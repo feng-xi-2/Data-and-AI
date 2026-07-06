@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PrIME 2022 — Area / Zone / Location / Assignment / Naming Rules</title>
+<style>
+  :root{
+    --bg:#0f1420; --panel:#161c2b; --panel2:#1d2536; --ink:#e8edf6; --muted:#9fb0c9;
+    --line:#2a3550; --accent:#4da3ff; --accent2:#39d3a0; --warn:#ffb454; --chip:#243049;
+    --db:#39d3a0; --train:#4da3ff; --wi:#c792ea; --sdc:#ffb454; --recap:#ff7a90;
+    --gloss:#7fd7ff; --gen:#8b98ad; --inf:#d0a0ff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.55 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{display:grid;grid-template-columns:290px 1fr;min-height:100vh}
+  /* Sidebar */
+  aside{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+    background:linear-gradient(180deg,#131a29,#0f1420);border-right:1px solid var(--line);padding:20px 16px}
+  aside h1{font-size:15px;margin:0 0 4px;color:#fff;letter-spacing:.2px}
+  aside .sub{font-size:11.5px;color:var(--muted);margin-bottom:16px}
+  nav a{display:block;padding:7px 10px;border-radius:8px;color:var(--muted);font-size:13px;margin-bottom:2px}
+  nav a:hover{background:var(--panel2);color:var(--ink);text-decoration:none}
+  nav a .n{display:inline-block;width:24px;color:var(--accent);font-weight:600}
+  .progress{margin:14px 0 6px;background:var(--panel2);border-radius:20px;height:9px;overflow:hidden;border:1px solid var(--line)}
+  .progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .3s}
+  .pmeta{font-size:11.5px;color:var(--muted);text-align:center;margin-bottom:14px}
+  .btnrow{display:flex;gap:6px;margin-top:8px}
+  .btnrow button{flex:1;background:var(--chip);color:var(--ink);border:1px solid var(--line);
+    border-radius:8px;padding:6px 8px;font-size:11.5px;cursor:pointer}
+  .btnrow button:hover{background:var(--panel2)}
+  /* Main */
+  main{padding:32px 40px 80px;max-width:1080px}
+  header.top{margin-bottom:22px}
+  header.top h2{font-size:26px;margin:0 0 6px;color:#fff}
+  header.top p{color:var(--muted);margin:4px 0;max-width:820px}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 4px}
+  .tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;
+    padding:3px 9px;border-radius:20px;background:var(--chip);border:1px solid var(--line);color:var(--ink)}
+  .tag i{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .t-db i{background:var(--db)} .t-train i{background:var(--train)} .t-wi i{background:var(--wi)}
+  .t-sdc i{background:var(--sdc)} .t-recap i{background:var(--recap)} .t-gloss i{background:var(--gloss)}
+  .t-gen i{background:var(--gen)} .t-inf i{background:var(--inf)}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:20px 22px;margin:18px 0;scroll-margin-top:16px}
+  section>h3{margin:0 0 4px;font-size:19px;color:#fff;display:flex;align-items:center;gap:10px}
+  section>h3 .num{background:var(--accent);color:#06101f;font-size:13px;font-weight:800;
+    border-radius:7px;padding:2px 9px}
+  section>.intro{color:var(--muted);font-size:13.5px;margin:2px 0 12px}
+  ul.rules{list-style:none;margin:0;padding:0}
+  ul.rules li{display:flex;gap:11px;padding:9px 10px;border-radius:9px;align-items:flex-start}
+  ul.rules li:hover{background:var(--panel2)}
+  ul.rules li.done .txt{opacity:.5;text-decoration:line-through}
+  ul.rules input[type=checkbox]{appearance:none;-webkit-appearance:none;flex:0 0 auto;
+    width:18px;height:18px;margin-top:2px;border:2px solid var(--line);border-radius:5px;
+    background:var(--bg);cursor:pointer;position:relative}
+  ul.rules input[type=checkbox]:checked{background:var(--accent2);border-color:var(--accent2)}
+  ul.rules input[type=checkbox]:checked::after{content:"✓";position:absolute;top:-2px;left:2px;
+    color:#06101f;font-size:14px;font-weight:800}
+  .txt{flex:1}
+  .rid{font-weight:700;color:var(--accent);margin-right:6px;font-variant-numeric:tabular-nums}
+  code{background:#0c1120;border:1px solid var(--line);border-radius:5px;padding:1px 6px;
+    font:12.5px/1.4 "Cascadia Code",Consolas,monospace;color:#bfe0ff}
+  .cites{margin-top:5px;display:flex;flex-wrap:wrap;gap:5px}
+  .cite{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:12px;background:var(--chip);
+    border:1px solid var(--line);white-space:nowrap}
+  .c-db{color:var(--db);border-color:#1c4a3c} .c-train{color:var(--train);border-color:#1c3a5a}
+  .c-wi{color:var(--wi);border-color:#3d2a52} .c-sdc{color:var(--sdc);border-color:#523f22}
+  .c-recap{color:var(--recap);border-color:#52222c} .c-gloss{color:var(--gloss);border-color:#1c4453}
+  .c-gen{color:var(--gen);border-color:#333} .c-inf{color:var(--inf);border-color:#3a2a52}
+  table.grid{border-collapse:collapse;width:100%;margin:8px 0;font-size:13px}
+  table.grid th,table.grid td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+  table.grid th{background:var(--panel2);color:#fff;font-weight:600}
+  table.grid tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+  .callout{border-left:3px solid var(--warn);background:rgba(255,180,84,.08);
+    padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0;font-size:13.5px}
+  .callout.info{border-color:var(--accent);background:rgba(77,163,255,.08)}
+  .warnflag{color:var(--warn);font-weight:700}
+  footer{color:var(--muted);font-size:12px;margin-top:26px;border-top:1px solid var(--line);padding-top:16px}
+  .kpis{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0}
+  .kpi{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 16px;min-width:120px}
+  .kpi b{display:block;font-size:22px;color:#fff}
+  .kpi span{font-size:11.5px;color:var(--muted)}
+  @media print{
+    aside{display:none} .wrap{grid-template-columns:1fr} main{max-width:none;padding:0}
+    body{background:#fff;color:#000} section{border-color:#ccc;background:#fff;break-inside:avoid}
+    section>h3,header.top h2,.kpi b{color:#000} code{color:#024;background:#eef}
+  }
+  @media(max-width:860px){.wrap{grid-template-columns:1fr}aside{position:static;height:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside>
+    <h1>PrIME 2022 Rules</h1>
+    <div class="sub">Area · Zone · Location · Assignment · Naming</div>
+    <div class="progress"><span id="bar"></span></div>
+    <div class="pmeta"><span id="pct">0%</span> reviewed · <span id="cnt">0/0</span></div>
+    <div class="btnrow">
+      <button onclick="setAll(true)">Check all</button>
+      <button onclick="setAll(false)">Reset</button>
+      <button onclick="window.print()">Print</button>
+    </div>
+    <nav id="nav" style="margin-top:16px"></nav>
+  </aside>
+
+  <main>
+    <header class="top">
+      <h2>PrIME 2022 — Area / Zone / Location / Assignment &amp; Naming Rules</h2>
+      <p>Complete, citation-backed checklist of every rule governing <b>Areas, Zones, Locations,
+      their Assignment, and Naming</b> in PrIME 2022 (Blue Yonder / "Puma"). Built for the
+      Minhang RTCIS&nbsp;→&nbsp;PrIME 2022 migration, grounded in the live <b>Athens</b> reference site.</p>
+
+      <div class="kpis">
+        <div class="kpi"><b>94</b><span>Areas (aremst)</span></div>
+        <div class="kpi"><b>30</b><span>Storage zones</span></div>
+        <div class="kpi"><b>23</b><span>Pick zones</span></div>
+        <div class="kpi"><b>92</b><span>Movement zones</span></div>
+        <div class="kpi"><b>108</b><span>Work zones</span></div>
+        <div class="kpi"><b>49</b><span>Location types</span></div>
+        <div class="kpi"><b>16,100</b><span>Locations</span></div>
+      </div>
+
+      <div class="legend">
+        <span class="tag t-db"><i></i>DB-ATHENS · live query</span>
+        <span class="tag t-train"><i></i>TRAIN · 2022 DB-model training</span>
+        <span class="tag t-wi"><i></i>WI · config-module slides</span>
+        <span class="tag t-sdc"><i></i>SDC · op-std / config std</span>
+        <span class="tag t-recap"><i></i>RECAP · Minhang transcripts</span>
+        <span class="tag t-gloss"><i></i>GLOSS · expert glossary</span>
+        <span class="tag t-inf"><i></i>INFERRED</span>
+        <span class="tag t-gen"><i></i>GENERAL</span>
+      </div>
+      <div class="callout info"><b>Citation basis:</b> <span class="c-db">DB-ATHENS</span> =
+        <code>ATHENS_REPLICA</code> (server <code>sqlwrhathensprod…</code>, schema <code>dbo</code>,
+        <code>wh_id='WMD1'</code>), verified live July 2026. All counts above are real row counts.</div>
+    </header>
+
+    <div id="content"></div>
+
+    <footer>
+      Generated from <code>kb/PRIME2022-AREA-ZONE-LOCATION-NAMING-CHECKLIST.md</code> ·
+      Sources: PrIME 2022 Capability DB Model Change Training (26-Sep-2024); WI 02-01-01 Facility
+      Configuration Module; WI 02.01.10 Zoning Category Configuration; SDC Op Std 2.1.1A Zoning General;
+      SDC Configuration Standards; Minhang M&amp;M transcripts (6.15–6.18, 2026); expert domain glossary;
+      live <code>ATHENS_REPLICA</code> queries. Checkbox state is saved in your browser.
+    </footer>
+  </main>
+</div>
+
+<script>
+/* ---- data model: sections -> rules ---- */
+const CITE={db:'c-db',train:'c-train',wi:'c-wi',sdc:'c-sdc',recap:'c-recap',gloss:'c-gloss',gen:'c-gen',inf:'c-inf'};
+const SECTIONS=[
+ {id:"s0",num:"0",title:"The 2014 → 2022 structural change (read first)",
+  intro:"PrIME 2022 replaced the single all-powerful 2014 <b>Area</b> with a 5-framework split plus Pick Methods.",
+  rules:[
+   {id:"0.1",t:"In 2014 <code>aremst</code> held ~105 fields driving storage, picking, put-away and movement at once. In 2022 <code>aremst</code> keeps only ~11 information-only fields; area is now mainly a <b>grouping / SAP-movement tag</b>.",c:[["train","TRAIN §1"],["db","DB-ATHENS aremst=14 cols"]]},
+   {id:"0.2",t:"Area functionality was split into <b>4 zone frameworks + Location Types</b>.",c:[["train","TRAIN §1"]],
+    tbl:{h:["2014 Area attribute set","2022 framework","PrIME table"],r:[
+     ["Storage attributes","Storage Zones","sto_zone"],
+     ["Picking attributes","Pick Zones","pck_zone"],
+     ["Movement / staging / hand-off / PND / consolidation","Movement Zones","mov_zone"],
+     ["Work balancing / congestion / travel-seq","Work Zones","zonmst"],
+     ["General flags (~41 area flags)","Location Types","loc_typ"],
+     ["Area UOMs + pick release + pick verification","Pick Methods","pck_mthd"]]}},
+   {id:"0.3",t:"<b>SAP movements stay at AREA level, NOT zone level.</b> Areas remain the key that sends inventory-movement (IM) transaction types (309/311) to SAP.",c:[["train","TRAIN §1"],["recap","RECAP 6.15_2 @1:04–1:08"]]},
+   {id:"0.4",t:"The 2014 \"Picking area\" concept (grouping areas for FIFO) <b>disappears</b> → replaced by Pick Zones. The \"List-pick flag\" leaves the allocation search path → now a <b>work-assignment</b> attribute in Pick Methods.",c:[["train","TRAIN §1, §3"]]},
+   {id:"0.5",t:"Put-away &amp; allocation strategies are now <b>2-level hierarchies</b> (Put-away: source Move Zone + item family → destination Storage Zone; Allocation: destination → source via Pick Zones + Pick Methods).",c:[["train","TRAIN §2, §3"]]},
+   {id:"0.6",t:"Platform changed <b>Oracle → Microsoft SQL Server</b>; <code>SELECT *</code> will break because location/area tables gained new zone columns — always list columns explicitly.",c:[["train","TRAIN §5, §9"]]}
+  ]},
+
+ {id:"s1",num:"1",title:"Building rules (aremst.BLDG_ID / Building Maintenance)",
+  rules:[
+   {id:"1.1",t:"Every area and location belongs to a <b>Building</b> (<code>BLDG_ID</code>). At Athens all areas are <code>B1</code>.",c:[["db","DB-ATHENS BLDG_ID='B1'"],["wi","WI-FAC slide 4"]]},
+   {id:"1.2",t:"Buildings carry <b>Storage Building Sequences</b> (where to store, spilling to next building when full) and <b>Pick Building Sequences</b> (where to find stock to fill an order).",c:[["wi","WI-FAC slide 5"]]},
+   {id:"1.3",t:"Building has an <b>Allow Fluid Loading</b> flag (pick directly onto trailer without staging).",c:[["wi","WI-FAC slide 4"]]},
+   {id:"1.4",t:"<b>(Minhang)</b> Physical footprint = <b>3 buildings</b> (B1/B2/B3 on Wu Chen Rd) + a remote WH + a dangerous-goods remote WH (~3 km). Building sequences must reflect this multi-building layout.",c:[["recap","RECAP 6.15_1 @5:37"]]}
+  ]},
+
+ {id:"s2",num:"2",title:"AREA rules (aremst)",
+  intro:"Definition &amp; mandatory attributes, area purpose classes, logical flag, governance.",
+  rules:[
+   {id:"2.1",t:"<code>aremst</code> PK = <code>ARECOD</code> + <code>WH_ID</code>. Columns are minimal: <code>ARECOD, WH_ID, BLDG_ID, LOST_LOC, LOGIC_FLG, BU_ID, IS_PURGED</code> (+audit). <b>No storage/pick flags live on the area anymore</b>.",c:[["db","DB-ATHENS aremst 14 cols"]]},
+   {id:"2.2",t:"Athens has <b>94 areas</b> for one warehouse — expect a comparable order of magnitude per site.",c:[["db","DB-ATHENS COUNT=94"]]},
+   {id:"2.3",t:"Flags that were on 2014 <code>aremst</code> now live elsewhere: <code>pckflg→locmst.PCKFLG</code>, <code>stoare_flg→locmst.STOFLG</code>, <code>shp_dck_flg→loc_typ.SHP_DCK_FLG</code>; <code>pdflg</code>, <code>cntflg</code> <b>removed</b>.",c:[["db","DB-ATHENS schema findings"]]},
+   {id:"2.4",t:"Areas are defined for: <b>Storage, Production Operation, Controlling, Staging, Dock-Door Operations, ESI (logical) Locations, Project-Specific Locations</b>.",c:[["wi","WI-FAC slide 6"]]},
+   {id:"2.5",t:"Valid area purposes (from 2014 General Attributes, now via Location-Type category): Storage, Pickup-and-Deposit (PnD), Processing, Ship Staging, Receiving Staging, Receiving Dock, Shipping Dock, Production Line, Production-Line Staging, WIP, WIP Supply, Put-to-Store, Distribution Processing, Pre-Stage, Cross-Dock, Storage Trailer, Yard, Shipment, Dispatch, Expected Receipts, Adjustments.",c:[["wi","WI-FAC slides 9-11"]]},
+   {id:"2.6",t:"<b><code>LOGIC_FLG = 1</code> ⇒ logical area</b> (no physical footprint — only displays inventory in a state). Athens logical areas: <code>ADJS, CADJ, DADJ, SADJ</code> (adjust), <code>SHIP, DSPCH</code>, <code>EXPR, WEXP</code>, <code>SXFR, XDDR, DKIT, SACO, WRKS, STOTRLR, RDTS000015</code>.",c:[["db","DB-ATHENS LOGIC_FLG=1"],["wi","WI-FAC slide 11"]]},
+   {id:"2.7",t:"Each area may declare a <b>Lost Location</b> (<code>LOST_LOC</code>) — the logical bucket for adjusted-out / lost inventory.",c:[["db","DB-ATHENS"],["wi","WI-FAC slide 18"]]},
+   {id:"2.8",t:"Areas allow <b>new records</b> and are <b>audited</b> by SDC; deviations tracked per-record (Areas + Policies are the only sections complex enough for a \"Deviations Allowed\" sheet).",c:[["sdc","SDC-STD"],["sdc","Config Std L10-11"]]},
+   {id:"2.9",t:"Standard PrIME area <b>type</b> codes (SDC baseline): <code>ADJS, ASRS, CADJ, FUPA, LINSTG, RVCSTG, SADJ, SDCK, SHIP, SHST, SSAL, STOT, SUBP, SXFR</code>.",c:[["sdc","SDC-STD"]]},
+   {id:"2.10",t:"<b>(Minhang decision)</b> Keep <b>areas only for the SAP movement-type grouping</b>; use <b>zones for functional behaviour</b>. Only IM locations send the adjustment movement type to SAP.",c:[["recap","RECAP 6.15_2 @1:04–1:08"]]},
+   {id:"2.11",t:"<b>(Minhang decision)</b> The old RTCIS \"error/ERR\" area was <b>dropped</b>; ERR is not what 2022 needs.",c:[["recap","RECAP 6.15_2 @1:08:25"]]},
+   {id:"2.12",t:"<b>(Minhang decision)</b> Minhang was found to <b>follow the standard configuration</b> with no site-specific area changes at the high level.",c:[["recap","RECAP 6.16_1 @1:07:23"]]}
+  ]},
+
+ {id:"s3",num:"3",title:"STORAGE ZONE rules (sto_zone)",
+  rules:[
+   {id:"3.1",t:"PK = <code>STO_ZONE_ID</code> (surrogate) + code <code>STO_ZONE_COD</code>; scoped by <code>WH_ID</code>, <code>BLDG_ID</code>. Athens = <b>30 storage zones</b>.",c:[["db","DB-ATHENS 19 cols, 30 rows"]]},
+   {id:"3.2",t:"Storage zone carries put-away/consolidation behaviour: <code>CONFLG</code> (auto-consolidate), <code>CON_PAL_FLG</code>, <code>FIFFLG</code> (FIFO), <code>PCKCOD</code> (S/M/N/D), <code>PROX_PUT_COD</code>, <code>RNWL_STO_FLG</code>, <code>VRT_STCK_FLG</code>.",c:[["db","DB-ATHENS cols"]]},
+   {id:"3.3",t:"A storage zone is defined <b>per storage area</b> and named <code>SZ-&lt;AREA&gt;</code> (e.g. <code>SZ-LIQUID</code>, <code>SZ-GILLETTE</code>). Confirmed by the 1:1 area→storage-zone join.",c:[["db","DB-ATHENS locmst⋈sto_zone"]]},
+   {id:"3.4",t:"<b>Every storage location should still get a storage zone</b> — even case-pick locations not linked to any storage strategy — for standardization &amp; future functionality.",c:[["recap","RECAP 6.15_2 @1:17"]]},
+   {id:"3.5",t:"Storage zones are used for <b>allocation search</b>, so keep them <b>separate</b> from staging zones (don't reuse a storage zone as a staging destination).",c:[["recap","RECAP 6.16_1 @2:31:00"]]},
+   {id:"3.6",t:"SDC: Storage-Zone config <b>allows new records</b> and is <b>not audited</b>.",c:[["sdc","SDC-STD"]]}
+  ]},
+
+ {id:"s4",num:"4",title:"PICK ZONE rules (pck_zone)",
+  rules:[
+   {id:"4.1",t:"PK = <code>PCK_ZONE_ID</code> + code <code>PCK_ZONE_COD</code>; scoped by <code>WH_ID</code>, <code>BLDG_ID</code>. Athens = <b>23 pick zones</b>.",c:[["db","DB-ATHENS 26 cols, 23 rows"]]},
+   {id:"4.2",t:"Pick zone carries pick behaviour: <code>CTNGRP</code> (cartonization A/D), <code>DTLFLG</code> (detail), <code>SUBFLG</code> (sub-load), <code>LODFLG</code> (load), <code>PCK_STEAL_FLG</code>, <code>GRP_PCK</code>, <code>MAXPCK</code>, <code>MIX_LOTSTS_ALLOC_FLG</code>.",c:[["db","DB-ATHENS cols"]]},
+   {id:"4.3",t:"Pick-zone naming = <code>PZ-&lt;AREA&gt;</code>, <b>or a grouped pick zone</b> across areas: <code>PZ-FUPA-ALL</code>, <code>PZ-PAPA-ALL</code>. Non-prefixed operational pick zones: <code>XDCK, XDDR, STOTRLR</code>.",c:[["db","DB-ATHENS"]]},
+   {id:"4.4",t:"Pick zones only exist on <b>pickable</b> locations. For outbound flow, the <b>pick zone is the outbound grouping</b>.",c:[["recap","RECAP 6.15_2 @1:06:04"]]},
+   {id:"4.5",t:"SDC: Pick-Zone config <b>does not allow new records</b> and is <b>not audited</b> (NA/NA).",c:[["sdc","SDC-STD"]]}
+  ]},
+
+ {id:"s5",num:"5",title:"MOVEMENT ZONE rules (mov_zone)",
+  rules:[
+   {id:"5.1",t:"PK = <code>MOV_ZONE_ID</code> + code <code>MOV_ZONE_COD</code>; scoped by <code>WH_ID</code>, <code>BLDG_ID</code>. Athens = <b>92 movement zones</b>.",c:[["db","DB-ATHENS 45 cols, 92 rows"]]},
+   {id:"5.2",t:"Holds staging / hand-off / PND / consolidation / replenishment-default behaviour: <code>CLR_DSTLOC_FLG</code>, <code>SPLIT_TRN</code>, <code>DEF_RPLCFG_*</code>, <code>DYN_SLOT_FLG</code>, <code>RECALC_PUTAWAY</code>, <code>PRE_STAGE_FLG</code>, <code>VC_CONS_LOT_FLG</code>. Attachment strategy defined here.",c:[["db","DB-ATHENS cols"],["train","TRAIN §4"]]},
+   {id:"5.3",t:"<b>RULE: every location MUST have a movement zone</b> (needed to raise move requests); a <b>1:1 map of areas → movement zones</b> is expected for lift-and-shift.",c:[["train","TRAIN §4"]]},
+   {id:"5.4",t:"Movement-zone naming = <code>MZ-&lt;AREA&gt;</code> for the 1:1 map, <b>plus</b> short operational zones reused as-is: <code>ADJS, CADJ, DADJ, DKIT, DSPCH, EXPR, SACO, SADJ, SHIP, SXFR, WEXP, WRKS, XDCK, XDDR, STOTRLR, RDT-B1, SRSTG_MZ</code>.",c:[["db","DB-ATHENS"]]},
+   {id:"5.5",t:"<span class='warnflag'>⚠ Reality vs rule:</span> at Athens <b>561 / 16,100 locations (~3.5%) have NULL movement zone</b> — logical/dispatch/expected-receipt locations that never physically move. Treat 5.3 as \"all <i>physical</i> locations must have a move zone\".",c:[["db","DB-ATHENS null=561"],["inf","INFERRED"]]},
+   {id:"5.6",t:"SDC: Movement-Zone config <b>allows new records</b> and is <b>not audited</b>. Pre-loaded: <code>ADJS, ASRS, AUDIT, CADJ, DADJ, DKIT, DRPP, DRPR, DSPCH, DTLP, EXPR, FUPA</code> + site zones.",c:[["sdc","SDC-STD"]]}
+  ]},
+
+ {id:"s6",num:"6",title:"WORK ZONE rules (zonmst)",
+  rules:[
+   {id:"6.1",t:"PK = <code>WRK_ZONE_ID</code> + code <code>WRKZON</code>; scoped by <code>WH_ID</code>, <code>BLDG_ID</code>. Athens = <b>108 work zones</b>.",c:[["db","DB-ATHENS 23 cols, 108 rows"]]},
+   {id:"6.2",t:"Work zones balance labour &amp; limit congestion: <code>WRKARE</code> (parent group), <code>TRVSEQ</code> (travel seq), <code>PRITHR/MAXPRITHR</code> (priority thresholds), <code>MAXDEV</code> (max devices), <code>OOSFLG</code>, <code>PCK_EXP_ARE</code>.",c:[["db","DB-ATHENS cols"],["wi","WI-FAC slide 2"]]},
+   {id:"6.3",t:"Work zones are grouped under <b>Work Areas</b> (<code>WRKARE</code>). Athens work-areas: <code>WABC</code> (ABC/rack), <code>WAHOM</code> (home/aisle 01), <code>WASTG</code> (staging), <code>WLOGICAL</code>, <code>WRKA</code>, <code>WAWMD1B1</code>.",c:[["db","DB-ATHENS WRKARE"]]},
+   {id:"6.4",t:"Work-zone naming (Athens): <code>WZ&lt;rowNN&gt;-&lt;sub&gt;[-&lt;rackType&gt;]</code> e.g. <code>WZ05-B-BB</code>, <code>WZ10-C-SR</code>; return-staging <code>WZRSTG001…035</code>; out-lanes <code>WZ05AOUT</code>; logical <code>99</code>/<code>NONE</code>. <code>TRVSEQ</code> rises along the pick path.",c:[["db","DB-ATHENS WRKZON"]]},
+   {id:"6.5",t:"Work Areas / Work Zones both specify <b>absolute and delta priorities</b> (used to offer/limit work per zone).",c:[["wi","WI-FAC slide 2"]]},
+   {id:"6.6",t:"SDC velocity-zoning <b>hard points</b>: follow velocity-based zoning; base on BOP forecast if accuracy &gt;90% else historical; run productivity/travel assessment; re-assess <b>monthly</b> if slow-mover volume &gt;10% of total else <b>quarterly</b> (integrated sites daily/weekly); <b>always relocate slow movers in the fast zone</b>.",c:[["sdc","SDC-ZON Hard Points 1-5"]]},
+   {id:"6.7",t:"Coverage: <b>1,341 / 16,100</b> Athens locations have NULL work zone — work zones only on <b>directed-work</b> locations.",c:[["db","DB-ATHENS null=1341"]]}
+  ]},
+
+ {id:"s7",num:"7",title:"LOCATION-TYPE rules (loc_typ)",
+  rules:[
+   {id:"7.1",t:"PK = <code>LOC_TYP_ID</code> + code <code>LOC_TYP</code>, grouped by <code>LOC_TYP_CAT</code>; scoped by <code>WH_ID</code>. This template inherited the ~41 general area flags. Athens = <b>49 location types across 8 categories</b>.",c:[["db","DB-ATHENS 57 cols, 49 rows"],["train","TRAIN §1"]]},
+   {id:"7.2",t:"The <b>8 Location-Type categories</b> and their codes (Athens):",c:[["db","DB-ATHENS GROUP BY LOC_TYP_CAT"]],
+    tbl:{h:["Category","Count","LOC_TYP codes"],r:[
+     ["DOCK","4","RDCK, RSDK, SDCK, STOTRLR"],
+     ["LOGICAL","8","ADJS, DSPCH, EXPR, RDTS, SADJ, SHIP, WEXP, XDDR"],
+     ["PND","14","AUDIT, DKIT, EXPR4W, HFPE, IMAR, IMQM, MNFST, NSTO, PND, PNDN, PNDS, PRST, SACO, WRKS"],
+     ["PROC","1","PROC"],
+     ["PROD","6","PELIN, PLIN, PROD, PSTA, PSTD, WIPSUP"],
+     ["STAGING","7","PSTG, RCST, SHST, SRSTG, SRSTG_LT, VSTG, XDCK"],
+     ["STORAGE","8","ASRS, NEAR, PPST, RSTO, SXFR, VSTO_LSTS, VSTO_PCKSTL, VSTO_PUT"],
+     ["YARD","1","YARD"]]}},
+   {id:"7.3",t:"Location-Type flags drive per-location behaviour: <code>STOARE_FLG</code>, <code>PDFLG</code>, <code>PRAFLG</code>, <code>RCV_STGFLG/RCV_DCK_FLG</code>, <code>SHP_DCK_FLG/SHPFLG</code>, <code>PROD_FLG/PRD_STGFLG</code>, <code>WIPFLG/WIP_SUPFLG</code>, <code>XDAFLG</code>, <code>YRDFLG</code>, <code>STGFLG</code>, <code>DISPATCH_FLG</code>, <code>EXPFLG</code>.",c:[["db","DB-ATHENS cols"],["wi","WI-FAC slides 9-19"]]},
+   {id:"7.4",t:"<b>RULE: every location MUST have a Location Type</b> — Athens has <b>0 NULL</b> <code>LOC_TYP_ID</code> across 16,100 locations.",c:[["db","DB-ATHENS null=0"]]}
+  ]},
+
+ {id:"s8",num:"8",title:"LOCATION rules (locmst) — mandatory attributes &amp; assignment coverage",
+  rules:[
+   {id:"8.1",t:"<code>locmst</code> PK = <code>STOLOC</code> + <code>WH_ID</code>. Wide table (<b>118 columns</b> at Athens) carrying storage/pick flags + all five zone FKs.",c:[["db","DB-ATHENS 118 cols"]]},
+   {id:"8.2",t:"Locations are <b>maintained per area</b> (Location Maintenance is scoped to an area).",c:[["wi","WI-FAC slide 3"]]},
+   {id:"8.3",t:"<b>Mandatory on every location (0 NULL at Athens):</b> <code>ARECOD</code> (area) and <code>LOC_TYP_ID</code> (location type).",c:[["db","DB-ATHENS 0 null both"]]},
+   {id:"8.4",t:"<b>Conditional zone assignment</b> (NULL where not applicable), of 16,100 Athens locations:",c:[["db","DB-ATHENS null counts"]],
+    tbl:{h:["Zone FK","NULL count","Applies to"],r:[
+     ["MOV_ZONE_ID","561","all physical (move-capable) locations"],
+     ["WRK_ZONE_ID","1,341","directed-work locations only"],
+     ["STO_ZONE_ID","2,967","storage-capable locations only"],
+     ["PCK_ZONE_ID","2,988","pickable locations only"]]}},
+   {id:"8.5",t:"Behavioural flags now sit on the location: <code>STOFLG</code>, <code>PCKFLG</code>, <code>REPFLG</code>, <code>ASGFLG</code>, <code>USEFLG</code>, <code>LOCSTS</code>, <code>PERM_ASGFLG</code>.",c:[["db","DB-ATHENS cols"]]},
+   {id:"8.6",t:"<b>Velocity zone</b> (<code>VELZON</code>) on each location — Athens: <code>A</code> fast (1,228), <code>B</code> (785), <code>C</code> bulk/slow (10,965), <code>D</code> (219), <code>Z</code> ground pick-face (2,903). Defined in Code Maintenance with ABC &amp; location-access codes.",c:[["db","DB-ATHENS GROUP BY VELZON"],["wi","WI-FAC slide 2"]]},
+   {id:"8.7",t:"<b>Aisle</b> (<code>AISLE_ID</code>, e.g. <code>AISLE001…004</code>) is a defined code (Aisle Maintenance) referenced by rack locations.",c:[["db","DB-ATHENS"],["wi","WI-FAC slide 3"]]},
+   {id:"8.8",t:"<b>Permanent / re-usable</b> locations get a Permanent Load number; <code>PERM_ASGFLG=1</code>. Pre-loaded: <code>PERM-ADJ-LOC, PERM-CRE-LOC, PERM-CNT-LOC, PERM-DKT-*-LOC, PERM-EXP-LOC, PERM-SHP-*, PERM-SHIP-LOC, PERM-WEXP-LOC, LSTS_LOST, RDT001, VOC01</code>.",c:[["wi","WI-FAC slide 3"],["sdc","SDC-STD"]]},
+   {id:"8.9",t:"Override-Location codes (why an RF operator overrode the suggested location, and whether to trigger a cycle count) are defined in Override Location Code Maintenance.",c:[["wi","WI-FAC slide 3"]]},
+   {id:"8.10",t:"<b>Dock ↔ Aisle ↔ Lane</b> associations (dock doors → staging lanes/aisles for ship &amp; receive) maintained in Dock-Aisle-Lane Association Maintenance.",c:[["wi","WI-FAC slide 3"]]}
+  ]},
+
+ {id:"s9",num:"9",title:"NAMING conventions (consolidated)",
+  intro:"Area codes, zone prefixes, and the STOLOC rack pattern.",
+  rules:[
+   {id:"9.1",t:"<b>Product/velocity storage areas</b> use plain product names: <code>LIQUID, PAPER, POWDER, POWDER PAR, BEAUTY, BEAUTY PAR, GILLETTE, AEROSOL, CSRE, CSUN, CSWG, LYPK, 3PL, 3PL FUPA, UNBW, UNBW PAR, PAPA PAR, SHST</code>.",c:[["db","DB-ATHENS aremst"]]},
+   {id:"9.2",t:"<b>Functional / logical areas</b> use 3-5 letter mnemonics: adjustments <code>ADJS/CADJ/DADJ/SADJ</code>; ship/dispatch <code>SHIP/DSPCH</code>; expected receipts <code>EXPR/WEXP</code>; cross-dock <code>XDCK/XDDR</code>; transfer <code>SXFR</code>; kitting <code>DKIT</code>; work-station <code>WRKS</code>; storage-trailer <code>STOTRLR</code>; <code>AUDIT/DMGE/SCRP/RETR/LOST</code>.",c:[["db","DB-ATHENS"]]},
+   {id:"9.3",t:"<b>Production-Execution (RPM) areas</b> carry a <code>PE/PEL/PST/PEWX/PEPND</code> prefix: <code>PELINAGR, PESTOB1, PEPCKSTLB1, PEPNDCLOB1, PEWXAB1…</code>.",c:[["inf","INFERRED"],["db","DB-ATHENS"]]},
+   {id:"9.4",t:"<b>Building-scoped areas</b> append the building: suffix <code>B1</code> (<code>PEWXAB1</code>, <code>PESTOB1</code>) or <code>|B1</code> delimiter (<code>PSTMX|B1</code>, <code>PSTDM|B1</code>, <code>EXPR4W|B1</code>).",c:[["db","DB-ATHENS"]]},
+   {id:"9.5",t:"<b>Zone prefixes:</b> Storage = <code>SZ-&lt;AREA&gt;</code>; Pick = <code>PZ-&lt;AREA&gt;</code> (or grouped <code>PZ-…-ALL</code>); Movement = <code>MZ-&lt;AREA&gt;</code>. Suffix mirrors the area code exactly, giving a traceable area↔zone lineage.",c:[["db","DB-ATHENS"]]},
+   {id:"9.6",t:"<b>Work zone</b> = <code>WZ&lt;rowNN&gt;-&lt;sub&gt;[-&lt;rackType&gt;]</code>; return-staging <code>WZRSTG###</code>; out-lane <code>WZ…OUT</code>.",c:[["db","DB-ATHENS"]]},
+   {id:"9.7",t:"Operational/logical zones bypass the prefix and reuse the mnemonic directly (<code>XDCK, XDDR, STOTRLR, ADJS, SHIP…</code>).",c:[["db","DB-ATHENS"]]},
+   {id:"9.8",t:"<b>Rack storage <code>STOLOC</code> pattern:</b> <code>&lt;2-digit row + letter&gt;&lt;3-digit position&gt;L&lt;level&gt;&lt;depth suffix&gt;</code>. Example <code>05B052L3BB</code> = row 05, block B, position 052, Level 3, depth BB.",c:[["db","DB-ATHENS locmst.STOLOC"]]},
+   {id:"9.9",t:"<b>Rack depth/face suffixes</b> &amp; volume: <code>BB</code> (7,925), <code>SR</code> (2,598), <code>GF</code> (2,151 — ground pick face, VELZON Z), <code>GR</code> (282), <code>LP</code> (138). Ground GF/GR faces are the pickable forward locations.",c:[["db","DB-ATHENS RIGHT(STOLOC,2)"],["inf","INFERRED GF/GR↔VELZON Z"]]},
+   {id:"9.10",t:"<b>Logical locations</b> use a long zero-padded token: <code>L</code> + 19 chars, e.g. <code>L000000000000000013Y</code> (ADJS logical).",c:[["db","DB-ATHENS"]]},
+   {id:"9.11",t:"<b>Staging / manipulation locations</b> use short descriptive codes: <code>SSTG14</code>, <code>ZMANIP19</code>, <code>PND1</code>, <code>PND2</code>, <code>A5/A6</code> (pass-through PND lanes).",c:[["db","DB-ATHENS"],["recap","RECAP 6.17_3"]]},
+   {id:"9.12",t:"Location-code fields that <i>can</i> carry structure but are blank at Athens (site may use them): <code>SECTION, BAY, LVL, LOCPOS</code>. Athens encodes level/position inside the <code>STOLOC</code> string instead.",c:[["db","DB-ATHENS NULL on samples"]]}
+  ]},
+
+ {id:"s10",num:"10",title:"ASSIGNMENT rules (how a location gets its area, zones, type)",
+  rules:[
+   {id:"10.1",t:"Assignment order for a new location: <b>Building → Area → Location Type → (Storage/Pick/Movement/Work) Zones → velocity/aisle/flags</b>.",c:[["wi","WI-FAC slides 2-3, 6"],["inf","INFERRED"]]},
+   {id:"10.2",t:"Group locations <b>by area</b> when the driver is the <b>SAP IM transaction type</b>; group <b>by zone</b> when the driver is <b>functional behaviour</b> (put-away, pick, flow).",c:[["recap","RECAP 6.15_2 @1:04–1:08"]]},
+   {id:"10.3",t:"Map current areas <b>1:1 to movement zones</b> for a lift-and-shift migration.",c:[["train","TRAIN §4"]]},
+   {id:"10.4",t:"Define <b>one storage zone per storage area</b> (<code>SZ-&lt;AREA&gt;</code>) and assign it to every storage/case-pick location in that area, even if no storage strategy is attached.",c:[["db","DB-ATHENS"],["recap","RECAP 6.15_2 @1:17"]]},
+   {id:"10.5",t:"Assign a <b>pick zone only to pickable locations</b>; storage-only bulk locations get none. Forward-pick faces across product areas may share a grouped pick zone (<code>PZ-FUPA-ALL</code>).",c:[["db","DB-ATHENS null=2988"]]},
+   {id:"10.6",t:"Assign a <b>work zone only to directed-work locations</b> (rack aisles, staging); logical/dock locations may have none.",c:[["db","DB-ATHENS null=1341"]]},
+   {id:"10.7",t:"<b>Put-away strategy</b> links <b>source move-zone + item family → destination storage-zone</b> (2-level \"storage search path\"). <b>Allocation/pick strategy</b> links <b>destination → source</b> via pick zones + pick methods (2-level).",c:[["train","TRAIN §2, §3"]]},
+   {id:"10.8",t:"<b>IM locations</b> are the only ones authorised to send SAP movement types (adjust in/out, 309/311); normal storage locations do not. Assign IM locations deliberately.",c:[["recap","RECAP 6.15_2 @1:07–1:08"]]},
+   {id:"10.9",t:"For <b>RPM / production supply</b> where there isn't space for per-material fixed pick locations, assign/replenish <b>by area</b> rather than per-item location.",c:[["recap","RECAP 6.17_2 @1:04"]]},
+   {id:"10.10",t:"<b>Directed vs. undirected put-away</b> is a per-location/area choice: with PND enabled the system suggests a directed location; without it, receipt goes straight to a station (undirected).",c:[["recap","RECAP 6.17_3 @20:10–20:29"]]}
+  ]},
+
+ {id:"s11",num:"11",title:"SDC governance &amp; audit summary (for sign-off)",
+  rules:[
+   {id:"11.1",t:"Audit posture per config section: <b>Storage Zones</b> (new ✔, not audited), <b>Pick Zones</b> (no new, not audited), <b>Movement Zones</b> (new ✔, not audited), <b>Locations</b> (matching, audited), <b>Items/Item Families</b> (audited medium), <b>Task/Pick Methods/Production Lines</b> (audited).",c:[["sdc","SDC-STD"]]},
+   {id:"11.2",t:"Audit severity: <b>High</b> = must match SDC (blocker); <b>Medium</b> = drift must be justified; <b>Low</b> = informational; <b>NA</b> = not audited.",c:[["sdc","SDC-STD"]]},
+   {id:"11.3",t:"Areas &amp; Policies are the only sections with a <b>\"Deviations Allowed\"</b> register (per-record allowed variations) due to complexity.",c:[["sdc","Config Std L10-11"]]},
+   {id:"11.4",t:"<b>(Minhang)</b> Confirm the placeholder <b><code>WH_ID</code></b> before go-live (transform used <code>WMH1</code>; Athens reference is <code>WMD1</code>).",c:[["db","minhang memory"]]}
+  ]},
+
+ {id:"s12",num:"12",title:"Migration cross-reference (RTCIS → PrIME 2022)",
+  rules:[
+   {id:"12.1",t:"RTCIS <code>LOCATN</code> → PrIME <code>locmst</code> (<code>ARECOD, STOFLG, PCKFLG, dims</code>).",c:[["gloss","GLOSS §6"]]},
+   {id:"12.2",t:"RTCIS <code>ZONCOD</code> → split by <code>ZONE_TYPE</code> into <code>zonmst</code> / <code>pck_zone</code> / <code>sto_zone</code>. At Minhang <code>ZONE_TYPE</code> is null, so <b>all <code>ZONCOD</code> map to <code>zonmst</code></b> (no pck/sto split yet).",c:[["db","minhang memory"]]},
+   {id:"12.3",t:"RTCIS <code>ARECOD</code> (distinct from LOCATN) + <code>BLDING</code> → PrIME <code>aremst</code>. <span class='warnflag'>⚠ Members only, not the taxonomy</span> — Minhang's PrIME areas are building/plant zones authored in the Site-Config Model, not RTCIS <code>ARECOD</code> values (see §13.1, §13.7).",c:[["db","minhang memory"],["db","SITE-CFG"]]},
+   {id:"12.4",t:"RTCIS area/zone <b>value sets differ entirely</b> from PrIME — same column name, different codebook; <b>no 1:1 value crosswalk</b>, remap by business intent.",c:[["gloss","codebook mappings §7, §8"]]},
+   {id:"12.5",t:"Field variants to re-point when translating 2014/RTCIS queries: <code>arecod, frmarea, toarea, dstare</code> → assess which 2022 zone framework applies.",c:[["train","TRAIN §9"]]}
+  ]},
+
+ {id:"s13",num:"13",title:"LEARNINGS — mechanical RTCIS transform vs. business Site-Config design (Minhang)",
+  intro:"A mechanical transform derived areas/zones/location-types straight from RTCIS (<code>ARECOD</code>, <code>ZONCOD</code>/<code>PIKZON</code>) and was compared to the business-authored <b>PrIME202X Site Configuration Model – MH – 2026.6.14.xlsx</b> (<code>wh_id BR01</code>, the target ground truth). Near-zero overlap: <b>AREA 0/11, LOC_TYPE 0/43, STORAGE-ZONE 1/23 (~4%)</b>. The 2022 taxonomy is a <b>business redesign</b>, not a field-rename of RTCIS.",
+  rules:[
+   {id:"13.1",t:"<b>AREAS are a physical/plant dimension, not the RTCIS functional dimension.</b> Business areas are buildings/floors/plants (<code>P1MAINWH</code>主仓, <code>P1TC9</code>, <code>P1DGWH</code>周转仓, <code>P1RESIN</code>树脂仓, <code>P1CHEMICAL</code>化学品仓, <code>P3HWCK</code>恒温恒湿仓, <code>P3F1/F2/F3</code>三厂1/2/3层, <code>REMOTEWH</code>外仓, <code>REMOTEDGWH</code>危险品外仓). RTCIS <code>ARECOD</code> is functional (<code>RO</code>=rack, <code>ST</code>=staging, <code>HP</code>=hand-off, <code>DO</code>=dock). <b>Do NOT map <code>ARECOD</code> 1:1 to PrIME Area</b> — it conflates two orthogonal dimensions.",c:[["db","SITE-CFG: Areas"]]},
+   {id:"13.2",t:"<b>LOCATION TYPES must come from the STANDARD PrIME catalog, never invented.</b> Business used 43 standard <code>loc_typ</code> codes (<code>ADJS, ASRS, AUDIT, DKIT, DSPCH, EXPR, HFPE, IMAR, IMQM, NEAR, NSTO, PND, PROC, PROD, PRST, PSTA, PSTD…</code>). Invented codes (<code>RACK, STAGING, HANDOFF…</code>) don't integrate with PrIME behaviour flags/strategies and score 0% match.",c:[["db","SITE-CFG: Location Types"]]},
+   {id:"13.3",t:"<b>STORAGE ZONES are designed by storage strategy &amp; material handling, not by RTCIS product code.</b> Business zones encode handling + material class: <code>SZ-VNA</code> (堆高车), <code>SZ-CSPICK</code> (固定拣货), <code>SZ-M-RESIN</code> (塑料粒子), <code>SZ-*-WIP</code>, <code>SZ-CHEMICAL</code>, <code>SZ-DG</code>, <code>SZ-P3-1F/2F/3F</code>, <code>SZ-REMOTE</code>. RTCIS-code clones (<code>SZ-M1..M9, SZ-B1..B3, SZ-XX</code>) are semantically wrong (only <code>SZ-DG</code> coincidentally matched).",c:[["db","SITE-CFG: Storage Zones"]]},
+   {id:"13.4",t:"<b>PICK ZONES are a small set of picking-method zones, not a per-product clone.</b> Business modelled ~3 method zones: 散拣区 (case-pick — plastic pellets/imported brush heads), 补货区 (replenishment — PCB/Plant 2&amp;3 injection), 整板区 (full-pallet). Codes left <b>blank pending assignment</b> (descriptions filled first). Cloning one <code>PZ-*</code> per <code>ZONCOD</code> (19) over-fragments the design.",c:[["db","SITE-CFG: Pick Zones"]]},
+   {id:"13.5",t:"<b>MOVEMENT ZONES model equipment-transition / deposit flows, not 1:1 area mirrors.</b> Business descriptions are PnD/equipment transitions: \"PnD from VNA forklift to pallet\", \"PnD from pallet jack to VNA\", \"receiving staging\", \"receiving staging-P3\" — i.e. where material changes handling equipment (see also the <i>Movement Zone Next Move</i> sheet). One-per-area <code>MZ-*</code> mirrors miss this.",c:[["db","SITE-CFG: Movement Zones"]]},
+   {id:"13.6",t:"<b>The Site Configuration Model is the TARGET ground truth; Athens+RTCIS are references only.</b> Validate generated taxonomy against the site's filled Site-Config workbook, not just Athens structure + RTCIS values. A transform can be 100% structurally valid (all FKs resolve, all rules pass) yet ~0% consistent with the business design. <b>Structural validity ≠ design correctness.</b>",c:[["db","SITE-CFG"],["inf","Diagnosis-vs-Prescription lesson"]]},
+   {id:"13.7",t:"<b>The correct RTCIS→2022 path is a semantic remap through the Site-Config design, not a code carry-over.</b> Use RTCIS only to populate members (which physical locations exist, their dims); take the area/zone/loc-type <b>taxonomy from the Site-Config Model</b> and map each RTCIS location onto the business codes by <b>building + material + handling intent</b>.",c:[["db","SITE-CFG"],["gloss","§12.4 no 1:1 crosswalk"]]},
+   {id:"13.8",t:"<b>Deliverable.</b> Business-vs-transform consistency export: <code>output/PRIME2022_MINHANG/_consistency_vs_business.csv</code> (per-framework summary + per-code MATCH / BUSINESS_ONLY / TRANSFORM_ONLY). Regenerate via <code>_md_consistency_vs_siteconfig.py</code>.",c:[["inf","deliverable"]]}
+  ]}
+];
+
+const OPEN=[
+ "<b>Go-live <code>WH_ID</code> → <code>BR01</code></b> (not the <code>WMH1</code> placeholder). Team Site Config uses <code>BR01</code> as Warehouse ID throughout; Site Overview: SAP Storage Location = <code>BR01</code>, Building(s) = <code>BR01</code>. <b>Action:</b> set transform <code>WH_ID</code> <code>WMH1</code>→<code>BR01</code>. <span class='cite c-db'>SITE-CFG Site Overview</span>",
+ "<b>Split <code>ZONCOD</code> into storage + pick zones → YES.</b> Storage zones for receiving/put-away, pick zones for outbound; areas kept only for SAP grouping. Team design: 23 storage zones + 3 picking-method pick zones (散拣/补货/整板). <span class='cite c-recap'>RECAP 6.15_2 @1:06</span> <span class='cite c-db'>SITE-CFG Storage/Pick Zones</span>",
+ "<b>IM locations → dedicated IM location types.</b> Only IM locations emit SAP movement-type adjustments; normal storage sends nothing. Team catalog defines standard <code>IMAR</code> &amp; <code>IMQM</code>. <span class='cite c-recap'>RECAP 6.15_2 @1:07</span> <span class='cite c-db'>SITE-CFG Location Types</span>",
+ "<b>Logical-location movement-zone exemption → YES.</b> Single building (<code>BR01</code>) with logical/in-transit locations (adjust, dispatch, expected-receipts, shuttle/hand-off) that never physically move — same exemption as the 561 no-move-zone Athens locations. Team catalog defines the <code>LOGICAL</code> category (<code>ADJS, DKIT, DSPCH, EXPR, SADJ, SHIP, WEXP, XDDR</code>); assign no <code>MOV_ZONE_ID</code>. <span class='cite c-recap'>RECAP 6.15_2 @1:11</span> <span class='cite c-db'>SITE-CFG + DB-ATHENS null=561</span>"
+];
+
+/* ---- render ---- */
+const content=document.getElementById('content');
+const nav=document.getElementById('nav');
+let total=0;
+SECTIONS.forEach(s=>{
+  const sec=document.createElement('section'); sec.id=s.id;
+  let html=`<h3><span class="num">${s.num}</span>${s.title}</h3>`;
+  if(s.intro) html+=`<div class="intro">${s.intro}</div>`;
+  html+=`<ul class="rules">`;
+  s.rules.forEach(r=>{
+    total++;
+    const cid=`c_${r.id.replace('.','_')}`;
+    let cites=(r.c||[]).map(([k,label])=>`<span class="cite ${CITE[k]}">${label}</span>`).join('');
+    let tbl='';
+    if(r.tbl){
+      tbl=`<table class="grid"><thead><tr>${r.tbl.h.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`
+        + r.tbl.r.map(row=>`<tr>${row.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')
+        + `</tbody></table>`;
+    }
+    html+=`<li data-id="${cid}"><input type="checkbox" id="${cid}">`
+      +`<label class="txt" for="${cid}"><span class="rid">${r.id}</span>${r.t}${tbl}`
+      +`<div class="cites">${cites}</div></label></li>`;
+  });
+  html+=`</ul>`;
+  sec.innerHTML=html;
+  content.appendChild(sec);
+  const a=document.createElement('a'); a.href='#'+s.id;
+  a.innerHTML=`<span class="n">${s.num}</span>${s.title.replace(/\s*\(.*/,'')}`;
+  nav.appendChild(a);
+});
+
+// open confirmations block
+const oc=document.createElement('section'); oc.id='open';
+oc.innerHTML=`<h3><span class="num">✓</span>Open confirmations — RESOLVED (meeting record + Site Config Model 2026-06-14)</h3>`
+ +`<ul class="rules">`+OPEN.map((o,i)=>{
+   const cid=`c_open_${i}`; total++;
+   return `<li data-id="${cid}"><input type="checkbox" id="${cid}"><label class="txt" for="${cid}"><span class="rid">${i+1}</span>${o}</label></li>`;
+ }).join('')+`</ul>`;
+content.appendChild(oc);
+const oa=document.createElement('a'); oa.href='#open'; oa.innerHTML=`<span class="n">✓</span>Confirmations (resolved)`; nav.appendChild(oa);
+
+/* ---- state + progress ---- */
+const KEY='prime2022_rules_state';
+function save(){const st={};document.querySelectorAll('ul.rules input').forEach(c=>st[c.id]=c.checked);localStorage.setItem(KEY,JSON.stringify(st));}
+function load(){try{const st=JSON.parse(localStorage.getItem(KEY)||'{}');document.querySelectorAll('ul.rules input').forEach(c=>{if(st[c.id]){c.checked=true;c.closest('li').classList.add('done');}});}catch(e){}}
+function refresh(){
+  const boxes=[...document.querySelectorAll('ul.rules input')];
+  const done=boxes.filter(b=>b.checked).length;
+  const pct=Math.round(done/boxes.length*100);
+  document.getElementById('bar').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'%';
+  document.getElementById('cnt').textContent=`${done}/${boxes.length}`;
+}
+document.addEventListener('change',e=>{
+  if(e.target.matches('ul.rules input')){e.target.closest('li').classList.toggle('done',e.target.checked);save();refresh();}
+});
+function setAll(v){document.querySelectorAll('ul.rules input').forEach(c=>{c.checked=v;c.closest('li').classList.toggle('done',v);});save();refresh();}
+load();refresh();
+</script>
+</body>
+</html>

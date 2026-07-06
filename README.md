@@ -6,4 +6,5 @@ This repo covers Skills and Ontology of Warehouse Data and AI, the accuracy is i
 4. Masterdata: Area-Zone-Location Mapping from RTCIS to PRIME 2022
 5. Warehouse Data and AI architecture design Q&A
 6. ALL learnings captured by previouse projects
-7. Tools: Validation etc.
+7. Warehouse process mining and bottleneck detection tool (refer from industry knowlege)
+8. Tools: Validation etc.

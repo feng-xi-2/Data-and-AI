@@ -49,6 +49,12 @@ Never patch one visual by hand in Desktop: the next build overwrites it. Fix the
 
 ## Deploy from Git (planned: the workspace refreshes itself from the replicas)
 
+**Access (Data Replica Authentication and Integration Standards v4, section 5 PowerBI):** the Power BI **Service** connects with a
+**Service Principal** (App Registration `prime-els-hypercare-prod-sp`, secret in a Key Vault only); a personal / ION account is
+for Desktop only. Process: create the SP -> approval of each site key user -> iDecide Ops (idecideoperations.im, approval attached)
+raises an RITM, adds the SP read-only to the site replica and shares the Data Replica gateway connection. E-mail drafts:
+`Email_draft_replica_SP_access.txt` (M&M folder).
+
 Once the Service can reach the replicas (the 4 `MI-<SITE>-PROD-FULL-PaaS-ADHOC` gateway connections shared with you), the
 workspace refreshes the model itself and the PC snapshot is no longer needed. The report is then deployed from Git:
 

@@ -1,0 +1,4 @@
+SiteCode,Setting,Value,Why
+JAKARTA,WH_ID,ID12,"20-Nov: production warehouse ID12 now on the PROD replica (master data only - 9,024 locations, 17 LTA lanes, 0 transactions yet). Workspace model reads ID12; the shared .pbix keeps ID01 (DC, live) until ID12 posts transactions - then set WH_ID = ID12 in site_config.csv, re-profile (py tools/profile_site.py JAKARTA --write --force) and delete this row"
+JAKARTA,Config_Status,"NOT LIVE YET (ID12) - re-profile after go-live","Shown on Home / Config & Health so users know why Jakarta is empty in the workspace"
+JAKARTA,SiteName,Jakarta (ID12),"Site name shows the warehouse the workspace model reads"

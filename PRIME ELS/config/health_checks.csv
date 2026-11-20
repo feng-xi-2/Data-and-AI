@@ -1,0 +1,21 @@
+Check_No,Area,Check,Check_Key,Operator,Expected,Unit,Requires,Why
+1,Freshness,Replica data lag (minutes) within DATA_LAG critical limit,H_DATA_LAG,<=,120,min,,Stale replica = every alert is stale (data-replica-latency skill)
+2,Freshness,Model refreshed within the last 24 hours,H_REFRESH_AGE,<=,24,h,,Scheduled refresh / credentials broken
+3,Feed,TTAT feed has trucks in the last 7 days,H_TTAT_ROWS,>=,1,trucks,,TTAT query returns nothing - check trlr_cod / actcod codes for the site
+4,Feed,Location feed loaded (usable storage locations),H_LOC_ROWS,>=,1,locs,,Location utilisation query failed or no usable locations
+5,Feed,User activity feed loaded (last N days),H_USER_ROWS,>=,1,txns,,dlytrn user activity query returned nothing
+6,Feed,Production feed has pallets in the look-back window,H_PROD_ROWS,>=,1,plt,Has_Production,LTA production query returns nothing - check LOC_LTA / FG_PRTNUM_LIKE tokens
+7,Accuracy,No negative TTAT (dispatch before check-in),H_NEG_TTAT,=,0,trucks,,Same rule as Excel VALIDATION #20
+8,Accuracy,No GR time longer than total turnaround,H_GR_GT_TTAT,=,0,trucks,,Same rule as Excel VALIDATION #22
+9,Accuracy,No negative pallet counts in production feed,H_NEG_PALLETS,=,0,rows,Has_Production,Same rule as Excel VALIDATION #9
+10,Accuracy,No blank report dates in production feed,H_BLANK_DATES,=,0,rows,Has_Production,Same rule as Excel VALIDATION #7
+11,Accuracy,All production hours within 0-23,H_BAD_HOURS,=,0,rows,Has_Production,Same rule as Excel VALIDATION #11
+12,Config,No UNMAPPED takeaway lines (Cfg_LineMap complete),H_UNMAPPED_LINES,=,0,lines,Has_Production,Add the missing LTA source to config/line_map.csv
+13,Config,Exactly one site selected in the Site slicer,H_SITE_FOUND,=,1,sites,,Pick one site in the banner Site slicer - KPIs are per site
+14,Config,Every KPI has a threshold row,H_THRESHOLDS,>=,25,KPIs,,config/kpi_thresholds.csv must keep the default (*) rows
+15,Freshness,Production data lag vs clock (hours),H_PROD_LAG,<=,3,h,Has_Production,Excel VALIDATION - production data lagging the clock
+16,Config,Replica of the selected site loaded at the last refresh (Data Health rows),H_SITE_LOADED,>=,1,rows,,"Site partitions empty - check the replica connection / credentials of this site, then Refresh"
+17,Config,Every line seen in the production feed is in Cfg_LineMap,H_LINEMAP_ROWS,>=,1,lines,Has_Production,Cfg_LineMap has no row for this site
+18,Freshness,Replica keeps enough transaction history for the look-back views (days),H_HISTORY_DAYS,>=,7,days,,Replica retention differs per site - fewer days means past-day filters show 'not in replica' (check site_config_check.py)
+19,Freshness,Outbound truck feed has trucks closed in the last FORECAST_DAYS days (Excel VALIDATION 29 / 31),H_OUT_TTAT_ROWS,>=,1,trucks,,No outbound truck closed recently - outbound TTAT alerts read an old day (or the site ships nothing yet)
+20,Freshness,Inbound and outbound truck feeds reach the same day (Excel VALIDATION 36),H_FEED_SAME_DAY,<=,1,days,,One truck feed lags the other - the inbound and outbound TTAT alerts compare different days

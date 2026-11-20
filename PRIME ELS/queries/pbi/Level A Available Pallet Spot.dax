@@ -1,0 +1,2 @@
+// rows of 'Level A Available Pallet Spot' in the model for one site (replace the site code)
+EVALUATE ROW("n", CALCULATE(COUNTROWS('Level A Available Pallet Spot'), TREATAS({"<SITE>"}, Cfg_Site[SiteCode])) + 0)

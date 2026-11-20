@@ -1,0 +1,9 @@
+Status_Code,Stage_Key,Is_Open,Age_From,Note
+R,O_READY,1,Created,Ready - created / released to WMS
+I,O_INPROC,1,Allocated,In-Process - allocated / picking
+S,O_STAGED,1,Staged,Staged at the dock
+L,O_LOADING,1,Staged,Loading
+D,O_LOADING,1,Loaded,Loaded - load not completed
+C,O_DONE,0,Loaded,Load Complete
+B,O_CANCEL,0,Created,Cancelled
+X,O_TRANSFER,0,Created,Transfer

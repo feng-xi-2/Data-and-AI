@@ -1,0 +1,16 @@
+# never commit data, built reports, local state or credentials
+*.pbix
+*.abf
+*.xlsx
+*.xlsm
+*.zip
+*.pfx
+*.pem
+.env
+dist/
+_*/
+_*.json
+_*.log
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+__pycache__/

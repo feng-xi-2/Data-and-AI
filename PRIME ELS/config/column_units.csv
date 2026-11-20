@@ -1,0 +1,39 @@
+Pattern,Base_Format,Unit,Note
+(?i)Process Edges\|(transitions)$,"#,##0",hand-offs,times a case went from the From step to the To step
+(?i)Process Edges\|(cases)$,"#,##0",cases,distinct pallets / orders / trucks on the edge
+(?i)Process Edges\|(median_min|p95_min)$,"#,##0.0",min,minutes between the two steps (median / 95th percentile)
+(?i)Process Edges\|(from_no|to_no|is_open_edge)$,0,#hide,step order / open-node flag used by measures
+(?i)Inventory\|pallets$,"#,##0",plt,pallets (distinct LPN) in stock
+(?i)Inventory\|qty_buom$,"#,##0",BUoM,base units of measure
+(?i)Inventory\|max_age_days$,"#,##0",days,"oldest pallet of the group, days since FIFO / receipt"
+(?i)\|(is_open|is_late)$,0,#hide,0 / 1 flags used by measures
+(?i)\|minutes ,"#,##0",min,minutes (process diagnosis snapshots)
+(?i)\|age_min$,"#,##0",min,minutes in the current stage (Flow Items)
+(?i)(\|lines$|gr_lines),"#,##0",lines,shipment lines / SAP goods-receipt lines
+(?i)\|items$,"#,##0",items,distinct items (materials) on a pallet
+(?i)Pallets In Flow\|units$,"#,##0",BUoM,base units of measure on the pallet
+(?i)(_sort|sort order|\|rowid|\|loc order)$,0,#hide,technical sort / row keys - hidden (used only to order other columns)
+(?i)(hour_of_day|hour of day|slot hour|\|hour$|activity_hour|start hour|shift hour),"00"":00""",#clock,hour of the day shown as a clock time (14 -> 14:00)
+(?i)(_zone$),"""zone ""0",#literal,numeric WMS zone id (prefix instead of unit)
+(?i)(\(minutes\)|_minutes$|\(min\)|min in location|min_since|aging_minutes|start min|end min),"#,##0",min,minutes
+(?i)(\(hours\)|duration_hours),"#,##0.0",h,hours
+(?i)su per hour,"#,##0.0",SU/h,statistical units per hour
+(?i)(per hour|per_hour),"#,##0.0",plt/h,pallets per hour
+(?i)(qty_per_pallet|quantity per pallet|buom_per_pallet),"#,##0.##",BUoM/plt,base units of measure per pallet
+(?i)(cases_per_pallet|untpal),"#,##0",cs/plt,cases per pallet
+(?i)cases,"#,##0",cs,cases
+(?i)pallet_spots,"#,##0",locs,free pallet spots (locations)
+(?i)(location_height|pallet_height),"#,##0",cm,centimetres
+(?i)(pallet|plt),"#,##0.##",plt,pallets
+(?i)locations,"#,##0",locs,storage locations
+(?i)_qvl,"#,##0.0",QVL,location volume units (locmst qvl)
+(?i)qty_su,"#,##0.##",SU,statistical units
+(?i)su_factor,0.000,SU/BUoM,statistical units per base unit
+(?i)(qty|available_qty),"#,##0",BUoM,base units of measure
+(?i)fraction,0.0%,%,share of the planned duration
+(?i)shelf life,"#,##0",days,days
+(?i)rows_last_24h,"#,##0",rows,rows
+(?i)transactions,"#,##0",txns,transactions
+(?i)KPI Scorecard\|(Pillar No|Priority)$,0,#literal,Copilot answer table: sort order (Priority 1 = CRITICAL first)
+(?i)KPI Scorecard\|(Actual|Target|Warning Limit|Critical Limit|Forecast End Of Day)$,"#,0.00",#literal,Copilot answer table: the unit differs per row (column Unit; formatted value in the Text columns)
+(?i)Site Summary\|(Critical KPIs|Warning KPIs|Failed Health Checks)$,0,#literal,Copilot answer table: counts per site

@@ -1,0 +1,2 @@
+Workspace,Display_Name,Note
+<workspace>,WH Hypercare KPI-<copy>,the owner's test build in the shared workspace (tells it apart from other copies); tools/publish.py updates these items by this name

@@ -1,0 +1,24 @@
+Rule_No,Pillar,Rule,KPI_Key,Insight_If_Breached,Recommended_Action,Owner
+1,Inbound,TTAT - average truck turnaround (report day),TTAT_IN,Inbound trucks are waiting too long between check-in and dispatch,Check dock-door availability and receiving labour; prioritise trucks waiting longest,Inbound lead
+2,Inbound,TTAT - worst single truck (report day),TTAT_IN_MAX,At least one visit far exceeded the SLA,Investigate that visit - was the delay waiting (yard) or unloading (GR)?,Inbound lead
+3,Production,Pallets/hr - site rate vs plan,PPH,Takeaway output is below the planned rate,Escalate to production - check downtime and manning,Production supervisor
+4,Production,Line performance - production lines in alert,LINES_IN_ALERT,One or more production lines are DOWN / LOW OUTPUT / SURGE vs their own 14-day baseline,Walk the lines with the production supervisor; check the produced column of the Daily & Hourly Report,Production supervisor
+5,Production,Shift attainment - current shift vs target,SHIFT_ATTAIN,The running shift is behind its pro-rated target,Shift huddle - reallocate labour to the hours / flows flagged on the Daily & Hourly Report,Shift leader
+6,Production,Ramp-up attainment - day vs ramp-up plan,RAMP_ATTAIN,Site is behind the ramp-up curve for today,Report to hypercare; check projected end-of-day and required recovery rate,Hypercare lead
+7,Production,Trend deterioration - consecutive declining hours,TREND_HOURS,Output has fallen for several hours in a row - early warning before a hard threshold trips,Check the hourly verdicts on the Daily & Hourly Report - line or space constraint?,Shift leader
+8,Warehouse,Space constraint - free SHORT pallet spots,MIN_SHORT,Short locations are almost full - takeaway will back up,Trigger bin-to-bin clean-up to release SHORT locations,Warehouse lead
+9,Warehouse,Space constraint - Level A utilisation,LVLA_UTIL,Level A is congested - no put-away locations,Run relocation (move-up) to free Level A,Warehouse lead
+10,Warehouse,Put-away backlog - pallets staged in HOFF IN,HOFF_IN,Inbound staging backlog upstream of Level A,Add put-away resource to clear HOFF IN staging,Warehouse lead
+11,Warehouse,Inbound vs outbound balance (space direction of travel),IMBALANCE,More pallets are coming in than going out - space will run out,Increase outbound picking or pre-clear locations before the next production wave,Warehouse lead
+12,Inbound,GR time - goods receipt duration (scan to close),GR_TIME,Unloading / scanning is slow,Add receiving labour or open another dock door,Inbound lead
+13,Warehouse,Production-to-storage 80/20 split,STORE_A_SPLIT,LTA output is not landing in Level A as designed,Deploy put-away resource immediately - this is usually the primary constraint,Warehouse lead
+14,Outbound,Outbound planning 80/20 split,PICK_A_SPLIT,Picks are not coming from Level A as designed,Re-point allocation to Level A stock; check why demand is sitting in non-A,Outbound lead
+15,Warehouse,Level A blocked by idle stock (bin-to-bin backlog),IDLE_A,Prime Level A slots are held by stock with no shipment demand,Work the bin-to-bin priority list (highest quantity first),Warehouse lead
+16,Outbound,Outbound TAT - trailer loading time,OUT_LOAD_TIME,Trailer loading is too slow,Check pick completion before loading and loader manning,Outbound lead
+17,Health,Data integrity - health checks after refresh,HEALTH_FAILS,Some data-health checks failed - alerts may be wrong,Open Config & Health and fix the FAIL rows before acting on any alert,Report owner
+18,Warehouse,Space constraint - free TALL pallet spots,MIN_TALL,Tall locations are almost full,Trigger bin-to-bin clean-up to release TALL locations,Warehouse lead
+19,Warehouse,Storage location utilisation (all usable locations),LOC_UTIL,The warehouse is running out of usable storage locations,Review slow movers / blocked locations; plan overflow,Warehouse lead
+20,Outbound,Outbound truck turnaround (check-in to close),TTAT_OUT,Outbound trucks are on site too long,Check staging readiness and dock scheduling,Outbound lead
+21,Users,User productivity - pallets per active user-hour,USER_PROD,RF users are moving fewer pallets per hour than the standard,Review the User Productivity page - training / task interleaving / travel,Shift leader
+22,Health,Replica data freshness,DATA_LAG,The replica is behind the WMS - numbers are stale,Check HVR (data-replica-latency skill) before acting on alerts,Report owner
+23,Health,Model refresh age,REFRESH_AGE,The semantic model has not refreshed recently,Check the scheduled refresh / gateway credentials in the Service,Report owner

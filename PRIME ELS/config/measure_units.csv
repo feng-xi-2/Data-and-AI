@@ -1,0 +1,203 @@
+Measure,Base_Format,Unit
+Daily_Produced Pallets,0,plt
+Daily_Planned Pallets,0,plt
+Daily_Shipped Pallets,0,plt
+Daily_Δ Prod-Plan,0,plt
+Daily_Δ Ship-Prod,0,plt
+Avg Prod Plt/h,0.0,plt/h
+Prod Pallets Throughput,0,plt
+Avg Shipped Plt/h,0.0,plt/h
+Cumulative Delta,0,plt
+Shipment Number,0,trucks
+Total Pallets,0,plt
+Thruput_Avg Plts/Hr,0.0,plt/h
+Prod Lines Count,0,lines
+Predicted_Avg_Plt/h,0.0,plt/h
+Market Count,0,markets
+Predicted_Avg_SU/h,0.0,SU/h
+HOFF_FG_Pallet,0,plt
+HOFF_PM_Pallet,0,plt
+LevelA_Empty Pallet Spot Short,"#,##0",locs
+LevelA_Empty Pallet Spot Tall,"#,##0",locs
+LTA_Pallet to Tall,0,plt
+LTA_Pallet to Short,0,plt
+Outbound_Picked From Level A,0,plt
+LTA_toLevelOther,0,plt
+Outbound_Picked From None Level A,0,plt
+LevelA_Plt wo Active Shipment,0,plt
+LevelA_Occupied FG,0,plt
+LevelA_Occupied PM,0,plt
+Problem Pallet,0,plt
+Clean Up BinA to BinUp,0,plt
+LTA_to Level A,0,plt
+LTA_to NonLevel A,0,plt
+HOFF OUT Total,0,plt
+Site UTC Offset h,0.0,h
+Elapsed Hours,0.0,h
+Prod Pallets Day,"#,##0",plt
+Prod Completed Hours,0,h
+KPI PPH,0.0,plt/h
+Prod Run Rate 3h,0.0,plt/h
+Prod Projected EOD,"#,##0",plt
+KPI PPH Predicted,0.0,plt/h
+Prod Ramp Plan Day,"#,##0",plt/day
+Prod Required Rate,0.0,plt/h
+Hour Pallets,"#,##0",plt
+Hour Baseline,0.0,plt/h
+Hour Inbound Trucks,0,trucks
+Hour Outbound Loads,0,loads
+KPI Trend Hours,0,h
+Line Latest Hr Pallets,0,plt
+Line Baseline Same Hr,0.0,plt
+Line Hours Idle,0,h
+Line Day Pallets,"#,##0",plt
+KPI Lines In Alert,0,lines
+Inbound Trucks,0,trucks
+KPI TTAT In,0.0,min
+KPI TTAT In Max,0,min
+KPI GR Time,0.0,min
+KPI TTAT In Predicted,0.0,min
+Outbound Trucks,0,trucks
+KPI TTAT Out,0.0,min
+KPI TTAT Out Predicted,0.0,min
+KPI Out Load Time,0.0,min
+Outbound Loads,0,loads
+Outbound Pallets Shipped,"#,##0",plt
+Out Alloc LevelA,"#,##0",plt
+Out Alloc Other,"#,##0",plt
+Loc Locations,"#,##0",locs
+Loc Occupied,"#,##0",locs
+Loc Free,"#,##0",locs
+Flow In Pallets Day,"#,##0",plt
+Flow Out Pallets Day,"#,##0",plt
+Flow Net Per Hour,+0.0;-0.0;0.0,plt/h
+Space Runway Hours,0.0,h
+LevelA Locations,"#,##0",locs
+KPI Free Short,0,locs
+KPI Free Tall,0,locs
+LevelA Free Spots,0,locs
+LevelA In Day,"#,##0",plt
+LevelA Other Day,"#,##0",plt
+LevelA Idle Locations,0,locs
+KPI HOFF In,0,plt
+KPI LTA Queue,0,plt
+User Pallets Moved,"#,##0",plt
+User Transactions,"#,##0",txns
+KPI Active Users,0,users
+User Active Hours,"#,##0",h
+KPI User Productivity,0.0,plt/user-h
+User Productivity 7d,0.0,plt/user-h
+KPI Data Lag Min,0,min
+KPI Refresh Age h,0.0,h
+Health Check Value,"#,##0.##",
+KPI Health Fails,0,checks
+Health Checks Run,0,checks
+Hour Pallets Moved,"#,##0",plt
+Hour Moves Baseline,0.0,plt/h
+Hour Active Users,0,users
+Hour Inbound TTAT,0,min
+Hour Outbound TTAT,0,min
+KPI Actual,"#,##0.00",
+KPI Predicted,"#,##0.00",
+Alerts Critical,0,critical
+Alerts Warning,0,warning
+Predicted_Avg_Plt_Display,0.0,plt/h
+Stage Items,"#,##0",items
+Stage Over Warn,"#,##0",items
+Stage Over Crit,"#,##0",items
+Flow Items Waiting,"#,##0",items
+Flow Items Warning,"#,##0",items
+Flow Items Critical,"#,##0",items
+Band Items,"#,##0",items
+Stage Oldest Min,"#,##0",min
+Item Age Min,"#,##0",min
+Truck Wait Min,"#,##0",min
+Truck Work Min,"#,##0",min
+Truck Rest Min,"#,##0",min
+Truck TTAT Min,"#,##0",min
+KPI TTAT In Prev,0.0,min
+KPI TTAT Out Prev,0.0,min
+Trucks On Site,"#,##0",trucks
+Trucks On Site In,"#,##0",trucks
+Trucks On Site Out,"#,##0",trucks
+Trucks Over Crit,"#,##0",trucks
+Band Trucks In,"#,##0",trucks
+Band Trucks Out,"#,##0",trucks
+Inbound Trucks Prev,"#,##0",trucks
+Outbound Trucks Prev,"#,##0",trucks
+Moves Hour,"#,##0",plt
+Moves Day Trend,"#,##0",plt
+Pallets Moved Prev,"#,##0",plt
+Pallets Moved Prior Avg,"#,##0",plt
+Area Moves Day,"#,##0",plt
+Pallets In Flow Now,"#,##0",plt
+Pallets Over Crit,"#,##0",plt
+User Pallets Prev,"#,##0",plt
+SAP Pallets Day,"#,##0",plt
+SAP Pallets Prev,"#,##0",plt
+SAP Pallets Prior Avg,"#,##0",plt
+SAP Pallets Window,"#,##0",plt
+WMS Pallets Window,"#,##0",plt
+SAP Pallets By Day,"#,##0",plt
+WMS Pallets By Day,"#,##0",plt
+SAP Material Pallets Day,"#,##0.#",plt
+Shipments Open,"#,##0",shipments
+Shipments Late,"#,##0",shipments
+Shipments Created Day,"#,##0",shipments
+Shipments Loaded Day,"#,##0",shipments
+Shipments Created Prev,"#,##0",shipments
+Shipments Loaded Prev,"#,##0",shipments
+Active Users Prev,0,users
+User Productivity Prev,0.0,plt/user-h
+Hour Pallets Per User,0.0,plt/user
+SAP GR Lines Day,"#,##0",GR lines
+SAP GR Lines By Day,"#,##0",GR lines
+SAP Material Qty Day,"#,##0",base units
+Stage Stale,"#,##0",items
+Flow Items Stale,"#,##0",items
+Trucks Stale,"#,##0",trucks
+Pallets Stale,"#,##0",plt
+Hour Inbound Done,0,trucks
+Hour Inbound Done TTAT,0,min
+PM Cases,"#,##0",cases
+PM Median Min,"#,##0.0",min
+PM P95 Min,"#,##0.0",min
+PM Case Hours,"#,##0",case-h
+PM Orders Traced,"#,##0",orders
+PM Orders Waiting,"#,##0",orders
+PM Trucks Traced,"#,##0",trucks
+PM Trucks Waiting,"#,##0",trucks
+PM Pallet Handoffs,"#,##0",hand-offs
+PM Min Cases,0,cases
+Gantt Start Min,"#,##0",min
+Inv Pallets,"#,##0",plt
+Inv FG Pallets,"#,##0",plt
+Inv Material Pallets,"#,##0",plt
+Inv Old Pallets,"#,##0",plt
+Inv Band FG Pallets,"#,##0",plt
+Inv Band Material Pallets,"#,##0",plt
+Inv Old Pallets Row,"#,##0",plt
+Inv Old Row All Pallets,"#,##0",plt
+Inv Old Row Max Age,"#,##0",days
+Inv Max Age Days,"#,##0",days
+Loc Area Occupied,"#,##0",locations
+Refresh Every Min,0,min
+Feed Rows 24h,"#,##0",rows
+PM Flow Cases,"#,##0",cases
+PM Window Days,0,days
+Line Hour Pallets,"#,##0",plt
+Shift Trucks,"#,##0",trucks
+Shift Avg Wait Min,"#,##0",min
+Shift Avg Work Min,"#,##0",min
+Shift Avg TTAT Min,"#,##0",min
+Inv Pallets Cell,"#,##0",plt
+Staging Pallets,"#,##0",plt
+Staging Trucks,"#,##0",trucks
+Staging Pallets Per Truck,0.0,plt/truck
+Staging Lanes Used,"#,##0",lanes
+Staging Truck TTAT,"#,##0",min
+Hour Productivity Target,0.0,plt/user-h
+Hour Users Below,0,users
+Win Hours,0.0,h
+Win Off Start h,0.0,h
+Win Off End h,0.0,h

@@ -1,0 +1,10 @@
+KPI_Key,Measure,Reference_SQL,Kind,Model_Window,Intent_Window,Requires,Tol_Abs,Tol_Pct,Note
+PROD_PALLETS,Prod Pallets Day,PROD_PALLETS.sql,DAY,SHIFT,SHIFT,Has_Production,1,0.02,PPH = this / elapsed hours of the shift day
+ACTIVE_USERS,KPI Active Users,ACTIVE_USERS.sql,DAY,SHIFT,SHIFT,,1,0.02,
+USER_PROD,KPI User Productivity,USER_PROD.sql,DAY,SHIFT,SHIFT,,0.5,0.03,pallets per active user-hour
+TTAT_IN,KPI TTAT In,TTAT_IN.sql,DAY,SHIFT,SHIFT,,1,0.03,minutes check-in -> dispatch
+TTAT_OUT,KPI TTAT Out,TTAT_OUT.sql,DAY,SHIFT,SHIFT,,1,0.03,minutes check-in -> close
+LOC_UTIL,KPI Loc Util,LOC_UTIL.sql,NOW,NOW,NOW,,0.01,0.03,live snapshot - model value is as of its last refresh
+LVLA_UTIL,KPI LevelA Util,LVLA_UTIL.sql,NOW,NOW,NOW,Has_LevelA,0.02,0.05,live snapshot - model value is as of its last refresh
+LTA_QUEUE,KPI LTA Queue,LTA_QUEUE.sql,NOW,NOW,NOW,Has_Production,3,0.1,live snapshot - model value is as of its last refresh
+HOFF_IN,KPI HOFF In,HOFF_IN.sql,NOW,NOW,NOW,Has_HOFF,3,0.1,live snapshot - model value is as of its last refresh

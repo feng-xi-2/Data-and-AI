@@ -1,0 +1,2 @@
+// rows of 'Pallet from LTA to short/tall location' in the model for one site (replace the site code)
+EVALUATE ROW("n", CALCULATE(COUNTROWS('Pallet from LTA to short/tall location'), TREATAS({"<SITE>"}, Cfg_Site[SiteCode])) + 0)

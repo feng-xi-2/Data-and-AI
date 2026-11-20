@@ -1,0 +1,64 @@
+﻿Type,Key,Priority,Text,Action
+LINE_RCA,SURGE,1,Output spike vs baseline - verify catch-up run after downtime and confirm Level A can absorb the volume,Pre-clear Level A locations and brief the put-away team on the incoming volume
+LINE_RCA,STORAGE_BLOCK,2,Storage blockage: only {free_short} SHORT spots free and {queue} pallets waiting in LTA - takeaway is backed up,"Trigger bin-to-bin clean-up to release SHORT locations, then restart LTA discharge"
+LINE_RCA,LVLA_CONGESTED,3,"Level A congestion: utilisation {lvla_util} - no put-away locations, LTA cannot discharge","Run move-up relocation to free Level A, then re-check the line"
+LINE_RCA,HOFF_BACKLOG,4,Inbound staging backlog: {hoff} pallets in HOFF IN - put-away resource shortage upstream of Level A,Add put-away resource to clear HOFF IN staging
+LINE_RCA,EXT_STOP,5,"Extended production stoppage ({idle} hrs) - no warehouse constraint detected, cause is on the line",Escalate to the production supervisor - confirm line status and downtime reason code
+LINE_RCA,SHORT_STOP_QUEUE,6,Short stop ({idle} hr) with {queue} pallets queued in LTA - takeaway waiting on put-away,Check put-away from LTA first; confirm with the line leader whether the stop is planned
+LINE_RCA,SHORT_STOP,7,Short stop ({idle} hr) - planned changeover / break or minor stop,Confirm with the line leader whether the stop is planned (changeover/break); log the reason code if unplanned
+LINE_RCA,LOW_OUTPUT,8,Speed loss / minor stops - output below {warn_pct} of own baseline,Notify the line leader - confirm speed loss / minor stops and log the downtime reason
+LINE_RCA,NORMAL,99,,
+VERDICT,SPACE_ALLOC,1,"VERDICT: SPACE-ALLOCATION problem, not racking capacity or line speed. Racking has {free_short} SHORT and {free_tall} TALL spots free, yet {idle_locs} prime Level A slots are held by stock with no demand.",Bin-to-bin clear the idle Level A locations first
+VERDICT,RACKING,2,"VERDICT: RACKING-CAPACITY constraint - free SHORT ({free_short}) / TALL ({free_tall}) spots are below minimum, takeaway will back up.",Release SHORT / TALL locations (bin-to-bin) and slow inbound if needed
+VERDICT,WH_FULL,3,VERDICT: WAREHOUSE-FULL risk - location utilisation {loc_util}{runway}.,Review slow movers / blocked locations and plan overflow
+VERDICT,LINE,4,VERDICT: LINE problem - {lines} takeaway line(s) in alert and no warehouse constraint detected.,Work the Line RCA list with production
+VERDICT,NONE,99,VERDICT: no structural constraint detected.,Keep monitoring
+NARRATIVE,PROD_OFF,1,Production pillar is not active for this site (Cfg_Site.Has_Production = 0).,
+NARRATIVE,PROD_BEHIND,2,At the current {rate} pallets/hr the site ends the shift day near {proj} pallets against a plan of {plan} pallets. Recovering the gap needs {req} pallets/hr for the rest of the day.,
+NARRATIVE,PROD_ONTRACK,3,At the current {rate} pallets/hr the site ends the shift day near {proj} pallets against a plan of {plan} pallets. On track for the day plan.,
+NARRATIVE,FIX_ORDER,4,FIX IN THIS ORDER:  ,
+NARRATIVE,FIX_NONE,5,Nothing to fix - keep monitoring.,
+NARRATIVE,ALL_CLEAR,6,ALL CLEAR - no rule breached,
+NARRATIVE,STATE_CRIT,7,CRITICAL - {crit} critical and {warn} warning alert(s) active -> ACT NOW,
+NARRATIVE,STATE_WARN,8,WARNING - {warn} warning alert(s) active -> MONITOR,
+NARRATIVE,HEALTH_OK,9,ALL {run} DATA-HEALTH CHECKS PASSED - numbers are safe to use,
+NARRATIVE,HEALTH_FAIL,10,{fail} OF {run} CHECKS FAILED - fix the Config & Health page before acting on alerts,
+NARRATIVE,TITLE,11,{site} PRIME ELS Dashboard,
+HOURLY,NOTHING_MOVED,1,NOTHING MOVED - site idle this hour,
+HOURLY,PROD_STOPPED_SHIPPING,2,"Production stopped but outbound still shipping - lines blocked, not the warehouse",
+HOURLY,IN_TTAT_HIGH,3,Inbound trucks over SLA ({in_ttat} min),
+HOURLY,OUT_TTAT_HIGH,4,Outbound trucks over SLA ({out_ttat} min),
+HOURLY,NO_MOVEMENT,5,No pallet movement in an hour that normally moves {base},
+HOURLY,BELOW_BASE,6,{pct} below the normal {base} pallets moved for this hour,
+HOURLY,ALL_NORMAL,7,All flows normal,
+NARRATIVE,HOURLY_SCAN,12,"SCAN RESULT: {crit} critical hour(s), {warn} warning(s), {idle} hour(s) without movement across {done} elapsed hour(s).",
+NARRATIVE,PAGE_NA,12,⚠ NOT USED AT {site}: this site has no {flag} - the visuals of this page stay empty,
+NARRATIVE,PAGE_NA_SAP,12,"ⓘ SAP DATA NOT IN THIS FILE: the {flag} comes from Databricks (CDL), left out so the file refreshes with the data replica only - the visuals of this page stay empty","To include it: config/build_options.csv Include_SAP_CDL = 1, rebuild (needs CDL access for everyone who refreshes)"
+NARRATIVE,NO_SITE,13,Select ONE site in the Site slicer (top right),
+EMPTY,*,1,no data for {day},
+EMPTY,TTAT_IN,1,no inbound truck dispatched on {day},
+EMPTY,GR_TIME,1,no inbound truck dispatched on {day},
+EMPTY,TTAT_OUT,1,no outbound truck closed on {day},
+EMPTY,USER_PROD,1,no RF pallet moves on {day},
+EMPTY,ACTIVE_USERS,1,no RF users on {day},
+EMPTY,OUT_LOAD_TIME,1,no outbound load closed on {day},
+EMPTY,PPH,1,no production on {day} - last pallet {last_prod},
+EMPTY,RAMP_ATTAIN,1,no production on {day} - last pallet {last_prod},
+ZERO,PPH,1,{value} - last pallet {last_prod},
+PAST_NOTE,LOC_UTIL,1,(live now - the replica keeps no location history),
+PAST_NOTE,LVLA_UTIL,1,(live now - no history),
+PAST_NOTE,MIN_SHORT,1,(live now),
+PAST_NOTE,MIN_TALL,1,(live now),
+PAST_NOTE,IDLE_A,1,(live now),
+NARRATIVE,PROD_NONE,2,"No pallets produced in this shift day yet ({hours} h elapsed) - last produced pallet: {last}. Lines stopped or the production feed is not reaching the replica: check the line status with the production supervisor, then Config & Health (data lag).",
+NARRATIVE,SAP_NONE,0,No SAP plant is configured for {site} (Cfg_Site.SAP_Plant / Has_SAP_Prod = 0) - the SAP production comparison is not available.,"If the site has a production plant: set SAP_Plant, Has_SAP_Prod = 1 and SAP_PALLET_UOM in config/site_config.csv and rebuild."
+NARRATIVE,SAP_STOPPED,0,SAP plant {plant} posted no finished-goods receipts in the last {days} days - production is stopped (PrIME agrees).,No action in PrIME - production is stopped in SAP too; confirm the restart date with the plant.
+NARRATIVE,SAP_NOT_TRACKED,0,"SAP plant {plant} posted {sap} FG pallets in the last {days} days ({perday} per day), but this PrIME warehouse does not track production (Has_Production = 0): the plant's output is received outside this WMS warehouse, so PrIME production KPIs stay empty by design.",Use this page for production volume; ask the site whether the production warehouse should be added as its own Cfg_Site row.
+NARRATIVE,SAP_WMS_MISSING,0,"SAP plant {plant} posted {sap} FG pallets in the last {days} days, but PrIME recorded only {wms}: production pallets are not (yet) received in PrIME (no work-order receipts / IDNTFY_WO).",Check the PrIME production go-live / line-to-WMS integration with the site; until then use SAP volume for production KPIs.
+NARRATIVE,SAP_COVERAGE,0,PrIME recorded {wms} of SAP's {sap} FG pallets in the last {days} days ({cov} coverage; SAP pallet basis: {basis}).,No action - PrIME receives the plant's production (coverage at or above the WMS_COVERAGE critical limit); investigate only if coverage drops.
+NARRATIVE,FLOW_CLEAR,0,🟢 No live blockage - no stage has items past its warning age (stale records excluded).,
+NARRATIVE,FLOW_BLOCK,0,{icon} Biggest blockage now: {stage} - {n} {unit} past the {limit} limit (oldest {oldest}). Action: {action} ({owner}),
+NARRATIVE,ORDERS_NA,0,not used here - shipments stay 'Ready' in WMS at this site (outbound runs on trailer loading): follow outbound on the Trucks page,
+NARRATIVE,PREV_LIVE,0,live value - no day history,
+NARRATIVE,STALE_NOTE,0,  |  🟣 Stale records: {n} items older than {hours} h sit in flow locations (most in: {stage}) - verify physically and correct WMS (inventory accuracy).,
+NARRATIVE,STALE_ACTION,0,Inventory accuracy: {n} {unit} older than {hours} h - verify physically and correct the WMS record (move / dispatch / cancel / count).,

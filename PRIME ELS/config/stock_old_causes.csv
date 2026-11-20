@@ -1,0 +1,6 @@
+Location_Class,Likely_Cause,Action
+On trailer,"Trailer never dispatched / closed in WMS (ghost stock), or the truck is still in the yard","Find the trailer (Trucks & TTAT); dispatch / close it in WMS, or unload it if still loaded"
+Receiving,"Received but not put away, or the receipt was never confirmed","Put away from the receiving lane, or correct / close the receipt"
+Shipping / staging,"Picked and staged but never loaded (order cancelled, short-shipped or truck missed)","Load on the next truck or return to storage; check the shipment status"
+Production line,"Left on a production-line location (not consumed / not returned)","Consume, return to storage or adjust at the line"
+Storage,"Slow mover, FIFO not followed, or blocked / QA stock awaiting a decision","Check FIFO rotation and obsolescence; get the release or disposal decision for blocked / QA stock"

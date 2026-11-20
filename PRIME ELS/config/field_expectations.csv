@@ -1,0 +1,29 @@
+Table,Column,Flag,Sites,Max_Days_Ahead,Reason
+^(Planned Pallet PO|Planned PO RPM Breakdown|SAP Plan PO)$,(?i)plan|bucket|shift_date|slot|start|finish|end,FUTURE_DATE,*,31,Production plans look ahead (bounded by WO_WINDOW_DAYS = 30)
+^WorkLine Activities$,^Scheduled Begin Date$,FUTURE_DATE,*,31,Work orders scheduled ahead (bounded by WO_WINDOW_DAYS)
+^Pallets Location$,^fifo_dte$,FUTURE_DATE,*,366,FIFO override date can be set ahead; values > 1 year are nulled in the query
+^Pallet in Level A not active shipment$,^newdte$,FUTURE_DATE,*,366,WMS date on the pallet (expiry / FIFO) can be ahead
+^Pallets Movement$,^trnqty$,NEGATIVE,*,,Negative transaction quantity = inventory adjustment / reversal (real WMS movements)
+^Planned PO RPM Breakdown$,^delivered_(qty|pallets)$,NEGATIVE,*,,Negative delivery = reversal of an RPM delivery
+^(TTAT|Outbound TTA)$,^(Load|Route To)$,EMPTY_FOR_SITE,BINHDUONG,,BD outbound trailers are STO fast-lane shuttles (pallets FL_XFR from production into the trailer): no order / carrier move / route exists
+^TTAT$,^(Trailer Type|Load|Route To|Dock ID|End Loading)$,EMPTY_FOR_SITE,"MINHANG,JAKARTA",,Outbound-only columns; the replica has inbound (RCV) trailers only
+^TTAT$,^Truck Number$,EMPTY_FOR_SITE,AKASHI,,Inbound-only column; the replica has outbound (SHIP) trailers only
+^Outbound TTA$,^(Dock ID|Check-in|Route To|TTAT.*)$,EMPTY_FOR_SITE,JAKARTA,,Go-live trailers are loaded without a TCHKIN check-in / carrier move yet
+^Short PO$,^LAST_ACTION_(BY|TIME)$,EMPTY_FOR_SITE,JAKARTA,,No follow-up action has been logged on short POs yet
+^Pallets Location$,^received_dte$,EMPTY_FOR_SITE,AKASHI,,The replica leaves inventory rcvdte empty; aging falls back to fifo_dte
+^Pallets Movement$,^toinvs$,EMPTY_FOR_SITE,"JAKARTA,AKASHI",,The replica leaves dlytrn.toinvs empty (no visual uses it)
+^WorkLine Activities$,^UOM$,EMPTY_FOR_SITE,MINHANG,,Work-order lines carry no UOM at this site
+^WorkLine Activities$,^Supplier Lot$,EMPTY_FOR_SITE,JAKARTA,,Supplier lot not captured at this site
+^SAP Production$,^(GR_Lines|Qty_BUoM|PALLETS)$,NEGATIVE,*,,"SAP reversals (movement 102) larger than receipts (101) on a day give a negative net - real SAP postings, shown as such"
+^Shipments$,^Late Ship$,FUTURE_DATE,*,90,Late ship date is the planned latest ship date of open shipments - in the future by design
+^Shipments$,^Dest Location$,EMPTY_ALL_SITES,*,,Destination location is not filled until the shipment is staged / assigned in PrIME - optional column
+^Open Trailers$,^Carrier$,EMPTY_FOR_SITE,*,,Carrier code not keyed at check-in at this site - informational column
+^WorkLine Activities$,^UOM$,EMPTY_ALL_SITES,*,,Unit of measure not stored on work-line activities at this site - informational column
+^Pallet in Level A not active shipment$,*,NO_ROWS,*,,"0 = every Level A pallet received since the hypercare start has an active shipment line (good). Verified Jakarta 31-Oct: 79 such pallets, all with an open shipment"
+^Short PO$,^(REQUEST_ACTIVITY|REQUEST_ACTION_TIME|LAST_ACTION_BY|LAST_ACTION_TIME)$,EMPTY_ALL_SITES,*,,"No replenishment request booked yet for these shorts (left join on the request transaction): an open short that nobody requested is the alert itself - verified Minhang / Akashi 2-Nov (2 shorts each, no request)"
+^Short PO$,^(INV_STATUS|ONHAND_QTY_BUOM|FIFO_DATE)$,EMPTY_ALL_SITES,*,,"A short PO = material short on stock: the stock columns come from a LEFT JOIN to inventory and stay empty while none is on hand"
+^Short PO$,^(INV_STATUS|ONHAND_QTY_BUOM|FIFO_DATE)$,EMPTY_FOR_SITE,*,,"A short PO = material short on stock: the stock columns come from a LEFT JOIN to inventory and stay empty while none is on hand"
+^Shipments$,^(Allocated|Staged|Loaded)$,EMPTY_FOR_SITE,BINHDUONG,,"Binh Duong does not use the allocate / stage / load order stages in PrIME (same rule as visual_expectations.csv: order stages N/A at BD)"
+^TTAT$,^Truck Number$,EMPTY_FOR_SITE,MINHANG,,"Minhang trailer actions carry no TRKNUM - one row per trailer, receipts linked via rcvtrk (site_config.csv notes)"
+^Short PO$,^(REQUEST_ACTIVITY|REQUEST_ACTION_TIME|LAST_ACTION_BY|LAST_ACTION_TIME)$,EMPTY_FOR_SITE,*,,"No replenishment request booked yet for these shorts (left join on the request transaction) - empty here while another site has requests; the open short without a request is the alert itself"
+^(Outbound TTA|Shipments|Pallet cleaned up from bin A|Pallet from LTA to short/tall location)$,*,NO_ROWS,MINHANG,,"Replica holds 0 rows for the same SQL (tools/compare_replica_pbi.py 20-Nov: replica 0 = model 0): Minhang books no outbound shipments / trailer loads and has no LTA lanes or bin-A clean-ups in PrIME yet"

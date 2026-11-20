@@ -1,0 +1,2 @@
+// rows of 'Short PO' in the model for one site (replace the site code)
+EVALUATE ROW("n", CALCULATE(COUNTROWS('Short PO'), TREATAS({"<SITE>"}, Cfg_Site[SiteCode])) + 0)

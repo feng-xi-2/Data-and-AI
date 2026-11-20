@@ -1,0 +1,2 @@
+// rows of 'Data Health' in the model for one site (replace the site code)
+EVALUATE ROW("n", CALCULATE(COUNTROWS('Data Health'), TREATAS({"<SITE>"}, Cfg_Site[SiteCode])) + 0)

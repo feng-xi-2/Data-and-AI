@@ -1,0 +1,6 @@
+KPI_Key,Order,Label,Input_Unit,Input_Format,Input_Min,Input_Max,Input_Step,Input_Scale
+PPH,1,1 Production - pallets per hour,plt/h,0,0,2000,1,1
+TTAT_IN,2,2 Inbound truck turnaround,min,0,0,1440,1,1
+TTAT_OUT,3,3 Outbound truck turnaround,min,0,0,1440,1,1
+LOC_UTIL,4,4 Location utilisation,%,0.0,0,100,0.5,100
+USER_PROD,5,5 User productivity,plt/user-h,0.0,0,200,0.5,1

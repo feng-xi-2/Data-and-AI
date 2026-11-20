@@ -1,0 +1,2 @@
+// rows of 'Planned PO RPM Breakdown' in the model for one site (replace the site code)
+EVALUATE ROW("n", CALCULATE(COUNTROWS('Planned PO RPM Breakdown'), TREATAS({"<SITE>"}, Cfg_Site[SiteCode])) + 0)

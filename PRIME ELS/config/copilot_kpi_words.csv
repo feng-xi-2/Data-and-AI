@@ -1,0 +1,14 @@
+KPI_Key,User_Words
+PPH,throughput|output
+SHIFT_ATTAIN,shift target
+LINES_IN_ALERT,line down
+TTAT_IN,unloading|receiving trucks
+GR_TIME,receiving time
+TTAT_OUT,dispatch|shipping trucks
+LOC_UTIL,space|capacity|warehouse full
+LVLA_UTIL,ground level full
+IDLE_A,idle stock
+HOFF_IN,hand-off backlog
+LTA_QUEUE,takeaway backlog
+USER_PROD,productivity|labour|operators
+HEALTH_FAILS,data quality

@@ -1,0 +1,5 @@
+Key,Value,Meaning
+File_Name,Hypercare_KPI_Inputs.xlsx,The ONE inputs file: tabs Read me / Sites / Alert targets
+SharePoint_Url,<sharepoint-url>,What the published (Service) model reads at every refresh (OAuth2 credential once per workspace)
+Local_Path,%OneDriveCommercial%\Shortcuts\OSS warehousing data and GenAI - PRIME ELS\Hypercare KPI\Hypercare_KPI_Inputs.xlsx,The same SharePoint file synced by OneDrive on this laptop - what Power BI Desktop and the tools read (no extra sign-in)
+Max_Sites,6,Most sites one report holds (refresh time and memory on a laptop)

@@ -1,0 +1,2 @@
+// rows of 'Open Trailers' in the model for one site (replace the site code)
+EVALUATE ROW("n", CALCULATE(COUNTROWS('Open Trailers'), TREATAS({"<SITE>"}, Cfg_Site[SiteCode])) + 0)

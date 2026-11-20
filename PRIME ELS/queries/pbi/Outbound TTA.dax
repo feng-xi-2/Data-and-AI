@@ -1,0 +1,2 @@
+// rows of 'Outbound TTA' in the model for one site (replace the site code)
+EVALUATE ROW("n", CALCULATE(COUNTROWS('Outbound TTA'), TREATAS({"<SITE>"}, Cfg_Site[SiteCode])) + 0)

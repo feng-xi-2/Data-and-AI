@@ -1,0 +1,10 @@
+Priority,Move_Class,Actcod_List,Oprcod_List,Location_Rule,Counts_As_Move,Flow_Role,Color,Meaning
+1,6 Load to trailer,TRLR_LOAD;TLDG,,d.tostol LIKE '{LOC_TRAILER}',1,STEP,#C05621,Pallet loaded onto a trailer (trailer-load activity or deposit on a trailer location)
+2,1 Receive,RCV;RCVSTG;IDNTFY;IDNTFY_UNXP;ASN_TRUST;ASN_NONTRUST;TRLR_UNLD;RVRCP,UID;URC,,1,IN,#2B6CB0,Pallet received / identified from an inbound truck (or a stock load)
+3,2 Production take-away,IDNTFY_WO,,d.frstol LIKE '{LOC_EOL}' OR d.frstol LIKE '{LOC_LTA}' OR d.frstol LIKE '{LOC_HOFF_OUT}',1,IN,#6B46C1,Production pallet identified on a work order or taken away from the line / LTA / HOFF
+4,3 Put-away,FL_XFR_PTWY;PUT_DRCT;PUT_UNDR,STO,,1,PUTAWAY,#2C7A7B,Pallet put away into storage
+5,4 Replenish,PALRPL,PIARPL;PRP;RPL,,1,STEP,#38A169,Pick-face replenishment
+6,5 Pick,LSTPCK;PALPCK;PALPCKMOV;CASPCKMOV;PCKSTEAL;ORDMIXPAL,PCK;LPCK,,1,STEP,#D69E2E,Pallet / case pick for an order
+7,7 Transfer,FL_XFR;PL_XFR;GENMOV,TRN;TRR;UTR,,1,SIDE,#718096,Other full-pallet transfer between locations
+99,8 Other move,,,,1,SIDE,#A0AEC0,Any other pallet transaction by an RF user (not matched above)
+100,9 Status / system event,LOCSTSCHG;ATELOCSETAUTO;ATELOCCLRAUTO;INVSTSCHG;LOTDATECHANGED;LOCOVRRID;WRKSUSP;ENG_EXEMP_CHG,,,0,SIDE,#CBD5E0,Status / system change - not a pallet move (excluded from pallets moved)

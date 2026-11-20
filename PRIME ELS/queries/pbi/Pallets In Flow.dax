@@ -1,0 +1,2 @@
+// rows of 'Pallets In Flow' in the model for one site (replace the site code)
+EVALUATE ROW("n", CALCULATE(COUNTROWS('Pallets In Flow'), TREATAS({"<SITE>"}, Cfg_Site[SiteCode])) + 0)

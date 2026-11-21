@@ -18,7 +18,7 @@ from pathlib import Path
 ALLOWED_GUIDS = {
     "1950a258-227b-4e31-a9cf-717495945fc2",   # Microsoft Azure PowerShell - public client id (MSAL device code)
     "2ff814a6-3304-4ab8-85cb-cd0e6f879c1d",   # Azure Databricks - Microsoft first-party resource id (token scope)
-    "<guid>",   # uuid5 namespace of the kit (lineage tags / logical ids)
+    "6d1b7a1e-0c55-4a8e-9b1e-5a1c0de0f001",   # uuid5 namespace of the kit (lineage tags / logical ids)
 }
 RULES = [
     ("SECRET", re.compile(r"(client_secret|password|passwd|pwd|api[_-]?key|AccountKey|SharedAccessKey|SharedAccessSignature|sig)\s*[:=]\s*['\"]?"

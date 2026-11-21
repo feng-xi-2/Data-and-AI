@@ -50,7 +50,7 @@ def clean_text(t):
 
 def put(src, dst):
     os.makedirs(os.path.dirname(dst), exist_ok=True)
-    if src.endswith(TEXT):
+    if src.endswith(TEXT) and os.path.basename(src) != "check_publish.py":   # the checker keeps its own allow-list verbatim
         open(dst, "w", encoding="utf-8", newline="\n").write(clean_text(open(src, encoding="utf-8", errors="replace").read()))
     else:
         shutil.copy2(src, dst)

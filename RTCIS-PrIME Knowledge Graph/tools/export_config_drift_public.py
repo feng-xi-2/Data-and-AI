@@ -12,9 +12,10 @@ import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
-from export_public import put  # noqa: E402  (same masks: hosts, e-mails, user paths, GUIDs, Cosmos names)
+from export_public import clear, put  # noqa: E402  (same masks: hosts, e-mails, user paths, GUIDs, Cosmos names)
 
-KEEP_ASSETS = {"shell.js", "bot.js", "design-system.css", "logo.png", "rtcis-prime-tab.js", "rtcis-prime-views.js", "rtcis-prime-graph.js"}
+KEEP_ASSETS = {"shell.js", "bot.js", "design-system.css", "logo.png", "rtcis-prime-tab.js", "rtcis-prime-views.js", "rtcis-prime-graph.js",
+               "sql-remediation-dialog.js"}
 SCRATCH = re.compile(r"^_(diag|probe|accuracy|verify|config_pages)", re.I)
 
 
@@ -41,8 +42,7 @@ def wanted(rel):
 def main():
     src, out = os.path.abspath(sys.argv[1]), os.path.abspath(sys.argv[2])
     if os.path.isdir(out):
-        import shutil
-        shutil.rmtree(out)
+        clear(out)
     kept = dropped = 0
     for dp, dirs, fs in os.walk(src):
         dirs[:] = [d for d in dirs if d not in ("__pycache__", ".git", ".cache")]
@@ -64,6 +64,9 @@ def main():
     open(readme, "a", encoding="utf-8", newline="\n").write(note)
     print(f"kept {kept} files, dropped {dropped}")
     chk = os.path.join(os.path.dirname(__file__), "check_publish.py")
+    import shutil
+    os.makedirs(os.path.join(out, "tools"), exist_ok=True)
+    shutil.copy2(chk, os.path.join(out, "tools", "check_publish.py"))   # verbatim: masking would rewrite its own allow-list
     r = subprocess.run([sys.executable, chk, out], capture_output=True, text=True)
     print(r.stdout[-3000:], r.stderr[-1000:])
     sys.exit(r.returncode)

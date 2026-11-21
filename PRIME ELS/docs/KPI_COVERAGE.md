@@ -51,3 +51,22 @@ meaning in Power BI). Accuracy proof: [BD_ORIGINAL_COMPARE.md](BD_ORIGINAL_COMPA
 | Takeaway pallets per hour 00-12 (LTA_DATA vs Produced Pallet) | 434 | 434 | **13 / 13 hours identical** |
 | Takeaway lines with output | 11 | 11 (+1 line that started after 12:00) | same lines, kit later hours included |
 | Inbound trucks dispatched 28-29 Oct (Query12 vs TTAT) | 13 | 30 | all 13 in both; +17 in the kit = trailers without TRKNUM (same cause as the PBIX comparison) |
+
+## 5. GCFC Timbr warehouse KPIs (semantic layer `dtimbr`, 21-Nov-2026)
+
+Source: `timbr_warehouse_kpis_view.txt` / `_gcfc_measure_defs.txt` (Timbr ontology one_supply_warehousing, GCFC). Copied only where
+the replica data of every PRIME ELS site supports it - a KPI that stays empty at the hypercare sites is not added (it would show
+empty visuals).
+
+| GCFC / Timbr KPI | Definition | In this report | Status |
+|---|---|---|---|
+| Outbounds completed (trucks), day / night shift, op day | distinct carrier moves with shift_date = op day | `Outbound Trucks` (closed trucks of the window), Trucks & TTAT; per shift via the Shift slicer and the TTAT-by-shift rows | Covered |
+| Pallets out | `SUM(pallets_loaded)` | `Outbound Pallets Shipped`, `Flow Out Pallets Day` | Covered |
+| Avg loading duration (h) | loading_start -> loading_end | `KPI Out Load Time` (min), Outbound TTA `Load Time (Minutes)` | Covered (minutes) |
+| Avg staging lane dwell (h), all trucks | first allocation -> trailer closed | **`Staging Lane Dwell h`** (first pallet staged in the lane -> trailer closed, outbound trucks of the window), Trucks & TTAT > Dock & staging | **Added** - starts at the first staged pallet: the replica keeps no allocation time per trailer |
+| FP / LTFP staging dwell (full vs less-than-full pallet) | same, split by `full_pallet_only_flag` | - | Not added: needs the pick-work full-pallet flag per carrier move (`pckwrk`), not loaded today |
+| HZM (horizontal-move lane) outbounds and dwell | `horizontal_move_lane_flag = 'Yes'` | - | N/A: GCFC lane type, no HZM lanes at the PRIME ELS sites |
+| Avg AGV allocation -> AGV staged last (h) | AGV timestamps | - | N/A: no AGV at the PRIME ELS sites |
+| Staging lanes out of service | count of unusable staging lanes | - | Candidate: `locmst` usable flag of the staging-lane locations (needs the site's staging-lane pattern) |
+| Total S2 cuts in cases | order-line cuts with reason S2 (`ordact` HOST_ORDQTY - ORDQTY) | - | Candidate for Orders & Shipments once the sites ship customer orders (Jakarta: 1 order in the rehearsal data) |
+| Doors out of service, yard utilisation, rack utilisation per cell (A/B/C) | `doors` / `yard` / `racking` concepts | Location utilisation KPI (storage), Inventory page | Partly covered: doors / yard need the door and yard location patterns (Jakarta LOC_DOOR_PATTERN not profiled yet) |

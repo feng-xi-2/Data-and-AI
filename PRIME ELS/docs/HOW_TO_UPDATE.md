@@ -136,6 +136,14 @@ py tools/service_refresh.py --site JAKARTA --test --workspace "<workspace>" --al
   Measured after 6 (21-Nov): on-demand full refresh TEST **44 s**, PROD **39 s**; the scheduled run at :30 took 432 s - the same
   model, so the rest is the shared gateway at schedule time. Scheduled refreshes only start at :00 / :30; a quieter minute (e.g. :45)
   needs a Power Automate flow (Recurrence -> "Refresh a dataset") instead of the built-in schedule.
+- **Publish guard:** every build writes `_BUILD_INCOMPLETE.txt` in its output folder and removes it only when every gate passed;
+  `publish.py` refuses a folder that still has it ("STOP: the last build ... did not pass every gate"). Chain commands so a failed
+  step stops the chain (PowerShell: check `$LASTEXITCODE`).
+- **Cockpit KPI tiles** (`report_pages.kpi_tile`): one white panel per KPI - the actual value large in its status colour, the status
+  line, then previous day / prior-days average / target / limits / forecast small. The three parts share the tile title text, so
+  `visual_expectations.csv` rules on the tile name still match ("· status" / "· context" parts).
+- **GCFC Timbr KPIs** mapped in `docs/KPI_COVERAGE.md` section 5; added: `Staging Lane Dwell h` (outbound trucks: first pallet
+  staged in the lane -> trailer closed) on Trucks & TTAT > Dock & staging.
 - **Real-data TEST environment** (a site that is not live, or a replica the Service cannot reach): `py tools/test_env.py BINHDUONG
   [--tests] [--min-free-gb 1]` builds the site file, refreshes it in Desktop from the replica, saves the .pbix (answers the tenant's
   *sensitivity label* question with "Business Use"), imports it WITH data into the workspace as *WH Hypercare KPI - BINHDUONG (TEST

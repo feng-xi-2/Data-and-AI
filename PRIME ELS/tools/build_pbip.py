@@ -1548,6 +1548,11 @@ def check_tokens():
 
 def build_one(label, out, base, codes):
     set_sites(codes)
+    # marker removed only when every gate passed: publish.py refuses a folder that still holds it (21-Nov: a failed layout gate
+    # was followed by a publish in the same command chain)
+    out.mkdir(parents=True, exist_ok=True)
+    marker = out / "_BUILD_INCOMPLETE.txt"
+    marker.write_text(f"{label}: build started {datetime.now():%Y-%m-%d %H:%M:%S} and did not pass every gate - do not publish\n", encoding="utf-8")
     report, nmeas, npages, nrel, ncol, unmatched = build_all(out, base)
     print(f"== {label} ({', '.join(s['SiteCode'] for s in SITES)}) -> {out.relative_to(ROOT)}: {len(report)} source tables x {len(SITES)} site partitions, "
           f"{len(SITE_TABLES)} site tables, {nrel} site relationships, {nmeas} KPI measures, {ncol} columns with units, {npages} new pages")
@@ -1560,6 +1565,7 @@ def build_one(label, out, base, codes):
         raise SystemExit("!! query rewrite rule(s) no longer match the source SQL (fix m_tokenizer.EXTRA): " + " | ".join(missed))
     if unmatched:
         print("   !! numeric columns without a unit rule (config/column_units.csv): " + ", ".join(unmatched))
+    marker.unlink(missing_ok=True)
 
 
 def main(argv):

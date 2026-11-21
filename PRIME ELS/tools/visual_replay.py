@@ -431,8 +431,8 @@ for qid, (p, v, s, d) in index.items():
             st = "EMPTY"
         elif not v["cols"] and vals and is_no_activity(vals[0]):
             st = "NO ACTIVITY"       # configured message (Cfg_Threshold.No_Activity_Text): no events that day - shown as text, not blank
-        elif not v["cols"] and vals and is_empty_value(vals[0]):
-            st = "NO VALUE"          # KPI card: main value "-" / blank while labels around it are filled
+        elif not v["cols"] and vals and is_empty_value(vals[0]) and not v["title"].endswith("· context"):
+            st = "NO VALUE"          # KPI card: main value "-" / blank while labels around it are filled (a tile's context part has none)
         else:
             st = "OK"
     if na and st != "OK":

@@ -313,10 +313,10 @@ def kpi_tile(page, k, x, y, w, h, z, title):
     lab["labels"][0]["properties"]["color"] = {"solid": {"color": {"expr": fld(K, f"Card {k} Color", True)}}}
     lab["categoryLabels"] = [{"properties": {"show": lit("true"), "fontSize": lit("9D"), "color": {"solid": {"color": lit(f"'{GREY}'")}}}}]
     hero["visual"]["query"]["queryState"]["Values"]["projections"][0]["displayName"] = "Actual (report day)"
-    status = single_card(page, f"tile_{k}_st", x + 4, y + 104, w - 8, 28, z + 2, f"Card {k} Status", 11, "#1F2D3D")
+    status = single_card(page, f"tile_{k}_st", x + 4, y + 104, w - 8, 30, z + 2, f"Card {k} Status", 11, "#1F2D3D")
     status["visual"]["objects"]["labels"][0]["properties"]["color"] = {"solid": {"color": {"expr": fld(K, f"Card {k} Color", True)}}}
     status["visual"]["visualContainerObjects"]["title"] = [{"properties": {"show": lit("false"), "text": lit(f"'{title} · status'")}}]
-    detail = card(page, f"tile_{k}_ctx", x + 4, y + 134, w - 8, h - 138, z + 3,
+    detail = card(page, f"tile_{k}_ctx", x + 4, y + 136, w - 8, h - 140, z + 3,
                   [(f"Card {k} Prev", "Previous day"), (f"Card {k} Avg Prior", "Prior-days average"), (f"Card {k} Target", "Target"),
                    (f"Card {k} Limits", "Warning / critical at"), (f"Card {k} Predicted", "Forecast end of day")], value_size=9)
     dv = detail["visual"]["visualContainerObjects"]
@@ -335,8 +335,8 @@ def page_cockpit():
     tiles = [("PPH", "1 Production - pallets / h"), ("TTAT_IN", "2 Inbound TTAT"), ("TTAT_OUT", "3 Outbound TTAT"),
              ("LOC_UTIL", "4 Location utilisation"), ("USER_PROD", "5 User productivity"), ("HEALTH_FAILS", "6 Daily health checks")]
     for i, (k, t) in enumerate(tiles):
-        v.extend(kpi_tile(p, k, 10 + i * 211, y0 + 64, 203, 336, 30 + i * 4, t))
-    yn = y0 + 64 + 344
+        v.extend(kpi_tile(p, k, 10 + i * 211, y0 + 64, 203, 356, 30 + i * 4, t))
+    yn = y0 + 64 + 364
     hn = BANNER_H + BODY_H - yn - 6
     # left: the two narratives stacked (one or two sentences each); right: the open alerts get the width they need
     hh = (hn - 8) // 2

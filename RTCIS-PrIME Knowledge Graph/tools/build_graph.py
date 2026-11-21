@@ -37,6 +37,7 @@ ONTOLOGY = {
         "Mapping": ["rtcis", "prime", "agreement", "tag", "source"], "Finding": ["category", "kind", "text"],
         "ExpertRule": ["code", "text"], "Learning": ["n", "text", "page"], "DataFact": ["n", "text", "consequence"],
         "Concept": ["page", "title", "type"], "Template": ["name", "purpose"], "JoinPath": ["name", "rtcis_join", "reason"],
+        "SDCModule": ["number", "name", "description"], "PMCProcess": ["code", "name", "source_file", "documented"],
     },
     "edges": {   # label: (domain, range)
         "IN_PLATFORM": (["Table"], ["Platform"]), "HAS_COLUMN": (["Table"], ["Column"]),
@@ -48,6 +49,8 @@ ONTOLOGY = {
         "APPLIES_RULE": (["Query"], ["ExpertRule"]), "MENTIONS": (["Learning", "DataFact", "Finding", "ExpertRule", "Concept", "Mapping"], ["Table", "Column"]),
         "DOCUMENTED_IN": (["Query", "ExpertRule"], ["Concept"]), "LINKS_TO": (["Concept"], ["Concept"]),
         "RENDERED_WITH": (["Query"], ["Template"]), "JOINS_VIA": (["Table"], ["JoinPath"]),
+        "USES_TABLE": (["SDCModule"], ["Table"]), "IN_MODULE": (["PMCProcess"], ["SDCModule"]),
+        "CONFIGURES": (["PMCProcess"], ["Table"]), "TRANSFORMS_TO": (["Table"], ["Table"]), "JOINS_WITH": (["Column"], ["Column"]),
     },
 }
 KEYWORDS = set("""select from where join inner left right full outer cross apply on and or not as group by order having union all
@@ -483,6 +486,23 @@ def main():
             g.edge("DOCUMENTED_IN", f"Query:{qid}:rtcis", pages[f"queries/{qid}.md"])
     for code in ("OBS1", "OBS2", "OBS3", "OBS4", "OBS5", "OBS6", "OBS7", "OBS8"):
         g.edge("DOCUMENTED_IN", f"ExpertRule:{code}", pages.get("experts/ruiz-rs-obs.md", ""))
+
+    # SDC module / PMC process layer: PASS-only output of tools/sdc_pmc_run.py (live catalog + data presence)
+    layer_f = os.path.join(KIT, "relationships", "sdc_pmc_layer.json")
+    if os.path.exists(layer_f):
+        layer = json.load(open(layer_f, encoding="utf-8"))
+        for n in layer["nodes"]:
+            g.node(n["label"], n["id"].split(":", 1)[1], **{k: v for k, v in n.items() if k not in ("id", "label")})
+        for e in layer["edges"]:
+            g.edge(e["label"], e["src"], e["dst"], **{k: v for k, v in e.items() if k not in ("label", "src", "dst")})
+
+    # validated join paths: equi-joins in the ON clauses of the expert-validated query SQL (columns gated by the catalog)
+    from kg_core import join_paths
+    for side, sub in (("rtcis", "rtcis_tsql"), ("prime", "prime")):
+        folder = os.path.join(WIKI, "queries", sub)
+        sqls = [open(os.path.join(folder, f), encoding="utf-8").read() for f in sorted(os.listdir(folder)) if f.endswith(".sql")]
+        for (a, b), n in join_paths(sqls).items():
+            g.edge("JOINS_WITH", f"Column:{side}:{a}", f"Column:{side}:{b}", n_queries=n, source="ON clause of validated queries")
 
     rel = os.path.join(KIT, "relationships")
     os.makedirs(rel, exist_ok=True)

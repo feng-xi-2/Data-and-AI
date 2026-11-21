@@ -1,0 +1,4678 @@
+{
+"nodes": [
+{
+"id": "SDCModule:01",
+"label": "SDCModule",
+"number": "01",
+"name": "Yard & Dock",
+"description": "Trailer management, appointments, dock scheduling"
+},
+{
+"id": "SDCModule:02",
+"label": "SDCModule",
+"number": "02",
+"name": "Facility Config & Zoning",
+"description": "Zones, locations, policies, users, work types \u2014 all configuration"
+},
+{
+"id": "SDCModule:03",
+"label": "SDCModule",
+"number": "03",
+"name": "Receiving, Inventory & Quality",
+"description": "Receiving, inventory structure (load/sub/detail), item master, footprints, quality holds"
+},
+{
+"id": "SDCModule:04",
+"label": "SDCModule",
+"number": "04",
+"name": "Storage & Internal Handling",
+"description": "Location management, inventory movements, replenishment, putaway"
+},
+{
+"id": "SDCModule:05",
+"label": "SDCModule",
+"number": "05",
+"name": "Outbound: Allocation, Picking & Packing",
+"description": "Orders, waves/batches, pick work, shipment building, allocation"
+},
+{
+"id": "SDCModule:07",
+"label": "SDCModule",
+"number": "07",
+"name": "Loading, Staging & Cross-Dock",
+"description": "Shipment execution, loading, cross-dock, carrier messaging"
+},
+{
+"id": "SDCModule:08",
+"label": "SDCModule",
+"number": "08",
+"name": "Production & SCL",
+"description": "Production work orders, line supply, finished goods receipt"
+},
+{
+"id": "SDCModule:09",
+"label": "SDCModule",
+"number": "09",
+"name": "DC Governance",
+"description": "Management process \u2014 no WMS tables"
+},
+{
+"id": "SDCModule:10",
+"label": "SDCModule",
+"number": "10",
+"name": "Performance Management & RTT",
+"description": "Transaction history for reporting, KPIs, RTT-DDS metrics"
+},
+{
+"id": "PMCProcess:PMC-01.01.02",
+"label": "PMCProcess",
+"code": "01.01.02",
+"name": "Receiving Trailer Live and  Drop Check in and Check Out",
+"source_file": "PMC 01-01-02 Receiving Trailer Live and  Drop Check in and Check Out.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-01.01.03",
+"label": "PMCProcess",
+"code": "01.01.03",
+"name": "Shipping AGH_v2",
+"source_file": "PMC 01-01-03c Shipping AGH_v2.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-01.01.06",
+"label": "PMCProcess",
+"code": "01.01.06",
+"name": "Drop Lot_Yard Management",
+"source_file": "PMC 01-01-06 Drop Lot_Yard Management.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-02.01.01",
+"label": "PMCProcess",
+"code": "02.01.01",
+"name": "Inventory Zoning",
+"source_file": "PMC 02-01-01 Inventory Zoning.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-02.01.02",
+"label": "PMCProcess",
+"code": "02.01.02",
+"name": "PutAway Strategy - Storage Configuration",
+"source_file": "PMC 02-01-02 PutAway Strategy - Storage Configuration.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-02.01.03",
+"label": "PMCProcess",
+"code": "02.01.03",
+"name": "Internal Movements",
+"source_file": "PMC 02-01-03 Internal Movements.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-02.01.04",
+"label": "PMCProcess",
+"code": "02.01.04",
+"name": "Pick Strategy - Allocation",
+"source_file": "PMC 02-01-04 Pick Strategy - Allocation.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-02.01.05",
+"label": "PMCProcess",
+"code": "02.01.05",
+"name": "Case Pick Slotting App PrIME Site",
+"source_file": "PMC 02.01.05C Case Pick Slotting App PrIME Site.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-02.01.06",
+"label": "PMCProcess",
+"code": "02.01.06",
+"name": "Work Areas and Work Zones",
+"source_file": "PMC 02-01-06 Work Areas and Work Zones.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-02.01.07",
+"label": "PMCProcess",
+"code": "02.01.07",
+"name": "Multiple Legal Entity considerations",
+"source_file": "PMC 02-01-07 Multiple Legal Entity considerations.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-03.01.01",
+"label": "PMCProcess",
+"code": "03.01.01",
+"name": "Pallet Management Assets",
+"source_file": "PMC 03-01-01 Pallet Management Assets.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-03.01.02",
+"label": "PMCProcess",
+"code": "03.01.02",
+"name": "Inventory Cycle Counting Creation and Gains_Losses",
+"source_file": "PMC 03-01-02 Inventory Cycle Counting Creation and Gains_Losses.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-03.01.04",
+"label": "PMCProcess",
+"code": "03.01.04",
+"name": "SAP_WMS Reconciliation",
+"source_file": "PMC 03-01-04 SAP_WMS Reconciliation.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-03.01.05",
+"label": "PMCProcess",
+"code": "03.01.05",
+"name": "Item Master Data Management",
+"source_file": "PMC 03-01-05  Item Master Data Management.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-03.01.06",
+"label": "PMCProcess",
+"code": "03.01.06",
+"name": "Write Offs Disposals",
+"source_file": "PMC 03-01-06 Write Offs Disposals.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-03.01.07",
+"label": "PMCProcess",
+"code": "03.01.07",
+"name": "Damages Found Shipping_Receiving_Case Picking",
+"source_file": "PMC 03-01-07 Damages Found Shipping_Receiving_Case Picking.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-03.02.01",
+"label": "PMCProcess",
+"code": "03.02.01",
+"name": "Standard Receiving and Putaway",
+"source_file": "PMC 03-02-01 Standard Receiving and Putaway.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-03.02.03",
+"label": "PMCProcess",
+"code": "03.02.03",
+"name": "Automatic Un-loading (Auto Dock)",
+"source_file": "PMC 03-02-03 Automatic Un-loading (Auto Dock).xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-03.02.04",
+"label": "PMCProcess",
+"code": "03.02.04",
+"name": "Customer Returns until  4.1",
+"source_file": "PMC 03-02-04 Customer Returns until  4.1.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-03.02.08",
+"label": "PMCProcess",
+"code": "03.02.08",
+"name": "Receipt reconciliation shorts_overs",
+"source_file": "PMC 03-02-08 Receipt reconciliation shorts_overs.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-03.02.09",
+"label": "PMCProcess",
+"code": "03.02.09",
+"name": "Pallet Unit Load building",
+"source_file": "PMC 03-02-09 Pallet Unit Load building.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-03.02.11",
+"label": "PMCProcess",
+"code": "03.02.11",
+"name": "Customer Returns - PrIME 4_1",
+"source_file": "PMC 03-02-11 Customer Returns - PrIME 4_1.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-03.03.02",
+"label": "PMCProcess",
+"code": "03.03.02",
+"name": "Quality Status Changes",
+"source_file": "PMC 03-03-02 Quality Status Changes.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-03.03.03",
+"label": "PMCProcess",
+"code": "03.03.03",
+"name": "Partial Lot Hold or Release",
+"source_file": "PMC 03-03-03 Partial Lot Hold or Release.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-03.03.05",
+"label": "PMCProcess",
+"code": "03.03.05",
+"name": "EAP Receiving",
+"source_file": "PMC 03-03-05 EAP Receiving.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-05.01.01",
+"label": "PMCProcess",
+"code": "05.01.01",
+"name": "SAP Shipment Creation",
+"source_file": "PMC 05-01-01 SAP Shipment Creation.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-05.01.02",
+"label": "PMCProcess",
+"code": "05.01.02",
+"name": "Group Shipments",
+"source_file": "PMC 05-01-02 Group Shipments.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-05.01.03",
+"label": "PMCProcess",
+"code": "05.01.03",
+"name": "Shipment Modification",
+"source_file": "PMC 05-01-03 Shipment Modification.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-05.01.04",
+"label": "PMCProcess",
+"code": "05.01.04",
+"name": "Shipping Blocked Stock  (Broker)",
+"source_file": "PMC 05-01-04 Shipping Blocked Stock  (Broker).xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-05.01.05",
+"label": "PMCProcess",
+"code": "05.01.05",
+"name": "Shipment Allocation and Release Short Allocations",
+"source_file": "PMC 05-01-05 Shipment Allocation and Release Short Allocations.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-05.01.06",
+"label": "PMCProcess",
+"code": "05.01.06",
+"name": "Staging Sequence",
+"source_file": "PMC 05-01-06 Staging Sequence.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-05.02.01",
+"label": "PMCProcess",
+"code": "05.02.01",
+"name": "Full Pallet Picking",
+"source_file": "PMC 05-02-01 Full Pallet Picking.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-05.02.02",
+"label": "PMCProcess",
+"code": "05.02.02",
+"name": "Case Picking with APAL",
+"source_file": "PMC 05-02-02 Case Picking with APAL.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-05.02.03",
+"label": "PMCProcess",
+"code": "05.02.03",
+"name": "Case Picking without APAL",
+"source_file": "PMC 05-02-03 Case Picking without APAL.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-05.02.04",
+"label": "PMCProcess",
+"code": "05.02.04",
+"name": "Set up Case Pick Location after Allocation",
+"source_file": "PMC 05-02-04 Set up Case Pick Location after Allocation.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-05.02.05",
+"label": "PMCProcess",
+"code": "05.02.05",
+"name": "Voice Picking",
+"source_file": "PMC 05-02-05 Voice Picking.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-05.02.06",
+"label": "PMCProcess",
+"code": "05.02.06",
+"name": "Unit Load ContainmentUp-Layering Pallet Building in Pre-Staging",
+"source_file": "PMC 05-02-06 Unit Load ContainmentUp-Layering Pallet Building in Pre-Staging.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-05.02.07",
+"label": "PMCProcess",
+"code": "05.02.07",
+"name": "Full CLP Operations",
+"source_file": "PMC 05-02-07 Full CLP Operations.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-05.02.08",
+"label": "PMCProcess",
+"code": "05.02.08",
+"name": "Labelling",
+"source_file": "PMC 05-02-08 Labelling.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-05.02.09",
+"label": "PMCProcess",
+"code": "05.02.09",
+"name": "Threshold Picking",
+"source_file": "PMC 05-02-09 Threshold Picking.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-05.02.10",
+"label": "PMCProcess",
+"code": "05.02.10",
+"name": "Semi Auto Layer Picking",
+"source_file": "PMC 05-02-10  Semi Auto Layer Picking.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-07.01.01",
+"label": "PMCProcess",
+"code": "07.01.01",
+"name": "Fluid Loading",
+"source_file": "PMC 07-01-01 Fluid Loading.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-07.01.05",
+"label": "PMCProcess",
+"code": "07.01.05",
+"name": "Standard Loading",
+"source_file": "PMC 07-01-05 Standard Loading.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-07.01.06",
+"label": "PMCProcess",
+"code": "07.01.06",
+"name": "Deadpile and Semi-Deadpile Loading",
+"source_file": "PMC 07-01-06 Deadpile and Semi-Deadpile Loading.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-07.01.10",
+"label": "PMCProcess",
+"code": "07.01.10",
+"name": "Load Auditing (Checks carried out)",
+"source_file": "PMC 07-01-10 Load Auditing (Checks carried out).xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-07.01.12",
+"label": "PMCProcess",
+"code": "07.01.12",
+"name": "Completing and Confirming",
+"source_file": "PMC 07-01-12 Completing and Confirming.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-07.01.13",
+"label": "PMCProcess",
+"code": "07.01.13",
+"name": "Shipping Documentation",
+"source_file": "PMC 07-01-13 Shipping Documentation.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-07.01.14",
+"label": "PMCProcess",
+"code": "07.01.14",
+"name": "RPM Intraplant Transfers",
+"source_file": "PMC 07-01-14 RPM Intraplant Transfers.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-07.02.01",
+"label": "PMCProcess",
+"code": "07.02.01",
+"name": "Cross Docking 5-11-2021",
+"source_file": "PMC 07-02-01 Cross Docking 5-11-2021.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-08.01.01",
+"label": "PMCProcess",
+"code": "08.01.01",
+"name": "Production Preparation",
+"source_file": "PMC 08-01-01 Production Preparation.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-08.01.02",
+"label": "PMCProcess",
+"code": "08.01.02",
+"name": "Production Staging",
+"source_file": "PMC 08-01-02 Production Staging.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-08.01.03",
+"label": "PMCProcess",
+"code": "08.01.03",
+"name": "Execute Production",
+"source_file": "PMC 08-01-03 Execute Production.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-08.01.04",
+"label": "PMCProcess",
+"code": "08.01.04",
+"name": "Production Receiving (Line take away)",
+"source_file": "PMC 08-01-04 Production Receiving (Line take away).xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-08.01.05",
+"label": "PMCProcess",
+"code": "08.01.05",
+"name": "Production Receiving via Automation",
+"source_file": "PMC 08-01-05 Production Receiving via Automation.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-08.01.06",
+"label": "PMCProcess",
+"code": "08.01.06",
+"name": "Handling Remaining materials",
+"source_file": "PMC 08-01-06 Handling Remaining materials.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-08.01.07",
+"label": "PMCProcess",
+"code": "08.01.07",
+"name": "Production Confirmation (close order)",
+"source_file": "PMC 08-01-07 Production Confirmation (close order).xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-08.01.08",
+"label": "PMCProcess",
+"code": "08.01.08",
+"name": "Production Staging Reconciliation",
+"source_file": "PMC 08-01-08 Production Staging Reconciliation.xlsx",
+"documented": "SDC standard xlsx"
+},
+{
+"id": "PMCProcess:PMC-10.02.01",
+"label": "PMCProcess",
+"code": "10.02.01",
+"name": "Work Management - v1.1",
+"source_file": "PMC 10-02-01 Work Management - v1.1.xlsx",
+"documented": "SDC standard xlsx"
+}
+],
+"edges": [
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:rtcis:trlmov",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:rtcis:trlreq",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:rtcis:trlrio",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:rtcis:trailer",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:rtcis:trukio",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:rtcis:trklin",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:rtcis:shptrlq",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:rtcis:trlque",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:rtcis:trlquedtl",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:rtcis:as_rtcis_trailer",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:rtcis:as_rtcis_trklin",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:rtcis:as_rtcis_trlrio",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:rtcis:as_rtcis_trukio",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:prime:trlr",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:prime:appt",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:prime:rcvtrk",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:prime:car_move",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:prime:shipment",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:prime:stop",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:01",
+"dst": "Table:prime:poldat",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:wh",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:subsit",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:blding",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:poldat",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:tsktyp",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:worktype",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:wrkzon",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:locatn",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:zoncod",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:mvt_mvttyp",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:mvt_mvtctg",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:mvt_frm_to",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:mvt_arecod",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:mvt_locatn",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:trntyp",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:codmst",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:dscmst",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:reacod",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:uom_def",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:velocity_type",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:users",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:les_usr_ath",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:les_ath_role",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:les_usr_role",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:oprgrp",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:pick_method",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:wrksts",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:as_rtcis_subsit",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:as_rtcis_blding",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:config_view",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:rtcis:task_man_view",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:prime:wh",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:prime:locmst",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:prime:aremst",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:prime:sto_zone",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:prime:mov_zone",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:prime:pck_zone",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:prime:pck_mthd",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:prime:poldat",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:prime:wrkopr",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:prime:les_usr_ath",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:prime:wrkque",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:prime:poldat",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:prime:wh",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:prime:locmst",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:02",
+"dst": "Table:prime:pck_mthd",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:rcphdr",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:rcpdtl",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:rcpexp",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:matreq",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:trailer",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:trlreq",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:trlrio",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:trukio",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:unitld",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:ulpall",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:ulstat",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:invact",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:cghold",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:itmmst",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:item_uom",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:item_config",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:prtmst",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:prtdsc",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:alt_prtmst",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:blditm",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:audcnt",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:ctlgrp",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:pallet_inventory",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:locatn",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:zoncod",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:wrkzon",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:i_invact",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:damg",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:brokehist",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:as_rtcis_rcphdr",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:as_rtcis_rcpdtl",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:as_rtcis_itmmst",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:as_rtcis_unitld",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:as_rtcis_untdtl",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:as_rtcis_ctlgrp",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:agv_inventory_view",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:qa_view",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:item_view",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:item_uom_view",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:rtcis:invent_view",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:rcvtrk",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:rcvinv",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:rcvlin",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:invlod",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:invdtl",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:invsub",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:invhld",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:inv_asset",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:prtmst",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:prtdsc",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:prtftp",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:prtftp_dtl",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:alt_prtmst",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:inventory_view",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08, PRIME22_WMD1"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:locmst",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:invmov",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:invact",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:prtmst",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:prtftp",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:prtftp_dtl",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:03",
+"dst": "Table:prime:poldat",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:locatn",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:zoncod",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:wrkzon",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:loclst",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:loclstdtl",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:locatn_assc",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:invact",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:i_invact",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:pallet_inventory",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:replen",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:item_velocity",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:velocity_type",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:bldlst",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:bldlstdtl",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:as_rtcis_locatn",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:as_rtcis_zoncod",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:as_rtcis_zonlst",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:rtcis:alps_item_config_view",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:prime:locmst",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:prime:invlod",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:prime:invdtl",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:prime:invsub",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:prime:invmov",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:prime:inventory_view",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08, PRIME22_WMD1"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:prime:rplwrk",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:prime:wrkque",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:prime:alloc_search_path",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:prime:ptwy_last_loc",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:prime:poldat",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:prime:locmst",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:04",
+"dst": "Table:prime:alloc_search_path",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:ordhdr",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:orddtl",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:ordctl",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:custmr",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:wavhdr",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:caspik",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:caspik_dtl",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:pick_method",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:pckcube",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:zonctl",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:zondtl",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:wrkque",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:mancas",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:rpkdtl",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:rpkcas",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:crtmst",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:crtngrp",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:cart",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:bundle",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:lblfmt",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:lbltyp",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:ship_stgloc",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:palgrp",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:replen",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:as_rtcis_ordhdr",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:as_rtcis_orddtl",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:as_rtcis_casepick",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:rtcis:order_view",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:prime:ord",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:prime:ord_line",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:prime:pckbat",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:prime:pckwrk_hdr",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:prime:pckwrk_dtl",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:prime:shipment",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:prime:shipment_line",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:prime:cstmst",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:prime:rplwrk",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:prime:wrkque",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:prime:pck_mthd",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:prime:pck_zone",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:prime:poldat",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:05",
+"dst": "Table:prime:alloc_search_path",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:rtcis:shphdr",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:rtcis:shpord",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:rtcis:stop",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:rtcis:order_shipment",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:rtcis:ordshp_dtl",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:rtcis:ordload",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:rtcis:ordpal",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:rtcis:trukld",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:rtcis:ap3_shipment",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:rtcis:ap3_truckload",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:rtcis:ap3_caspik",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:rtcis:trlmov",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:rtcis:trlque",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:rtcis:as_rtcis_shphdr",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:rtcis:as_rtcis_order_shipment",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:rtcis:ap3_shipment_data",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:prime:shipment",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:prime:shipment_line",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:prime:stop",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:prime:car_move",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:prime:trlr",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:prime:invmov",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:07",
+"dst": "Table:prime:poldat",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:08",
+"dst": "Table:rtcis:prdque",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:08",
+"dst": "Table:rtcis:prdrls",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:08",
+"dst": "Table:rtcis:prdlin",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:08",
+"dst": "Table:rtcis:lindel",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:08",
+"dst": "Table:rtcis:linwrk",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:08",
+"dst": "Table:rtcis:cmpdtl",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:08",
+"dst": "Table:rtcis:cmppar",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:08",
+"dst": "Table:rtcis:as_rtcis_prdlin",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:08",
+"dst": "Table:rtcis:as_rtcis_prdque",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:08",
+"dst": "Table:rtcis:kit_view",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:08",
+"dst": "Table:rtcis:prdord_view",
+"role": "rtcis view",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:08",
+"dst": "Table:prime:wrkque",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:08",
+"dst": "Table:prime:invlod",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:08",
+"dst": "Table:prime:invdtl",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:08",
+"dst": "Table:prime:prtmst",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:08",
+"dst": "Table:prime:poldat",
+"role": "configuration",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:10",
+"dst": "Table:rtcis:invact",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:10",
+"dst": "Table:rtcis:i_invact",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "no rows at checked sites"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:10",
+"dst": "Table:rtcis:systrn",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS, RTCIS_LON"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:10",
+"dst": "Table:rtcis:wrkque",
+"role": "rtcis",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at RTCIS_EUS"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:10",
+"dst": "Table:prime:dlytrn",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:10",
+"dst": "Table:prime:invmov",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:10",
+"dst": "Table:prime:invact",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "USES_TABLE",
+"src": "SDCModule:10",
+"dst": "Table:prime:wrkque",
+"role": "operational",
+"validated": "V1 live catalog",
+"source": "SDC flow mapping",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-01.01.02",
+"dst": "SDCModule:01"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-01.01.02",
+"dst": "Table:prime:trlr",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-01.01.02",
+"dst": "Table:prime:appt",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-01.01.02",
+"dst": "Table:prime:rcvtrk",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-01.01.03",
+"dst": "SDCModule:01"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-01.01.03",
+"dst": "Table:prime:trlr",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-01.01.03",
+"dst": "Table:prime:appt",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-01.01.03",
+"dst": "Table:prime:shipment",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-01.01.03",
+"dst": "Table:prime:stop",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-01.01.06",
+"dst": "SDCModule:01"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-01.01.06",
+"dst": "Table:prime:trlr",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-01.01.06",
+"dst": "Table:prime:car_move",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-02.01.01",
+"dst": "SDCModule:02"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.01",
+"dst": "Table:prime:locmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.01",
+"dst": "Table:prime:sto_zone",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.01",
+"dst": "Table:prime:mov_zone",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.01",
+"dst": "Table:prime:pck_zone",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.01",
+"dst": "Table:prime:aremst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-02.01.02",
+"dst": "SDCModule:02"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.02",
+"dst": "Table:prime:alloc_search_path",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.02",
+"dst": "Table:prime:ptwy_last_loc",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.02",
+"dst": "Table:prime:locmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.02",
+"dst": "Table:prime:poldat",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-02.01.03",
+"dst": "SDCModule:02"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.03",
+"dst": "Table:prime:invmov",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.03",
+"dst": "Table:prime:wrkque",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.03",
+"dst": "Table:prime:locmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-02.01.04",
+"dst": "SDCModule:02"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.04",
+"dst": "Table:prime:pck_mthd",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.04",
+"dst": "Table:prime:pck_zone",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.04",
+"dst": "Table:prime:alloc_search_path",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.04",
+"dst": "Table:prime:poldat",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-02.01.05",
+"dst": "SDCModule:02"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.05",
+"dst": "Table:prime:locmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.05",
+"dst": "Table:prime:prtftp",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.05",
+"dst": "Table:prime:poldat",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-02.01.06",
+"dst": "SDCModule:02"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.06",
+"dst": "Table:prime:wrkque",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.06",
+"dst": "Table:prime:wrkopr",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.06",
+"dst": "Table:prime:mov_zone",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-02.01.07",
+"dst": "SDCModule:02"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.07",
+"dst": "Table:prime:wh",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.07",
+"dst": "Table:prime:prtmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-02.01.07",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-03.01.01",
+"dst": "SDCModule:03"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.01",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.01",
+"dst": "Table:prime:inv_asset",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-03.01.02",
+"dst": "SDCModule:03"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.02",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.02",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.02",
+"dst": "Table:prime:invsub",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.02",
+"dst": "Table:prime:locmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-03.01.04",
+"dst": "SDCModule:03"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.04",
+"dst": "Table:prime:prtmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.04",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.04",
+"dst": "Table:prime:dlytrn",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-03.01.05",
+"dst": "SDCModule:03"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.05",
+"dst": "Table:prime:prtmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.05",
+"dst": "Table:prime:prtdsc",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.05",
+"dst": "Table:prime:prtftp",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.05",
+"dst": "Table:prime:prtftp_dtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.05",
+"dst": "Table:prime:alt_prtmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-03.01.06",
+"dst": "SDCModule:03"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.06",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.06",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.06",
+"dst": "Table:prime:dlytrn",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-03.01.07",
+"dst": "SDCModule:03"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.07",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.07",
+"dst": "Table:prime:invhld",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "no rows at checked sites"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.01.07",
+"dst": "Table:prime:dlytrn",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-03.02.01",
+"dst": "SDCModule:03"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.01",
+"dst": "Table:prime:rcvtrk",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.01",
+"dst": "Table:prime:rcvinv",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.01",
+"dst": "Table:prime:rcvlin",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.01",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.01",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.01",
+"dst": "Table:prime:locmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-03.02.03",
+"dst": "SDCModule:03"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.03",
+"dst": "Table:prime:rcvtrk",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.03",
+"dst": "Table:prime:rcvlin",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.03",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-03.02.04",
+"dst": "SDCModule:03"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.04",
+"dst": "Table:prime:rcvtrk",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.04",
+"dst": "Table:prime:rcvlin",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.04",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.04",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-03.02.08",
+"dst": "SDCModule:03"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.08",
+"dst": "Table:prime:rcvlin",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.08",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.08",
+"dst": "Table:prime:dlytrn",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-03.02.09",
+"dst": "SDCModule:03"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.09",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.09",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.09",
+"dst": "Table:prime:prtftp",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-03.02.11",
+"dst": "SDCModule:03"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.11",
+"dst": "Table:prime:rcvtrk",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.11",
+"dst": "Table:prime:rcvlin",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.11",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.11",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.02.11",
+"dst": "Table:prime:invhld",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "no rows at checked sites"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-03.03.02",
+"dst": "SDCModule:03"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.03.02",
+"dst": "Table:prime:invhld",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "no rows at checked sites"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.03.02",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.03.02",
+"dst": "Table:prime:inv_asset",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-03.03.03",
+"dst": "SDCModule:03"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.03.03",
+"dst": "Table:prime:invhld",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "no rows at checked sites"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.03.03",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-03.03.05",
+"dst": "SDCModule:03"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.03.05",
+"dst": "Table:prime:rcvlin",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.03.05",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-03.03.05",
+"dst": "Table:prime:invhld",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "no rows at checked sites"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-05.01.01",
+"dst": "SDCModule:05"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.01",
+"dst": "Table:prime:ord",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.01",
+"dst": "Table:prime:ord_line",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.01",
+"dst": "Table:prime:shipment",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-05.01.02",
+"dst": "SDCModule:05"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.02",
+"dst": "Table:prime:shipment",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.02",
+"dst": "Table:prime:shipment_line",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.02",
+"dst": "Table:prime:pckbat",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-05.01.03",
+"dst": "SDCModule:05"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.03",
+"dst": "Table:prime:ord",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.03",
+"dst": "Table:prime:ord_line",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.03",
+"dst": "Table:prime:shipment_line",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-05.01.04",
+"dst": "SDCModule:05"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.04",
+"dst": "Table:prime:invhld",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "no rows at checked sites"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.04",
+"dst": "Table:prime:ord_line",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.04",
+"dst": "Table:prime:shipment_line",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-05.01.05",
+"dst": "SDCModule:05"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.05",
+"dst": "Table:prime:pckbat",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.05",
+"dst": "Table:prime:pckwrk_hdr",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.05",
+"dst": "Table:prime:pckwrk_dtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.05",
+"dst": "Table:prime:ord_line",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-05.01.06",
+"dst": "SDCModule:05"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.06",
+"dst": "Table:prime:shipment",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.01.06",
+"dst": "Table:prime:locmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-05.02.01",
+"dst": "SDCModule:05"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.01",
+"dst": "Table:prime:pckwrk_hdr",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.01",
+"dst": "Table:prime:pckwrk_dtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.01",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.01",
+"dst": "Table:prime:locmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-05.02.02",
+"dst": "SDCModule:05"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.02",
+"dst": "Table:prime:pckwrk_hdr",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.02",
+"dst": "Table:prime:pckwrk_dtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.02",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.02",
+"dst": "Table:prime:locmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-05.02.03",
+"dst": "SDCModule:05"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.03",
+"dst": "Table:prime:pckwrk_hdr",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.03",
+"dst": "Table:prime:pckwrk_dtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.03",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.03",
+"dst": "Table:prime:locmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-05.02.04",
+"dst": "SDCModule:05"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.04",
+"dst": "Table:prime:locmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.04",
+"dst": "Table:prime:prtftp",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.04",
+"dst": "Table:prime:rplwrk",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-05.02.05",
+"dst": "SDCModule:05"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.05",
+"dst": "Table:prime:pckwrk_hdr",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.05",
+"dst": "Table:prime:pckwrk_dtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-05.02.06",
+"dst": "SDCModule:05"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.06",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.06",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.06",
+"dst": "Table:prime:prtftp",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-05.02.07",
+"dst": "SDCModule:05"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.07",
+"dst": "Table:prime:pckwrk_dtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.07",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-05.02.08",
+"dst": "SDCModule:05"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.08",
+"dst": "Table:prime:pckwrk_dtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.08",
+"dst": "Table:prime:shipment_line",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-05.02.09",
+"dst": "SDCModule:05"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.09",
+"dst": "Table:prime:pckwrk_hdr",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.09",
+"dst": "Table:prime:pckwrk_dtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.09",
+"dst": "Table:prime:rplwrk",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-05.02.10",
+"dst": "SDCModule:05"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.10",
+"dst": "Table:prime:pckwrk_hdr",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-05.02.10",
+"dst": "Table:prime:pckwrk_dtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-07.01.01",
+"dst": "SDCModule:07"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.01",
+"dst": "Table:prime:shipment",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.01",
+"dst": "Table:prime:stop",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.01",
+"dst": "Table:prime:trlr",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.01",
+"dst": "Table:prime:invmov",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-07.01.05",
+"dst": "SDCModule:07"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.05",
+"dst": "Table:prime:shipment",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.05",
+"dst": "Table:prime:stop",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.05",
+"dst": "Table:prime:trlr",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.05",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-07.01.06",
+"dst": "SDCModule:07"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.06",
+"dst": "Table:prime:shipment",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.06",
+"dst": "Table:prime:stop",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.06",
+"dst": "Table:prime:trlr",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-07.01.10",
+"dst": "SDCModule:07"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.10",
+"dst": "Table:prime:shipment",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.10",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-07.01.12",
+"dst": "SDCModule:07"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.12",
+"dst": "Table:prime:shipment",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.12",
+"dst": "Table:prime:stop",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.12",
+"dst": "Table:prime:trlr",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.12",
+"dst": "Table:prime:car_move",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-07.01.13",
+"dst": "SDCModule:07"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.13",
+"dst": "Table:prime:shipment",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.13",
+"dst": "Table:prime:shipment_line",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.13",
+"dst": "Table:prime:ord",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-07.01.14",
+"dst": "SDCModule:07"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.14",
+"dst": "Table:prime:shipment",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.14",
+"dst": "Table:prime:shipment_line",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.01.14",
+"dst": "Table:prime:invmov",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-07.02.01",
+"dst": "SDCModule:07"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.02.01",
+"dst": "Table:prime:shipment",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.02.01",
+"dst": "Table:prime:pckwrk_hdr",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.02.01",
+"dst": "Table:prime:pckwrk_dtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-07.02.01",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-08.01.01",
+"dst": "SDCModule:08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.01",
+"dst": "Table:prime:wrkque",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.01",
+"dst": "Table:prime:prtmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.01",
+"dst": "Table:prime:ord",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-08.01.02",
+"dst": "SDCModule:08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.02",
+"dst": "Table:prime:wrkque",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.02",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.02",
+"dst": "Table:prime:locmst",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-08.01.03",
+"dst": "SDCModule:08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.03",
+"dst": "Table:prime:wrkque",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.03",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.03",
+"dst": "Table:prime:dlytrn",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-08.01.04",
+"dst": "SDCModule:08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.04",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.04",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.04",
+"dst": "Table:prime:rcvtrk",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-08.01.05",
+"dst": "SDCModule:08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.05",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.05",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-08.01.06",
+"dst": "SDCModule:08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.06",
+"dst": "Table:prime:invlod",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.06",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.06",
+"dst": "Table:prime:wrkque",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-08.01.07",
+"dst": "SDCModule:08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.07",
+"dst": "Table:prime:dlytrn",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.07",
+"dst": "Table:prime:wrkque",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-08.01.08",
+"dst": "SDCModule:08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.08",
+"dst": "Table:prime:invdtl",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-08.01.08",
+"dst": "Table:prime:dlytrn",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "IN_MODULE",
+"src": "PMCProcess:PMC-10.02.01",
+"dst": "SDCModule:10"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-10.02.01",
+"dst": "Table:prime:wrkque",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "CONFIGURES",
+"src": "PMCProcess:PMC-10.02.01",
+"dst": "Table:prime:dlytrn",
+"validated": "V1 live catalog",
+"source": "PrIME Config 2022 sections",
+"populated": "rows at PRIME22_DE08"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:itmmst",
+"dst": "Table:prime:prtmst",
+"type": "SPLIT",
+"rule": "Item master splits: attributes\u2192prtmst, descriptions\u2192prtdsc",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:itmmst",
+"dst": "Table:prime:prtdsc",
+"type": "SPLIT",
+"rule": "Item description to separate table with composite key (colnam/locale_id)",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:item_uom",
+"dst": "Table:prime:prtftp_dtl",
+"type": "RESTRUCTURE",
+"rule": "UOM dimensions moved to footprint detail with stk_flg=1 filter",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:item_config",
+"dst": "Table:prime:prtftp_view",
+"type": "CALCULATE",
+"rule": "caslay/laypul CALCULATED from untcas/untlay/untpal formulas",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:zoncod",
+"dst": "Table:prime:aremst",
+"type": "SPLIT_4WAY",
+"rule": "Zones split into 4 types: aremst + sto_zone + mov_zone + pck_zone",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:zoncod",
+"dst": "Table:prime:sto_zone",
+"type": "SPLIT_4WAY",
+"rule": "Storage zone (from area master restructure in PrIME 2022)",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:zoncod",
+"dst": "Table:prime:mov_zone",
+"type": "SPLIT_4WAY",
+"rule": "Movement zone (from area master restructure in PrIME 2022)",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:zoncod",
+"dst": "Table:prime:pck_zone",
+"type": "SPLIT_4WAY",
+"rule": "Pick zone (from area master restructure in PrIME 2022)",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:systrn",
+"dst": "Table:prime:dlytrn",
+"type": "MERGE",
+"rule": "SYSTRN+SYSDTL merged into single denormalized dlytrn (104 fields)",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:rcphdr",
+"dst": "Table:prime:rcvtrk",
+"type": "SPLIT",
+"rule": "Receipt header splits: trailer\u2192rcvtrk, inventory\u2192rcvinv",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:rcphdr",
+"dst": "Table:prime:rcvinv",
+"type": "SPLIT",
+"rule": "Receiving inventory entity (split from header)",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:caspik",
+"dst": "Table:prime:pckwrk_hdr",
+"type": "RESTRUCTURE",
+"rule": "Case pick restructured into header+detail+batch",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:caspik",
+"dst": "Table:prime:pckwrk_dtl",
+"type": "RESTRUCTURE",
+"rule": "Case pick detail lines",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:caspik",
+"dst": "Table:prime:pckbat",
+"type": "RESTRUCTURE",
+"rule": "Wave/batch assignment for picks",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:invact",
+"dst": "Table:prime:invmov",
+"type": "RENAME_EXTEND",
+"rule": "Inventory activity \u2192 movement (extended with new fields)",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:unitld",
+"dst": "Table:prime:invlod",
+"type": "RENAME",
+"rule": "Unit load \u2192 inventory load (same concept, PrIME naming)",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:ctlgrp",
+"dst": "Table:prime:invdtl",
+"type": "ABSORB",
+"rule": "Control group QA status absorbed into inventory detail (invsts field)",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:ordhdr",
+"dst": "Table:prime:ord",
+"type": "RENAME",
+"rule": "Order header \u2192 ord (simplified name)",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:wavhdr",
+"dst": "Table:prime:pckbat",
+"type": "RENAME",
+"rule": "Wave header \u2192 pick batch (concept rename)",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:shphdr",
+"dst": "Table:prime:shipment",
+"type": "RENAME",
+"rule": "Shipment header \u2192 shipment",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+},
+{
+"label": "TRANSFORMS_TO",
+"src": "Table:rtcis:trukio",
+"dst": "Table:prime:trlr",
+"type": "RESTRUCTURE",
+"rule": "Truck I/O \u2192 trailer table + appt JOIN for appointment data",
+"validated": "both in catalog; agrees with validated MAPS_TO"
+}
+]
+}

@@ -30,6 +30,7 @@ MASKS = [
     (re.compile(r"[A-Za-z]:[\\/]+Users[\\/]+[^\\/\s\"'<>]+", re.I), "<home>"),
     (re.compile(r"\b[\w-]+\.scm\.azurewebsites\.net\b", re.I), "<app-host>"),
     (re.compile(r"\bipa-nonprod-\d+\.pg\.com\b", re.I), "<platform-host>"),
+    (re.compile(r"\b[\w-]+\.sharepoint\.com\b", re.I), "<sharepoint-host>"),
 ]
 for env in ("KG_COSMOS_ACCOUNT", "KG_COSMOS_RG", "KG_COSMOS_SUB_NAME"):
     if os.environ.get(env):
@@ -69,17 +70,19 @@ def main():
     out = os.path.abspath(sys.argv[1])
     if os.path.isdir(out):
         shutil.rmtree(out)
-    for d in ("tools", "templates", "docs", "ui"):
+    for d in ("tools", "templates", "docs", "ui", "tests"):
         tree(os.path.join(KIT, d), os.path.join(out, d))
     put(os.path.join(KIT, "README.md"), os.path.join(out, "README.md"))
     rel = os.path.join(out, "relationships")
     put(os.path.join(KIT, "relationships", "ontology.json"), os.path.join(rel, "ontology.json"))
+    put(os.path.join(KIT, "relationships", "sdc_pmc_layer.json"), os.path.join(rel, "sdc_pmc_layer.json"))
     for kind in ("nodes", "edges"):
         items = json.loads(clean_text(json.dumps(graphio.load(kind), ensure_ascii=False)))
         print(kind, len(items), "->", graphio.shard(items, os.path.join(rel, "parts"), kind), "shards")
     b = os.path.join(out, "benchmark")
     for f in ("catalog.json", "gold.json", "predicted.json", "graph_validation.json", "results.json", "RESULTS.md",
-              "cosmos_load_rtcis_prime.json"):
+              "cosmos_load_rtcis_prime.json", "sdc_pmc_validation.json", "cloud_batch_results.json", "cloud_batch_results_round1.json", "cloud_batch_results_round2.json",
+              "CLOUD_RESULTS.md"):
         if os.path.exists(os.path.join(KIT, "benchmark", f)):
             put(os.path.join(KIT, "benchmark", f), os.path.join(b, f))
     mv = json.load(open(os.path.join(KIT, "benchmark", "mapping_validation.json"), encoding="utf-8"))

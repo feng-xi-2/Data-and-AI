@@ -35,7 +35,8 @@
   ]
  ],
  "dropped_edges": {
-  "READS_COLUMN": 5
+  "READS_COLUMN": 5,
+  "JOINS_WITH": 45
  },
  "nodes": {
   "Platform": 3,
@@ -52,7 +53,9 @@
   "JoinPath": 9,
   "Learning": 57,
   "DataFact": 27,
-  "Concept": 52
+  "Concept": 52,
+  "SDCModule": 9,
+  "PMCProcess": 58
  },
  "edges": {
   "IN_PLATFORM": 1680,
@@ -73,6 +76,11 @@
   "MAPS_TO": 9079,
   "JOINS_VIA": 18,
   "LINKS_TO": 163,
-  "DOCUMENTED_IN": 42
+  "DOCUMENTED_IN": 42,
+  "USES_TABLE": 238,
+  "IN_MODULE": 58,
+  "CONFIGURES": 183,
+  "TRANSFORMS_TO": 21,
+  "JOINS_WITH": 91
  }
 }

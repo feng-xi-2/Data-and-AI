@@ -46,3 +46,12 @@ RTCIS EUS / DE08 / Athens, agreement on the same keys excluding both-blank pairs
 trlr.STOLOC (= trailer id) -> trlr.YARD_LOC; R16 ctrl_date LSTDTE (303/97,793 set) -> COALESCE(LSTDTE, ADDDTE); R05/R06
 PrIME test load like-for-like (packaging receipt at a door). compare.py partial runs now merge into compare.json.
 Rule added to wiki/criteria.md item 9-10, method step 9b, AGENTS.md convert workflow; facts 22-28; lessons 25-30.
+
+## [2026-11-21] setup | Knowledge graph of RTCIS / PrIME 2014 / PrIME 2022 in Cosmos DB (Gremlin)
+New kit <home>\Desktop\M&M\_kg_cosmos (public copy: github.com/feng-xi-2/Data-and-AI, folder 'RTCIS-PrIME Knowledge Graph', PR #3, issue #2).
+Live catalogs of 5 replicas (1,680 tables / 28,585 columns); mappings harvested from this wiki + complete reference + remediation guide +
+verified-mappings + data model, validated V1 exists / V2 type / V3 live value lookup: 9,033 pass, 54 rejected (doc errors such as invact->invmov
+columns, ord.ship_id, car). Loaded as database whs_kg / graph rtcis_prime (30,806 vertices / 44,840 edges). Benchmark with engine gold
+(SHOWPLAN + describe_first_result_set): PrIME entity F1 1.00/0.98, Text2KGBench F1 0.89, conversion lookup 37/59. Lessons: data model lists
+1,026 PrIME 2022 tables not in the replica; sample-vs-sample value overlap is misleading for keys (use lookup); bare-name mapping rows
+must be limited to mapped table pairs.

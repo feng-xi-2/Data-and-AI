@@ -87,6 +87,17 @@
    "name",
    "rtcis_join",
    "reason"
+  ],
+  "SDCModule": [
+   "number",
+   "name",
+   "description"
+  ],
+  "PMCProcess": [
+   "code",
+   "name",
+   "source_file",
+   "documented"
   ]
  },
  "edges": {
@@ -251,6 +262,46 @@
    ],
    [
     "JoinPath"
+   ]
+  ],
+  "USES_TABLE": [
+   [
+    "SDCModule"
+   ],
+   [
+    "Table"
+   ]
+  ],
+  "IN_MODULE": [
+   [
+    "PMCProcess"
+   ],
+   [
+    "SDCModule"
+   ]
+  ],
+  "CONFIGURES": [
+   [
+    "PMCProcess"
+   ],
+   [
+    "Table"
+   ]
+  ],
+  "TRANSFORMS_TO": [
+   [
+    "Table"
+   ],
+   [
+    "Table"
+   ]
+  ],
+  "JOINS_WITH": [
+   [
+    "Column"
+   ],
+   [
+    "Column"
    ]
   ]
  }

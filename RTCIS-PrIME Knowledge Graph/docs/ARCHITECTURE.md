@@ -149,9 +149,81 @@ the Neo4j DBMS holding it was not running, and its replica validator covers only
 5. **Validate before answering**: `sys.dm_exec_describe_first_result_set` (compiles, column contract), then `TOP n` on the replica; field-check rule E1–E3 on the result.
 6. **Measure**: execution accuracy on a held-out question set (Spider / BIRD style), plus the T1–T3 metrics of this kit.
 
+---
+
+## 8. Built: ask / convert / batch / validate (the knowledge-graph tab)
+
+```
+ UI tab "RTCIS ↔ PrIME 2014 ↔ 2022"  (config-drift-governance/UIUX/knowledge-graph.html, same force graph as the other tabs)
+        │ fetch (CORS, 127.0.0.1 only)
+ tools/kg_api.py  FastAPI  /rp/health /rp/graph /rp/search /rp/templates /rp/ask /rp/convert /rp/batch /rp/validate /rp/approve
+        │
+ tools/kg_assistant.py  ── retrieve (kg_core.retrieve: name/description tokens, IDF-weighted; descriptions from query intents,
+        │                   concepts, learnings, SDC module names, TRANSFORMS_TO rules)
+        │               ── graph context  (Cosmos: validated MAPS_TO, learnings, OBS rules)
+        │               ── validated join paths (kg_core.join_paths over the expert-validated SQL; PrIME 2014 borrows 2022's
+        │                   only where its catalog has both columns)
+        │               ── few-shot: matching validated templates + approved pairs (benchmark/approved_pairs.jsonl)
+        │               ── GenAI model → one SQL → sqlglot guard (single SELECT, no write / INTO) → database
+        │               ── one repair round: the database error + the real columns of the tables the failed SQL used
+ tools/kg_services.py  CosmosGraph (Gremlin views) · GenAiLLM · ReplicaDB (guard → describe_first_result_set dry-run →
+                        execute, 50-row cap, 60 s timeout, empty-field flag E1, datetimeoffset converter)
+```
+Best practice applied (production text-to-SQL: Vanna, WrenAI, DIN-SQL, BIRD/Spider evaluation): read-only parse guard before
+any database call, dry-run before execution, row cap + timeout, schema linking from a curated semantic layer (the graph),
+explicit join relationships instead of letting the model infer them, approved question→SQL pairs as few-shot memory, a single
+self-correction round fed by the engine's own error, and **execution accuracy** against reference answers as the acceptance
+metric — "it ran" is not "it is right" (round 2 showed 0-row answers that ran but were wrong; see section 10).
+
+**Security (independent code review, all findings fixed test-first — `tests/test_kg_core.py`, `test_services_offline.py`, `test_api.py`):**
+the guard rejects unquoted T-SQL statement keywords used as names (sqlglot reads `SELECT 1 DELETE FROM t` as an alias, SQL
+Server as a second statement) and OPENQUERY / OPENROWSET / OPENDATASOURCE / OPENXML outside comments; parameter names must be
+plain identifiers before anything reaches `DECLARE`; every Gremlin value is a binding; one lock per replica connection
+(pyodbc is not thread-safe); the API answers only `127.0.0.1` / `localhost` hosts (DNS rebinding), only the local page's
+origin (`null` for file://, localhost), and POST only as `application/json` (forces a CORS preflight). Still recommended for
+any shared deployment: a read-only database login and an API token.
+
+Graph templates of the tab (`/rp/graph?view=`): `versions` (one table across the three engines with its column lineage
+RTCIS → PrIME 2022 ← PrIME 2014), `query` (conversion lineage: both queries, tables, output fields, derived columns,
+passed expert rules, findings), `sdc` (SDC module or PMC process → the tables it uses / configures in both engines),
+`domain`, `issues` (mapping conflicts, code sets that differ), `rules` (OBS1–8 → queries that pass). Offline the tab shows
+the same views exported from Cosmos (`tools/export_ui_views.py` → `assets/rtcis-prime-views.js`).
+
+## 9. SDC module / PMC process layer
+
+Source: the SDC → RTCIS / PrIME hierarchy curated in the Neo4j era (`_build_sdc_prime_hierarchy.py`: 9 SDC modules, their RTCIS
+and PrIME tables, 60 PMC processes → PrIME configuration tables, 23 RTCIS→PrIME transformation rules) plus the PMC titles of the
+SDC standard documents. Validated by `tools/sdc_pmc_run.py` before loading (`benchmark/sdc_pmc_validation.json`):
+
+* V1 live catalog: 247 module→table and 183 PMC→table links pass; **6 rejected** — SDC 03 listed PrIME tables (invdtl, invlod,
+  invsub) and `hold` as RTCIS tables, and PrIME `car` does not exist (so `carrier → car` is rejected too).
+* Transformations vs the value-validated mapping harvest: 21 of 22 agree; 1 is "no PrIME table by design" (blditm).
+* V3 data presence (TOP 1 on RTCIS Euskirchen + London, PrIME 2022 DE08 + Athens): recorded on every edge (`populated`);
+  27 RTCIS and 1 PrIME table exist but hold no rows at the checked sites; one London view timed out (Euskirchen answered).
+
+Vertices `SDCModule`, `PMCProcess`; edges `USES_TABLE` (role rtcis / rtcis view / operational / configuration), `IN_MODULE`,
+`CONFIGURES`, `TRANSFORMS_TO` (type + rule). Also new: `JOINS_WITH` (Column–Column, 91 equi-joins of the validated queries;
+45 dropped by the catalog gate because they join CTE / derived columns).
+
+## 10. Cloud environments (AIF, Ultimate) — tested and findings
+
+| Service | Environment | Tested | Result |
+|---|---|---|---|
+| Graph | Cosmos DB for Apache Gremlin, resource group of the AIP `uvawheu` workspace | load, incremental sync, exact presence check, all graph views, `tests/test_cloud.py` | 30,873 vertices / 45,431 edges, 0 failed writes |
+| Model | P&G GenAI platform (GPT-5.2), project header from `KG_GENAI_PROJECT` | ask / convert / batch | NL 11/11 validated, EX 3/5 strict (4/5 rolled up); conversions 8/8 with identical column contract — `benchmark/CLOUD_RESULTS.md` |
+| Data | replicas: RTCIS Euskirchen + London, PrIME 2014 Xiqing, PrIME 2022 DE08 + Athens | every answer dry-run + executed | all five sites answered through the API; SDC/PMC presence checked on four |
+| Network | Cosmos firewall (VNet filter on, 24 IP rules, 4 subnet rules, no private endpoint) | read-only ARM / Resource Graph | **AIF AKS subnet is allowed**; the uvawheu Container Apps environment (`aca-subnet`) and the Ultimate web apps (`ossultimatedev13vn/vnsubnet-app`) are **not** — a cloud-hosted `kg_api` there needs a Cosmos subnet rule or a private endpoint first |
+
+Hosting recommendation: run `kg_api.py` as a workload on the AIF AKS cluster (already allowed by the Cosmos firewall) or add the
+uvawheu `aca-subnet` to the Cosmos VNet rules and expose it as a route of the existing uvawheu container app; the Ultimate Teams
+bot then calls it. Keep the Gremlin key in Key Vault (Gremlin has no Entra data-plane RBAC). **Nothing was deployed** — this
+needs your approval and the AIF gates.
+
 ## References
 * Text2KGBench — Mihindukulasooriya et al., ISWC 2023, github.com/cenguix/Text2KGBench (P/R/F1, ontology conformance, subject / relation / object hallucination).
 * Microsoft GraphRAG — github.com/microsoft/graphrag (entity + relationship extraction; local search from entity entry points).
 * Neo4j, "GraphRAG and agentic architecture" (NeoConverse, 2025): schema-aware agent with Text2Cypher fallback.
+* Vanna (github.com/vanna-ai/vanna) and WrenAI (github.com/Canner/WrenAI): question→SQL memory from approved pairs, semantic layer, dry-run before execution.
+* DIN-SQL (Pourreza & Rafiei, NeurIPS 2023): schema linking + self-correction.
 * Spider (Yale LILY) and BIRD (bird-bench) text-to-SQL benchmarks: execution accuracy as the acceptance metric.
 * Microsoft Learn, "Secure your account — Azure Cosmos DB for Apache Gremlin" (2026-04): private endpoints, managed identities; points high-scale work to Cosmos DB for NoSQL and OLAP graph to Graph in Microsoft Fabric.

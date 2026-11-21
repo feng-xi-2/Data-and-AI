@@ -1,7 +1,7 @@
 {
  "db": "whs_kg",
  "graph": "rtcis_prime",
- "loaded_at": "2026-11-21 09:43",
+ "loaded_at": "2026-11-21 13:48",
  "vertices": {
   "Column:PrIME2014": 9107,
   "Column:PrIME2022": 12223,
@@ -15,8 +15,10 @@
   "Learning": 57,
   "Mapping": 38,
   "OutputField": 212,
+  "PMCProcess": 58,
   "Platform": 3,
   "Query": 34,
+  "SDCModule": 9,
   "Site": 5,
   "Table:PrIME2014": 491,
   "Table:PrIME2022": 606,
@@ -25,7 +27,8 @@
  },
  "edges": {
   "Column:PrIME2014": 8297,
-  "Column:RTCIS": 130,
+  "Column:PrIME2022": 52,
+  "Column:RTCIS": 169,
   "Concept": 433,
   "DataFact": 133,
   "ExpertRule": 35,
@@ -33,10 +36,12 @@
   "Learning": 69,
   "Mapping": 130,
   "OutputField": 347,
+  "PMCProcess": 241,
   "Query": 1897,
+  "SDCModule": 238,
   "Table:PrIME2014": 10634,
   "Table:PrIME2022": 13588,
-  "Table:RTCIS": 9060
+  "Table:RTCIS": 9081
  },
  "failed": []
 }

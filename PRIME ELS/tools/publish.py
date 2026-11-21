@@ -233,6 +233,9 @@ def main():
         if not sites or not (d / f"{base}.SemanticModel").exists():
             raise SystemExit(f"{d / (base + '.SemanticModel')} missing - build it first: py tools/build_pbip.py {code}"
                              + (" --service" if "--service" in args else ""))
+        if (d / "_BUILD_INCOMPLETE.txt").exists():
+            raise SystemExit(f"STOP: the last build of {d.relative_to(ROOT)} did not pass every gate ({(d / '_BUILD_INCOMPLETE.txt').read_text(encoding='utf-8').strip()})"
+                             " - fix the gate finding and rebuild; nothing published")
     ws, wsdisp = workspace_id(wsname)
     name = base if "--site" in args else service_name(base, wsdisp)
     print(f"workspace: {wsdisp} ({ws}) | name: {name}", flush=True)

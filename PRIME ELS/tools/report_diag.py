@@ -210,8 +210,8 @@ def page_trucks():
     h2 = 230
     v.append(card(p, "stg_kpis", 10, y2, 200, h2, 12,
                   [("Staging Trucks", "Trucks (window)"), ("Staging Pallets", "Pallets"), ("Staging Pallets Per Truck", "Pallets / truck"),
-                   ("Staging Lanes Used", "Lanes used"), ("Staging Lane Dwell h", "Outbound lane dwell (h): first pallet staged -> trailer closed")],
-                  title="2. Dock & staging", value_size=12))
+                   ("Staging Lanes Used", "Lanes used"), ("Staging Lane Dwell h", "Outbound lane dwell (h)")],
+                  title="2. Dock & staging", value_size=10))
     v.append(measures_chart(p, "docks", 218, y2, 520, h2, 13, (ts, "Dock", "Dock"), [("Staging Pallets", "Pallets")],
                             "Pallets per dock (door) - trucks of the window", [PAL["dock"]], vtype="barChart",
                             sort=(K, "Staging Pallets", True, "Descending"), tooltips=[("Staging Trucks", "Trucks")], labels=True))

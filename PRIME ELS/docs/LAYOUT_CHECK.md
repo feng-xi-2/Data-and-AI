@@ -5,7 +5,7 @@
 | # | Page | Size | Display | Data visuals | Findings |
 |---|---|---|---|---|---|
 | 1 | Home | 1280x1068 | FitToWidth | 7 | 0 |
-| 2 | Hypercare Cockpit | 1280x914 | FitToWidth | 28 | 6 |
+| 2 | Hypercare Cockpit | 1280x914 | FitToWidth | 28 | 0 |
 | 3 | Alerts | 1280x914 | FitToWidth | 9 | 0 |
 | 4 | Daily & Hourly Report | 1280x914 | FitToWidth | 9 | 0 |
 | 5 | Process Flow | 1280x914 | FitToWidth | 13 | 0 |
@@ -29,9 +29,4 @@
 
 ## Findings
 
-- Hypercare Cockpit: TINY card 'Production - pallets / h · status' 195x28
-- Hypercare Cockpit: TINY card 'User productivity · status' 195x28
-- Hypercare Cockpit: TINY card 'Location utilisation · status' 195x28
-- Hypercare Cockpit: TINY card 'Daily health checks · status' 195x28
-- Hypercare Cockpit: TINY card 'Inbound TTAT · status' 195x28
-- Hypercare Cockpit: TINY card 'Outbound TTAT · status' 195x28
+none

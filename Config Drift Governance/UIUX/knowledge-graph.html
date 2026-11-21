@@ -46,8 +46,8 @@
 
     <main class="content">
       <div class="content__topbar">
-        <h1>Knowledge Graph</h1>
-        <span class="crumb">· live Neo4j graph &middot; deviation samples</span>
+        <h1>Semantic Layer &amp; Knowledge Graph</h1>
+        <span class="crumb">· Cosmos DB graph (Gremlin) &middot; Timbr concepts &middot; deviation samples</span>
         <div style="margin-left:auto" class="flex items-center gap-3">
           <span class="chip" id="kg-conn"><span class="dot"></span> connecting…</span>
         </div>
@@ -271,6 +271,7 @@
   </div>
   <script src="./assets/data.js"></script>
   <script src="./assets/graph-snapshot.js"></script>
+  <script src="./assets/rtcis-prime-views.js"></script>
   <script src="./assets/cross-site.js"></script>
   <script src="./assets/exception-ledger.js"></script>
   <script src="./assets/change-capture.js"></script>
@@ -627,28 +628,33 @@
     /* =========================================================================
        Knowledge Graph — combined live view (was graph-live's Config/CRFC/Drift).
        Two tabs:
-         Ontology         — live force-directed graph of the real Neo4j (schema
-                             + /graph/sample), node labels & relationship types.
+         Ontology         — live force-directed graph of the Cosmos DB graph rtcis_prime
+                             (kg_api /rp/schema + /rp/sample), partitions & edge types.
          Config, CRFC & Drift — interactive CFG-RFC register graph (pick a change
                              -> its exception-register subgraph), cross-site
                              inconsistency sample, deviation explainability, and a
                              simple skill link.
-       Live data comes from the bridge; window.WHS_KG (assets/graph-snapshot.js)
+       Config tab: bundled snapshot (that theme is not in Cosmos yet; a local graph
+       bridge on 8737 is used only if it runs). window.WHS_KG (assets/graph-snapshot.js)
        is the static graph JSON fallback so the visuals work offline too.
        ========================================================================= */
     (function () {
-      var BRIDGE = "http://127.0.0.1:8737";
+      var BRIDGE = "http://127.0.0.1:8737";   /* config-drift graph (local only, optional) */
+      var RP = window.RP_API_BASE || (window.localStorage && localStorage.getItem("rp_api")) || "http://127.0.0.1:8738";   /* Cosmos graph via kg_api, local or cloud */
       var mount = document.getElementById("kg-new");
       if (!mount) return;
       var SNAP = window.WHS_KG || null;
+      var COSMOS_SNAP = (window.RP_VIEWS && window.RP_VIEWS.schema) ? window.RP_VIEWS : null;   /* Cosmos export (export_ui_views.py) */
 
-      function api(path, opts) {
-        return fetch(BRIDGE + path, opts).then(function (r) {
+      function api(path, opts, base) {
+        var o = Object.assign({}, opts || {});
+        if (!o.signal && window.AbortSignal && AbortSignal.timeout) o.signal = AbortSignal.timeout(20000);
+        return fetch((base || BRIDGE) + path, o).then(function (r) {
           if (!r.ok) return r.json().then(function (j) { throw new Error(j.error || ("HTTP " + r.status)); });
           return r.json();
         });
       }
-      function esc(s) { return String(s == null ? "" : s).replace(/[&<>]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]; }); }
+      function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
       function num(v) { return (v || 0).toLocaleString(); }
       function kpi(v, l) { return '<div class="kpi"><div class="kpi__value">' + v + '</div><div class="kpi__label">' + l + '</div></div>'; }
 
@@ -660,17 +666,16 @@
         + '<button class="kg-tab" data-tab="rp">Semantic Layer \u00b7 RTCIS \u2194 PrIME 2014 \u2194 2022<small>Timbr concepts \u00b7 validated mappings \u00b7 Cosmos graph</small></button>'
         + '</div>'
         + '<div id="kg-offline" class="gl-offline" style="display:none;margin-bottom:var(--space-5)">'
-        +   '<b>Live Neo4j bridge not reachable.</b> The graphs read your Neo4j DBMS through a small local server; showing the bundled snapshot instead. Start it for live data:<br/><br/>'
-        +   '<code>cd SQL_Translations\\PBI_Config_Drift_Alert</code><br/><code>set NEO4J_USER=neo4j &amp;&amp; set NEO4J_PASSWORD=***</code><br/><code>python graph_api.py --port 8737</code><br/><br/>'
-        +   'Then reload. (Bridge: <code>' + BRIDGE + '</code>)'
+        +   '<b>Cosmos graph not reachable</b> through the knowledge-graph API at <code>' + esc(RP) + '</code>, so the bundled snapshot is shown. '
+        +   'Local: <code>_kg_cosmos: . .\\env.local.ps1; &amp; $py tools\\kg_api.py</code>. Cloud: set <code>localStorage.rp_api</code> to the deployed API. Then reload.'
         + '</div>'
         /* ---- TAB 1: ontology ---- */
         + '<section id="kgtab-onto" class="kg-pane is-active">'
         +   '<div class="kpi-row" id="kg-kpis" style="margin-bottom:var(--space-5)"></div>'
         +   '<div class="card" style="margin-bottom:var(--space-5)">'
         +     '<div class="flex items-center gap-3" style="justify-content:space-between;flex-wrap:wrap">'
-        +       '<div><div class="section__eyebrow">Live graph &middot; real Neo4j nodes &amp; relationships</div>'
-        +       '<p class="card__desc" style="margin:.3rem 0 0;max-width:70ch">Pick a node label and explore its neighbourhood, straight from the graph. Drag nodes; click a node to inspect its properties. Colours = labels.</p></div>'
+        +       '<div><div class="section__eyebrow">Live graph &middot; Cosmos DB (Gremlin) &middot; rtcis_prime</div>'
+        +       '<p class="card__desc" style="margin:.3rem 0 0;max-width:70ch">Pick a partition (engine table / column, semantic concept, query …) and explore its neighbourhood. Drag nodes; click a node to inspect its properties. Colours = labels.</p></div>'
         +       '<div class="kgf-ctrl"><select id="kgf-label"><option value="">connecting\u2026</option></select>'
         +         '<input id="kgf-limit" type="number" min="6" max="200" value="40" title="max relationships"/>'
         +         '<button class="btn" id="kgf-reload">Reload</button></div>'
@@ -805,25 +810,27 @@
       var G_ONTO = makeGraph(document.getElementById("kgf-svg"), document.getElementById("kgf-legend"), document.getElementById("kgf-panel"));
       var G_CFG = makeGraph(document.getElementById("kgc-svg"), document.getElementById("kgc-legend"), document.getElementById("kgc-panel"));
       window.__KG = { makeGraph: makeGraph, labelColor: labelColor, colorFor: colorFor, esc: esc, kpi: kpi, num: num };
-      var ONLINE = false;
+      var ONLINE = false, CFG_LIVE = false;   /* ONLINE = Cosmos graph (ontology); CFG_LIVE = optional local config-drift bridge */
 
       /* ---- ontology graph loader ---- */
+      var sampleSeq = 0;
       function loadGraph(label, limit) {
-        var panel = document.getElementById("kgf-panel");
+        var panel = document.getElementById("kgf-panel"), my = ++sampleSeq;
         if (!ONLINE) {
-          var g = SNAP && SNAP.samples && SNAP.samples.ontology;
-          if (g && g.nodes) { G_ONTO.build(g); panel.innerHTML = '<div class="card__desc">Snapshot subgraph (' + g.nodes.length + ' nodes). Start the bridge for live exploration.</div>'; }
-          else panel.innerHTML = '<div class="card__desc">No snapshot available.</div>';
+          var g = COSMOS_SNAP && COSMOS_SNAP.samples && COSMOS_SNAP.samples.ontology;
+          if (g && g.nodes) { G_ONTO.build(g); panel.innerHTML = '<div class="card__desc">Cosmos snapshot subgraph (' + g.nodes.length + ' nodes, ' + esc(COSMOS_SNAP.generatedAt) + '). Start the knowledge-graph API for the live graph.</div>'; }
+          else panel.innerHTML = '<div class="card__desc">No Cosmos snapshot exported yet (tools/export_ui_views.py).</div>';
           return;
         }
         if (!label) return;
         panel.innerHTML = '<div class="card__desc">Loading :' + esc(label) + ' neighbourhood\u2026</div>';
-        api("/graph/sample?label=" + encodeURIComponent(label) + "&limit=" + (limit || 40)).then(function (r) {
+        api("/rp/sample?label=" + encodeURIComponent(label) + "&limit=" + Math.min(limit || 40, 200), null, RP).then(function (r) {
+          if (my !== sampleSeq) return;
           var g = r.graph || r;
           if (!g.nodes || !g.nodes.length) { panel.innerHTML = '<div class="card__desc">No nodes for :' + esc(label) + '.</div>'; return; }
           G_ONTO.build(g);
           panel.innerHTML = '<div class="card__desc">' + g.nodes.length + ' nodes &middot; ' + ((g.edges || []).length) + ' relationships. Click a node to inspect.</div>';
-        }).catch(function (e) { panel.innerHTML = '<div class="gl-offline">' + esc(e.message) + '</div>'; });
+        }).catch(function (e) { if (my === sampleSeq) panel.innerHTML = '<div class="gl-offline">' + esc(e.message) + '</div>'; });
       }
 
       /* ---- CFG-RFC register graph (pick a change -> its subgraph) ---- */
@@ -848,9 +855,9 @@
         if (!code) return;
         cfgMeta(code);
         var panel = document.getElementById("kgc-panel");
-        if (!ONLINE) {
+        if (!CFG_LIVE) {
           var g = SNAP && SNAP.samples && SNAP.samples.cfgCase;
-          if (g && g.nodes) { G_CFG.build(g); panel.innerHTML = '<div class="card__desc">Bundled snapshot case (' + g.nodes.length + ' nodes). Start the bridge to render any CFG-RFC live.</div>'; }
+          if (g && g.nodes) { G_CFG.build(g); panel.innerHTML = '<div class="card__desc">Bundled snapshot case (' + g.nodes.length + ' nodes). The config-drift graph is not in Cosmos yet, so this tab shows the snapshot.</div>'; }
           else panel.innerHTML = '<div class="card__desc">No snapshot case available.</div>';
           return;
         }
@@ -1036,29 +1043,33 @@
         document.getElementById("kg-rels").innerHTML = (rels || []).map(function (l) { return '<span class="chip mono">:' + esc(l.type) + ' <span style="opacity:.55">' + num(l.count) + '</span></span>'; }).join(" ");
       }
 
-      api("/schema").then(function (sc) {
-        ONLINE = true; setConn(true, "live Neo4j");
+      var cfgProbe = fetch(BRIDGE + "/schema", window.AbortSignal && AbortSignal.timeout ? { signal: AbortSignal.timeout(5000) } : {})
+        .then(function (r) { CFG_LIVE = r.ok; }).catch(function () { CFG_LIVE = false; });
+      cfgProbe.then(function () { populateCfg((SNAP && SNAP.cfgList) || []); });   /* independent of the Cosmos call */
+      api("/rp/schema", null, RP).then(function (sc) {
+        ONLINE = true; setConn(true, "live \u00b7 Cosmos graph " + esc((sc.source || "").replace("cosmos:", "")));
+        var badge = sc.verified ? '<span class="chip chip--success" style="vertical-align:middle"><span class="dot dot--live"></span> live</span>'
+          : '<span class="chip chip--danger" style="vertical-align:middle" title="live totals differ from the load record">check</span>';
         document.getElementById("kg-kpis").innerHTML =
-          kpi(num(sc.totals.nodes) + ' <span class="chip chip--success" style="vertical-align:middle"><span class="dot dot--live"></span> live</span>', "Nodes")
-          + kpi(num(sc.totals.relationships), "Relationships")
-          + kpi(num((sc.labels || []).length), "Node labels")
-          + kpi(num((sc.relationships || []).length), "Relationship types");
+          kpi(num(sc.totals.nodes) + ' ' + badge, "Vertices")
+          + kpi(num(sc.totals.relationships), "Edges")
+          + kpi(num((sc.labels || []).length), "Partitions")
+          + kpi(num((sc.relationships || []).length), "Edge types");
         var labels = sc.labels || [];
         labels.forEach(function (l) { colorFor(l.label); });
         renderChips(labels, sc.relationships);
         labelSel.innerHTML = labels.map(function (l) { return '<option value="' + esc(l.label) + '">' + esc(l.label) + ' (' + num(l.count) + ')</option>'; }).join("");
-        var pref = ["Section", "RTCISTable", "Exception", "Stage", "Column", "PrIMETable"], start = labels[0] && labels[0].label;
+        var pref = ["Table:PrIME2022", "Table:RTCIS", "SemanticConcept"], start = labels[0] && labels[0].label;
         for (var i = 0; i < pref.length; i++) { if (labels.some(function (l) { return l.label === pref[i]; })) { start = pref[i]; break; } }
         labelSel.value = start; loadGraph(start, 40);
-        populateCfg((SNAP && SNAP.cfgList) || []);
       }).catch(function () {
-        ONLINE = false; setConn(false, "offline \u00b7 snapshot");
+        ONLINE = false; setConn(false, "offline \u00b7 Cosmos snapshot" + (COSMOS_SNAP ? " " + COSMOS_SNAP.generatedAt : ""));
         document.getElementById("kg-offline").style.display = "";
-        var s = SNAP && SNAP.schema;
+        var s = COSMOS_SNAP && COSMOS_SNAP.schema;
         if (s) {
           document.getElementById("kg-kpis").innerHTML =
-            kpi(num(s.totals.nodes), "Nodes") + kpi(num(s.totals.relationships), "Relationships")
-            + kpi(num((s.labels || []).length), "Node labels") + kpi(num((s.relationships || []).length), "Relationship types");
+            kpi(num(s.totals.nodes), "Vertices") + kpi(num(s.totals.relationships), "Edges")
+            + kpi(num((s.labels || []).length), "Partitions") + kpi(num((s.relationships || []).length), "Edge types");
           (s.labels || []).forEach(function (l) { colorFor(l.label); });
           renderChips(s.labels, s.relationships);
           labelSel.innerHTML = (s.labels || []).map(function (l) { return '<option value="' + esc(l.label) + '">' + esc(l.label) + ' (' + num(l.count) + ')</option>'; }).join("");
@@ -1067,7 +1078,6 @@
           labelSel.innerHTML = '<option value="">snapshot missing</option>';
         }
         loadGraph("", 40);
-        populateCfg((SNAP && SNAP.cfgList) || []);
       });
 
       /* ---- tab switching ---- */
@@ -1081,7 +1091,6 @@
       });
     })();
   </script>
-  <script src="./assets/rtcis-prime-views.js"></script>
   <script src="./assets/rtcis-prime-tab.js"></script>
   <script src="./assets/shell.js"></script>
   <script src="./assets/bot.js"></script>

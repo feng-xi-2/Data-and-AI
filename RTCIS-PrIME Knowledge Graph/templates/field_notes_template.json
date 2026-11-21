@@ -1,0 +1,13 @@
+{
+  "_readme": "One entry per output field that tools/field_check.py flags: E1 empty in PrIME, E2 agreement < 95% on the same keys, E3 source not traced. Value format: '<CATEGORY>: <measured reason> (<evidence file>)'. A reason is accepted only after the PrIME source (and its alternatives) was probed for data.",
+  "_categories": {
+    "empty": ["NO_SOURCE", "DATA_NOT_MIGRATED", "TEST_DATA", "SITE_CONVENTION", "FAITHFUL_TO_ORIGINAL", "NOT_CONFIGURED", "SMALL_SAMPLE"],
+    "diff": ["TIMING", "CODE_SET", "NAMING", "NO_SOURCE", "DATA_NOT_MIGRATED", "INFERRED", "TEXT_VARIANT", "CONFIG_DIFF", "MORE_PRECISE", "NOT_CONFIGURED"]
+  },
+  "Rnn": {
+    "<OUTPUT_COLUMN>": {
+      "empty": "NO_SOURCE: <PrIME table.column> filled on 0 of <n> rows at <site>; alternatives probed: <list> (results/<probe>.json)",
+      "diff": "TIMING: <n> of <m> differing keys moved in RTCIS after the PrIME load (results/<probe>.json)"
+    }
+  }
+}

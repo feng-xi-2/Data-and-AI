@@ -1,0 +1,157 @@
+# Architecture — RTCIS / PrIME 2014 / PrIME 2022 knowledge graph
+
+**Goal.** One validated knowledge graph of every table and column of the three warehouse engines, how they map onto each
+other, and how queries were converted — so that (1) a person or an agent can convert a query between engines with evidence,
+and (2) in the future, write a new query from a natural-language question on any of the three databases.
+
+**Rule that governs everything:** nothing enters the graph unless it was checked against a real database first.
+Documents propose; the database decides.
+
+---
+
+## 1. What is in the graph (`rtcis_prime`)
+
+```mermaid
+flowchart LR
+  subgraph S["Schema layer — from live catalogs only"]
+    P[Platform] --- T[Table] --- C[Column]
+    T --- Site
+    T --- Dom[Domain ERD]
+  end
+  subgraph M["Mapping layer — validated"]
+    C -- MAPS_TO --> C
+    T -- MAPS_TO --> T
+    Mp[Mapping row measured] -. MAPS_FROM / MAPS_INTO .- C
+    JP[JoinPath] --- T
+  end
+  subgraph K["Conversion knowledge"]
+    Q[Query = template] -- READS --> T
+    Q -- READS_COLUMN --> C
+    Q -- HAS_FIELD --> F[OutputField] -- DERIVED_FROM --> C
+    F -- EXPLAINED_BY --> Fi[Finding]
+    Q -- APPLIES_RULE --> R[ExpertRule]
+    Q -- CONVERTS_TO --> Q
+    L[Learning / DataFact] -- MENTIONS --> T
+    Q -- DOCUMENTED_IN --> Cp[Concept page]
+    Q -- RENDERED_WITH --> Tp[Template]
+  end
+```
+
+| Layer | Content (2026-11-21) | Validated how |
+|---|---|---|
+| Schema | 1,680 tables, 28,585 columns: RTCIS (Euskirchen + London) 583 / 7,255; PrIME 2014 (Xiqing) 491 / 9,107; PrIME 2022 (Euskirchen DE08 base tables + replica views) 606 / 12,223 | `INFORMATION_SCHEMA` of the base databases (synonyms resolved to `*_simp` / `*_RTDS`); per-site presence kept (`EXISTS_AT`) |
+| Descriptions | PrIME table/column descriptions, primary keys, theme (Configuration / Master Data / Transactional), ERD domain | attached **only** where the object exists in a real catalog. The vendor data model lists 1,026 PrIME 2022 tables that are not in the replica — they are kept out |
+| Mappings | 9,033 validated mappings: RTCIS→PrIME 2022 158, RTCIS→PrIME 2014 147, PrIME 2014→2022 8,728 (incl. data-model renames); plus 221 edges from the Euskirchen measured mapping table = 9,254 `MAPS_TO` | V1 both endpoints exist, V2 type family, V3 live value lookup (§4). **54 documented mappings rejected** (e.g. `invact→invmov` columns that `invmov` does not have, `ord.ship_id`, `car`) |
+| Conversion | 17 RPM queries × 2 engines, 212 output fields, 68 findings, 12 expert rules, 57 learnings, 27 data facts, 52 wiki pages, 5 templates | queries executed on RTCIS Euskirchen, PrIME DE08 and Athens; fields checked by `field_check.py`; entities recognised in SQL kept only if in the catalog (5 extractor errors held back) |
+
+Full ontology (labels, properties, edge domain/range): [relationships/ontology.json](../relationships/ontology.json).
+
+---
+
+## 2. Pipeline (rebuild, never hand-edit)
+
+```mermaid
+flowchart LR
+  Git[(Git: wiki + SQL + mapping docs)] --> H[harvest candidates<br/>mappings.py H1..H8]
+  DB[(Replicas: RTCIS, PrIME 2014, PrIME 2022)] --> CAT[catalog.py<br/>live INFORMATION_SCHEMA]
+  CAT --> V{validation gates<br/>V1 exists · V2 type · V3 values}
+  H --> V
+  V -- pass --> B[build_graph.py<br/>entity recognition + graph]
+  V -- fail --> REJ[rejected list<br/>mapping_validation.json]
+  DB --> GOLD[gold_extract.py<br/>engine plan + lineage]
+  B --> LOAD[load_cosmos.py] --> COS[(Cosmos DB Gremlin<br/>whs_kg / rtcis_prime)]
+  GOLD --> BEN[benchmark.py<br/>T1 · T2 Text2KGBench · T3]
+  COS --> BEN
+  BEN --> CI{regression thresholds}
+```
+
+* **Git is the source of truth** (wiki, SQL templates, field notes). The graph is a derived, rebuildable index — the same
+  discipline as the LLM-wiki pattern this knowledge base already follows. A wrong edge is fixed in the source, then rebuilt.
+* **Gold comes from the engines**, not from our own parser: `SET SHOWPLAN_XML` (tables/columns the engine reads) and
+  `sys.dm_exec_describe_first_result_set` (which column feeds each output field). The extractor is not graded with itself.
+* **Benchmark as a regression gate** (Text2KGBench metrics + conversion accuracy): run on every rebuild; a drop blocks publish.
+
+---
+
+## 3. Hosting study
+
+| Option | Fit for this graph | Security / platform | Retrieval for natural language | Verdict |
+|---|---|---|---|---|
+| **Azure Cosmos DB for Apache Gremlin** (account in the UVAWHEU dev resource group, Gremlin enabled, was empty) | ✅ traversals tested live (benchmark T3, NL lookups); 75k elements; shared autoscale throughput | ⚠️ data plane through **account keys** — Microsoft's Gremlin security guidance names managed identities for calling services but no Entra data-plane RBAC, while the platform is moving to Entra ID. Public network access is **enabled** on the account (guidance: private endpoints only) | ❌ no vector search → pair with Azure AI Search | **Use now** as the traversal store, behind one backend identity |
+| Azure Cosmos DB for NoSQL (graph as adjacency documents) | ⚠️ multi-hop = several queries; no Gremlin | ✅ Entra data-plane RBAC, local auth can be disabled | ✅ built-in vector search | Fallback if InfoSec forbids key-based access |
+| Graph in Microsoft Fabric | ✅ Microsoft's suggested target for OLAP graph / Gremlin migration | ✅ Entra | ⚠️ analytics-oriented | Watch; good for BI-side graph analytics |
+| Neo4j (today: local Desktop, holds config drift) | ✅ best tooling (Cypher, Bloom, GraphRAG libraries) | ⚠️ self-hosted / licence; not a platform service today | ✅ vector index | Keep as dev / exploration tool, not as the shared service |
+| Timbr (existing semantic layer) | ⚠️ business ontology over SQL, not a cross-engine mapping store | ✅ SSO | ✅ NL→SQL agent already used for KPIs | **Complement**: Timbr answers business questions; the graph feeds it mapping knowledge |
+
+**Recommendation.** Cosmos Gremlin as the traversal store + **Azure AI Search** (the platform already runs one) as the
+entry-point index — hybrid GraphRAG: search finds the starting nodes (tables, columns, templates, learnings) from the
+question; Gremlin expands their neighbourhood (mappings, join paths, rules, findings); the LLM writes SQL; the SQL is
+**compiled / executed on the real replica before it is shown** (same rule as §4). Ask the platform team to
+(1) hold the account key in the tenant Key Vault, read only by the backend managed identity, and (2) disable public network
+access / add a private endpoint. Re-evaluate Cosmos NoSQL if key-based access is not accepted.
+
+---
+
+## 4. Validation gates (applied before loading)
+
+| Gate | Check | Result 2026-11-21 |
+|---|---|---|
+| V1 exists | both endpoints in the live catalog of their engine | 9,033 pass, 54 rejected |
+| V2 type | same data-type family (text / number / date) | 38 type differences flagged on the edge (e.g. RTCIS numeric id → PrIME nvarchar) |
+| V3 values | up to 200 sampled source values looked up in the target column (same site Euskirchen RTCIS → DE08 where possible) | 182 curated column mappings checked. Same-site confirmed: `item_config.itmcod→prtmst.prtnum` 100%, `locatn.locatn→locmst.stoloc` 97%, `sysdtl.itmcod→dlytrn.prtnum` 96.5%. 0% with ≤ 50 distinct values = **code set differs** (`whsflg` Y/N → `stk_flg` 0/1, `trntyp→actcod`, `qastat` RL→U): needs a value mapping. 0% on identifiers (orders, transaction ids) = different history on the DEV copy, not comparable yet |
+| Conflicts | one source column → different targets in different sources | `sysdtl.locatn` → `dlytrn.frstol` **and** `tostol`; both kept, a person decides |
+| Entities from SQL | recognised table/column must exist in the catalog | 5 extractor errors kept out |
+| Queries | executed on RTCIS Euskirchen, PrIME DE08, PrIME Athens | 51 runs ok (wiki results) |
+
+---
+
+## 5. Separate graphs by theme, or one graph?
+
+**Best practice: one database, one graph per bounded context, shared identifiers between them — neither one giant graph nor
+one database per theme.**
+
+* Gremlin cannot traverse across containers, so a split must follow the traversals: everything one question walks through
+  stays together. Schema + mappings + conversion + templates are walked together ("query → column → MAPS_TO → PrIME column
+  → learning") → **one graph `rtcis_prime`**.
+* **Config drift** has a different source (COE export + CFG-RFC register), owners, refresh cadence and consumers, and only a
+  few touch points (site code, PrIME config tables such as `poldat`) → **its own graph `config_drift`** in the same database.
+  Link by shared keys (`Site:<code>`, `Table:prime:poldat`) in the application, not by edges.
+* Same database with **shared autoscale throughput** (max 1,000 RU/s, bills 100–1,000): small graphs do not each pay a minimum.
+* One container per theme gives independent rebuilds (drop + reload one theme), access scoping and a smaller blast radius.
+* Partition key `/pk`: `Table:<engine>` / `Column:<engine>` for the schema, the label for the rest; point reads always pass `pk`.
+
+**Query templates.** SQL text stays in **Git** (reviewed, versioned, diffable); the graph holds the template **metadata** —
+intent, parameters, tables read, output-field lineage, grade, validated runs, file path — on `Query` vertices; the intent text
+is also indexed in AI Search for retrieval. The graph is not the system of record for SQL.
+
+Config drift: `tools/export_config_drift.py` (Neo4j → JSON) then `load_cosmos.py --graph config_drift`. **Not loaded yet:**
+the Neo4j DBMS holding it was not running, and its replica validator covers only the Policy Maintenance section today.
+
+---
+
+## 6. How users reach it (existing UIs first)
+
+| User | Surface (existing) | What they do | Integration |
+|---|---|---|---|
+| Site key user / analyst | **Teams bot on the Ultimate Platform** (UVAWHEU workflows, like the Europe NPI assistant) | "Convert this RTCIS query", "how do I get pallet height in PrIME 2022?" → answer card: SQL, evidence, confidence, *validated on <site>* | new LangGraph workflow: `search (AI Search) → expand (Gremlin) → write SQL → validate on replica (describe_first_result_set / TOP n) → card`. Backend identity reads the Cosmos key from Key Vault. **Designed, not built or deployed** — needs your approval |
+| Developer / converter | **VS Code agents** (RTCIS→PrIME SQL Remediation agent, LLM wiki) | conversion with the full method + benchmark | the agent calls `tools/` Gremlin lookups (`templates/gremlin_queries.md`) and follows the wiki method |
+| Governance / COE | **WHS GenAI UI** (`config-drift-governance/UIUX`, Knowledge section) | browse mappings, rejected mappings, templates, validation status | page `rtcis-prime-graph.html` + generated snapshot (`tools/export_ui_snapshot.py`; no database needed to view) |
+| Business questions on live data | **Timbr agent** (existing) | KPI questions | feed validated mappings / learnings into the Timbr knowledge base; Timbr stays the NL→SQL engine for business KPIs |
+
+---
+
+## 7. Future natural-language query writing (target flow)
+
+1. **Entity linking**: question → AI Search over node cards (table/column descriptions, template intents, learnings) → top-k nodes, filtered by the user's engine and site (`EXISTS_AT`).
+2. **Graph expansion** (Gremlin, 1–2 hops): columns, join paths, value mappings (edges marked `CODE SET DIFFERS` carry the translation need), expert rules, findings for empty fields.
+3. **Template first**: if a validated template's intent matches, adapt its parameters instead of writing from scratch.
+4. **Write SQL** with the house rules (OBS1–8, WHT/FAN/LOC/VIEW) injected from `ExpertRule` vertices.
+5. **Validate before answering**: `sys.dm_exec_describe_first_result_set` (compiles, column contract), then `TOP n` on the replica; field-check rule E1–E3 on the result.
+6. **Measure**: execution accuracy on a held-out question set (Spider / BIRD style), plus the T1–T3 metrics of this kit.
+
+## References
+* Text2KGBench — Mihindukulasooriya et al., ISWC 2023, github.com/cenguix/Text2KGBench (P/R/F1, ontology conformance, subject / relation / object hallucination).
+* Microsoft GraphRAG — github.com/microsoft/graphrag (entity + relationship extraction; local search from entity entry points).
+* Neo4j, "GraphRAG and agentic architecture" (NeoConverse, 2025): schema-aware agent with Text2Cypher fallback.
+* Spider (Yale LILY) and BIRD (bird-bench) text-to-SQL benchmarks: execution accuracy as the acceptance metric.
+* Microsoft Learn, "Secure your account — Azure Cosmos DB for Apache Gremlin" (2026-04): private endpoints, managed identities; points high-scale work to Cosmos DB for NoSQL and OLAP graph to Graph in Microsoft Fabric.

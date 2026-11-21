@@ -1,0 +1,111 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<title>RPM queries - RTCIS to PrIME 2022 - query by query</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;margin:0;color:#222;line-height:1.55;background:#eef1f6}
+header{background:#003087;color:#fff;padding:16px 26px}
+header h1{margin:0;font-size:20px}
+header p{margin:5px 0 0;font-size:12.5px;opacity:.85}
+.wrap{display:flex;align-items:flex-start}
+nav.tabs{width:270px;flex:0 0 270px;background:#fff;border-right:1px solid #d6dbe4;min-height:calc(100vh - 66px);
+padding:10px 0;position:sticky;top:0;max-height:100vh;overflow-y:auto}
+.tab{display:block;width:100%;text-align:left;border:0;background:none;padding:9px 14px;cursor:pointer;
+border-left:4px solid transparent;font-size:13px;font-family:inherit}
+.tab:hover{background:#f2f5fa}
+.tab.active{background:#eaf0fb;border-left-color:#003087;font-weight:600}
+.tab .tid{font-weight:700;color:#003087;margin-right:7px}
+.tab .tnm{color:#333;word-break:break-word}
+.tab .tb{display:block;margin-top:4px;font-size:9.5px;width:max-content}
+main{flex:1;padding:22px 30px 70px;min-width:0}
+.pane{display:none;background:#fff;border:1px solid #dfe4ec;border-radius:6px;padding:20px 26px 30px}
+.pane.active{display:block}
+h2{color:#003087;margin:0 0 14px;border-bottom:2px solid #dfe4ec;padding-bottom:9px;font-size:19px}
+h4{margin:16px 0 6px;font-size:13px;color:#33475b}
+.step{margin:26px 0 10px;font-weight:700;color:#003087;font-size:14.5px;border-top:1px dashed #ccd4e0;padding-top:14px}
+.step .n{display:inline-block;width:21px;height:21px;line-height:21px;text-align:center;background:#003087;color:#fff;
+border-radius:50%;font-size:12px;margin-right:8px}
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:1200px){.ba{grid-template-columns:1fr}}
+table.data{border-collapse:collapse;width:100%;margin:6px 0 14px;font-size:12.5px}
+table.data th,table.data td{border:1px solid #d9dee6;padding:5px 8px;text-align:left;vertical-align:top}
+table.data th{background:#003087;color:#fff;font-weight:600}
+table.data tr:nth-child(even) td{background:#f7f9fc}
+td.c,th.c{text-align:center}
+.mono{font-family:Consolas,monospace;font-size:11.5px}
+.nul{color:#c3c9d2;text-align:center}
+.sub{font-weight:400;color:#6b7480;font-size:11.5px}
+.muted{color:#7b848f;font-size:12.5px}
+.err{color:#922b21;font-family:Consolas,monospace;font-size:11px}
+.badge{display:inline-block;padding:2px 9px;border-radius:11px;font-size:11px;font-weight:700;white-space:nowrap}
+.b-ok{background:#d6f0e0;color:#14603a}
+.b-zero{background:#fdf0d0;color:#7a5b12}
+.b-bad{background:#fadbd8;color:#922b21}
+.b-na{background:#e8eaed;color:#5f6772}
+.kind{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10.5px;font-weight:700;font-family:Consolas,monospace}
+.k-map{background:#d6f0e0;color:#14603a}
+.k-par,.k-dev{background:#fdf0d0;color:#7a5b12}
+.k-eli,.k-inf{background:#fadbd8;color:#922b21}
+pre.sql{background:#0e1420;color:#d6e2f0;padding:11px 13px;border-radius:5px;font-family:Consolas,monospace;
+font-size:11px;overflow:auto;white-space:pre;max-height:420px}
+pre.sql.before{border-left:5px solid #c0392b}
+pre.sql.after{border-left:5px solid #1a7f45}
+.sqlwrap{position:relative}
+.sqlwrap .copy{position:absolute;top:7px;right:9px;z-index:2;border:1px solid #44546a;background:#1e2a3d;color:#c8d6e8;
+cursor:pointer;font-family:inherit;font-size:10px;font-weight:600;padding:3px 10px;border-radius:4px;opacity:.55}
+.sqlwrap:hover .copy{opacity:1}
+.sqlwrap .copy.ok{background:#1a7f45;border-color:#1a7f45;color:#fff;opacity:1}
+.sqlwrap .copy.warn{background:#a8710f;border-color:#a8710f;color:#fff;opacity:1}
+.scroll{max-height:300px;overflow:auto;border:1px solid #e3e7ee;border-radius:4px}
+.whatbox{background:#eef4fc;border-left:5px solid #0b5cad;padding:11px 15px;font-size:13.5px;border-radius:4px}
+.note{background:#fff8e8;border-left:5px solid #c8930c;padding:10px 15px;font-size:12.5px;margin:12px 0;border-radius:4px}
+</style></head><body>
+<header>
+  <h1>RPM queries &mdash; RTCIS to PrIME 2022, query by query (Euskirchen)</h1>
+  <p>Generated {{GENERATED}}. Every figure came from a live query. Pick a query on the left.</p>
+</header>
+<div class="wrap">
+<nav class="tabs">
+  <button class="tab active" data-t="INTRO"><span class="tid">&#9432;</span><span class="tnm">Start here</span></button>
+  {{TABS}}
+</nav>
+<main>
+{{INTRO}}
+{{PANES}}
+</main></div>
+<script>
+document.querySelectorAll('.tab').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('.tab').forEach(function(x){ x.classList.remove('active'); });
+    document.querySelectorAll('.pane').forEach(function(x){ x.classList.remove('active'); });
+    b.classList.add('active');
+    var p = document.getElementById(b.dataset.t);
+    if (p) { p.classList.add('active'); }
+    window.scrollTo(0,0);
+  });
+});
+/* Clipboard API where available, hidden-textarea fallback for file:// */
+document.querySelectorAll('.sqlwrap .copy').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var pre = btn.parentElement.querySelector('pre.sql');
+    if (!pre) { return; }
+    var text = pre.textContent;
+    var done = function(ok){
+      btn.textContent = ok ? 'Copied' : 'Press Ctrl+C';
+      btn.classList.add(ok ? 'ok' : 'warn');
+      setTimeout(function(){ btn.textContent = 'Copy'; btn.classList.remove('ok', 'warn'); }, 1600);
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(function(){ done(true); }, function(){ done(false); });
+      return;
+    }
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    done(ok);
+  });
+});
+</script>
+</body></html>

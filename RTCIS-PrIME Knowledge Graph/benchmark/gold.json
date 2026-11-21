@@ -1,0 +1,3712 @@
+{
+ "_about": "Database-grounded gold set for the benchmark (read-only). No result rows are kept: only engine metadata.",
+ "queries": {
+  "R01": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "blding",
+     "ctlgrp",
+     "item_config",
+     "item_uom",
+     "itmmst",
+     "locatn",
+     "rcpdtl",
+     "unitld",
+     "untdtl",
+     "zoncod"
+    ],
+    "columns": [
+     "blding.blding",
+     "blding.subsit",
+     "ctlgrp.ctlgrp",
+     "ctlgrp.fifodt",
+     "ctlgrp.itmcls",
+     "ctlgrp.itmcod",
+     "ctlgrp.qastat",
+     "ctlgrp.vndcod",
+     "ctlgrp.vndlot",
+     "item_config.itmcod",
+     "item_config.ulpall",
+     "item_uom.itmcls",
+     "item_uom.itmcod",
+     "item_uom.u_height",
+     "item_uom.uom",
+     "item_uom.whsflg",
+     "itmmst.itmcls",
+     "itmmst.itmcod",
+     "itmmst.itmgrp",
+     "itmmst.palflg",
+     "itmmst.picflg",
+     "locatn.locatn",
+     "locatn.pikzon",
+     "locatn.subsit",
+     "locatn.zoncod",
+     "rcpdtl.ctlgrp",
+     "rcpdtl.itmcls",
+     "rcpdtl.itmcod",
+     "unitld.locatn",
+     "unitld.subsit",
+     "unitld.ulid",
+     "unitld.ulpall",
+     "untdtl.casqty",
+     "untdtl.ctlgrp",
+     "untdtl.itmcls",
+     "untdtl.itmcod",
+     "untdtl.ulid",
+     "zoncod.blding",
+     "zoncod.zoncod"
+    ],
+    "lineage": [
+     {
+      "field": "LOCATN",
+      "table": "unitld",
+      "column": "locatn"
+     },
+     {
+      "field": "ITMCOD",
+      "table": "untdtl",
+      "column": "itmcod"
+     },
+     {
+      "field": "ITMGRP",
+      "table": "itmmst",
+      "column": "itmgrp"
+     },
+     {
+      "field": "ULID20",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "CASQTY",
+      "table": "untdtl",
+      "column": "casqty"
+     },
+     {
+      "field": "QASTAT",
+      "table": "ctlgrp",
+      "column": "qastat"
+     },
+     {
+      "field": "FIFODT",
+      "table": "ctlgrp",
+      "column": "fifodt"
+     },
+     {
+      "field": "CTLGRP",
+      "table": "untdtl",
+      "column": "ctlgrp"
+     },
+     {
+      "field": "ULPALL",
+      "table": "unitld",
+      "column": "ulpall"
+     },
+     {
+      "field": "ZONCOD",
+      "table": "locatn",
+      "column": "zoncod"
+     },
+     {
+      "field": "last_update",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "BLDING",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "MATTYP",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "calculated_pal_height",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "UOM",
+      "table": "item_uom",
+      "column": "uom"
+     },
+     {
+      "field": "VNDCOD",
+      "table": "ctlgrp",
+      "column": "vndcod"
+     },
+     {
+      "field": "VNDLOT",
+      "table": "ctlgrp",
+      "column": "vndlot"
+     },
+     {
+      "field": "ULPAL_ITEM",
+      "table": null,
+      "column": null
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "aremst",
+     "invdtl",
+     "invlod",
+     "invsub",
+     "locmst",
+     "prtftp_dtl",
+     "prtmst"
+    ],
+    "columns": [
+     "aremst.arecod",
+     "aremst.bldg_id",
+     "aremst.wh_id",
+     "invdtl.fifdte",
+     "invdtl.ftpcod",
+     "invdtl.invsts",
+     "invdtl.lotnum",
+     "invdtl.prt_client_id",
+     "invdtl.prtnum",
+     "invdtl.subnum",
+     "invdtl.sup_lotnum",
+     "invdtl.untqty",
+     "invlod.lodnum",
+     "invlod.stoloc",
+     "invlod.wh_id",
+     "invsub.lodnum",
+     "invsub.subnum",
+     "locmst.arecod",
+     "locmst.stoloc",
+     "locmst.wh_id",
+     "prtftp_dtl.ftpcod",
+     "prtftp_dtl.hgt",
+     "prtftp_dtl.pal_flg",
+     "prtftp_dtl.prt_client_id",
+     "prtftp_dtl.prtnum",
+     "prtftp_dtl.rcv_flg",
+     "prtftp_dtl.untqty",
+     "prtftp_dtl.uomcod",
+     "prtftp_dtl.uomlvl",
+     "prtftp_dtl.wh_id",
+     "prtmst.prt_client_id",
+     "prtmst.prtfam",
+     "prtmst.prtnum",
+     "prtmst.typcod",
+     "prtmst.wh_id_tmpl"
+    ],
+    "lineage": [
+     {
+      "field": "LOCATN",
+      "table": "invlod",
+      "column": "stoloc"
+     },
+     {
+      "field": "ITMCOD",
+      "table": "invdtl",
+      "column": "prtnum"
+     },
+     {
+      "field": "ITMGRP",
+      "table": "prtmst",
+      "column": "prtfam"
+     },
+     {
+      "field": "ULID20",
+      "table": "invlod",
+      "column": "lodnum"
+     },
+     {
+      "field": "CASQTY",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "QASTAT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "FIFODT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "CTLGRP",
+      "table": "invdtl",
+      "column": "lotnum"
+     },
+     {
+      "field": "ULPALL",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ZONCOD",
+      "table": "locmst",
+      "column": "arecod"
+     },
+     {
+      "field": "last_update",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "BLDING",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "MATTYP",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "calculated_pal_height",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "UOM",
+      "table": "prtftp_dtl",
+      "column": "uomcod"
+     },
+     {
+      "field": "VNDCOD",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VNDLOT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ULPAL_ITEM",
+      "table": null,
+      "column": null
+     }
+    ]
+   }
+  },
+  "R02": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "locatn",
+     "sysdtl",
+     "systrn",
+     "users"
+    ],
+    "columns": [
+     "locatn.arecod",
+     "locatn.count_itmcls",
+     "locatn.locatn",
+     "locatn.post_count_ok",
+     "locatn.pre_count_ok",
+     "locatn.subsit",
+     "sysdtl.dtltyp",
+     "sysdtl.locatn",
+     "sysdtl.subsit",
+     "sysdtl.trnseq",
+     "systrn.gendat",
+     "systrn.sysdat",
+     "systrn.techid",
+     "systrn.trnseq",
+     "systrn.trntyp",
+     "users.first_name",
+     "users.last_name",
+     "users.user_id"
+    ],
+    "lineage": [
+     {
+      "field": "stkcnt_date",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "time",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "subsit",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "count_itmcls",
+      "table": "locatn",
+      "column": "count_itmcls"
+     },
+     {
+      "field": "locatn",
+      "table": "sysdtl",
+      "column": "locatn"
+     },
+     {
+      "field": "stkcnt",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "stkmis",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "stkcor",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "name",
+      "table": null,
+      "column": null
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "adrmst",
+     "aremst",
+     "cnthst",
+     "dlytrn",
+     "les_usr_ath",
+     "loc_typ",
+     "locmst",
+     "prtmst"
+    ],
+    "columns": [
+     "adrmst.adr_id",
+     "adrmst.first_name",
+     "adrmst.last_name",
+     "aremst.arecod",
+     "aremst.bldg_id",
+     "aremst.wh_id",
+     "cnthst.cnt_usr_id",
+     "cnthst.cntdte",
+     "cnthst.cntqty",
+     "cnthst.prt_client_id",
+     "cnthst.prtnum",
+     "cnthst.stoloc",
+     "cnthst.untqty",
+     "cnthst.wh_id",
+     "dlytrn.actcod",
+     "dlytrn.dlytrn_id",
+     "dlytrn.frstol",
+     "dlytrn.trndte",
+     "dlytrn.wh_id",
+     "les_usr_ath.adr_id",
+     "les_usr_ath.usr_id",
+     "loc_typ.loc_typ",
+     "loc_typ.loc_typ_id",
+     "locmst.arecod",
+     "locmst.loc_typ_id",
+     "locmst.stoloc",
+     "locmst.wh_id",
+     "prtmst.prt_client_id",
+     "prtmst.prtnum",
+     "prtmst.typcod",
+     "prtmst.wh_id_tmpl"
+    ],
+    "lineage": [
+     {
+      "field": "stkcnt_date",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "time",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "subsit",
+      "table": "aremst",
+      "column": "bldg_id"
+     },
+     {
+      "field": "count_itmcls",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "locatn",
+      "table": "cnthst",
+      "column": "stoloc"
+     },
+     {
+      "field": "stkcnt",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "stkmis",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "stkcor",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "name",
+      "table": null,
+      "column": null
+     }
+    ]
+   }
+  },
+  "R03": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "ctlgrp",
+     "lindel",
+     "porecipe",
+     "prdlin",
+     "prdque",
+     "systrn",
+     "unitld",
+     "untdtl"
+    ],
+    "columns": [
+     "ctlgrp.ctlgrp",
+     "ctlgrp.itmcls",
+     "ctlgrp.itmcod",
+     "ctlgrp.qastat",
+     "ctlgrp.vndcod",
+     "ctlgrp.vndlot",
+     "lindel.ctlgrp",
+     "lindel.itmcod",
+     "lindel.linseq",
+     "lindel.locatn",
+     "lindel.plnumb",
+     "lindel.prdord",
+     "lindel.spccod",
+     "lindel.vndcod",
+     "lindel.vndlot",
+     "porecipe.actqty",
+     "porecipe.deliv_prdlin",
+     "porecipe.expqty",
+     "porecipe.prdord",
+     "porecipe.spccd1",
+     "porecipe.spccd1_itmcls",
+     "prdlin.plnumb",
+     "prdlin.prdlin",
+     "prdlin.prdord",
+     "prdlin.subsit",
+     "prdque.actdat",
+     "prdque.complete_flag",
+     "prdque.enddat",
+     "prdque.itmcod",
+     "prdque.prdord",
+     "systrn.sysdat",
+     "unitld.locatn",
+     "unitld.ulid",
+     "untdtl.ctlgrp",
+     "untdtl.itmcls",
+     "untdtl.itmcod",
+     "untdtl.ulid"
+    ],
+    "lineage": [
+     {
+      "field": "PLNUMB",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "PRDORD",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ACTDAT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ENDDAT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ITMCOD",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "SPCCOD",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "LINSEQ",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "LOCATN",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "CTLGRP",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VNDCOD",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VNDLOT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ULIDs_anhand_Ort",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ULIDs_anhand_Vendor_Lot",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Last_Update",
+      "table": null,
+      "column": null
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "dlytrn",
+     "invdtl",
+     "invlod",
+     "invsub",
+     "prtmst",
+     "wkodtl",
+     "wkohdr"
+    ],
+    "columns": [
+     "dlytrn.trndte",
+     "dlytrn.wh_id",
+     "invdtl.invsts",
+     "invdtl.prt_client_id",
+     "invdtl.prtnum",
+     "invdtl.subnum",
+     "invdtl.sup_lotnum",
+     "invlod.lodnum",
+     "invlod.stoloc",
+     "invlod.wh_id",
+     "invsub.lodnum",
+     "invsub.subnum",
+     "prtmst.prt_client_id",
+     "prtmst.prtnum",
+     "prtmst.typcod",
+     "prtmst.wh_id_tmpl",
+     "wkodtl.client_id",
+     "wkodtl.linqty",
+     "wkodtl.lotnum",
+     "wkodtl.prcloc",
+     "wkodtl.prt_client_id",
+     "wkodtl.prtnum",
+     "wkodtl.sup_lotnum",
+     "wkodtl.tot_dlvqty",
+     "wkodtl.wh_id",
+     "wkodtl.wkolin",
+     "wkodtl.wkonum",
+     "wkodtl.wkorev",
+     "wkohdr.client_id",
+     "wkohdr.prdlin",
+     "wkohdr.prtnum",
+     "wkohdr.sch_begdte",
+     "wkohdr.sch_enddte",
+     "wkohdr.wh_id",
+     "wkohdr.wkonum",
+     "wkohdr.wkorev",
+     "wkohdr.wkosts"
+    ],
+    "lineage": [
+     {
+      "field": "PLNUMB",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "PRDORD",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ACTDAT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ENDDAT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ITMCOD",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "SPCCOD",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "LINSEQ",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "LOCATN",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "CTLGRP",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VNDCOD",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VNDLOT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ULIDs_anhand_Ort",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ULIDs_anhand_Vendor_Lot",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Last_Update",
+      "table": null,
+      "column": null
+     }
+    ]
+   }
+  },
+  "R04": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "equip"
+    ],
+    "columns": [
+     "equip.equip",
+     "equip.equip_desc"
+    ],
+    "lineage": [
+     {
+      "field": "equip",
+      "table": "equip",
+      "column": "equip"
+     },
+     {
+      "field": "equip_desc",
+      "table": "equip",
+      "column": "equip_desc"
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "dscmst",
+     "vehtyp"
+    ],
+    "columns": [
+     "dscmst.colnam",
+     "dscmst.colval",
+     "dscmst.lngdsc",
+     "dscmst.locale_id",
+     "vehtyp.vehtyp_id"
+    ],
+    "lineage": [
+     {
+      "field": "equip",
+      "table": "vehtyp",
+      "column": "vehtyp_id"
+     },
+     {
+      "field": "equip_desc",
+      "table": null,
+      "column": null
+     }
+    ]
+   }
+  },
+  "R05": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "rcpexp",
+     "rcphdr",
+     "trailer",
+     "trklin",
+     "trukio"
+    ],
+    "columns": [
+     "rcpexp.itmcod",
+     "rcpexp.ponumb",
+     "rcpexp.rrnumb",
+     "rcphdr.bolnum",
+     "rcphdr.delvid",
+     "rcphdr.rcvsit",
+     "rcphdr.rectyp",
+     "rcphdr.rrnumb",
+     "rcphdr.vndcod",
+     "trailer.locatn",
+     "trailer.trklin",
+     "trailer.trlnum",
+     "trklin.trklin",
+     "trklin.trknam",
+     "trukio.aptdat",
+     "trukio.aptnum",
+     "trukio.asgdat",
+     "trukio.rrnumb",
+     "trukio.trklin",
+     "trukio.trlnum"
+    ],
+    "lineage": [
+     {
+      "field": "RRNUMB",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "RECTYP",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "BN",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "IB",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "DC",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VNDCOD",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "IT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "PO",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "APTDAT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "TRLNUM",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "LOCATN",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "TRKNAM",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ASGDAT",
+      "table": null,
+      "column": null
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "carhdr",
+     "rcvinv",
+     "rcvlin",
+     "rcvtrk",
+     "trlr"
+    ],
+    "columns": [
+     "carhdr.carcod",
+     "carhdr.carnam",
+     "rcvinv.invnum",
+     "rcvinv.invtyp",
+     "rcvinv.po_num",
+     "rcvinv.supnum",
+     "rcvinv.trknum",
+     "rcvinv.waybil",
+     "rcvinv.wh_id",
+     "rcvlin.invnum",
+     "rcvlin.prtnum",
+     "rcvlin.trknum",
+     "rcvlin.wh_id",
+     "rcvtrk.expdte",
+     "rcvtrk.trknum",
+     "rcvtrk.trlr_id",
+     "rcvtrk.wh_id",
+     "trlr.arrdte",
+     "trlr.carcod",
+     "trlr.trlr_id",
+     "trlr.trlr_num",
+     "trlr.yard_loc"
+    ],
+    "lineage": [
+     {
+      "field": "RRNUMB",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "RECTYP",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "BN",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "IB",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "DC",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VNDCOD",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "IT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "PO",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "APTDAT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "TRLNUM",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "LOCATN",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "TRKNAM",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ASGDAT",
+      "table": null,
+      "column": null
+     }
+    ]
+   }
+  },
+  "R06": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "blditm",
+     "item_config",
+     "item_uom",
+     "itmgrp",
+     "itmmst",
+     "rcpexp",
+     "rcphdr",
+     "trailer",
+     "trklin",
+     "trukio"
+    ],
+    "columns": [
+     "blditm.blding",
+     "blditm.itmcls",
+     "blditm.itmcod",
+     "blditm.put_zonlst",
+     "blditm.ulpall",
+     "item_config.default_conf",
+     "item_config.itmcls",
+     "item_config.itmcod",
+     "item_config.laypul",
+     "item_config.udepth",
+     "item_config.ulpall",
+     "item_config.uwidth",
+     "item_uom.dimuom",
+     "item_uom.itmcls",
+     "item_uom.itmcod",
+     "item_uom.u_height",
+     "item_uom.u_length",
+     "item_uom.u_width",
+     "item_uom.uom",
+     "item_uom.whsflg",
+     "itmgrp.grpdsc",
+     "itmgrp.itmgrp",
+     "itmmst.itmcls",
+     "itmmst.itmcod",
+     "itmmst.itmdsc",
+     "itmmst.itmgrp",
+     "itmmst.palflg",
+     "rcpexp.itmcod",
+     "rcpexp.ponumb",
+     "rcpexp.rrnumb",
+     "rcphdr.bolnum",
+     "rcphdr.delvid",
+     "rcphdr.rcvsit",
+     "rcphdr.rectyp",
+     "rcphdr.rrnumb",
+     "rcphdr.vndcod",
+     "trailer.locatn",
+     "trailer.trklin",
+     "trailer.trlnum",
+     "trklin.trklin",
+     "trklin.trknam",
+     "trukio.aptdat",
+     "trukio.aptnum",
+     "trukio.asgdat",
+     "trukio.rrnumb",
+     "trukio.trklin",
+     "trukio.trlnum"
+    ],
+    "lineage": [
+     {
+      "field": "rrnumb",
+      "table": "rcphdr",
+      "column": "rrnumb"
+     },
+     {
+      "field": "rectyp",
+      "table": "rcphdr",
+      "column": "rectyp"
+     },
+     {
+      "field": "bn",
+      "table": "rcphdr",
+      "column": "bolnum"
+     },
+     {
+      "field": "ib",
+      "table": "rcphdr",
+      "column": "delvid"
+     },
+     {
+      "field": "dc",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "vndcod",
+      "table": "rcphdr",
+      "column": "vndcod"
+     },
+     {
+      "field": "it",
+      "table": "rcpexp",
+      "column": "itmcod"
+     },
+     {
+      "field": "po",
+      "table": "rcpexp",
+      "column": "ponumb"
+     },
+     {
+      "field": "aptdat",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "trlnum",
+      "table": "trukio",
+      "column": "trlnum"
+     },
+     {
+      "field": "locatn",
+      "table": "trailer",
+      "column": "locatn"
+     },
+     {
+      "field": "trknam",
+      "table": "trklin",
+      "column": "trknam"
+     },
+     {
+      "field": "asgdat",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "new_material",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "stammdaten",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "agv_lagerbereich",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "itmdsc",
+      "table": "itmmst",
+      "column": "itmdsc"
+     },
+     {
+      "field": "itmgrp",
+      "table": "itmmst",
+      "column": "itmgrp"
+     },
+     {
+      "field": "grpdsc",
+      "table": "itmgrp",
+      "column": "grpdsc"
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "carhdr",
+     "dscmst",
+     "prtdsc",
+     "prtftp_dtl",
+     "prtmst",
+     "rcvinv",
+     "rcvlin",
+     "rcvtrk",
+     "trlr"
+    ],
+    "columns": [
+     "carhdr.carcod",
+     "carhdr.carnam",
+     "dscmst.colnam",
+     "dscmst.colval",
+     "dscmst.lngdsc",
+     "dscmst.locale_id",
+     "prtdsc.colnam",
+     "prtdsc.colval",
+     "prtdsc.lngdsc",
+     "prtdsc.locale_id",
+     "prtftp_dtl.hgt",
+     "prtftp_dtl.len",
+     "prtftp_dtl.pal_flg",
+     "prtftp_dtl.prt_client_id",
+     "prtftp_dtl.prtnum",
+     "prtftp_dtl.rcv_flg",
+     "prtftp_dtl.uomlvl",
+     "prtftp_dtl.wh_id",
+     "prtftp_dtl.wid",
+     "prtmst.prt_client_id",
+     "prtmst.prtfam",
+     "prtmst.prtnum",
+     "prtmst.typcod",
+     "prtmst.wh_id_tmpl",
+     "rcvinv.invnum",
+     "rcvinv.invtyp",
+     "rcvinv.po_num",
+     "rcvinv.supnum",
+     "rcvinv.trknum",
+     "rcvinv.waybil",
+     "rcvinv.wh_id",
+     "rcvlin.invnum",
+     "rcvlin.prt_client_id",
+     "rcvlin.prtnum",
+     "rcvlin.trknum",
+     "rcvlin.wh_id",
+     "rcvtrk.expdte",
+     "rcvtrk.trknum",
+     "rcvtrk.trlr_id",
+     "rcvtrk.wh_id",
+     "trlr.arrdte",
+     "trlr.carcod",
+     "trlr.trlr_id",
+     "trlr.trlr_num",
+     "trlr.yard_loc"
+    ],
+    "lineage": [
+     {
+      "field": "rrnumb",
+      "table": "rcvtrk",
+      "column": "trknum"
+     },
+     {
+      "field": "rectyp",
+      "table": "rcvinv",
+      "column": "invtyp"
+     },
+     {
+      "field": "bn",
+      "table": "rcvinv",
+      "column": "waybil"
+     },
+     {
+      "field": "ib",
+      "table": "rcvinv",
+      "column": "invnum"
+     },
+     {
+      "field": "dc",
+      "table": "rcvtrk",
+      "column": "wh_id"
+     },
+     {
+      "field": "vndcod",
+      "table": "rcvinv",
+      "column": "supnum"
+     },
+     {
+      "field": "it",
+      "table": "rcvlin",
+      "column": "prtnum"
+     },
+     {
+      "field": "po",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "aptdat",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "trlnum",
+      "table": "trlr",
+      "column": "trlr_num"
+     },
+     {
+      "field": "locatn",
+      "table": "trlr",
+      "column": "yard_loc"
+     },
+     {
+      "field": "trknam",
+      "table": "carhdr",
+      "column": "carnam"
+     },
+     {
+      "field": "asgdat",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "new_material",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "stammdaten",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "agv_lagerbereich",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "itmdsc",
+      "table": "prtdsc",
+      "column": "lngdsc"
+     },
+     {
+      "field": "itmgrp",
+      "table": "prtmst",
+      "column": "prtfam"
+     },
+     {
+      "field": "grpdsc",
+      "table": "dscmst",
+      "column": "lngdsc"
+     }
+    ]
+   }
+  },
+  "R07": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "blding",
+     "ctlgrp",
+     "item_uom",
+     "itmgrp",
+     "itmmst",
+     "locatn",
+     "subsit",
+     "unitld",
+     "untdtl",
+     "zoncod"
+    ],
+    "columns": [
+     "blding.blding",
+     "blding.subsit",
+     "ctlgrp.ctlgrp",
+     "ctlgrp.fifodt",
+     "ctlgrp.itmcls",
+     "ctlgrp.itmcod",
+     "ctlgrp.qastat",
+     "ctlgrp.vndlot",
+     "item_uom.itmcls",
+     "item_uom.itmcod",
+     "item_uom.uom",
+     "item_uom.whsflg",
+     "itmgrp.grpdsc",
+     "itmgrp.itmcls",
+     "itmgrp.itmgrp",
+     "itmmst.itmcls",
+     "itmmst.itmcod",
+     "itmmst.itmdsc",
+     "itmmst.itmgrp",
+     "itmmst.itmnum",
+     "locatn.locatn",
+     "locatn.subsit",
+     "locatn.zoncod",
+     "subsit.sitnam",
+     "subsit.subsit",
+     "unitld.locatn",
+     "unitld.subsit",
+     "unitld.ulid",
+     "unitld.ulpall",
+     "untdtl.casqty",
+     "untdtl.ctlgrp",
+     "untdtl.itmcls",
+     "untdtl.itmcod",
+     "untdtl.ulid",
+     "zoncod.blding",
+     "zoncod.zoncod"
+    ],
+    "lineage": [
+     {
+      "field": "Subsit",
+      "table": "subsit",
+      "column": "sitnam"
+     },
+     {
+      "field": "Building",
+      "table": "zoncod",
+      "column": "blding"
+     },
+     {
+      "field": "Location",
+      "table": "unitld",
+      "column": "locatn"
+     },
+     {
+      "field": "Pallet Number",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Pallet Type",
+      "table": "unitld",
+      "column": "ulpall"
+     },
+     {
+      "field": "Item Code",
+      "table": "untdtl",
+      "column": "itmcod"
+     },
+     {
+      "field": "Item Description",
+      "table": "itmmst",
+      "column": "itmdsc"
+     },
+     {
+      "field": "Item Group Description",
+      "table": "itmgrp",
+      "column": "grpdsc"
+     },
+     {
+      "field": "Control Group",
+      "table": "untdtl",
+      "column": "ctlgrp"
+     },
+     {
+      "field": "Categorie",
+      "table": "itmmst",
+      "column": "itmnum"
+     },
+     {
+      "field": "Vendor Lot",
+      "table": "ctlgrp",
+      "column": "vndlot"
+     },
+     {
+      "field": "QA Status",
+      "table": "ctlgrp",
+      "column": "qastat"
+     },
+     {
+      "field": "Quantity",
+      "table": "untdtl",
+      "column": "casqty"
+     },
+     {
+      "field": "WHSE Unit",
+      "table": "item_uom",
+      "column": "uom"
+     },
+     {
+      "field": "First Receipt Date",
+      "table": "ctlgrp",
+      "column": "fifodt"
+     },
+     {
+      "field": "sysdate",
+      "table": null,
+      "column": null
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "aremst",
+     "dscmst",
+     "invdtl",
+     "invlod",
+     "invsub",
+     "locmst",
+     "prtdsc",
+     "prtftp_dtl",
+     "prtmst"
+    ],
+    "columns": [
+     "aremst.arecod",
+     "aremst.bldg_id",
+     "aremst.wh_id",
+     "dscmst.colnam",
+     "dscmst.colval",
+     "dscmst.lngdsc",
+     "dscmst.locale_id",
+     "invdtl.fifdte",
+     "invdtl.ftpcod",
+     "invdtl.invsts",
+     "invdtl.lotnum",
+     "invdtl.prt_client_id",
+     "invdtl.prtnum",
+     "invdtl.subnum",
+     "invdtl.sup_lotnum",
+     "invdtl.untqty",
+     "invlod.lodnum",
+     "invlod.stoloc",
+     "invlod.wh_id",
+     "invsub.lodnum",
+     "invsub.subnum",
+     "locmst.arecod",
+     "locmst.stoloc",
+     "locmst.wh_id",
+     "prtdsc.colnam",
+     "prtdsc.colval",
+     "prtdsc.lngdsc",
+     "prtdsc.locale_id",
+     "prtftp_dtl.ftpcod",
+     "prtftp_dtl.prt_client_id",
+     "prtftp_dtl.prtnum",
+     "prtftp_dtl.rcv_flg",
+     "prtftp_dtl.untqty",
+     "prtftp_dtl.uomcod",
+     "prtftp_dtl.uomlvl",
+     "prtftp_dtl.wh_id",
+     "prtmst.prt_client_id",
+     "prtmst.prtfam",
+     "prtmst.prtnum",
+     "prtmst.typcod",
+     "prtmst.wh_id_tmpl"
+    ],
+    "lineage": [
+     {
+      "field": "Subsit",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Building",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Location",
+      "table": "invlod",
+      "column": "stoloc"
+     },
+     {
+      "field": "Pallet Number",
+      "table": "invlod",
+      "column": "lodnum"
+     },
+     {
+      "field": "Pallet Type",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Item Code",
+      "table": "invdtl",
+      "column": "prtnum"
+     },
+     {
+      "field": "Item Description",
+      "table": "prtdsc",
+      "column": "lngdsc"
+     },
+     {
+      "field": "Item Group Description",
+      "table": "dscmst",
+      "column": "lngdsc"
+     },
+     {
+      "field": "Control Group",
+      "table": "invdtl",
+      "column": "lotnum"
+     },
+     {
+      "field": "Categorie",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Vendor Lot",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "QA Status",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Quantity",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "WHSE Unit",
+      "table": "prtftp_dtl",
+      "column": "uomcod"
+     },
+     {
+      "field": "First Receipt Date",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "sysdate",
+      "table": null,
+      "column": null
+     }
+    ]
+   }
+  },
+  "R08": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "ctlgrp",
+     "item_uom",
+     "itmmst",
+     "sysdtl",
+     "systrn"
+    ],
+    "columns": [
+     "ctlgrp.ctlgrp",
+     "ctlgrp.itmcls",
+     "ctlgrp.itmcod",
+     "ctlgrp.vndcod",
+     "ctlgrp.vndlot",
+     "item_uom.itmcod",
+     "item_uom.uom",
+     "item_uom.whsflg",
+     "itmmst.itmcls",
+     "itmmst.itmcod",
+     "itmmst.itmdsc",
+     "sysdtl.ctlgrp",
+     "sysdtl.dtltyp",
+     "sysdtl.itmcls",
+     "sysdtl.itmcod",
+     "sysdtl.locatn",
+     "sysdtl.subsit",
+     "sysdtl.trnseq",
+     "sysdtl.ulid",
+     "systrn.prdord",
+     "systrn.sysdat",
+     "systrn.trnqty",
+     "systrn.trnseq",
+     "systrn.trntyp"
+    ],
+    "lineage": [
+     {
+      "field": "LINE",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "DELIVERY_DATE",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ITMCOD",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "DESCRIPTION",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "CTLGRP",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VENDOR",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VENDOR_LOT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "QTY",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "WM_UNIT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "PROCESS_ORDER",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ULID",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ID_NR",
+      "table": null,
+      "column": null
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "dlytrn",
+     "loc_typ",
+     "locmst",
+     "pckwrk_dtl",
+     "pckwrk_hdr",
+     "prtdsc",
+     "prtftp_dtl",
+     "prtmst"
+    ],
+    "columns": [
+     "dlytrn.lodnum",
+     "dlytrn.lotnum",
+     "dlytrn.prt_client_id",
+     "dlytrn.prtnum",
+     "dlytrn.sup_lotnum",
+     "dlytrn.tostol",
+     "dlytrn.trndte",
+     "dlytrn.trnqty",
+     "dlytrn.wh_id",
+     "loc_typ.loc_typ_cat",
+     "loc_typ.loc_typ_id",
+     "locmst.loc_typ_id",
+     "locmst.stoloc",
+     "locmst.wh_id",
+     "pckwrk_dtl.last_upd_dt",
+     "pckwrk_dtl.wkonum",
+     "pckwrk_dtl.wrkref",
+     "pckwrk_dtl.wrkref_dtl",
+     "pckwrk_hdr.pallet_id",
+     "pckwrk_hdr.wh_id",
+     "pckwrk_hdr.wrkref",
+     "prtdsc.colnam",
+     "prtdsc.colval",
+     "prtdsc.lngdsc",
+     "prtdsc.locale_id",
+     "prtftp_dtl.prt_client_id",
+     "prtftp_dtl.prtnum",
+     "prtftp_dtl.rcv_flg",
+     "prtftp_dtl.untqty",
+     "prtftp_dtl.uomcod",
+     "prtftp_dtl.uomlvl",
+     "prtftp_dtl.wh_id",
+     "prtmst.prt_client_id",
+     "prtmst.prtnum",
+     "prtmst.stkuom",
+     "prtmst.typcod",
+     "prtmst.wh_id_tmpl"
+    ],
+    "lineage": [
+     {
+      "field": "LINE",
+      "table": "dlytrn",
+      "column": "tostol"
+     },
+     {
+      "field": "DELIVERY_DATE",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ITMCOD",
+      "table": "dlytrn",
+      "column": "prtnum"
+     },
+     {
+      "field": "DESCRIPTION",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "CTLGRP",
+      "table": "dlytrn",
+      "column": "lotnum"
+     },
+     {
+      "field": "VENDOR",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VENDOR_LOT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "QTY",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "WM_UNIT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "PROCESS_ORDER",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ULID",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ID_NR",
+      "table": null,
+      "column": null
+     }
+    ]
+   }
+  },
+  "R09": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "ctlgrp",
+     "item_uom",
+     "itmmst",
+     "sysdtl",
+     "systrn"
+    ],
+    "columns": [
+     "ctlgrp.ctlgrp",
+     "ctlgrp.itmcls",
+     "ctlgrp.itmcod",
+     "ctlgrp.vndcod",
+     "ctlgrp.vndlot",
+     "item_uom.itmcod",
+     "item_uom.uom",
+     "item_uom.whsflg",
+     "itmmst.itmcls",
+     "itmmst.itmcod",
+     "itmmst.itmdsc",
+     "sysdtl.ctlgrp",
+     "sysdtl.dtltyp",
+     "sysdtl.itmcls",
+     "sysdtl.itmcod",
+     "sysdtl.locatn",
+     "sysdtl.subsit",
+     "sysdtl.trnseq",
+     "sysdtl.ulid",
+     "systrn.prdord",
+     "systrn.sysdat",
+     "systrn.trnqty",
+     "systrn.trnseq",
+     "systrn.trntyp"
+    ],
+    "lineage": [
+     {
+      "field": "LINE",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "DELIVERY_DATE",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ITMCOD",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "DESCRIPTION",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "CTLGRP",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VENDOR",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VENDOR_LOT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "QTY",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "WM_UNIT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "PROCESS_ORDER",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ULID",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ID_NR",
+      "table": null,
+      "column": null
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "dlytrn",
+     "loc_typ",
+     "locmst",
+     "pckwrk_dtl",
+     "pckwrk_hdr",
+     "prtdsc",
+     "prtftp_dtl",
+     "prtmst"
+    ],
+    "columns": [
+     "dlytrn.dlytrn_id",
+     "dlytrn.lodnum",
+     "dlytrn.lotnum",
+     "dlytrn.prt_client_id",
+     "dlytrn.prtnum",
+     "dlytrn.sup_lotnum",
+     "dlytrn.tostol",
+     "dlytrn.trndte",
+     "dlytrn.trnqty",
+     "dlytrn.wh_id",
+     "loc_typ.loc_typ_cat",
+     "loc_typ.loc_typ_id",
+     "locmst.loc_typ_id",
+     "locmst.stoloc",
+     "locmst.wh_id",
+     "pckwrk_dtl.last_upd_dt",
+     "pckwrk_dtl.wkonum",
+     "pckwrk_dtl.wrkref",
+     "pckwrk_dtl.wrkref_dtl",
+     "pckwrk_hdr.pallet_id",
+     "pckwrk_hdr.wh_id",
+     "pckwrk_hdr.wrkref",
+     "prtdsc.colnam",
+     "prtdsc.colval",
+     "prtdsc.lngdsc",
+     "prtdsc.locale_id",
+     "prtftp_dtl.prt_client_id",
+     "prtftp_dtl.prtnum",
+     "prtftp_dtl.rcv_flg",
+     "prtftp_dtl.untqty",
+     "prtftp_dtl.uomcod",
+     "prtftp_dtl.uomlvl",
+     "prtftp_dtl.wh_id",
+     "prtmst.prt_client_id",
+     "prtmst.prtnum",
+     "prtmst.stkuom",
+     "prtmst.typcod",
+     "prtmst.wh_id_tmpl"
+    ],
+    "lineage": [
+     {
+      "field": "LINE",
+      "table": "dlytrn",
+      "column": "tostol"
+     },
+     {
+      "field": "DELIVERY_DATE",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ITMCOD",
+      "table": "dlytrn",
+      "column": "prtnum"
+     },
+     {
+      "field": "DESCRIPTION",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "CTLGRP",
+      "table": "dlytrn",
+      "column": "lotnum"
+     },
+     {
+      "field": "VENDOR",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VENDOR_LOT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "QTY",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "WM_UNIT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "PROCESS_ORDER",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ULID",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ID_NR",
+      "table": null,
+      "column": null
+     }
+    ]
+   }
+  },
+  "R10": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "ctlgrp",
+     "item_uom",
+     "itmmst",
+     "sysdtl",
+     "systrn"
+    ],
+    "columns": [
+     "ctlgrp.ctlgrp",
+     "ctlgrp.itmcls",
+     "ctlgrp.itmcod",
+     "ctlgrp.vndcod",
+     "ctlgrp.vndlot",
+     "item_uom.itmcod",
+     "item_uom.uom",
+     "item_uom.whsflg",
+     "itmmst.itmcls",
+     "itmmst.itmcod",
+     "itmmst.itmdsc",
+     "sysdtl.ctlgrp",
+     "sysdtl.dtltyp",
+     "sysdtl.itmcls",
+     "sysdtl.itmcod",
+     "sysdtl.locatn",
+     "sysdtl.subsit",
+     "sysdtl.trnseq",
+     "sysdtl.ulid",
+     "systrn.prdord",
+     "systrn.sysdat",
+     "systrn.trnqty",
+     "systrn.trnseq",
+     "systrn.trntyp"
+    ],
+    "lineage": [
+     {
+      "field": "LINE",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "RETURN_DATE",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ITMCOD",
+      "table": "sysdtl",
+      "column": "itmcod"
+     },
+     {
+      "field": "DESCRIPTION",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "CTLGRP",
+      "table": "sysdtl",
+      "column": "ctlgrp"
+     },
+     {
+      "field": "VENDOR",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VENDOR_LOT",
+      "table": "ctlgrp",
+      "column": "vndlot"
+     },
+     {
+      "field": "QTY",
+      "table": "systrn",
+      "column": "trnqty"
+     },
+     {
+      "field": "WM_UNIT",
+      "table": "item_uom",
+      "column": "uom"
+     },
+     {
+      "field": "PROCESS_ORDER",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ULID",
+      "table": "sysdtl",
+      "column": "ulid"
+     },
+     {
+      "field": "ID_NR",
+      "table": null,
+      "column": null
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "dlytrn",
+     "loc_typ",
+     "locmst",
+     "pckwrk_dtl",
+     "pckwrk_hdr",
+     "prtdsc",
+     "prtftp_dtl",
+     "prtmst"
+    ],
+    "columns": [
+     "dlytrn.frstol",
+     "dlytrn.lodnum",
+     "dlytrn.lotnum",
+     "dlytrn.prt_client_id",
+     "dlytrn.prtnum",
+     "dlytrn.sup_lotnum",
+     "dlytrn.tostol",
+     "dlytrn.trndte",
+     "dlytrn.trnqty",
+     "dlytrn.wh_id",
+     "loc_typ.loc_typ_cat",
+     "loc_typ.loc_typ_id",
+     "locmst.loc_typ_id",
+     "locmst.stoloc",
+     "locmst.wh_id",
+     "pckwrk_dtl.last_upd_dt",
+     "pckwrk_dtl.wkonum",
+     "pckwrk_dtl.wrkref",
+     "pckwrk_dtl.wrkref_dtl",
+     "pckwrk_hdr.pallet_id",
+     "pckwrk_hdr.wh_id",
+     "pckwrk_hdr.wrkref",
+     "prtdsc.colnam",
+     "prtdsc.colval",
+     "prtdsc.lngdsc",
+     "prtdsc.locale_id",
+     "prtftp_dtl.prt_client_id",
+     "prtftp_dtl.prtnum",
+     "prtftp_dtl.rcv_flg",
+     "prtftp_dtl.untqty",
+     "prtftp_dtl.uomcod",
+     "prtftp_dtl.uomlvl",
+     "prtftp_dtl.wh_id",
+     "prtmst.prt_client_id",
+     "prtmst.prtnum",
+     "prtmst.stkuom",
+     "prtmst.typcod",
+     "prtmst.wh_id_tmpl"
+    ],
+    "lineage": [
+     {
+      "field": "LINE",
+      "table": "dlytrn",
+      "column": "frstol"
+     },
+     {
+      "field": "RETURN_DATE",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ITMCOD",
+      "table": "dlytrn",
+      "column": "prtnum"
+     },
+     {
+      "field": "DESCRIPTION",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "CTLGRP",
+      "table": "dlytrn",
+      "column": "lotnum"
+     },
+     {
+      "field": "VENDOR",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VENDOR_LOT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "QTY",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "WM_UNIT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "PROCESS_ORDER",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ULID",
+      "table": "dlytrn",
+      "column": "lodnum"
+     },
+     {
+      "field": "ID_NR",
+      "table": null,
+      "column": null
+     }
+    ]
+   }
+  },
+  "R11": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "ctlgrp",
+     "item_uom",
+     "itmmst",
+     "sysdtl",
+     "systrn"
+    ],
+    "columns": [
+     "ctlgrp.ctlgrp",
+     "ctlgrp.itmcls",
+     "ctlgrp.itmcod",
+     "ctlgrp.vndcod",
+     "ctlgrp.vndlot",
+     "item_uom.itmcod",
+     "item_uom.uom",
+     "item_uom.whsflg",
+     "itmmst.itmcls",
+     "itmmst.itmcod",
+     "itmmst.itmdsc",
+     "sysdtl.ctlgrp",
+     "sysdtl.dtltyp",
+     "sysdtl.itmcls",
+     "sysdtl.itmcod",
+     "sysdtl.locatn",
+     "sysdtl.subsit",
+     "sysdtl.trnseq",
+     "sysdtl.ulid",
+     "systrn.prdord",
+     "systrn.sysdat",
+     "systrn.trnqty",
+     "systrn.trnseq",
+     "systrn.trntyp"
+    ],
+    "lineage": [
+     {
+      "field": "LINE",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "RETURN_DATE",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ITMCOD",
+      "table": "sysdtl",
+      "column": "itmcod"
+     },
+     {
+      "field": "DESCRIPTION",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "CTLGRP",
+      "table": "sysdtl",
+      "column": "ctlgrp"
+     },
+     {
+      "field": "VENDOR",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VENDOR_LOT",
+      "table": "ctlgrp",
+      "column": "vndlot"
+     },
+     {
+      "field": "QTY",
+      "table": "systrn",
+      "column": "trnqty"
+     },
+     {
+      "field": "WM_UNIT",
+      "table": "item_uom",
+      "column": "uom"
+     },
+     {
+      "field": "PROCESS_ORDER",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ULID",
+      "table": "sysdtl",
+      "column": "ulid"
+     },
+     {
+      "field": "ID_NR",
+      "table": null,
+      "column": null
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "dlytrn",
+     "loc_typ",
+     "locmst",
+     "pckwrk_dtl",
+     "pckwrk_hdr",
+     "prtdsc",
+     "prtftp_dtl",
+     "prtmst"
+    ],
+    "columns": [
+     "dlytrn.frstol",
+     "dlytrn.lodnum",
+     "dlytrn.lotnum",
+     "dlytrn.prt_client_id",
+     "dlytrn.prtnum",
+     "dlytrn.sup_lotnum",
+     "dlytrn.tostol",
+     "dlytrn.trndte",
+     "dlytrn.trnqty",
+     "dlytrn.wh_id",
+     "loc_typ.loc_typ_cat",
+     "loc_typ.loc_typ_id",
+     "locmst.loc_typ_id",
+     "locmst.stoloc",
+     "locmst.wh_id",
+     "pckwrk_dtl.last_upd_dt",
+     "pckwrk_dtl.wkonum",
+     "pckwrk_dtl.wrkref",
+     "pckwrk_dtl.wrkref_dtl",
+     "pckwrk_hdr.pallet_id",
+     "pckwrk_hdr.wh_id",
+     "pckwrk_hdr.wrkref",
+     "prtdsc.colnam",
+     "prtdsc.colval",
+     "prtdsc.lngdsc",
+     "prtdsc.locale_id",
+     "prtftp_dtl.prt_client_id",
+     "prtftp_dtl.prtnum",
+     "prtftp_dtl.rcv_flg",
+     "prtftp_dtl.untqty",
+     "prtftp_dtl.uomcod",
+     "prtftp_dtl.uomlvl",
+     "prtftp_dtl.wh_id",
+     "prtmst.prt_client_id",
+     "prtmst.prtnum",
+     "prtmst.stkuom",
+     "prtmst.typcod",
+     "prtmst.wh_id_tmpl"
+    ],
+    "lineage": [
+     {
+      "field": "LINE",
+      "table": "dlytrn",
+      "column": "frstol"
+     },
+     {
+      "field": "RETURN_DATE",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ITMCOD",
+      "table": "dlytrn",
+      "column": "prtnum"
+     },
+     {
+      "field": "DESCRIPTION",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "CTLGRP",
+      "table": "dlytrn",
+      "column": "lotnum"
+     },
+     {
+      "field": "VENDOR",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "VENDOR_LOT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "QTY",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "WM_UNIT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "PROCESS_ORDER",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ULID",
+      "table": "dlytrn",
+      "column": "lodnum"
+     },
+     {
+      "field": "ID_NR",
+      "table": null,
+      "column": null
+     }
+    ]
+   }
+  },
+  "R12": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "item_uom",
+     "itmgrp",
+     "itmmst",
+     "sysdtl",
+     "systrn"
+    ],
+    "columns": [
+     "item_uom.itmcls",
+     "item_uom.itmcod",
+     "item_uom.uom",
+     "item_uom.whsflg",
+     "itmgrp.grpdsc",
+     "itmgrp.itmcls",
+     "itmgrp.itmgrp",
+     "itmmst.itmcls",
+     "itmmst.itmcod",
+     "itmmst.itmgrp",
+     "sysdtl.itmcls",
+     "sysdtl.itmcod",
+     "sysdtl.locatn",
+     "sysdtl.subsit",
+     "sysdtl.trnseq",
+     "sysdtl.ulid",
+     "systrn.prdord",
+     "systrn.sysdat",
+     "systrn.trnqty",
+     "systrn.trnseq",
+     "systrn.trntyp"
+    ],
+    "lineage": [
+     {
+      "field": "DELIVERY_DATE",
+      "table": "systrn",
+      "column": "sysdat"
+     },
+     {
+      "field": "LINE",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "PROCESS_ORDER",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ITMCOD",
+      "table": "sysdtl",
+      "column": "itmcod"
+     },
+     {
+      "field": "ITMGRP",
+      "table": "itmmst",
+      "column": "itmgrp"
+     },
+     {
+      "field": "grpdsc",
+      "table": "itmgrp",
+      "column": "grpdsc"
+     },
+     {
+      "field": "QTY",
+      "table": "systrn",
+      "column": "trnqty"
+     },
+     {
+      "field": "WHSE_UNIT",
+      "table": "item_uom",
+      "column": "uom"
+     },
+     {
+      "field": "ULID",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "RETURN_DATE",
+      "table": "systrn",
+      "column": "sysdat"
+     },
+     {
+      "field": "RETURN_QTY",
+      "table": "systrn",
+      "column": "trnqty"
+     },
+     {
+      "field": "DATE_DIFF",
+      "table": null,
+      "column": null
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "dlytrn",
+     "dscmst",
+     "loc_typ",
+     "locmst",
+     "pckwrk_dtl",
+     "pckwrk_hdr",
+     "prtftp_dtl",
+     "prtmst"
+    ],
+    "columns": [
+     "dlytrn.frstol",
+     "dlytrn.lodnum",
+     "dlytrn.prt_client_id",
+     "dlytrn.prtnum",
+     "dlytrn.tostol",
+     "dlytrn.trndte",
+     "dlytrn.trnqty",
+     "dlytrn.wh_id",
+     "dscmst.colnam",
+     "dscmst.colval",
+     "dscmst.lngdsc",
+     "dscmst.locale_id",
+     "loc_typ.loc_typ_cat",
+     "loc_typ.loc_typ_id",
+     "locmst.loc_typ_id",
+     "locmst.stoloc",
+     "locmst.wh_id",
+     "pckwrk_dtl.last_upd_dt",
+     "pckwrk_dtl.wkonum",
+     "pckwrk_dtl.wrkref",
+     "pckwrk_dtl.wrkref_dtl",
+     "pckwrk_hdr.pallet_id",
+     "pckwrk_hdr.wh_id",
+     "pckwrk_hdr.wrkref",
+     "prtftp_dtl.prt_client_id",
+     "prtftp_dtl.prtnum",
+     "prtftp_dtl.rcv_flg",
+     "prtftp_dtl.untqty",
+     "prtftp_dtl.uomcod",
+     "prtftp_dtl.uomlvl",
+     "prtftp_dtl.wh_id",
+     "prtmst.prt_client_id",
+     "prtmst.prtfam",
+     "prtmst.prtnum",
+     "prtmst.typcod",
+     "prtmst.wh_id_tmpl"
+    ],
+    "lineage": [
+     {
+      "field": "DELIVERY_DATE",
+      "table": "dlytrn",
+      "column": "trndte"
+     },
+     {
+      "field": "LINE",
+      "table": "dlytrn",
+      "column": "tostol"
+     },
+     {
+      "field": "PROCESS_ORDER",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ITMCOD",
+      "table": "dlytrn",
+      "column": "prtnum"
+     },
+     {
+      "field": "ITMGRP",
+      "table": "prtmst",
+      "column": "prtfam"
+     },
+     {
+      "field": "grpdsc",
+      "table": "dscmst",
+      "column": "lngdsc"
+     },
+     {
+      "field": "QTY",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "WHSE_UNIT",
+      "table": "prtftp_dtl",
+      "column": "uomcod"
+     },
+     {
+      "field": "ULID",
+      "table": "dlytrn",
+      "column": "lodnum"
+     },
+     {
+      "field": "RETURN_DATE",
+      "table": "dlytrn",
+      "column": "trndte"
+     },
+     {
+      "field": "RETURN_QTY",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "DATE_DIFF",
+      "table": null,
+      "column": null
+     }
+    ]
+   }
+  },
+  "R13": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "itmgrp"
+    ],
+    "columns": [
+     "itmgrp.fifo_window",
+     "itmgrp.grpdsc",
+     "itmgrp.itmcls",
+     "itmgrp.itmgrp"
+    ],
+    "lineage": [
+     {
+      "field": "itmgrp",
+      "table": "itmgrp",
+      "column": "itmgrp"
+     },
+     {
+      "field": "grpdsc",
+      "table": "itmgrp",
+      "column": "grpdsc"
+     },
+     {
+      "field": "itmcls",
+      "table": "itmgrp",
+      "column": "itmcls"
+     },
+     {
+      "field": "fifo_window",
+      "table": "itmgrp",
+      "column": "fifo_window"
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "dscmst",
+     "prtfam",
+     "prtmst"
+    ],
+    "columns": [
+     "dscmst.colnam",
+     "dscmst.colval",
+     "dscmst.lngdsc",
+     "dscmst.locale_id",
+     "prtfam.prtfam",
+     "prtmst.prtfam",
+     "prtmst.typcod",
+     "prtmst.wh_id_tmpl"
+    ],
+    "lineage": [
+     {
+      "field": "itmgrp",
+      "table": "prtfam",
+      "column": "prtfam"
+     },
+     {
+      "field": "grpdsc",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "itmcls",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "fifo_window",
+      "table": null,
+      "column": null
+     }
+    ]
+   }
+  },
+  "R14": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "ctlgrp",
+     "item_uom",
+     "itmmst",
+     "untdtl"
+    ],
+    "columns": [
+     "ctlgrp.ctlgrp",
+     "ctlgrp.ctrl_date",
+     "ctlgrp.itmcod",
+     "ctlgrp.qastat",
+     "item_uom.buomden",
+     "item_uom.buomnum",
+     "item_uom.itmcls",
+     "item_uom.itmcod",
+     "item_uom.uom",
+     "item_uom.whsflg",
+     "itmmst.itmcls",
+     "itmmst.itmcod",
+     "itmmst.itmdsc",
+     "itmmst.itmgrp",
+     "untdtl.casqty",
+     "untdtl.ctlgrp",
+     "untdtl.itmcls",
+     "untdtl.itmcod"
+    ],
+    "lineage": [
+     {
+      "field": "ITMGRP",
+      "table": "itmmst",
+      "column": "itmgrp"
+     },
+     {
+      "field": "Herkunft",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ARTIKEL",
+      "table": "ctlgrp",
+      "column": "itmcod"
+     },
+     {
+      "field": "BESCHREIBUNG",
+      "table": "itmmst",
+      "column": "itmdsc"
+     },
+     {
+      "field": "LOTNUMMER",
+      "table": "ctlgrp",
+      "column": "ctlgrp"
+     },
+     {
+      "field": "QA_STATUS",
+      "table": "ctlgrp",
+      "column": "qastat"
+     },
+     {
+      "field": "MENGE",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "WM_UNIT",
+      "table": "item_uom",
+      "column": "uom"
+     },
+     {
+      "field": "BESTAND_SU",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "SPERR_DATUM",
+      "table": null,
+      "column": null
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "invdtl",
+     "invlod",
+     "invsub",
+     "prtdsc",
+     "prtftp_dtl",
+     "prtlot",
+     "prtmst"
+    ],
+    "columns": [
+     "invdtl.ftpcod",
+     "invdtl.invsts",
+     "invdtl.lotnum",
+     "invdtl.prt_client_id",
+     "invdtl.prtnum",
+     "invdtl.subnum",
+     "invdtl.untqty",
+     "invlod.lodnum",
+     "invlod.wh_id",
+     "invsub.lodnum",
+     "invsub.subnum",
+     "prtdsc.colnam",
+     "prtdsc.colval",
+     "prtdsc.lngdsc",
+     "prtdsc.locale_id",
+     "prtftp_dtl.ftpcod",
+     "prtftp_dtl.prt_client_id",
+     "prtftp_dtl.prtnum",
+     "prtftp_dtl.rcv_flg",
+     "prtftp_dtl.untqty",
+     "prtftp_dtl.uomcod",
+     "prtftp_dtl.uomlvl",
+     "prtftp_dtl.wh_id",
+     "prtlot.last_upd_dt",
+     "prtlot.lotnum",
+     "prtlot.prt_client_id",
+     "prtlot.prtnum",
+     "prtlot.wh_id",
+     "prtmst.prt_client_id",
+     "prtmst.prtfam",
+     "prtmst.prtnum",
+     "prtmst.typcod",
+     "prtmst.wh_id_tmpl"
+    ],
+    "lineage": [
+     {
+      "field": "ITMGRP",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Herkunft",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ARTIKEL",
+      "table": "invdtl",
+      "column": "prtnum"
+     },
+     {
+      "field": "BESCHREIBUNG",
+      "table": "prtdsc",
+      "column": "lngdsc"
+     },
+     {
+      "field": "LOTNUMMER",
+      "table": "invdtl",
+      "column": "lotnum"
+     },
+     {
+      "field": "QA_STATUS",
+      "table": "invdtl",
+      "column": "invsts"
+     },
+     {
+      "field": "MENGE",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "WM_UNIT",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "BESTAND_SU",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "SPERR_DATUM",
+      "table": null,
+      "column": null
+     }
+    ]
+   }
+  },
+  "R15": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "blding",
+     "ctlgrp",
+     "itmgrp",
+     "itmmst",
+     "locatn",
+     "subsit",
+     "unitld",
+     "untdtl",
+     "zoncod"
+    ],
+    "columns": [
+     "blding.blding",
+     "blding.subsit",
+     "ctlgrp.ctlgrp",
+     "ctlgrp.fifodt",
+     "ctlgrp.itmcls",
+     "ctlgrp.itmcod",
+     "ctlgrp.ponumb",
+     "ctlgrp.qastat",
+     "ctlgrp.vndcod",
+     "ctlgrp.vndlot",
+     "itmgrp.grpdsc",
+     "itmgrp.itmcls",
+     "itmgrp.itmgrp",
+     "itmmst.itmcls",
+     "itmmst.itmcod",
+     "itmmst.itmdsc",
+     "itmmst.itmgrp",
+     "locatn.locatn",
+     "locatn.subsit",
+     "locatn.zoncod",
+     "subsit.sitnam",
+     "subsit.subsit",
+     "unitld.locatn",
+     "unitld.subsit",
+     "unitld.ulid",
+     "untdtl.casqty",
+     "untdtl.ctlgrp",
+     "untdtl.itmcls",
+     "untdtl.itmcod",
+     "untdtl.ulid",
+     "zoncod.blding",
+     "zoncod.zoncod"
+    ],
+    "lineage": [
+     {
+      "field": "Subsit",
+      "table": "subsit",
+      "column": "sitnam"
+     },
+     {
+      "field": "Location",
+      "table": "unitld",
+      "column": "locatn"
+     },
+     {
+      "field": "Count_Pallets",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Item Code",
+      "table": "untdtl",
+      "column": "itmcod"
+     },
+     {
+      "field": "Item Description",
+      "table": "itmmst",
+      "column": "itmdsc"
+     },
+     {
+      "field": "Item Group Description",
+      "table": "itmgrp",
+      "column": "grpdsc"
+     },
+     {
+      "field": "Control Group",
+      "table": "untdtl",
+      "column": "ctlgrp"
+     },
+     {
+      "field": "Vendor Cod",
+      "table": "ctlgrp",
+      "column": "vndcod"
+     },
+     {
+      "field": "Vendor Lot",
+      "table": "ctlgrp",
+      "column": "vndlot"
+     },
+     {
+      "field": "QA Status",
+      "table": "ctlgrp",
+      "column": "qastat"
+     },
+     {
+      "field": "Sum_Quantity",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "First Receipt Date",
+      "table": "ctlgrp",
+      "column": "fifodt"
+     },
+     {
+      "field": "PO Number",
+      "table": "ctlgrp",
+      "column": "ponumb"
+     },
+     {
+      "field": "sysdate",
+      "table": null,
+      "column": null
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "aremst",
+     "dscmst",
+     "invdtl",
+     "invlod",
+     "invsub",
+     "locmst",
+     "prtdsc",
+     "prtftp_dtl",
+     "prtmst"
+    ],
+    "columns": [
+     "aremst.arecod",
+     "aremst.bldg_id",
+     "aremst.wh_id",
+     "dscmst.colnam",
+     "dscmst.colval",
+     "dscmst.lngdsc",
+     "dscmst.locale_id",
+     "invdtl.fifdte",
+     "invdtl.ftpcod",
+     "invdtl.invsts",
+     "invdtl.lotnum",
+     "invdtl.prt_client_id",
+     "invdtl.prtnum",
+     "invdtl.subnum",
+     "invdtl.sup_lotnum",
+     "invdtl.untqty",
+     "invlod.lodnum",
+     "invlod.stoloc",
+     "invlod.wh_id",
+     "invsub.lodnum",
+     "invsub.subnum",
+     "locmst.arecod",
+     "locmst.stoloc",
+     "locmst.wh_id",
+     "prtdsc.colnam",
+     "prtdsc.colval",
+     "prtdsc.lngdsc",
+     "prtdsc.locale_id",
+     "prtftp_dtl.ftpcod",
+     "prtftp_dtl.prt_client_id",
+     "prtftp_dtl.prtnum",
+     "prtftp_dtl.rcv_flg",
+     "prtftp_dtl.untqty",
+     "prtftp_dtl.uomlvl",
+     "prtftp_dtl.wh_id",
+     "prtmst.prt_client_id",
+     "prtmst.prtfam",
+     "prtmst.prtnum",
+     "prtmst.typcod",
+     "prtmst.wh_id_tmpl"
+    ],
+    "lineage": [
+     {
+      "field": "Subsit",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Location",
+      "table": "invlod",
+      "column": "stoloc"
+     },
+     {
+      "field": "Count_Pallets",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Item Code",
+      "table": "invdtl",
+      "column": "prtnum"
+     },
+     {
+      "field": "Item Description",
+      "table": "prtdsc",
+      "column": "lngdsc"
+     },
+     {
+      "field": "Item Group Description",
+      "table": "dscmst",
+      "column": "lngdsc"
+     },
+     {
+      "field": "Control Group",
+      "table": "invdtl",
+      "column": "lotnum"
+     },
+     {
+      "field": "Vendor Cod",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Vendor Lot",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "QA Status",
+      "table": "invdtl",
+      "column": "invsts"
+     },
+     {
+      "field": "Sum_Quantity",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "First Receipt Date",
+      "table": "invdtl",
+      "column": "fifdte"
+     },
+     {
+      "field": "PO Number",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "sysdate",
+      "table": null,
+      "column": null
+     }
+    ]
+   }
+  },
+  "R16": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "blding",
+     "ctlgrp",
+     "itmgrp",
+     "itmmst",
+     "locatn",
+     "subsit",
+     "unitld",
+     "untdtl",
+     "zoncod"
+    ],
+    "columns": [
+     "blding.blding",
+     "blding.subsit",
+     "ctlgrp.ctlgrp",
+     "ctlgrp.fifodt",
+     "ctlgrp.itmcls",
+     "ctlgrp.itmcod",
+     "ctlgrp.ponumb",
+     "ctlgrp.qastat",
+     "ctlgrp.vndcod",
+     "ctlgrp.vndlot",
+     "itmgrp.grpdsc",
+     "itmgrp.itmcls",
+     "itmgrp.itmgrp",
+     "itmmst.itmcls",
+     "itmmst.itmcod",
+     "itmmst.itmdsc",
+     "itmmst.itmgrp",
+     "locatn.locatn",
+     "locatn.subsit",
+     "locatn.zoncod",
+     "subsit.sitnam",
+     "subsit.subsit",
+     "unitld.ctrl_date",
+     "unitld.locatn",
+     "unitld.subsit",
+     "unitld.ulid",
+     "unitld.ulpall",
+     "untdtl.casqty",
+     "untdtl.ctlgrp",
+     "untdtl.itmcls",
+     "untdtl.itmcod",
+     "untdtl.ulid",
+     "zoncod.blding",
+     "zoncod.zoncod"
+    ],
+    "lineage": [
+     {
+      "field": "Subsit",
+      "table": "subsit",
+      "column": "sitnam"
+     },
+     {
+      "field": "Building",
+      "table": "zoncod",
+      "column": "blding"
+     },
+     {
+      "field": "Location",
+      "table": "unitld",
+      "column": "locatn"
+     },
+     {
+      "field": "Pallet Number",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Pallet Type",
+      "table": "unitld",
+      "column": "ulpall"
+     },
+     {
+      "field": "Item Code",
+      "table": "untdtl",
+      "column": "itmcod"
+     },
+     {
+      "field": "Item Description",
+      "table": "itmmst",
+      "column": "itmdsc"
+     },
+     {
+      "field": "Item Group Description",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Control Group",
+      "table": "untdtl",
+      "column": "ctlgrp"
+     },
+     {
+      "field": "Vendor Cod",
+      "table": "ctlgrp",
+      "column": "vndcod"
+     },
+     {
+      "field": "Vendor Lot",
+      "table": "ctlgrp",
+      "column": "vndlot"
+     },
+     {
+      "field": "QA Status",
+      "table": "ctlgrp",
+      "column": "qastat"
+     },
+     {
+      "field": "Quantity",
+      "table": "untdtl",
+      "column": "casqty"
+     },
+     {
+      "field": "First Receipt Date",
+      "table": "ctlgrp",
+      "column": "fifodt"
+     },
+     {
+      "field": "PO Number",
+      "table": "ctlgrp",
+      "column": "ponumb"
+     },
+     {
+      "field": "ctrl_date",
+      "table": "unitld",
+      "column": "ctrl_date"
+     },
+     {
+      "field": "sysdate",
+      "table": null,
+      "column": null
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "aremst",
+     "dscmst",
+     "invdtl",
+     "invlod",
+     "invsub",
+     "locmst",
+     "prtdsc",
+     "prtftp_dtl",
+     "prtmst"
+    ],
+    "columns": [
+     "aremst.arecod",
+     "aremst.bldg_id",
+     "aremst.wh_id",
+     "dscmst.colnam",
+     "dscmst.colval",
+     "dscmst.lngdsc",
+     "dscmst.locale_id",
+     "invdtl.fifdte",
+     "invdtl.ftpcod",
+     "invdtl.invsts",
+     "invdtl.lotnum",
+     "invdtl.prt_client_id",
+     "invdtl.prtnum",
+     "invdtl.subnum",
+     "invdtl.sup_lotnum",
+     "invdtl.untqty",
+     "invlod.adddte",
+     "invlod.lodnum",
+     "invlod.lstdte",
+     "invlod.stoloc",
+     "invlod.wh_id",
+     "invsub.lodnum",
+     "invsub.subnum",
+     "locmst.arecod",
+     "locmst.stoloc",
+     "locmst.wh_id",
+     "prtdsc.colnam",
+     "prtdsc.colval",
+     "prtdsc.lngdsc",
+     "prtdsc.locale_id",
+     "prtftp_dtl.ftpcod",
+     "prtftp_dtl.prt_client_id",
+     "prtftp_dtl.prtnum",
+     "prtftp_dtl.rcv_flg",
+     "prtftp_dtl.untqty",
+     "prtftp_dtl.uomlvl",
+     "prtftp_dtl.wh_id",
+     "prtmst.prt_client_id",
+     "prtmst.prtfam",
+     "prtmst.prtnum",
+     "prtmst.typcod",
+     "prtmst.wh_id_tmpl"
+    ],
+    "lineage": [
+     {
+      "field": "Subsit",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Building",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Location",
+      "table": "invlod",
+      "column": "stoloc"
+     },
+     {
+      "field": "Pallet Number",
+      "table": "invlod",
+      "column": "lodnum"
+     },
+     {
+      "field": "Pallet Type",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Item Code",
+      "table": "invdtl",
+      "column": "prtnum"
+     },
+     {
+      "field": "Item Description",
+      "table": "prtdsc",
+      "column": "lngdsc"
+     },
+     {
+      "field": "Item Group Description",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Control Group",
+      "table": "invdtl",
+      "column": "lotnum"
+     },
+     {
+      "field": "Vendor Cod",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Vendor Lot",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "QA Status",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "Quantity",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "First Receipt Date",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "PO Number",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "ctrl_date",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "sysdate",
+      "table": null,
+      "column": null
+     }
+    ]
+   }
+  },
+  "R17": {
+   "rtcis": {
+    "plan_site": "RTCIS_EUS",
+    "lineage_site": "RTCIS_EUS",
+    "tables": [
+     "item_config",
+     "item_uom",
+     "itmmst",
+     "locatn"
+    ],
+    "columns": [
+     "item_config.caslay",
+     "item_config.default_conf",
+     "item_config.itmcod",
+     "item_uom.itmcls",
+     "item_uom.itmcod",
+     "item_uom.uom",
+     "item_uom.whsflg",
+     "itmmst.itmcls",
+     "itmmst.itmcod",
+     "locatn.actdat",
+     "locatn.arecod",
+     "locatn.count_itmcls",
+     "locatn.cycdat",
+     "locatn.itmcod",
+     "locatn.locatn",
+     "locatn.pikzon",
+     "locatn.post_count_ok",
+     "locatn.pre_count_ok",
+     "locatn.serflg",
+     "locatn.serflg_commnt",
+     "locatn.subsit",
+     "locatn.zoncod"
+    ],
+    "lineage": [
+     {
+      "field": "subsit",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "blding",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "locatn",
+      "table": "locatn",
+      "column": "locatn"
+     },
+     {
+      "field": "count_itmcls",
+      "table": "locatn",
+      "column": "count_itmcls"
+     },
+     {
+      "field": "CYCDAT",
+      "table": "locatn",
+      "column": "cycdat"
+     },
+     {
+      "field": "last_count_durration_days",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "POST_COUNT_OK",
+      "table": "locatn",
+      "column": "post_count_ok"
+     },
+     {
+      "field": "PRE_COUNT_OK",
+      "table": "locatn",
+      "column": "pre_count_ok"
+     },
+     {
+      "field": "serflg",
+      "table": "locatn",
+      "column": "serflg"
+     },
+     {
+      "field": "serflg_commnt",
+      "table": "locatn",
+      "column": "serflg_commnt"
+     },
+     {
+      "field": "actdat",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "itmcod",
+      "table": "locatn",
+      "column": "itmcod"
+     },
+     {
+      "field": "arecod",
+      "table": "locatn",
+      "column": "arecod"
+     },
+     {
+      "field": "caslay",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "wm_unit",
+      "table": "item_uom",
+      "column": "uom"
+     },
+     {
+      "field": "last_update",
+      "table": null,
+      "column": null
+     }
+    ]
+   },
+   "prime": {
+    "plan_site": "PRIME_WMD1",
+    "lineage_site": "PRIME_DE08",
+    "tables": [
+     "aremst",
+     "dscmst",
+     "invsum",
+     "loc_typ",
+     "locmst",
+     "prtftp_dtl",
+     "prtmst",
+     "rplcfg"
+    ],
+    "columns": [
+     "aremst.arecod",
+     "aremst.bldg_id",
+     "aremst.wh_id",
+     "dscmst.colnam",
+     "dscmst.colval",
+     "dscmst.locale_id",
+     "dscmst.short_dsc",
+     "invsum.prt_client_id",
+     "invsum.prtnum",
+     "invsum.stoloc",
+     "invsum.wh_id",
+     "loc_typ.loc_typ",
+     "loc_typ.loc_typ_id",
+     "locmst.arecod",
+     "locmst.cntdte",
+     "locmst.loc_typ_id",
+     "locmst.lokcod",
+     "locmst.lstdte",
+     "locmst.stoloc",
+     "locmst.useflg",
+     "locmst.wh_id",
+     "prtftp_dtl.cas_flg",
+     "prtftp_dtl.layer_flg",
+     "prtftp_dtl.prt_client_id",
+     "prtftp_dtl.prtnum",
+     "prtftp_dtl.rcv_flg",
+     "prtftp_dtl.untqty",
+     "prtftp_dtl.uomcod",
+     "prtftp_dtl.uomlvl",
+     "prtftp_dtl.wh_id",
+     "prtmst.prt_client_id",
+     "prtmst.prtnum",
+     "prtmst.typcod",
+     "prtmst.wh_id_tmpl",
+     "rplcfg.prt_client_id",
+     "rplcfg.prtnum",
+     "rplcfg.stoloc",
+     "rplcfg.wh_id"
+    ],
+    "lineage": [
+     {
+      "field": "subsit",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "blding",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "locatn",
+      "table": "locmst",
+      "column": "stoloc"
+     },
+     {
+      "field": "count_itmcls",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "CYCDAT",
+      "table": "locmst",
+      "column": "cntdte"
+     },
+     {
+      "field": "last_count_durration_days",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "POST_COUNT_OK",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "PRE_COUNT_OK",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "serflg",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "serflg_commnt",
+      "table": "locmst",
+      "column": "lokcod"
+     },
+     {
+      "field": "actdat",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "itmcod",
+      "table": "rplcfg",
+      "column": "prtnum"
+     },
+     {
+      "field": "arecod",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "caslay",
+      "table": null,
+      "column": null
+     },
+     {
+      "field": "wm_unit",
+      "table": "prtftp_dtl",
+      "column": "uomcod"
+     },
+     {
+      "field": "last_update",
+      "table": null,
+      "column": null
+     }
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,2410 @@
+{
+ "R01": {
+  "rtcis": {
+   "tables": [
+    "agv_inventory_view",
+    "cbo_ctlgrp",
+    "item_config",
+    "item_uom",
+    "itmmst",
+    "locatn"
+   ],
+   "columns": [
+    "agv_inventory_view.casqty",
+    "agv_inventory_view.ctlgrp",
+    "agv_inventory_view.fifodt",
+    "agv_inventory_view.itmcls",
+    "agv_inventory_view.itmcod",
+    "agv_inventory_view.itmgrp",
+    "agv_inventory_view.locatn",
+    "agv_inventory_view.qastat",
+    "agv_inventory_view.subsit",
+    "agv_inventory_view.ulid20",
+    "agv_inventory_view.ulpall",
+    "agv_inventory_view.zoncod",
+    "cbo_ctlgrp.ctlgrp",
+    "cbo_ctlgrp.itmcod",
+    "cbo_ctlgrp.vndcod",
+    "cbo_ctlgrp.vndlot",
+    "item_config.caslay",
+    "item_config.itmcod",
+    "item_config.laypul",
+    "item_config.ulpall",
+    "item_uom.itmcod",
+    "item_uom.u_height",
+    "item_uom.uom",
+    "item_uom.whsflg",
+    "itmmst.itmcls",
+    "itmmst.itmcod",
+    "itmmst.palflg",
+    "itmmst.picflg",
+    "locatn.locatn",
+    "locatn.pikzon",
+    "locatn.subsit"
+   ],
+   "lineage": {
+    "LOCATN": [],
+    "ITMCOD": [],
+    "ITMGRP": [],
+    "ULID20": [],
+    "CASQTY": [],
+    "QASTAT": [],
+    "FIFODT": [],
+    "CTLGRP": [],
+    "ULPALL": [],
+    "ZONCOD": [],
+    "last_update": [],
+    "BLDING": [
+     "locatn.pikzon"
+    ],
+    "MATTYP": [
+     "agv_inventory_view.itmgrp"
+    ],
+    "calculated_pal_height": [],
+    "UOM": [],
+    "VNDCOD": [
+     "cbo_ctlgrp.vndcod"
+    ],
+    "VNDLOT": [
+     "cbo_ctlgrp.vndlot"
+    ],
+    "ULPAL_ITEM": []
+   }
+  },
+  "prime": {
+   "tables": [
+    "aremst",
+    "invdtl",
+    "invlod",
+    "invsub",
+    "locmst",
+    "prtftp_dtl",
+    "prtmst"
+   ],
+   "columns": [
+    "aremst.arecod",
+    "aremst.bldg_id",
+    "aremst.wh_id",
+    "invdtl.fifdte",
+    "invdtl.ftpcod",
+    "invdtl.invsts",
+    "invdtl.lotnum",
+    "invdtl.prt_client_id",
+    "invdtl.prtnum",
+    "invdtl.subnum",
+    "invdtl.sup_lotnum",
+    "invdtl.untqty",
+    "invlod.lodnum",
+    "invlod.stoloc",
+    "invlod.wh_id",
+    "invsub.lodnum",
+    "invsub.subnum",
+    "locmst.arecod",
+    "locmst.stoloc",
+    "locmst.wh_id",
+    "prtftp_dtl.ftpcod",
+    "prtftp_dtl.hgt",
+    "prtftp_dtl.pal_flg",
+    "prtftp_dtl.prt_client_id",
+    "prtftp_dtl.prtnum",
+    "prtftp_dtl.rcv_flg",
+    "prtftp_dtl.untqty",
+    "prtftp_dtl.uomcod",
+    "prtftp_dtl.uomlvl",
+    "prtftp_dtl.wh_id",
+    "prtmst.prt_client_id",
+    "prtmst.prtfam",
+    "prtmst.prtnum",
+    "prtmst.typcod",
+    "prtmst.wh_id_tmpl"
+   ],
+   "lineage": {
+    "LOCATN": [
+     "invlod.stoloc"
+    ],
+    "ITMCOD": [],
+    "ITMGRP": [
+     "prtmst.prtfam"
+    ],
+    "ULID20": [
+     "invlod.lodnum"
+    ],
+    "CASQTY": [],
+    "QASTAT": [
+     "invdtl.invsts"
+    ],
+    "FIFODT": [
+     "invdtl.fifdte"
+    ],
+    "CTLGRP": [],
+    "ULPALL": [
+     "invdtl.ftpcod"
+    ],
+    "ZONCOD": [
+     "locmst.arecod"
+    ],
+    "last_update": [],
+    "BLDING": [
+     "locmst.arecod"
+    ],
+    "MATTYP": [
+     "prtmst.prtfam"
+    ],
+    "calculated_pal_height": [],
+    "UOM": [],
+    "VNDCOD": [],
+    "VNDLOT": [],
+    "ULPAL_ITEM": []
+   }
+  }
+ },
+ "R02": {
+  "rtcis": {
+   "tables": [
+    "locatn",
+    "sysdtl",
+    "systrn",
+    "users"
+   ],
+   "columns": [
+    "locatn.arecod",
+    "locatn.count_itmcls",
+    "locatn.locatn",
+    "locatn.post_count_ok",
+    "locatn.pre_count_ok",
+    "locatn.subsit",
+    "sysdtl.dtltyp",
+    "sysdtl.locatn",
+    "sysdtl.subsit",
+    "sysdtl.trnseq",
+    "systrn.gendat",
+    "systrn.sysdat",
+    "systrn.techid",
+    "systrn.trnseq",
+    "systrn.trntyp",
+    "users.first_name",
+    "users.last_name",
+    "users.user_id"
+   ],
+   "lineage": {
+    "stkcnt_date": [
+     "systrn.gendat"
+    ],
+    "time": [
+     "systrn.gendat"
+    ],
+    "subsit": [],
+    "count_itmcls": [],
+    "locatn": [],
+    "stkcnt": [],
+    "stkmis": [],
+    "stkcor": [],
+    "name": [
+     "users.first_name",
+     "users.last_name"
+    ]
+   }
+  },
+  "prime": {
+   "tables": [
+    "adrmst",
+    "aremst",
+    "cnthst",
+    "dlytrn",
+    "les_usr_ath",
+    "loc_typ",
+    "locmst",
+    "prtmst"
+   ],
+   "columns": [
+    "adrmst.adr_id",
+    "adrmst.first_name",
+    "adrmst.last_name",
+    "aremst.arecod",
+    "aremst.bldg_id",
+    "aremst.wh_id",
+    "cnthst.cnt_usr_id",
+    "cnthst.cntdte",
+    "cnthst.cntqty",
+    "cnthst.prt_client_id",
+    "cnthst.prtnum",
+    "cnthst.stoloc",
+    "cnthst.untqty",
+    "cnthst.wh_id",
+    "dlytrn.actcod",
+    "dlytrn.frstol",
+    "dlytrn.trndte",
+    "dlytrn.wh_id",
+    "les_usr_ath.adr_id",
+    "les_usr_ath.usr_id",
+    "loc_typ.loc_typ",
+    "loc_typ.loc_typ_id",
+    "locmst.arecod",
+    "locmst.loc_typ_id",
+    "locmst.stoloc",
+    "locmst.wh_id",
+    "prtmst.prt_client_id",
+    "prtmst.prtnum",
+    "prtmst.typcod",
+    "prtmst.wh_id_tmpl"
+   ],
+   "lineage": {
+    "stkcnt_date": [
+     "cnthst.cntdte"
+    ],
+    "time": [
+     "cnthst.cntdte"
+    ],
+    "subsit": [
+     "aremst.bldg_id"
+    ],
+    "count_itmcls": [
+     "prtmst.typcod"
+    ],
+    "locatn": [
+     "cnthst.stoloc"
+    ],
+    "stkcnt": [],
+    "stkmis": [
+     "cnthst.cntqty",
+     "cnthst.untqty"
+    ],
+    "stkcor": [
+     "cnthst.stoloc"
+    ],
+    "name": [
+     "adrmst.first_name",
+     "adrmst.last_name"
+    ]
+   }
+  }
+ },
+ "R03": {
+  "rtcis": {
+   "tables": [
+    "ctlgrp",
+    "lindel",
+    "porecipe",
+    "prdlin",
+    "prdque",
+    "systrn",
+    "unitld",
+    "untdtl"
+   ],
+   "columns": [
+    "ctlgrp.ctlgrp",
+    "ctlgrp.itmcod",
+    "ctlgrp.qastat",
+    "ctlgrp.vndcod",
+    "ctlgrp.vndlot",
+    "lindel.ctlgrp",
+    "lindel.itmcod",
+    "lindel.linseq",
+    "lindel.locatn",
+    "lindel.plnumb",
+    "lindel.prdord",
+    "lindel.spccod",
+    "lindel.vndcod",
+    "lindel.vndlot",
+    "porecipe.actqty",
+    "porecipe.deliv_prdlin",
+    "porecipe.expqty",
+    "porecipe.prdord",
+    "porecipe.spccd1",
+    "porecipe.spccd1_itmcls",
+    "prdlin.plnumb",
+    "prdlin.prdlin",
+    "prdlin.prdord",
+    "prdlin.subsit",
+    "prdque.actdat",
+    "prdque.complete_flag",
+    "prdque.enddat",
+    "prdque.itmcod",
+    "prdque.prdord",
+    "systrn.locatn",
+    "systrn.sysdat",
+    "systrn.ulid",
+    "untdtl.ctlgrp",
+    "untdtl.itmcls",
+    "untdtl.itmcod",
+    "untdtl.ulid"
+   ],
+   "lineage": {
+    "PLNUMB": [
+     "lindel.plnumb"
+    ],
+    "PRDORD": [
+     "lindel.prdord"
+    ],
+    "ACTDAT": [],
+    "ENDDAT": [],
+    "ITMCOD": [
+     "lindel.itmcod"
+    ],
+    "SPCCOD": [
+     "lindel.spccod"
+    ],
+    "LINSEQ": [
+     "lindel.linseq"
+    ],
+    "LOCATN": [
+     "lindel.locatn"
+    ],
+    "CTLGRP": [
+     "lindel.ctlgrp"
+    ],
+    "VNDCOD": [
+     "lindel.vndcod"
+    ],
+    "VNDLOT": [
+     "lindel.vndlot"
+    ],
+    "ULIDs_anhand_Ort": [],
+    "ULIDs_anhand_Vendor_Lot": [],
+    "Last_Update": []
+   }
+  },
+  "prime": {
+   "tables": [
+    "dlytrn",
+    "invdtl",
+    "invlod",
+    "invsub",
+    "prtmst",
+    "wkodtl",
+    "wkohdr"
+   ],
+   "columns": [
+    "dlytrn.trndte",
+    "invlod.lodnum",
+    "invlod.stoloc",
+    "invlod.wh_id",
+    "invsub.lodnum",
+    "invsub.subnum",
+    "prtmst.prt_client_id",
+    "prtmst.prtnum",
+    "prtmst.typcod",
+    "prtmst.wh_id_tmpl",
+    "wkodtl.client_id",
+    "wkodtl.linqty",
+    "wkodtl.lotnum",
+    "wkodtl.prcloc",
+    "wkodtl.prt_client_id",
+    "wkodtl.prtnum",
+    "wkodtl.sup_lotnum",
+    "wkodtl.tot_dlvqty",
+    "wkodtl.wh_id",
+    "wkodtl.wkolin",
+    "wkodtl.wkonum",
+    "wkodtl.wkorev",
+    "wkohdr.client_id",
+    "wkohdr.prdlin",
+    "wkohdr.prtnum",
+    "wkohdr.sch_begdte",
+    "wkohdr.sch_enddte",
+    "wkohdr.wh_id",
+    "wkohdr.wkonum",
+    "wkohdr.wkorev",
+    "wkohdr.wkosts"
+   ],
+   "lineage": {
+    "PLNUMB": [
+     "wkohdr.prdlin"
+    ],
+    "PRDORD": [
+     "wkohdr.wkonum"
+    ],
+    "ACTDAT": [
+     "wkodtl.linqty",
+     "wkodtl.tot_dlvqty"
+    ],
+    "ENDDAT": [
+     "wkodtl.linqty",
+     "wkodtl.tot_dlvqty"
+    ],
+    "ITMCOD": [],
+    "SPCCOD": [
+     "wkodtl.prtnum"
+    ],
+    "LINSEQ": [
+     "wkodtl.wkolin"
+    ],
+    "LOCATN": [
+     "invlod.stoloc"
+    ],
+    "CTLGRP": [],
+    "VNDCOD": [],
+    "VNDLOT": [],
+    "ULIDs_anhand_Ort": [],
+    "ULIDs_anhand_Vendor_Lot": [],
+    "Last_Update": []
+   }
+  }
+ },
+ "R04": {
+  "rtcis": {
+   "tables": [
+    "equip"
+   ],
+   "columns": [
+    "equip.equip_desc"
+   ],
+   "lineage": {
+    "equip": [
+     "equip.equip"
+    ],
+    "equip_desc": [
+     "equip.equip_desc"
+    ]
+   }
+  },
+  "prime": {
+   "tables": [
+    "dscmst",
+    "vehtyp"
+   ],
+   "columns": [
+    "dscmst.colnam",
+    "dscmst.colval",
+    "dscmst.lngdsc",
+    "dscmst.locale_id",
+    "vehtyp.vehtyp_id"
+   ],
+   "lineage": {
+    "equip": [
+     "vehtyp.vehtyp_id"
+    ],
+    "equip_desc": [
+     "dscmst.lngdsc",
+     "vehtyp.vehtyp_id"
+    ]
+   }
+  }
+ },
+ "R05": {
+  "rtcis": {
+   "tables": [
+    "rcpexp",
+    "rcphdr",
+    "trailer",
+    "trklin",
+    "trukio"
+   ],
+   "columns": [
+    "rcpexp.itmcod",
+    "rcpexp.ponumb",
+    "rcpexp.rrnumb",
+    "rcphdr.bolnum",
+    "rcphdr.delvid",
+    "rcphdr.rcvsit",
+    "rcphdr.rectyp",
+    "rcphdr.rrnumb",
+    "rcphdr.vndcod",
+    "trailer.locatn",
+    "trailer.trklin",
+    "trailer.trlnum",
+    "trklin.trklin",
+    "trklin.trknam",
+    "trukio.aptdat",
+    "trukio.asgdat",
+    "trukio.rrnumb",
+    "trukio.trklin",
+    "trukio.trlnum"
+   ],
+   "lineage": {
+    "RRNUMB": [],
+    "RECTYP": [],
+    "BN": [],
+    "IB": [],
+    "DC": [
+     "rcphdr.rcvsit"
+    ],
+    "VNDCOD": [],
+    "IT": [],
+    "PO": [],
+    "APTDAT": [],
+    "TRLNUM": [],
+    "LOCATN": [],
+    "TRKNAM": [],
+    "ASGDAT": []
+   }
+  },
+  "prime": {
+   "tables": [
+    "carhdr",
+    "rcvinv",
+    "rcvlin",
+    "rcvtrk",
+    "trlr"
+   ],
+   "columns": [
+    "carhdr.carcod",
+    "carhdr.carnam",
+    "rcvinv.invnum",
+    "rcvinv.invtyp",
+    "rcvinv.po_num",
+    "rcvinv.supnum",
+    "rcvinv.trknum",
+    "rcvinv.waybil",
+    "rcvinv.wh_id",
+    "rcvlin.invnum",
+    "rcvlin.prtnum",
+    "rcvlin.trknum",
+    "rcvlin.wh_id",
+    "rcvtrk.expdte",
+    "rcvtrk.trknum",
+    "rcvtrk.trlr_id",
+    "rcvtrk.wh_id",
+    "trlr.arrdte",
+    "trlr.carcod",
+    "trlr.trlr_id",
+    "trlr.trlr_num",
+    "trlr.yard_loc"
+   ],
+   "lineage": {
+    "RRNUMB": [
+     "rcvtrk.trknum"
+    ],
+    "RECTYP": [
+     "rcvinv.invtyp"
+    ],
+    "BN": [
+     "rcvinv.waybil"
+    ],
+    "IB": [
+     "rcvinv.invnum"
+    ],
+    "DC": [
+     "rcvtrk.wh_id"
+    ],
+    "VNDCOD": [
+     "rcvinv.supnum"
+    ],
+    "IT": [],
+    "PO": [],
+    "APTDAT": [
+     "rcvtrk.expdte"
+    ],
+    "TRLNUM": [
+     "trlr.trlr_num"
+    ],
+    "LOCATN": [
+     "trlr.yard_loc"
+    ],
+    "TRKNAM": [
+     "carhdr.carnam"
+    ],
+    "ASGDAT": [
+     "trlr.arrdte"
+    ]
+   }
+  }
+ },
+ "R06": {
+  "rtcis": {
+   "tables": [
+    "blditm",
+    "item_config",
+    "item_uom",
+    "itmgrp",
+    "itmmst",
+    "rcpexp",
+    "rcphdr",
+    "trailer",
+    "trklin",
+    "trukio"
+   ],
+   "columns": [
+    "blditm.blding",
+    "blditm.itmcls",
+    "blditm.itmcod",
+    "blditm.put_zonlst",
+    "blditm.ulpall",
+    "item_config.default_conf",
+    "item_config.itmcod",
+    "item_config.laypul",
+    "item_config.udepth",
+    "item_config.ulpall",
+    "item_config.uwidth",
+    "item_uom.dimuom",
+    "item_uom.itmcod",
+    "item_uom.u_height",
+    "item_uom.u_length",
+    "item_uom.u_width",
+    "item_uom.whsflg",
+    "itmgrp.grpdsc",
+    "itmgrp.itmgrp",
+    "itmmst.itmcls",
+    "itmmst.itmcod",
+    "itmmst.itmdsc",
+    "itmmst.itmgrp",
+    "itmmst.palflg",
+    "rcpexp.itmcod",
+    "rcpexp.ponumb",
+    "rcpexp.rrnumb",
+    "rcphdr.bolnum",
+    "rcphdr.delvid",
+    "rcphdr.rcvsit",
+    "rcphdr.rectyp",
+    "rcphdr.rrnumb",
+    "rcphdr.vndcod",
+    "trailer.locatn",
+    "trailer.trklin",
+    "trailer.trlnum",
+    "trklin.trklin",
+    "trklin.trknam",
+    "trukio.aptdat",
+    "trukio.asgdat",
+    "trukio.rrnumb",
+    "trukio.trklin",
+    "trukio.trlnum"
+   ],
+   "lineage": {
+    "rrnumb": [],
+    "rectyp": [],
+    "bn": [],
+    "ib": [],
+    "dc": [
+     "rcphdr.rcvsit"
+    ],
+    "vndcod": [],
+    "it": [],
+    "po": [
+     "rcpexp.ponumb"
+    ],
+    "aptdat": [],
+    "trlnum": [],
+    "locatn": [],
+    "trknam": [],
+    "asgdat": [],
+    "new_material": [],
+    "stammdaten": [
+     "item_config.laypul",
+     "item_config.udepth"
+    ],
+    "agv_lagerbereich": [],
+    "itmdsc": [],
+    "itmgrp": [],
+    "grpdsc": []
+   }
+  },
+  "prime": {
+   "tables": [
+    "carhdr",
+    "dscmst",
+    "prtdsc",
+    "prtftp_dtl",
+    "prtmst",
+    "rcvinv",
+    "rcvlin",
+    "rcvtrk",
+    "trlr"
+   ],
+   "columns": [
+    "carhdr.carcod",
+    "carhdr.carnam",
+    "dscmst.colnam",
+    "dscmst.colval",
+    "dscmst.lngdsc",
+    "dscmst.locale_id",
+    "prtdsc.colnam",
+    "prtdsc.colval",
+    "prtdsc.lngdsc",
+    "prtdsc.locale_id",
+    "prtftp_dtl.hgt",
+    "prtftp_dtl.len",
+    "prtftp_dtl.pal_flg",
+    "prtftp_dtl.prt_client_id",
+    "prtftp_dtl.prtnum",
+    "prtftp_dtl.rcv_flg",
+    "prtftp_dtl.uomlvl",
+    "prtftp_dtl.wh_id",
+    "prtftp_dtl.wid",
+    "prtmst.prt_client_id",
+    "prtmst.prtfam",
+    "prtmst.prtnum",
+    "prtmst.typcod",
+    "prtmst.wh_id_tmpl",
+    "rcvinv.invnum",
+    "rcvinv.invtyp",
+    "rcvinv.po_num",
+    "rcvinv.supnum",
+    "rcvinv.trknum",
+    "rcvinv.waybil",
+    "rcvinv.wh_id",
+    "rcvlin.invnum",
+    "rcvlin.prt_client_id",
+    "rcvlin.prtnum",
+    "rcvlin.trknum",
+    "rcvlin.wh_id",
+    "rcvtrk.expdte",
+    "rcvtrk.trknum",
+    "rcvtrk.trlr_id",
+    "rcvtrk.wh_id",
+    "trlr.arrdte",
+    "trlr.carcod",
+    "trlr.trlr_id",
+    "trlr.trlr_num",
+    "trlr.yard_loc"
+   ],
+   "lineage": {
+    "rrnumb": [
+     "rcvtrk.trknum"
+    ],
+    "rectyp": [
+     "rcvinv.invtyp"
+    ],
+    "bn": [
+     "rcvinv.waybil"
+    ],
+    "ib": [
+     "rcvinv.invnum"
+    ],
+    "dc": [
+     "rcvtrk.wh_id"
+    ],
+    "vndcod": [
+     "rcvinv.supnum"
+    ],
+    "it": [
+     "rcvlin.prtnum"
+    ],
+    "po": [
+     "rcvinv.po_num"
+    ],
+    "aptdat": [
+     "rcvtrk.expdte"
+    ],
+    "trlnum": [
+     "trlr.trlr_num"
+    ],
+    "locatn": [
+     "trlr.yard_loc"
+    ],
+    "trknam": [
+     "carhdr.carnam"
+    ],
+    "asgdat": [
+     "trlr.arrdte"
+    ],
+    "new_material": [
+     "prtmst.prtfam",
+     "rcvlin.prtnum"
+    ],
+    "stammdaten": [],
+    "agv_lagerbereich": [],
+    "itmdsc": [],
+    "itmgrp": [
+     "prtmst.prtfam"
+    ],
+    "grpdsc": [
+     "dscmst.lngdsc"
+    ]
+   }
+  }
+ },
+ "R07": {
+  "rtcis": {
+   "tables": [
+    "agv_inventory_view",
+    "ctlgrp",
+    "item_uom",
+    "itmgrp",
+    "itmmst",
+    "subsit"
+   ],
+   "columns": [
+    "agv_inventory_view.blding",
+    "agv_inventory_view.casqty",
+    "agv_inventory_view.ctlgrp",
+    "agv_inventory_view.itmcls",
+    "agv_inventory_view.itmcod",
+    "agv_inventory_view.locatn",
+    "agv_inventory_view.subsit",
+    "agv_inventory_view.ulid20",
+    "agv_inventory_view.ulpall",
+    "ctlgrp.ctlgrp",
+    "ctlgrp.fifodt",
+    "ctlgrp.itmcls",
+    "ctlgrp.itmcod",
+    "ctlgrp.qastat",
+    "ctlgrp.vndlot",
+    "item_uom.itmcls",
+    "item_uom.itmcod",
+    "item_uom.uom",
+    "item_uom.whsflg",
+    "itmgrp.grpdsc",
+    "itmgrp.itmcls",
+    "itmgrp.itmgrp",
+    "itmmst.itmcls",
+    "itmmst.itmcod",
+    "itmmst.itmdsc",
+    "itmmst.itmgrp",
+    "itmmst.itmnum",
+    "subsit.sitnam",
+    "subsit.subsit"
+   ],
+   "lineage": {
+    "Subsit": [
+     "subsit.sitnam"
+    ],
+    "Building": [
+     "agv_inventory_view.blding"
+    ],
+    "Location": [
+     "agv_inventory_view.locatn"
+    ],
+    "Pallet Number": [
+     "agv_inventory_view.ulid20"
+    ],
+    "Pallet Type": [
+     "agv_inventory_view.ulpall"
+    ],
+    "Item Code": [
+     "agv_inventory_view.itmcod"
+    ],
+    "Item Description": [
+     "itmmst.itmdsc"
+    ],
+    "Item Group Description": [
+     "itmgrp.grpdsc"
+    ],
+    "Control Group": [
+     "agv_inventory_view.ctlgrp"
+    ],
+    "Categorie": [
+     "itmmst.itmnum"
+    ],
+    "Vendor Lot": [
+     "ctlgrp.vndlot"
+    ],
+    "QA Status": [
+     "ctlgrp.qastat"
+    ],
+    "Quantity": [
+     "agv_inventory_view.casqty"
+    ],
+    "WHSE Unit": [
+     "item_uom.uom"
+    ],
+    "First Receipt Date": [
+     "ctlgrp.fifodt"
+    ],
+    "sysdate": []
+   }
+  },
+  "prime": {
+   "tables": [
+    "aremst",
+    "dscmst",
+    "invdtl",
+    "invlod",
+    "invsub",
+    "locmst",
+    "prtdsc",
+    "prtftp_dtl",
+    "prtmst"
+   ],
+   "columns": [
+    "aremst.arecod",
+    "aremst.bldg_id",
+    "aremst.wh_id",
+    "dscmst.colnam",
+    "dscmst.colval",
+    "dscmst.lngdsc",
+    "dscmst.locale_id",
+    "invdtl.fifdte",
+    "invdtl.ftpcod",
+    "invdtl.invsts",
+    "invdtl.lotnum",
+    "invdtl.prt_client_id",
+    "invdtl.prtnum",
+    "invdtl.subnum",
+    "invdtl.sup_lotnum",
+    "invdtl.untqty",
+    "invlod.lodnum",
+    "invlod.stoloc",
+    "invlod.wh_id",
+    "invsub.lodnum",
+    "invsub.subnum",
+    "locmst.arecod",
+    "locmst.stoloc",
+    "locmst.wh_id",
+    "prtdsc.colnam",
+    "prtdsc.colval",
+    "prtdsc.lngdsc",
+    "prtdsc.locale_id",
+    "prtftp_dtl.ftpcod",
+    "prtftp_dtl.prt_client_id",
+    "prtftp_dtl.prtnum",
+    "prtftp_dtl.rcv_flg",
+    "prtftp_dtl.untqty",
+    "prtftp_dtl.uomcod",
+    "prtftp_dtl.uomlvl",
+    "prtftp_dtl.wh_id",
+    "prtmst.prt_client_id",
+    "prtmst.prtfam",
+    "prtmst.prtnum",
+    "prtmst.typcod",
+    "prtmst.wh_id_tmpl"
+   ],
+   "lineage": {
+    "Subsit": [
+     "aremst.bldg_id"
+    ],
+    "Building": [
+     "locmst.arecod"
+    ],
+    "Location": [
+     "invlod.stoloc"
+    ],
+    "Pallet Number": [
+     "invlod.lodnum"
+    ],
+    "Pallet Type": [
+     "invdtl.ftpcod"
+    ],
+    "Item Code": [],
+    "Item Description": [],
+    "Item Group Description": [
+     "dscmst.lngdsc"
+    ],
+    "Control Group": [],
+    "Categorie": [],
+    "Vendor Lot": [],
+    "QA Status": [
+     "invdtl.invsts"
+    ],
+    "Quantity": [],
+    "WHSE Unit": [],
+    "First Receipt Date": [
+     "invdtl.fifdte"
+    ],
+    "sysdate": []
+   }
+  }
+ },
+ "R08": {
+  "rtcis": {
+   "tables": [
+    "ctlgrp",
+    "item_uom",
+    "itmmst",
+    "sysdtl",
+    "systrn"
+   ],
+   "columns": [
+    "ctlgrp.ctlgrp",
+    "ctlgrp.itmcls",
+    "ctlgrp.itmcod",
+    "ctlgrp.vndcod",
+    "ctlgrp.vndlot",
+    "item_uom.itmcod",
+    "item_uom.uom",
+    "item_uom.whsflg",
+    "itmmst.itmcls",
+    "itmmst.itmcod",
+    "itmmst.itmdsc",
+    "sysdtl.ctlgrp",
+    "sysdtl.dtltyp",
+    "sysdtl.itmcls",
+    "sysdtl.itmcod",
+    "sysdtl.locatn",
+    "sysdtl.subsit",
+    "sysdtl.trnseq",
+    "sysdtl.ulid",
+    "systrn.prdord",
+    "systrn.sysdat",
+    "systrn.trnqty",
+    "systrn.trnseq",
+    "systrn.trntyp"
+   ],
+   "lineage": {
+    "LINE": [
+     "sysdtl.locatn"
+    ],
+    "DELIVERY_DATE": [
+     "systrn.sysdat"
+    ],
+    "ITMCOD": [],
+    "DESCRIPTION": [
+     "itmmst.itmdsc"
+    ],
+    "CTLGRP": [],
+    "VENDOR": [
+     "ctlgrp.vndcod"
+    ],
+    "VENDOR_LOT": [
+     "ctlgrp.vndlot"
+    ],
+    "QTY": [
+     "systrn.trnqty"
+    ],
+    "WM_UNIT": [
+     "item_uom.uom"
+    ],
+    "PROCESS_ORDER": [
+     "systrn.prdord"
+    ],
+    "ULID": [
+     "sysdtl.ulid"
+    ],
+    "ID_NR": [
+     "sysdtl.ulid",
+     "systrn.sysdat"
+    ]
+   }
+  },
+  "prime": {
+   "tables": [
+    "dlytrn",
+    "loc_typ",
+    "locmst",
+    "pckwrk_dtl",
+    "pckwrk_hdr",
+    "prtdsc",
+    "prtftp_dtl",
+    "prtmst"
+   ],
+   "columns": [
+    "dlytrn.lodnum",
+    "dlytrn.lotnum",
+    "dlytrn.prt_client_id",
+    "dlytrn.prtnum",
+    "dlytrn.sup_lotnum",
+    "dlytrn.tostol",
+    "dlytrn.trndte",
+    "dlytrn.trnqty",
+    "dlytrn.wh_id",
+    "loc_typ.loc_typ_cat",
+    "loc_typ.loc_typ_id",
+    "locmst.loc_typ_id",
+    "locmst.stoloc",
+    "locmst.wh_id",
+    "pckwrk_dtl.last_upd_dt",
+    "pckwrk_dtl.wkonum",
+    "pckwrk_dtl.wrkref",
+    "pckwrk_hdr.pallet_id",
+    "pckwrk_hdr.wh_id",
+    "pckwrk_hdr.wrkref",
+    "prtdsc.colnam",
+    "prtdsc.colval",
+    "prtdsc.lngdsc",
+    "prtdsc.locale_id",
+    "prtftp_dtl.prt_client_id",
+    "prtftp_dtl.prtnum",
+    "prtftp_dtl.rcv_flg",
+    "prtftp_dtl.untqty",
+    "prtftp_dtl.uomcod",
+    "prtftp_dtl.uomlvl",
+    "prtftp_dtl.wh_id",
+    "prtmst.prt_client_id",
+    "prtmst.prtnum",
+    "prtmst.stkuom",
+    "prtmst.typcod",
+    "prtmst.wh_id_tmpl"
+   ],
+   "lineage": {
+    "LINE": [
+     "dlytrn.tostol"
+    ],
+    "DELIVERY_DATE": [],
+    "ITMCOD": [
+     "dlytrn.prtnum"
+    ],
+    "DESCRIPTION": [],
+    "CTLGRP": [
+     "dlytrn.lotnum"
+    ],
+    "VENDOR": [
+     "dlytrn.sup_lotnum"
+    ],
+    "VENDOR_LOT": [
+     "dlytrn.sup_lotnum"
+    ],
+    "QTY": [
+     "dlytrn.trnqty"
+    ],
+    "WM_UNIT": [
+     "prtmst.stkuom"
+    ],
+    "PROCESS_ORDER": [],
+    "ULID": [
+     "dlytrn.lodnum"
+    ],
+    "ID_NR": []
+   }
+  }
+ },
+ "R09": {
+  "rtcis": {
+   "tables": [
+    "ctlgrp",
+    "item_uom",
+    "itmmst",
+    "sysdtl",
+    "systrn"
+   ],
+   "columns": [
+    "ctlgrp.ctlgrp",
+    "ctlgrp.itmcls",
+    "ctlgrp.itmcod",
+    "ctlgrp.vndcod",
+    "ctlgrp.vndlot",
+    "item_uom.itmcod",
+    "item_uom.uom",
+    "item_uom.whsflg",
+    "itmmst.itmcls",
+    "itmmst.itmcod",
+    "itmmst.itmdsc",
+    "sysdtl.ctlgrp",
+    "sysdtl.dtltyp",
+    "sysdtl.itmcls",
+    "sysdtl.itmcod",
+    "sysdtl.locatn",
+    "sysdtl.subsit",
+    "sysdtl.trnseq",
+    "sysdtl.ulid",
+    "systrn.prdord",
+    "systrn.sysdat",
+    "systrn.trnqty",
+    "systrn.trnseq",
+    "systrn.trntyp"
+   ],
+   "lineage": {
+    "LINE": [
+     "sysdtl.locatn"
+    ],
+    "DELIVERY_DATE": [
+     "systrn.sysdat"
+    ],
+    "ITMCOD": [],
+    "DESCRIPTION": [
+     "itmmst.itmdsc"
+    ],
+    "CTLGRP": [],
+    "VENDOR": [
+     "ctlgrp.vndcod"
+    ],
+    "VENDOR_LOT": [
+     "ctlgrp.vndlot"
+    ],
+    "QTY": [
+     "systrn.trnqty"
+    ],
+    "WM_UNIT": [
+     "item_uom.uom"
+    ],
+    "PROCESS_ORDER": [
+     "systrn.prdord"
+    ],
+    "ULID": [
+     "sysdtl.ulid"
+    ],
+    "ID_NR": [
+     "sysdtl.ulid",
+     "systrn.sysdat"
+    ]
+   }
+  },
+  "prime": {
+   "tables": [
+    "dlytrn",
+    "loc_typ",
+    "locmst",
+    "pckwrk_dtl",
+    "pckwrk_hdr",
+    "prtdsc",
+    "prtftp_dtl",
+    "prtmst"
+   ],
+   "columns": [
+    "dlytrn.lodnum",
+    "dlytrn.lotnum",
+    "dlytrn.prt_client_id",
+    "dlytrn.prtnum",
+    "dlytrn.sup_lotnum",
+    "dlytrn.tostol",
+    "dlytrn.trndte",
+    "dlytrn.trnqty",
+    "dlytrn.wh_id",
+    "loc_typ.loc_typ_cat",
+    "loc_typ.loc_typ_id",
+    "locmst.loc_typ_id",
+    "locmst.stoloc",
+    "locmst.wh_id",
+    "pckwrk_dtl.last_upd_dt",
+    "pckwrk_dtl.wkonum",
+    "pckwrk_dtl.wrkref",
+    "pckwrk_hdr.pallet_id",
+    "pckwrk_hdr.wh_id",
+    "pckwrk_hdr.wrkref",
+    "prtdsc.colnam",
+    "prtdsc.colval",
+    "prtdsc.lngdsc",
+    "prtdsc.locale_id",
+    "prtftp_dtl.prt_client_id",
+    "prtftp_dtl.prtnum",
+    "prtftp_dtl.rcv_flg",
+    "prtftp_dtl.untqty",
+    "prtftp_dtl.uomcod",
+    "prtftp_dtl.uomlvl",
+    "prtftp_dtl.wh_id",
+    "prtmst.prt_client_id",
+    "prtmst.prtnum",
+    "prtmst.stkuom",
+    "prtmst.typcod",
+    "prtmst.wh_id_tmpl"
+   ],
+   "lineage": {
+    "LINE": [
+     "dlytrn.tostol"
+    ],
+    "DELIVERY_DATE": [],
+    "ITMCOD": [
+     "dlytrn.prtnum"
+    ],
+    "DESCRIPTION": [],
+    "CTLGRP": [
+     "dlytrn.lotnum"
+    ],
+    "VENDOR": [
+     "dlytrn.sup_lotnum"
+    ],
+    "VENDOR_LOT": [
+     "dlytrn.sup_lotnum"
+    ],
+    "QTY": [
+     "dlytrn.trnqty"
+    ],
+    "WM_UNIT": [
+     "prtmst.stkuom"
+    ],
+    "PROCESS_ORDER": [],
+    "ULID": [
+     "dlytrn.lodnum"
+    ],
+    "ID_NR": []
+   }
+  }
+ },
+ "R10": {
+  "rtcis": {
+   "tables": [
+    "ctlgrp",
+    "item_uom",
+    "itmmst",
+    "sysdtl",
+    "systrn"
+   ],
+   "columns": [
+    "ctlgrp.ctlgrp",
+    "ctlgrp.itmcls",
+    "ctlgrp.itmcod",
+    "ctlgrp.vndcod",
+    "ctlgrp.vndlot",
+    "item_uom.itmcod",
+    "item_uom.uom",
+    "item_uom.whsflg",
+    "itmmst.itmcls",
+    "itmmst.itmcod",
+    "itmmst.itmdsc",
+    "sysdtl.ctlgrp",
+    "sysdtl.itmcls",
+    "sysdtl.itmcod",
+    "sysdtl.locatn",
+    "sysdtl.subsit",
+    "sysdtl.trnseq",
+    "sysdtl.ulid",
+    "systrn.prdord",
+    "systrn.sysdat",
+    "systrn.trnqty",
+    "systrn.trnseq",
+    "systrn.trntyp"
+   ],
+   "lineage": {
+    "LINE": [
+     "sysdtl.locatn"
+    ],
+    "RETURN_DATE": [
+     "systrn.sysdat"
+    ],
+    "ITMCOD": [
+     "sysdtl.itmcod"
+    ],
+    "DESCRIPTION": [
+     "itmmst.itmdsc"
+    ],
+    "CTLGRP": [
+     "sysdtl.ctlgrp"
+    ],
+    "VENDOR": [
+     "ctlgrp.vndcod"
+    ],
+    "VENDOR_LOT": [
+     "ctlgrp.vndlot"
+    ],
+    "QTY": [
+     "systrn.trnqty"
+    ],
+    "WM_UNIT": [
+     "item_uom.uom"
+    ],
+    "PROCESS_ORDER": [
+     "systrn.prdord"
+    ],
+    "ULID": [
+     "sysdtl.ulid"
+    ],
+    "ID_NR": [
+     "sysdtl.ulid",
+     "systrn.sysdat"
+    ]
+   }
+  },
+  "prime": {
+   "tables": [
+    "dlytrn",
+    "loc_typ",
+    "locmst",
+    "pckwrk_dtl",
+    "pckwrk_hdr",
+    "prtdsc",
+    "prtftp_dtl",
+    "prtmst"
+   ],
+   "columns": [
+    "dlytrn.frstol",
+    "dlytrn.lodnum",
+    "dlytrn.lotnum",
+    "dlytrn.prt_client_id",
+    "dlytrn.prtnum",
+    "dlytrn.sup_lotnum",
+    "dlytrn.tostol",
+    "dlytrn.trndte",
+    "dlytrn.trnqty",
+    "dlytrn.wh_id",
+    "loc_typ.loc_typ_cat",
+    "loc_typ.loc_typ_id",
+    "locmst.loc_typ_id",
+    "locmst.stoloc",
+    "locmst.wh_id",
+    "pckwrk_dtl.last_upd_dt",
+    "pckwrk_dtl.wkonum",
+    "pckwrk_dtl.wrkref",
+    "pckwrk_hdr.pallet_id",
+    "pckwrk_hdr.wh_id",
+    "pckwrk_hdr.wrkref",
+    "prtdsc.colnam",
+    "prtdsc.colval",
+    "prtdsc.lngdsc",
+    "prtdsc.locale_id",
+    "prtftp_dtl.prt_client_id",
+    "prtftp_dtl.prtnum",
+    "prtftp_dtl.rcv_flg",
+    "prtftp_dtl.untqty",
+    "prtftp_dtl.uomcod",
+    "prtftp_dtl.uomlvl",
+    "prtftp_dtl.wh_id",
+    "prtmst.prt_client_id",
+    "prtmst.prtnum",
+    "prtmst.stkuom",
+    "prtmst.typcod",
+    "prtmst.wh_id_tmpl"
+   ],
+   "lineage": {
+    "LINE": [
+     "dlytrn.frstol"
+    ],
+    "RETURN_DATE": [],
+    "ITMCOD": [
+     "dlytrn.prtnum"
+    ],
+    "DESCRIPTION": [],
+    "CTLGRP": [
+     "dlytrn.lotnum"
+    ],
+    "VENDOR": [
+     "dlytrn.sup_lotnum"
+    ],
+    "VENDOR_LOT": [
+     "dlytrn.sup_lotnum"
+    ],
+    "QTY": [
+     "dlytrn.trnqty"
+    ],
+    "WM_UNIT": [
+     "prtmst.stkuom"
+    ],
+    "PROCESS_ORDER": [],
+    "ULID": [
+     "dlytrn.lodnum"
+    ],
+    "ID_NR": []
+   }
+  }
+ },
+ "R11": {
+  "rtcis": {
+   "tables": [
+    "ctlgrp",
+    "item_uom",
+    "itmmst",
+    "sysdtl",
+    "systrn"
+   ],
+   "columns": [
+    "ctlgrp.ctlgrp",
+    "ctlgrp.itmcls",
+    "ctlgrp.itmcod",
+    "ctlgrp.vndcod",
+    "ctlgrp.vndlot",
+    "item_uom.itmcod",
+    "item_uom.uom",
+    "item_uom.whsflg",
+    "itmmst.itmcls",
+    "itmmst.itmcod",
+    "itmmst.itmdsc",
+    "sysdtl.ctlgrp",
+    "sysdtl.itmcls",
+    "sysdtl.itmcod",
+    "sysdtl.locatn",
+    "sysdtl.subsit",
+    "sysdtl.trnseq",
+    "sysdtl.ulid",
+    "systrn.prdord",
+    "systrn.sysdat",
+    "systrn.trnqty",
+    "systrn.trnseq",
+    "systrn.trntyp"
+   ],
+   "lineage": {
+    "LINE": [
+     "sysdtl.locatn"
+    ],
+    "RETURN_DATE": [
+     "systrn.sysdat"
+    ],
+    "ITMCOD": [
+     "sysdtl.itmcod"
+    ],
+    "DESCRIPTION": [
+     "itmmst.itmdsc"
+    ],
+    "CTLGRP": [
+     "sysdtl.ctlgrp"
+    ],
+    "VENDOR": [
+     "ctlgrp.vndcod"
+    ],
+    "VENDOR_LOT": [
+     "ctlgrp.vndlot"
+    ],
+    "QTY": [
+     "systrn.trnqty"
+    ],
+    "WM_UNIT": [
+     "item_uom.uom"
+    ],
+    "PROCESS_ORDER": [
+     "systrn.prdord"
+    ],
+    "ULID": [
+     "sysdtl.ulid"
+    ],
+    "ID_NR": [
+     "sysdtl.ulid",
+     "systrn.sysdat"
+    ]
+   }
+  },
+  "prime": {
+   "tables": [
+    "dlytrn",
+    "loc_typ",
+    "locmst",
+    "pckwrk_dtl",
+    "pckwrk_hdr",
+    "prtdsc",
+    "prtftp_dtl",
+    "prtmst"
+   ],
+   "columns": [
+    "dlytrn.frstol",
+    "dlytrn.lodnum",
+    "dlytrn.lotnum",
+    "dlytrn.prt_client_id",
+    "dlytrn.prtnum",
+    "dlytrn.sup_lotnum",
+    "dlytrn.tostol",
+    "dlytrn.trndte",
+    "dlytrn.trnqty",
+    "dlytrn.wh_id",
+    "loc_typ.loc_typ_cat",
+    "loc_typ.loc_typ_id",
+    "locmst.loc_typ_id",
+    "locmst.stoloc",
+    "locmst.wh_id",
+    "pckwrk_dtl.last_upd_dt",
+    "pckwrk_dtl.wkonum",
+    "pckwrk_dtl.wrkref",
+    "pckwrk_hdr.pallet_id",
+    "pckwrk_hdr.wh_id",
+    "pckwrk_hdr.wrkref",
+    "prtdsc.colnam",
+    "prtdsc.colval",
+    "prtdsc.lngdsc",
+    "prtdsc.locale_id",
+    "prtftp_dtl.prt_client_id",
+    "prtftp_dtl.prtnum",
+    "prtftp_dtl.rcv_flg",
+    "prtftp_dtl.untqty",
+    "prtftp_dtl.uomcod",
+    "prtftp_dtl.uomlvl",
+    "prtftp_dtl.wh_id",
+    "prtmst.prt_client_id",
+    "prtmst.prtnum",
+    "prtmst.stkuom",
+    "prtmst.typcod",
+    "prtmst.wh_id_tmpl"
+   ],
+   "lineage": {
+    "LINE": [
+     "dlytrn.frstol"
+    ],
+    "RETURN_DATE": [],
+    "ITMCOD": [
+     "dlytrn.prtnum"
+    ],
+    "DESCRIPTION": [],
+    "CTLGRP": [
+     "dlytrn.lotnum"
+    ],
+    "VENDOR": [
+     "dlytrn.sup_lotnum"
+    ],
+    "VENDOR_LOT": [
+     "dlytrn.sup_lotnum"
+    ],
+    "QTY": [
+     "dlytrn.trnqty"
+    ],
+    "WM_UNIT": [
+     "prtmst.stkuom"
+    ],
+    "PROCESS_ORDER": [],
+    "ULID": [
+     "dlytrn.lodnum"
+    ],
+    "ID_NR": []
+   }
+  }
+ },
+ "R12": {
+  "rtcis": {
+   "tables": [
+    "item_uom",
+    "itmgrp",
+    "itmmst",
+    "sysdtl",
+    "systrn"
+   ],
+   "columns": [
+    "item_uom.itmcls",
+    "item_uom.itmcod",
+    "item_uom.uom",
+    "item_uom.whsflg",
+    "itmgrp.grpdsc",
+    "itmgrp.itmcls",
+    "itmgrp.itmgrp",
+    "itmmst.itmcls",
+    "itmmst.itmcod",
+    "itmmst.itmgrp",
+    "sysdtl.itmcls",
+    "sysdtl.itmcod",
+    "sysdtl.locatn",
+    "sysdtl.subsit",
+    "sysdtl.trnseq",
+    "sysdtl.ulid",
+    "systrn.prdord",
+    "systrn.sysdat",
+    "systrn.trnqty",
+    "systrn.trnseq",
+    "systrn.trntyp"
+   ],
+   "lineage": {
+    "DELIVERY_DATE": [
+     "systrn.sysdat"
+    ],
+    "LINE": [
+     "sysdtl.locatn"
+    ],
+    "PROCESS_ORDER": [
+     "systrn.prdord"
+    ],
+    "ITMCOD": [],
+    "ITMGRP": [],
+    "grpdsc": [],
+    "QTY": [
+     "systrn.trnqty"
+    ],
+    "WHSE_UNIT": [
+     "item_uom.uom"
+    ],
+    "ULID": [
+     "sysdtl.ulid"
+    ],
+    "RETURN_DATE": [
+     "systrn.sysdat"
+    ],
+    "RETURN_QTY": [
+     "systrn.trnqty"
+    ],
+    "DATE_DIFF": [
+     "systrn.sysdat"
+    ]
+   }
+  },
+  "prime": {
+   "tables": [
+    "dlytrn",
+    "dscmst",
+    "loc_typ",
+    "locmst",
+    "pckwrk_dtl",
+    "pckwrk_hdr",
+    "prtftp_dtl",
+    "prtmst"
+   ],
+   "columns": [
+    "dscmst.colnam",
+    "dscmst.colval",
+    "dscmst.lngdsc",
+    "dscmst.locale_id",
+    "loc_typ.loc_typ_cat",
+    "loc_typ.loc_typ_id",
+    "locmst.loc_typ_id",
+    "locmst.stoloc",
+    "locmst.wh_id",
+    "pckwrk_dtl.last_upd_dt",
+    "pckwrk_dtl.wkonum",
+    "pckwrk_dtl.wrkref",
+    "pckwrk_hdr.pallet_id",
+    "pckwrk_hdr.wh_id",
+    "pckwrk_hdr.wrkref",
+    "prtftp_dtl.prt_client_id",
+    "prtftp_dtl.prtnum",
+    "prtftp_dtl.rcv_flg",
+    "prtftp_dtl.untqty",
+    "prtftp_dtl.uomcod",
+    "prtftp_dtl.uomlvl",
+    "prtftp_dtl.wh_id",
+    "prtmst.prt_client_id",
+    "prtmst.prtfam",
+    "prtmst.prtnum",
+    "prtmst.typcod",
+    "prtmst.wh_id_tmpl"
+   ],
+   "lineage": {
+    "DELIVERY_DATE": [],
+    "LINE": [],
+    "PROCESS_ORDER": [],
+    "ITMCOD": [],
+    "ITMGRP": [
+     "prtmst.prtfam"
+    ],
+    "grpdsc": [
+     "dscmst.lngdsc"
+    ],
+    "QTY": [],
+    "WHSE_UNIT": [],
+    "ULID": [],
+    "RETURN_DATE": [],
+    "RETURN_QTY": [],
+    "DATE_DIFF": []
+   }
+  }
+ },
+ "R13": {
+  "rtcis": {
+   "tables": [
+    "itmgrp"
+   ],
+   "columns": [
+    "itmgrp.fifo_window",
+    "itmgrp.grpdsc",
+    "itmgrp.itmcls"
+   ],
+   "lineage": {
+    "itmgrp": [
+     "itmgrp.itmgrp"
+    ],
+    "grpdsc": [
+     "itmgrp.grpdsc"
+    ],
+    "itmcls": [
+     "itmgrp.itmcls"
+    ],
+    "fifo_window": [
+     "itmgrp.fifo_window"
+    ]
+   }
+  },
+  "prime": {
+   "tables": [
+    "dscmst",
+    "prtfam",
+    "prtmst"
+   ],
+   "columns": [
+    "dscmst.colnam",
+    "dscmst.colval",
+    "dscmst.lngdsc",
+    "dscmst.locale_id",
+    "prtfam.prtfam",
+    "prtmst.prtfam",
+    "prtmst.typcod",
+    "prtmst.wh_id_tmpl"
+   ],
+   "lineage": {
+    "itmgrp": [
+     "prtfam.prtfam"
+    ],
+    "grpdsc": [
+     "dscmst.lngdsc"
+    ],
+    "itmcls": [],
+    "fifo_window": []
+   }
+  }
+ },
+ "R14": {
+  "rtcis": {
+   "tables": [
+    "ctlgrp",
+    "item_uom",
+    "itmmst",
+    "untdtl"
+   ],
+   "columns": [
+    "ctlgrp.ctlgrp",
+    "ctlgrp.ctrl_date",
+    "ctlgrp.itmcod",
+    "ctlgrp.qastat",
+    "item_uom.buomden",
+    "item_uom.buomnum",
+    "item_uom.itmcod",
+    "item_uom.uom",
+    "item_uom.whsflg",
+    "itmmst.cost",
+    "itmmst.itmcls",
+    "itmmst.itmcod",
+    "itmmst.itmdsc",
+    "itmmst.itmgrp",
+    "untdtl.casqty",
+    "untdtl.ctlgrp",
+    "untdtl.itmcls",
+    "untdtl.itmcod"
+   ],
+   "lineage": {
+    "ITMGRP": [],
+    "Herkunft": [],
+    "ARTIKEL": [],
+    "BESCHREIBUNG": [],
+    "LOTNUMMER": [],
+    "QA_STATUS": [],
+    "MENGE": [
+     "untdtl.casqty"
+    ],
+    "WM_UNIT": [],
+    "BESTAND_SU": [
+     "untdtl.casqty"
+    ],
+    "SPERR_DATUM": []
+   }
+  },
+  "prime": {
+   "tables": [
+    "invdtl",
+    "invlod",
+    "invsub",
+    "prtdsc",
+    "prtftp_dtl",
+    "prtlot",
+    "prtmst"
+   ],
+   "columns": [
+    "invdtl.ftpcod",
+    "invdtl.invsts",
+    "invdtl.lotnum",
+    "invdtl.prt_client_id",
+    "invdtl.prtnum",
+    "invdtl.subnum",
+    "invdtl.untqty",
+    "invlod.lodnum",
+    "invlod.wh_id",
+    "invsub.lodnum",
+    "invsub.subnum",
+    "prtdsc.colnam",
+    "prtdsc.colval",
+    "prtdsc.lngdsc",
+    "prtdsc.locale_id",
+    "prtftp_dtl.ftpcod",
+    "prtftp_dtl.prt_client_id",
+    "prtftp_dtl.prtnum",
+    "prtftp_dtl.rcv_flg",
+    "prtftp_dtl.untqty",
+    "prtftp_dtl.uomcod",
+    "prtftp_dtl.uomlvl",
+    "prtftp_dtl.wh_id",
+    "prtlot.last_upd_dt",
+    "prtlot.lotnum",
+    "prtlot.prt_client_id",
+    "prtlot.prtnum",
+    "prtlot.wh_id",
+    "prtmst.prt_client_id",
+    "prtmst.prtfam",
+    "prtmst.prtnum",
+    "prtmst.typcod",
+    "prtmst.wh_id_tmpl"
+   ],
+   "lineage": {
+    "ITMGRP": [
+     "prtmst.prtfam"
+    ],
+    "Herkunft": [
+     "invdtl.lotnum"
+    ],
+    "ARTIKEL": [
+     "invdtl.prtnum"
+    ],
+    "BESCHREIBUNG": [],
+    "LOTNUMMER": [
+     "invdtl.lotnum"
+    ],
+    "QA_STATUS": [
+     "invdtl.invsts"
+    ],
+    "MENGE": [
+     "invdtl.untqty"
+    ],
+    "WM_UNIT": [],
+    "BESTAND_SU": [],
+    "SPERR_DATUM": [
+     "prtlot.last_upd_dt"
+    ]
+   }
+  }
+ },
+ "R15": {
+  "rtcis": {
+   "tables": [
+    "agv_inventory_view",
+    "ctlgrp",
+    "itmgrp",
+    "itmmst",
+    "subsit"
+   ],
+   "columns": [
+    "agv_inventory_view.casqty",
+    "agv_inventory_view.ctlgrp",
+    "agv_inventory_view.itmcls",
+    "agv_inventory_view.itmcod",
+    "agv_inventory_view.locatn",
+    "agv_inventory_view.subsit",
+    "agv_inventory_view.ulid20",
+    "ctlgrp.ctlgrp",
+    "ctlgrp.fifodt",
+    "ctlgrp.itmcls",
+    "ctlgrp.itmcod",
+    "ctlgrp.ponumb",
+    "ctlgrp.qastat",
+    "ctlgrp.vndcod",
+    "ctlgrp.vndlot",
+    "itmgrp.grpdsc",
+    "itmgrp.itmcls",
+    "itmgrp.itmgrp",
+    "itmmst.itmcls",
+    "itmmst.itmcod",
+    "itmmst.itmdsc",
+    "itmmst.itmgrp",
+    "subsit.sitnam",
+    "subsit.subsit"
+   ],
+   "lineage": {
+    "Subsit": [
+     "subsit.sitnam"
+    ],
+    "Location": [
+     "agv_inventory_view.locatn"
+    ],
+    "Count_Pallets": [
+     "agv_inventory_view.ulid20"
+    ],
+    "Item Code": [
+     "agv_inventory_view.itmcod"
+    ],
+    "Item Description": [
+     "itmmst.itmdsc"
+    ],
+    "Item Group Description": [
+     "itmgrp.grpdsc"
+    ],
+    "Control Group": [
+     "agv_inventory_view.ctlgrp"
+    ],
+    "Vendor Cod": [
+     "ctlgrp.vndcod"
+    ],
+    "Vendor Lot": [
+     "ctlgrp.vndlot"
+    ],
+    "QA Status": [
+     "ctlgrp.qastat"
+    ],
+    "Sum_Quantity": [
+     "agv_inventory_view.casqty"
+    ],
+    "First Receipt Date": [
+     "ctlgrp.fifodt"
+    ],
+    "PO Number": [
+     "ctlgrp.ponumb"
+    ],
+    "sysdate": []
+   }
+  },
+  "prime": {
+   "tables": [
+    "aremst",
+    "dscmst",
+    "invdtl",
+    "invlod",
+    "invsub",
+    "locmst",
+    "prtdsc",
+    "prtftp_dtl",
+    "prtmst"
+   ],
+   "columns": [
+    "aremst.arecod",
+    "aremst.bldg_id",
+    "aremst.wh_id",
+    "dscmst.colnam",
+    "dscmst.colval",
+    "dscmst.lngdsc",
+    "dscmst.locale_id",
+    "invdtl.fifdte",
+    "invdtl.ftpcod",
+    "invdtl.invsts",
+    "invdtl.lotnum",
+    "invdtl.prt_client_id",
+    "invdtl.prtnum",
+    "invdtl.subnum",
+    "invdtl.sup_lotnum",
+    "invdtl.untqty",
+    "invlod.lodnum",
+    "invlod.stoloc",
+    "invlod.wh_id",
+    "invsub.lodnum",
+    "invsub.subnum",
+    "locmst.arecod",
+    "locmst.stoloc",
+    "locmst.wh_id",
+    "prtdsc.colnam",
+    "prtdsc.colval",
+    "prtdsc.lngdsc",
+    "prtdsc.locale_id",
+    "prtftp_dtl.ftpcod",
+    "prtftp_dtl.prt_client_id",
+    "prtftp_dtl.prtnum",
+    "prtftp_dtl.rcv_flg",
+    "prtftp_dtl.untqty",
+    "prtftp_dtl.uomcod",
+    "prtftp_dtl.uomlvl",
+    "prtftp_dtl.wh_id",
+    "prtmst.prt_client_id",
+    "prtmst.prtfam",
+    "prtmst.prtnum",
+    "prtmst.typcod",
+    "prtmst.wh_id_tmpl"
+   ],
+   "lineage": {
+    "Subsit": [
+     "aremst.bldg_id"
+    ],
+    "Location": [
+     "invlod.stoloc"
+    ],
+    "Count_Pallets": [
+     "invlod.lodnum"
+    ],
+    "Item Code": [
+     "invdtl.prtnum"
+    ],
+    "Item Description": [],
+    "Item Group Description": [
+     "dscmst.lngdsc"
+    ],
+    "Control Group": [
+     "invdtl.lotnum"
+    ],
+    "Vendor Cod": [
+     "invdtl.sup_lotnum"
+    ],
+    "Vendor Lot": [
+     "invdtl.sup_lotnum"
+    ],
+    "QA Status": [
+     "invdtl.invsts"
+    ],
+    "Sum_Quantity": [
+     "invdtl.untqty"
+    ],
+    "First Receipt Date": [
+     "invdtl.fifdte"
+    ],
+    "PO Number": [],
+    "sysdate": []
+   }
+  }
+ },
+ "R16": {
+  "rtcis": {
+   "tables": [
+    "agv_inventory_view",
+    "ctlgrp",
+    "itmgrp",
+    "itmmst",
+    "subsit"
+   ],
+   "columns": [
+    "agv_inventory_view.blding",
+    "agv_inventory_view.casqty",
+    "agv_inventory_view.ctlgrp",
+    "agv_inventory_view.ctrl_date",
+    "agv_inventory_view.itmcls",
+    "agv_inventory_view.itmcod",
+    "agv_inventory_view.locatn",
+    "agv_inventory_view.subsit",
+    "agv_inventory_view.ulid20",
+    "agv_inventory_view.ulpall",
+    "ctlgrp.ctlgrp",
+    "ctlgrp.fifodt",
+    "ctlgrp.itmcls",
+    "ctlgrp.itmcod",
+    "ctlgrp.ponumb",
+    "ctlgrp.qastat",
+    "ctlgrp.vndcod",
+    "ctlgrp.vndlot",
+    "itmgrp.grpdsc",
+    "itmgrp.itmcls",
+    "itmgrp.itmgrp",
+    "itmmst.itmcls",
+    "itmmst.itmcod",
+    "itmmst.itmdsc",
+    "itmmst.itmgrp",
+    "subsit.sitnam",
+    "subsit.subsit"
+   ],
+   "lineage": {
+    "Subsit": [
+     "subsit.sitnam"
+    ],
+    "Building": [
+     "agv_inventory_view.blding"
+    ],
+    "Location": [
+     "agv_inventory_view.locatn"
+    ],
+    "Pallet Number": [
+     "agv_inventory_view.ulid20"
+    ],
+    "Pallet Type": [
+     "agv_inventory_view.ulpall"
+    ],
+    "Item Code": [
+     "agv_inventory_view.itmcod"
+    ],
+    "Item Description": [
+     "itmmst.itmdsc"
+    ],
+    "Item Group Description": [
+     "agv_inventory_view.locatn",
+     "itmgrp.grpdsc",
+     "itmgrp.itmgrp"
+    ],
+    "Control Group": [
+     "agv_inventory_view.ctlgrp"
+    ],
+    "Vendor Cod": [
+     "ctlgrp.vndcod"
+    ],
+    "Vendor Lot": [
+     "ctlgrp.vndlot"
+    ],
+    "QA Status": [
+     "ctlgrp.qastat"
+    ],
+    "Quantity": [
+     "agv_inventory_view.casqty"
+    ],
+    "First Receipt Date": [
+     "ctlgrp.fifodt"
+    ],
+    "PO Number": [
+     "ctlgrp.ponumb"
+    ],
+    "ctrl_date": [
+     "agv_inventory_view.ctrl_date"
+    ],
+    "sysdate": []
+   }
+  },
+  "prime": {
+   "tables": [
+    "aremst",
+    "dscmst",
+    "invdtl",
+    "invlod",
+    "invsub",
+    "locmst",
+    "prtdsc",
+    "prtftp_dtl",
+    "prtmst"
+   ],
+   "columns": [
+    "aremst.arecod",
+    "aremst.bldg_id",
+    "aremst.wh_id",
+    "dscmst.colnam",
+    "dscmst.colval",
+    "dscmst.lngdsc",
+    "dscmst.locale_id",
+    "invdtl.fifdte",
+    "invdtl.ftpcod",
+    "invdtl.invsts",
+    "invdtl.lotnum",
+    "invdtl.prt_client_id",
+    "invdtl.prtnum",
+    "invdtl.subnum",
+    "invdtl.sup_lotnum",
+    "invdtl.untqty",
+    "invlod.adddte",
+    "invlod.lodnum",
+    "invlod.lstdte",
+    "invlod.stoloc",
+    "invlod.wh_id",
+    "invsub.lodnum",
+    "invsub.subnum",
+    "locmst.arecod",
+    "locmst.stoloc",
+    "locmst.wh_id",
+    "prtdsc.colnam",
+    "prtdsc.colval",
+    "prtdsc.lngdsc",
+    "prtdsc.locale_id",
+    "prtftp_dtl.ftpcod",
+    "prtftp_dtl.prt_client_id",
+    "prtftp_dtl.prtnum",
+    "prtftp_dtl.rcv_flg",
+    "prtftp_dtl.untqty",
+    "prtftp_dtl.uomcod",
+    "prtftp_dtl.uomlvl",
+    "prtftp_dtl.wh_id",
+    "prtmst.prt_client_id",
+    "prtmst.prtfam",
+    "prtmst.prtnum",
+    "prtmst.typcod",
+    "prtmst.wh_id_tmpl"
+   ],
+   "lineage": {
+    "Subsit": [
+     "aremst.bldg_id"
+    ],
+    "Building": [
+     "locmst.arecod"
+    ],
+    "Location": [
+     "invlod.stoloc"
+    ],
+    "Pallet Number": [
+     "invlod.lodnum"
+    ],
+    "Pallet Type": [
+     "invdtl.ftpcod"
+    ],
+    "Item Code": [],
+    "Item Description": [],
+    "Item Group Description": [
+     "dscmst.lngdsc",
+     "invlod.stoloc",
+     "prtmst.prtfam"
+    ],
+    "Control Group": [],
+    "Vendor Cod": [],
+    "Vendor Lot": [],
+    "QA Status": [
+     "invdtl.invsts"
+    ],
+    "Quantity": [],
+    "First Receipt Date": [
+     "invdtl.fifdte"
+    ],
+    "PO Number": [],
+    "ctrl_date": [
+     "invlod.adddte",
+     "invlod.lstdte"
+    ],
+    "sysdate": []
+   }
+  }
+ },
+ "R17": {
+  "rtcis": {
+   "tables": [
+    "item_config",
+    "item_uom",
+    "itmmst",
+    "locatn"
+   ],
+   "columns": [
+    "item_config.caslay",
+    "item_config.default_conf",
+    "item_config.itmcod",
+    "item_uom.itmcod",
+    "item_uom.uom",
+    "item_uom.whsflg",
+    "itmmst.itmcls",
+    "itmmst.itmcod",
+    "locatn.arecod",
+    "locatn.blding",
+    "locatn.count_itmcls",
+    "locatn.cycdat",
+    "locatn.pikzon",
+    "locatn.post_count_ok",
+    "locatn.pre_count_ok",
+    "locatn.serflg",
+    "locatn.serflg_commnt",
+    "locatn.subsit",
+    "locatn.zoncod"
+   ],
+   "lineage": {
+    "subsit": [],
+    "blding": [
+     "locatn.pikzon"
+    ],
+    "locatn": [],
+    "count_itmcls": [],
+    "CYCDAT": [],
+    "last_count_durration_days": [],
+    "POST_COUNT_OK": [],
+    "PRE_COUNT_OK": [],
+    "serflg": [],
+    "serflg_commnt": [],
+    "actdat": [],
+    "itmcod": [],
+    "arecod": [],
+    "caslay": [],
+    "wm_unit": [
+     "item_uom.uom"
+    ],
+    "last_update": []
+   }
+  },
+  "prime": {
+   "tables": [
+    "aremst",
+    "dscmst",
+    "invsum",
+    "loc_typ",
+    "locmst",
+    "prtftp_dtl",
+    "prtmst",
+    "rplcfg"
+   ],
+   "columns": [
+    "aremst.arecod",
+    "aremst.bldg_id",
+    "aremst.prt_client_id",
+    "aremst.prtnum",
+    "aremst.stoloc",
+    "aremst.wh_id",
+    "dscmst.colnam",
+    "dscmst.colval",
+    "dscmst.locale_id",
+    "dscmst.short_dsc",
+    "invsum.prt_client_id",
+    "invsum.prtnum",
+    "invsum.stoloc",
+    "invsum.wh_id",
+    "loc_typ.loc_typ",
+    "loc_typ.loc_typ_id",
+    "locmst.arecod",
+    "locmst.cntdte",
+    "locmst.loc_typ_id",
+    "locmst.lokcod",
+    "locmst.lstdte",
+    "locmst.stoloc",
+    "locmst.useflg",
+    "locmst.wh_id",
+    "prtftp_dtl.cas_flg",
+    "prtftp_dtl.layer_flg",
+    "prtftp_dtl.prt_client_id",
+    "prtftp_dtl.prtnum",
+    "prtftp_dtl.rcv_flg",
+    "prtftp_dtl.untqty",
+    "prtftp_dtl.uomcod",
+    "prtftp_dtl.uomlvl",
+    "prtftp_dtl.wh_id",
+    "prtmst.prt_client_id",
+    "prtmst.prtnum",
+    "prtmst.typcod",
+    "prtmst.wh_id_tmpl",
+    "rplcfg.prt_client_id",
+    "rplcfg.prtnum",
+    "rplcfg.stoloc",
+    "rplcfg.wh_id"
+   ],
+   "lineage": {
+    "subsit": [
+     "aremst.bldg_id"
+    ],
+    "blding": [
+     "locmst.arecod",
+     "locmst.stoloc"
+    ],
+    "locatn": [
+     "locmst.stoloc"
+    ],
+    "count_itmcls": [
+     "locmst.arecod"
+    ],
+    "CYCDAT": [
+     "locmst.cntdte"
+    ],
+    "last_count_durration_days": [
+     "locmst.cntdte"
+    ],
+    "POST_COUNT_OK": [],
+    "PRE_COUNT_OK": [],
+    "serflg": [
+     "locmst.useflg"
+    ],
+    "serflg_commnt": [
+     "locmst.lokcod"
+    ],
+    "actdat": [
+     "locmst.lstdte"
+    ],
+    "itmcod": [],
+    "arecod": [
+     "dscmst.short_dsc"
+    ],
+    "caslay": [],
+    "wm_unit": [],
+    "last_update": []
+   }
+  }
+ }
+}

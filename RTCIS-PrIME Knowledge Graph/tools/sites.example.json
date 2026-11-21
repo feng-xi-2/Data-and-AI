@@ -1,0 +1,6 @@
+{
+  "_readme": "Copy to sites.local.json (git-ignored) and fill in your replica hosts. engine: RTCIS | PrIME2014 | PrIME2022. catalogs: [[database, [schemas]]] whose INFORMATION_SCHEMA holds the BASE tables (not synonyms).",
+  "RTCIS_<SITE>":     {"engine": "RTCIS",     "server": "<rtcis-replica-host>",     "database": "<DB>", "catalogs": [["<DB>_simp", ["live3"]]], "site": "<site>"},
+  "PRIME14_<SITE>":   {"engine": "PrIME2014", "server": "<prime2014-replica-host>", "database": "<DB>", "catalogs": [["<DB>", ["prodwms"]]], "site": "<site>"},
+  "PRIME22_<SITE>":   {"engine": "PrIME2022", "server": "<prime2022-replica-host>", "database": "<SITE>_RTDS", "catalogs": [["<SITE>_RTDS", ["dbo"]]], "site": "<site>", "query_db": "<SITE>_REPLICA"}
+}

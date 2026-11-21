@@ -1,0 +1,24 @@
+Kind,Pattern,Visibility,Synonyms,Why
+Table,^Field Dictionary$,Visible,data dictionary|glossary|definitions|field meaning|what does it mean|formula|calculation|how is it calculated,Copilot answer table: meaning and formula of every field (tools/ai_descriptions.py)
+Table,^(KPI Scorecard|Site Summary)$,Visible,scorecard|kpi list|alerts|status|rca|root cause,Copilot answer tables - one row per site x KPI / per site
+Table,^Cfg_(Site|Threshold|KpiExplain|HealthCheck|PageGuide|FieldGuide|AlertRule|RCA|Stage)$,Visible,,"Site settings, KPI limits, how each KPI is calculated, alert rules + RCA texts, process stages, health checks, page / field guide - Copilot explains with them"
+Table,^(Cfg_|Input |StartTime$|EndTime$|StartDate$|EndDate$|TimeSlots$|DimBucket$|DimDateBucket$|Date Refresh$|CTMZ Category$|KPI Snapshot$),Hidden,,"Parameter / slicer helper / config tables - technical, not business questions"
+Table,.*,Visible,,Business data tables (pallets / trucks / users / locations / production)
+Measure,(?i)\(strip\)$,Hidden,,Banner-strip copy of another measure (same number) - one name per KPI for Copilot
+Measure,(?i)(colou?r|fill|font|icon|arrow|svg)\b,Hidden,,Visual formatting helper
+Measure,(?i)^(Card|Rows|Thr|Feature|Cfg|Input|Win Off|Refresh Line|Page Guide|Sort_Helper|Debug)\b,Hidden,,Visual / threshold / feature-flag helper - the KPI measures and the answer tables carry the business number
+Measure,(?i)(label|title|subtitle|caption|tooltip|hint)\b,Hidden,,Report label text
+Measure,(?i) Text$,Hidden,,Formatted text copy of a number measure (the number measure is kept)
+Measure,^KPI Status$,Visible,status|alert|health|rag,Status of a KPI against its limits
+Measure,^KPI Actual$,Visible,value|actual|result,KPI value of the report day
+Measure,^Avg Prod Plt/h$,Visible,pph|throughput|output|pallets per hour,Production pallets per hour
+Measure,.*,Visible,,Business measure
+Column,(?i)^Field Dictionary\|Meaning$,Visible,definition|means|description|explanation,What the field means
+Column,(?i)^Field Dictionary\|Formula$,Visible,dax|calculation|calculated|how calculated|expression,How the field is calculated
+Column,(?i)^Field Dictionary\|Field$,Visible,field name|measure name|column name|setting|kpi name,Name of the field
+Column,(?i)^Cfg_Site\|(SiteCode|SiteName|Region|WH_ID|WMS_Version|UTC_Offset_h|Shift1_Start|Shift2_Start|Shift3_Start|Hypercare_Start|Has_Production|Has_LevelA|Has_HOFF|Prod_Model|Config_Status|Also Called)$,Visible,,Site settings users ask about
+Column,(?i)^Cfg_Site\|,Hidden,,SQL tokens / connection details of the site profile - technical
+Column,(?i)\|(dlytrn_id|debug_label|.*_Sort|Sort.*|.*Key|Row|S)$,Hidden,,Technical id / sort / key column
+Column,(?i)^(Site Summary|KPI Scorecard)\|Site$,Visible,warehouse|plant|dc,Site of the answer row
+Column,.*,Visible,,Business column
+Measure,^Staging Lane Dwell h$,Visible,staging lane dwell|lane dwell time|dwell in staging|time in staging lane|staging dwell,GCFC / Timbr staging-lane dwell KPI (first pallet staged -> trailer closed)

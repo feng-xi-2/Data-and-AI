@@ -147,8 +147,14 @@ def site_aliases(s):
 
 
 def _alias_switch():
-    pairs = ", ".join(f'"{s["SiteCode"]}", "{", ".join(site_aliases(s)[1:]).replace(chr(34), "")}"' for s in read_csv("site_config.csv"))
-    return f"SWITCH(Cfg_Site[SiteCode], {pairs}, BLANK())"
+    # code / name / WH ID / SAP plant come from the model's own Cfg_Site row (a Service or ID12 override is then reflected);
+    # only the hand-written names of config/site_aliases.csv are listed per site
+    manual = {r["SiteCode"]: [a.strip() for a in r["Aliases"].split("|") if a.strip()] for r in read_csv("site_aliases.csv")} \
+        if (ROOT / "config" / "site_aliases.csv").exists() else {}
+    pairs = ", ".join(f'"{c}", "{", ".join(a).replace(chr(34), "")}"' for c, a in manual.items() if a)
+    return ('VAR _w = CALCULATE(SELECTEDVALUE(Cfg_Site[WH_ID])) VAR _p = CALCULATE(SELECTEDVALUE(Cfg_Site[SAP_Plant])) '
+            f'VAR _m = SWITCH(Cfg_Site[SiteCode], {pairs}, BLANK()) '
+            'RETURN _w & IF(_p <> "", ", plant " & _p) & IF(_m <> "", ", " & _m)')
 
 
 SITE_SUMMARY_DAX = SITE_SUMMARY_DAX.replace("{{ALIASES}}", _alias_switch())
@@ -188,7 +194,7 @@ def kpis_text():
             pillar = r["Pillar"]
             out.append(f"{pillar}:")
         out.append(f"- {r['KPI_Key']}: {r['KPI_Name']}; {r['Unit']}, {word[r['Direction']]}"
-                   + (f'; user says "{words[r["KPI_Key"]]}"' if words.get(r["KPI_Key"]) else ""))
+                   + (f'; aka {words[r["KPI_Key"]]}' if words.get(r["KPI_Key"]) else ""))
     return "\n".join(out)
 
 
@@ -196,15 +202,36 @@ def questions():
     return read_csv("copilot_questions.csv")
 
 
-def questions_text():
-    return "\n".join(f"- Q: {r['Template']}\n  A: {r['Steps']}" for r in questions())
+def questions_for(sites):
+    """copilot_questions.csv with the example site names swapped for the sites IN THIS FILE (a Jakarta-only file never shows
+    'How is BINHDUONG doing today?'); several sites in the file: every other site code maps onto them in turn."""
+    codes = [s["SiteCode"] for s in sites] or [s["SiteCode"] for s in report_sites()]
+    known = sorted({s["SiteCode"] for s in read_csv("site_config.csv")} | set(codes), key=len, reverse=True)
+    others = [c for c in known if c not in codes]
+    swap = {c: codes[i % len(codes)] for i, c in enumerate(others)}
+    out = []
+    for r in questions():
+        r = dict(r)
+        for col in ("Example", "Template", "What_You_Get"):
+            if r.get(col):
+                r[col] = re.sub(r"\b(" + "|".join(map(re.escape, others)) + r")\b", lambda m: swap[m.group(1)], r[col]) if others else r[col]
+        out.append(r)
+    return out
 
 
-def example_prompts():
+def questions_text(sites=None):
+    rows = questions_for(sites) if sites else questions()
+    if sites and len(sites) == 1:          # one-site file: no cross-site templates
+        rows = [r for r in rows if "compare" not in (r.get("Group") or "").lower()]
+    return "\n".join(f"- Q: {r['Template']}\n  A: {r['Steps']}" for r in rows)
+
+
+def example_prompts(sites=None):
     """Starter questions Copilot shows when it opens (PBIP Copilot/examplePrompts.json) - the Example column, real site names."""
-    codes = {s["SiteCode"] for s in report_sites()}
+    sites = sites if sites else report_sites()
+    codes = {s["SiteCode"] for s in sites}
     out_of_report = {s["SiteCode"] for s in read_csv("site_config.csv")} - codes
-    ex = [r["Example"] for r in questions()]
+    ex = [r["Example"] for r in questions_for(sites)]
     bad = [e for e in ex if any(re.search(rf"\b{c}\b", e, re.I) for c in out_of_report)]
     if bad:
         raise SystemExit(f"config/copilot_questions.csv Example names a site that is not in the report: {bad}")
@@ -215,7 +242,7 @@ def render(sites=None):
     sites = sites if sites is not None else report_sites()
     tpl = (ROOT / "config" / "copilot_instructions.md").read_text(encoding="utf-8")
     txt = (tpl.replace("{{SITES}}", sites_text(sites)).replace("{{KPIS}}", kpis_text())
-           .replace("{{QUESTIONS}}", questions_text()).strip() + "\n")
+           .replace("{{QUESTIONS}}", questions_text(sites)).strip() + "\n")
     if len(txt) > LIMIT:
         raise SystemExit(f"Copilot AI instructions are {len(txt)} characters - Power BI allows {LIMIT}. "
                          "Shorten config/copilot_instructions.md or config/copilot_questions.csv")
@@ -264,14 +291,14 @@ def apply_pbip(out_sm, sites=None):
     if f"ref cultureInfo {CULTURE}" not in mt:
         mt = mt.rstrip("\n") + f"\n\nref cultureInfo {CULTURE}\n"
     mf.write_text(tooling_annotation(mt), encoding="utf-8")
-    write_copilot_folder(Path(out_sm), text)
+    write_copilot_folder(Path(out_sm), text, sites)
     return len(text)
 
 
 SCHEMA = "https://developer.microsoft.com/json-schemas/fabric/item/"
 
 
-def write_copilot_folder(out_sm, text):
+def write_copilot_folder(out_sm, text, sites=None):
     """PBIP <Model>.SemanticModel/Copilot/ in the layout Power BI Desktop saves (microsoft/fabric-data-agent-workshop sample + json-schemas):
     Instructions (same text as the culture CustomInstructions), example prompts = the starter questions Copilot offers, Q&A indexing on."""
     cp = out_sm / "Copilot"
@@ -279,7 +306,7 @@ def write_copilot_folder(out_sm, text):
     files = {
         "version.json": ver,
         "settings.json": {"$schema": SCHEMA + "semanticModel/copilot/settings/1.0.0/schema.json", "indexingEnabled": True},
-        "examplePrompts.json": {"$schema": SCHEMA + "semanticModel/copilot/examplePrompts/1.0.0/schema.json", "prompts": example_prompts()},
+        "examplePrompts.json": {"$schema": SCHEMA + "semanticModel/copilot/examplePrompts/1.0.0/schema.json", "prompts": example_prompts(sites)},
         "Instructions/version.json": ver,
     }
     too_long = [p for p in files["examplePrompts.json"]["prompts"] if len(p) > 500]
@@ -290,6 +317,99 @@ def write_copilot_folder(out_sm, text):
         f.parent.mkdir(parents=True, exist_ok=True)
         f.write_text(json.dumps(obj, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     (cp / "Instructions" / "instructions.md").write_text(text, encoding="utf-8")
+    write_schema(out_sm)
+
+
+def write_schema(out_sm):
+    """Copilot/schema.json - written with the Copilot folder and again after tools/ai_descriptions.py added the Field Dictionary."""
+    sch, st = ai_schema(out_sm)
+    (Path(out_sm) / "Copilot" / "schema.json").write_text(json.dumps(sch, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"   Copilot AI data schema: {st}", flush=True)
+
+
+def ai_schema(out_sm):
+    """Copilot/schema.json (Prep data for AI > Simplify the data schema): a compact business schema from config/copilot_schema.csv
+    (first matching rule per table / measure / 'Table|Column'). Hidden model objects stay out. Every object a Visible measure uses
+    (other measures, 'Table'[Column]) is kept Visible - Microsoft: the schema must include the dependencies of the selected measures."""
+    rules = [(r["Kind"], re.compile(r["Pattern"]), r["Visibility"], [s for s in (r.get("Synonyms") or "").split("|") if s])
+             for r in read_csv("copilot_schema.csv")]
+
+    def rule(kind, key):
+        return next(((v, syn) for k, p, v, syn in rules if k == kind and p.search(key)), ("Visible", []))
+
+    tabs = {}
+    for f in sorted((Path(out_sm) / "definition" / "tables").glob("*.tmdl")):
+        L = f.read_text(encoding="utf-8").splitlines()
+        tl = next(i for i, x in enumerate(L) if x.startswith("table "))
+        tn = L[tl][6:].strip().strip("'").replace("''", "'")
+        t = {"hidden": any(x.strip() == "isHidden" for x in L[tl + 1:tl + 4]), "cols": {}, "meas": {}}
+        cur = None
+        for i, ln in enumerate(L):
+            m = re.match(r"^\t(measure|column) ('(?:[^']|'')+'|[^\s=]+)", ln)
+            if m:
+                n = m.group(2).strip("'").replace("''", "'")
+                cur = (m.group(1), n)
+                body = ln.split(" = ", 1)[1] if " = " in ln else ""
+                hid = False
+                (t["meas"] if cur[0] == "measure" else t["cols"])[n] = {"dax": body, "hidden": hid}
+            elif cur and (ln.startswith("\t\t") or ln.startswith("\t\t\t")):
+                o = (t["meas"] if cur[0] == "measure" else t["cols"])[cur[1]]
+                if ln.strip() == "isHidden":
+                    o["hidden"] = True
+                elif not re.match(r"^\t\t(formatString|displayFolder|lineageTag|dataType|summarizeBy|sourceColumn|sortByColumn|"
+                                  r"annotation|isHidden|dataCategory|formatStringDefinition|changedProperty)", ln):
+                    o["dax"] += "\n" + ln
+            elif ln.startswith("\t") and not ln.startswith("\t\t") and ln.strip():
+                cur = None
+        tabs[tn] = t
+    vis = {}
+    for tn, t in tabs.items():
+        tv, tsyn = rule("Table", tn)
+        vis[("t", tn)] = (tv if not t["hidden"] else "Hidden", tsyn)
+        for n, o in t["meas"].items():
+            v, syn = rule("Measure", n)
+            vis[("m", tn, n)] = ("Hidden" if o["hidden"] else v, syn)
+        for n, o in t["cols"].items():
+            v, syn = rule("Column", f"{tn}|{n}")
+            vis[("c", tn, n)] = ("Hidden" if o["hidden"] or t["hidden"] or tv == "Hidden" else v, syn)
+    where = {n: tn for tn, t in tabs.items() for n in t["meas"]}
+    todo = [k for k, (v, _) in vis.items() if k[0] == "m" and v == "Visible"]
+    added = 0
+    while todo:                                  # dependency closure of the visible measures
+        k = todo.pop()
+        dax = tabs[k[1]]["meas"][k[2]]["dax"]
+        for m in re.finditer(r"(?:'((?:[^']|'')+)'|\b([A-Za-z_][\w ]*?))?\[([^\]]+)\]", dax):
+            tref, col = (m.group(1) or m.group(2) or "").replace("''", "'").strip(), m.group(3)
+            if tref and tref in tabs and col in tabs[tref]["cols"]:
+                dk = ("c", tref, col)
+            elif not tref and col in where:
+                dk = ("m", where[col], col)
+            else:
+                continue
+            if vis.get(dk, ("Visible",))[0] != "Visible" and not (tabs[dk[1]]["cols" if dk[0] == "c" else "meas"][dk[2]]["hidden"]):
+                vis[dk] = ("Visible", vis[dk][1])
+                added += 1
+                if dk[0] == "m":
+                    todo.append(dk)
+                if vis[("t", dk[1])][0] != "Visible":
+                    vis[("t", dk[1])] = ("Visible", vis[("t", dk[1])][1])
+    out = []
+    for tn, t in tabs.items():
+        tv, tsyn = vis[("t", tn)]
+        e = {"name": tn, "visibility": tv}
+        if tsyn:
+            e["synonyms"] = tsyn
+        if t["cols"]:
+            e["columns"] = [dict({"name": n, "visibility": vis[("c", tn, n)][0]},
+                                 **({"synonyms": vis[("c", tn, n)][1]} if vis[("c", tn, n)][1] else {})) for n in t["cols"]]
+        if t["meas"]:
+            e["measures"] = [dict({"name": n, "visibility": vis[("m", tn, n)][0]},
+                                  **({"synonyms": vis[("m", tn, n)][1]} if vis[("m", tn, n)][1] else {})) for n in t["meas"]]
+        out.append(e)
+    cnt = lambda kind: (sum(1 for k, (v, _) in vis.items() if k[0] == kind and v == "Visible"), sum(1 for k in vis if k[0] == kind))
+    st = (f"tables {cnt('t')[0]}/{cnt('t')[1]}, measures {cnt('m')[0]}/{cnt('m')[1]}, columns {cnt('c')[0]}/{cnt('c')[1]} visible "
+          f"({added} kept as dependencies) - config/copilot_schema.csv")
+    return {"$schema": SCHEMA + "semanticModel/copilot/schema/1.0.0/schema.json", "tables": out}, st
 
 
 def _ps(*args):

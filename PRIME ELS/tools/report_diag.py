@@ -210,7 +210,8 @@ def page_trucks():
     h2 = 230
     v.append(card(p, "stg_kpis", 10, y2, 200, h2, 12,
                   [("Staging Trucks", "Trucks (window)"), ("Staging Pallets", "Pallets"), ("Staging Pallets Per Truck", "Pallets / truck"),
-                   ("Staging Lanes Used", "Lanes used")], title="2. Dock & staging", value_size=14))
+                   ("Staging Lanes Used", "Lanes used"), ("Staging Lane Dwell h", "Outbound lane dwell (h): first pallet staged -> trailer closed")],
+                  title="2. Dock & staging", value_size=12))
     v.append(measures_chart(p, "docks", 218, y2, 520, h2, 13, (ts, "Dock", "Dock"), [("Staging Pallets", "Pallets")],
                             "Pallets per dock (door) - trucks of the window", [PAL["dock"]], vtype="barChart",
                             sort=(K, "Staging Pallets", True, "Descending"), tooltips=[("Staging Trucks", "Trucks")], labels=True))
@@ -320,13 +321,20 @@ def page_field_guide():
     p = "field_guide"
     fg = "Cfg_FieldGuide"
     v = [*banner(p, "FIELDS", "Field Guide")]
-    v.append(table(p, "fields", 10, Y0, 1260, BOTTOM - Y0, 10,
+    h1 = int((BOTTOM - Y0) * 0.62)
+    v.append(table(p, "fields", 10, Y0, 1260, h1, 10,
                    [(fg, "Order", False, "#"), (fg, "Page", False, "Page"), (fg, "Visual", False, "Visual"), (fg, "Field", False, "Field"),
                     (fg, "Unit", False, "Unit"), (fg, "Meaning", False, "Meaning / calculation"), (fg, "Grouping_Colour", False, "Grouping & colour"),
                     (fg, "Source", False, "Source")],
-                   "Every field of the report: meaning, unit of measure, grouping / colour rule and source (config/field_guide.csv)",
+                   "Every field of the report: meaning, unit of measure, grouping / colour rule and source",
                    sort=(fg, "Order", False, "Ascending"),
                    widths={"Order": 30, "Page": 90, "Visual": 130, "Field": 130, "Unit": 70, "Meaning": 420, "Grouping_Colour": 220, "Source": 140}))
+    pg = "Cfg_PageGuide"
+    v.append(table(p, "page_tech", 10, Y0 + h1 + 8, 1260, BOTTOM - Y0 - h1 - 8, 11,
+                   [(pg, "Page", False, "Page"), (pg, "How_Calculated", False, "How it is calculated (data sources, rules)"),
+                    (pg, "How_To_Configure", False, "How to configure (report owner)")],
+                   "For the report owner: how each page is calculated and configured",
+                   widths={"Page": 150, "How_Calculated": 640, "How_To_Configure": 440}))
     return p, "Field Guide", "FIELDS", v
 
 
@@ -337,8 +345,7 @@ def page_ask_copilot():
     v.append(table(p, "questions", 10, Y0, 1260, BOTTOM - Y0, 11,
                    [(cq, "Order", False, "#"), (cq, "Group", False, "Topic"), (cq, "Template", False, "Question template"),
                     (cq, "Example", False, "Example to copy"), (cq, "Answer", False, "What you get")],
-                   "Question templates for Copilot (Home > Copilot, skill 'Answers questions about the data') - replace <SITE>, <KPI>, <OWNER>; "
-                   "always name the site (config/copilot_questions.csv)",
+                   "Question templates for Copilot - open Copilot (top right), copy an example, change <SITE>, <KPI> or <OWNER>",
                    sort=(cq, "Order", False, "Ascending"),
                    widths={"Order": 30, "Group": 110, "Template": 360, "Example": 380, "Answer": 360}))
     return p, "Ask Copilot", "COPILOT", v
@@ -470,7 +477,7 @@ def page_inventory():
     v.append(table(p, "old_cause", 846, y2, 424, BOTTOM - y2, 14,
                    [(IVT, "Location Class", False, "Location class"), (K, "Inv Old Pallets Row", True, "Old pallets"),
                     (K, "Inv Old Cause", True, "Likely cause"), (K, "Inv Old Action", True, "Action")],
-                   "Old stock - likely cause and action per location class (config/stock_old_causes.csv)",
+                   "Old stock - likely cause and action per location class",
                    sort=(K, "Inv Old Pallets Row", True, "Descending"),
                    widths={"Location Class": 70, "Inv Old Pallets Row": 50, "Inv Old Cause": 145, "Inv Old Action": 145}))
     return p, "Inventory", "INVENTORY", v

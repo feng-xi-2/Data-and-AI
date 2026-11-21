@@ -37,7 +37,7 @@ Site,KPI_Key,Pillar_No,Pillar,KPI_Name,Unit,Format,Direction,Target,Warn_Pct,Cri
 *,RUN_RATE_HOURS,1,Production,Hours in the run-rate window used for the production projection,h,0,Info,3,,,,,,DAY,N,no activity this day,Prediction = pallets + run rate of the last N complete hours x remaining hours
 *,HOUR_VS_BASE,6,Health,Hourly pallets moved vs same-hour baseline (hourly report),x baseline,0%,Higher,1,0.9,0.8,,,,DAY,N,no activity this day,Excel HOURLY_ALERT status (generic: RF pallet moves instead of LTA takeaway)
 *,COMPARE_DAYS,1,Production,SAP vs WMS production comparison window,days,0,Info,7,,,,,,DAY,,,Window of the SAP Production page coverage sentence
-*,WMS_COVERAGE,1,Production,PrIME production pallets as share of SAP FG receipts,%,0%,Higher,0.95,0.9,0.5,,,,DAY,,,Below Crit_At the SAP page says production is not (yet) received in PrIME
+*,WMS_COVERAGE,1,Production,PrIME production pallets as share of SAP FG receipts,%,0%,Higher,0.95,0.9,0.5,,,Has_SAP_Prod,DAY,,,Below Crit_At the SAP page says production is not (yet) received in PrIME
 *,STALE_HOURS,4,Warehouse,"Stale record age in a flow stage (inventory accuracy, not a live blockage)",h,0,Info,72,,,,,,DAY,,,"Process Flow: items waiting longer than this in a stage are listed as STALE records (verify + correct WMS), not as the live blockage"
 *,PM_MIN_CASES,4,Warehouse,Process mining noise floor (cases per hand-off),cases,0,Info,30,,,,,,DAY,,,Process Mining: a hand-off between two steps is shown / ranked only when at least this many distinct pallets / orders / trucks made it (keeps one-off rescans out of the map)
 *,STOCK_OLD_DAYS,4,Warehouse,Old stock age,days,0,Info,30,,,,,,DAY,,,Inventory: pallets whose FIFO / receipt date is older than this count as old stock (rotation / obsolescence check)

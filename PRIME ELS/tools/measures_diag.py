@@ -280,6 +280,12 @@ STAGING = [
      + _STG + f'RETURN IF(NOT ISEMPTY(T), SUMX(T, {TS}[Pallets]))'),
     ("Staging Trucks", "11 Trucks\\Dock & staging", "#,##0", _STG + f'RETURN COUNTROWS(DISTINCT(SELECTCOLUMNS(T, "@t", {TS}[TrailerID]))) + 0'),
     ("Staging Pallets Per Truck", "11 Trucks\\Dock & staging", "0.0", 'DIVIDE([Staging Pallets], [Staging Trucks])'),
+    ("Staging Lane Dwell h", "11 Trucks\\Dock & staging", "0.0",
+     '-- GCFC / Timbr "staging lane dwell" for outbound trucks closed in the truck window: hours from the FIRST pallet put in the\n'
+     '-- staging lane to the trailer close (Timbr starts at the first allocation - the replica keeps no allocation time per trailer)\n'
+     + _STG + f'VAR O = FILTER(T, {TS}[Direction] = "Outbound" && NOT ISBLANK({TS}[First Pallet]) && NOT ISBLANK({TS}[Close]))\n'
+     f'VAR G = GROUPBY(O, {TS}[TrailerID], "@f", MINX(CURRENTGROUP(), {TS}[First Pallet]), "@c", MAXX(CURRENTGROUP(), {TS}[Close]))\n'
+     'RETURN AVERAGEX(FILTER(G, [@c] >= [@f]), ([@c] - [@f]) * 24)'),
     ("Staging Lanes Used", "11 Trucks\\Dock & staging", "#,##0",
      _STG + f'RETURN COUNTROWS(DISTINCT(SELECTCOLUMNS(FILTER(T, LEFT({TS}[Staging Lane], 1) <> "("), "@l", {TS}[Staging Lane]))) + 0'),
     ("Staging Truck TTAT", "11 Trucks\\Dock & staging", "#,##0",
@@ -409,19 +415,19 @@ PROCESS_MINING = [
     ("PM Window Days", "14 Process Mining", "0", site("MOVEMENT_DAYS")),
     ("PM Window Text", "14 Process Mining", None,
      '-- subtitle of the Sankeys / hand-off table: the measured window and the noise floor in numbers (not config names)\n'
-     'VAR d = [PM Window Days]\nRETURN IF(ISBLANK(d), BLANK(), "Measured over the last " & d & " days (Cfg_Site MOVEMENT_DAYS); hand-offs with fewer than " & '
-     '[PM Min Cases] & " cases hidden (PM_MIN_CASES); \'Open: waiting after X\' = not yet at the next step now = stuck")'),
+     'VAR d = [PM Window Days]\nRETURN IF(ISBLANK(d), BLANK(), "Measured over the last " & d & " days; hand-offs with fewer than " & '
+     '[PM Min Cases] & " cases hidden; \'Open: waiting after X\' = not yet at the next step now = stuck")'),
     ("PM Order Flow Note", "14 Process Mining", None,
      '-- order Sankey subtitle: says WHY it is empty (a custom visual shows no "no data" text) - else the measured window\n'
      f'VAR n = COALESCE(CALCULATE(SUM({PE}[Cases]), {PE}[Flow] = "Order", {PE}[From_No] = 1), 0)\n'
      'RETURN IF(NOT [Orders Flow Used], "Not traceable at this site: shipments stay Ready in WMS (no pick-release / staged / loaded status) - follow the '
      'pallet flow and the trucks below",\n'
      '    IF(n < [PM Min Cases], "Too few orders for a reliable flow: " & FORMAT(n, "#,##0") & " orders in the last " & [PM Window Days] & '
-     '" days (minimum " & [PM Min Cases] & ", Cfg_Threshold PM_MIN_CASES)", [PM Window Text]))'),
+     '" days (minimum " & [PM Min Cases] & " cases)", [PM Window Text]))'),
     ("PM Pallet Flow Note", "14 Process Mining", None,
      f'VAR mx = COALESCE(CALCULATE(MAX({PE}[Cases]), {PE}[Flow] = "Pallet", {PE}[Edge_Kind] IN {{"Forward", "Storage"}}), 0)\n'
      'RETURN IF(mx < [PM Min Cases], "Too few pallets for a reliable flow: the largest main-flow hand-off has " & FORMAT(mx, "#,##0") & '
-     '" pallets in the last " & [PM Window Days] & " days (minimum " & [PM Min Cases] & ", Cfg_Threshold PM_MIN_CASES) - see the hand-off table", [PM Window Text])'),
+     '" pallets in the last " & [PM Window Days] & " days (minimum " & [PM Min Cases] & " cases) - see the hand-off table", [PM Window Text])'),
     ("PM Cases", "14 Process Mining", "#,##0",
      '-- Sankey weight = distinct pallets / orders / trucks that made the hand-off From -> To in the last MOVEMENT_DAYS days. Hidden: edges below\n'
      '-- PM_MIN_CASES (one-off rescans) and the order flow where shipments stay Ready in WMS (Orders Flow Used)\n'
@@ -468,7 +474,7 @@ PROCESS_MINING = [
       f'VAR nEdges = COUNTROWS({PE})\n'
       'RETURN IF(ISBLANK(txtP) && ISBLANK(txtT) && ISBLANK(txtO) && ISBLANK(stTxt),\n'
       '    IF(nEdges > 0, "Too few cases for a reliable picture: no hand-off with at least " & mc & " cases in the last " & [PM Window Days] & '
-      '" days (" & FORMAT(nEdges, "0") & " smaller hand-offs; lower Cfg_Threshold PM_MIN_CASES for this site to see them).",\n'
+      '" days (" & FORMAT(nEdges, "0") & " smaller hand-offs below the minimum case count are not drawn).",\n'
       '        "No process events in the last " & [PM Window Days] & " days for this site."),\n'
       '    "Where the flow loses most time (median x cases, last " & [PM Window Days] & " days): " & CONCATENATEX(FILTER(parts, NOT ISBLANK([Value]) && [Value] <> ""), [Value], "   |   "))'),
 ]
@@ -547,7 +553,7 @@ INVENTORY = [
     ("Inv Old Share", "16 Inventory", "0.0%", 'DIVIDE([Inv Old Pallets], [Inv Pallets])'),
     ("Inv Old Rule Text", "16 Inventory", None,
      f'VAR od = {thr("STOCK_OLD_DAYS")}\nVAR o = [Inv Old Pallets]\n'
-     'RETURN IF(ISBLANK(od), BLANK(), "Old = in stock more than " & od & " days since receipt (Cfg_Threshold STOCK_OLD_DAYS): " & FORMAT(o, "#,##0") & '
+     'RETURN IF(ISBLANK(od), BLANK(), "Old = in stock more than " & od & " days since receipt: " & FORMAT(o, "#,##0") & '
      '" pallets = " & FORMAT(DIVIDE(o, [Inv Pallets]), "0%") & " of " & FORMAT([Inv Pallets], "#,##0") & " pallets in stock")'),
     # old-stock table: blank when the row has no old stock -> the row is hidden (no measure filter needed)
     ("Inv Old Pallets Row", "16 Inventory", "#,##0", 'VAR o = [Inv Old Pallets]\nRETURN IF(o > 0, o)'),

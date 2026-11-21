@@ -1,4 +1,4 @@
-﻿Type,Key,Priority,Text,Action
+Type,Key,Priority,Text,Action
 LINE_RCA,SURGE,1,Output spike vs baseline - verify catch-up run after downtime and confirm Level A can absorb the volume,Pre-clear Level A locations and brief the put-away team on the incoming volume
 LINE_RCA,STORAGE_BLOCK,2,Storage blockage: only {free_short} SHORT spots free and {queue} pallets waiting in LTA - takeaway is backed up,"Trigger bin-to-bin clean-up to release SHORT locations, then restart LTA discharge"
 LINE_RCA,LVLA_CONGESTED,3,"Level A congestion: utilisation {lvla_util} - no put-away locations, LTA cannot discharge","Run move-up relocation to free Level A, then re-check the line"
@@ -16,13 +16,15 @@ VERDICT,NONE,99,VERDICT: no structural constraint detected.,Keep monitoring
 NARRATIVE,PROD_OFF,1,Production pillar is not active for this site (Cfg_Site.Has_Production = 0).,
 NARRATIVE,PROD_BEHIND,2,At the current {rate} pallets/hr the site ends the shift day near {proj} pallets against a plan of {plan} pallets. Recovering the gap needs {req} pallets/hr for the rest of the day.,
 NARRATIVE,PROD_ONTRACK,3,At the current {rate} pallets/hr the site ends the shift day near {proj} pallets against a plan of {plan} pallets. On track for the day plan.,
+NARRATIVE,PROD_CLOSED_BEHIND,2,The shift day is closed: {done} pallets produced against a plan of {plan} pallets ({pct} of plan).,
+NARRATIVE,PROD_CLOSED_MET,3,The shift day is closed: {done} pallets produced against a plan of {plan} pallets ({pct} of plan) - day plan met.,
 NARRATIVE,FIX_ORDER,4,FIX IN THIS ORDER:  ,
 NARRATIVE,FIX_NONE,5,Nothing to fix - keep monitoring.,
 NARRATIVE,ALL_CLEAR,6,ALL CLEAR - no rule breached,
 NARRATIVE,STATE_CRIT,7,CRITICAL - {crit} critical and {warn} warning alert(s) active -> ACT NOW,
 NARRATIVE,STATE_WARN,8,WARNING - {warn} warning alert(s) active -> MONITOR,
 NARRATIVE,HEALTH_OK,9,ALL {run} DATA-HEALTH CHECKS PASSED - numbers are safe to use,
-NARRATIVE,HEALTH_FAIL,10,{fail} OF {run} CHECKS FAILED - fix the Config & Health page before acting on alerts,
+NARRATIVE,HEALTH_FAIL,10,{fail} OF {run} CHECKS FAILED - open Config & Health: the top box names the cause and who fixes it,
 NARRATIVE,TITLE,11,{site} PRIME ELS Dashboard,
 HOURLY,NOTHING_MOVED,1,NOTHING MOVED - site idle this hour,
 HOURLY,PROD_STOPPED_SHIPPING,2,"Production stopped but outbound still shipping - lines blocked, not the warehouse",
@@ -59,6 +61,13 @@ NARRATIVE,SAP_COVERAGE,0,PrIME recorded {wms} of SAP's {sap} FG pallets in the l
 NARRATIVE,FLOW_CLEAR,0,🟢 No live blockage - no stage has items past its warning age (stale records excluded).,
 NARRATIVE,FLOW_BLOCK,0,{icon} Biggest blockage now: {stage} - {n} {unit} past the {limit} limit (oldest {oldest}). Action: {action} ({owner}),
 NARRATIVE,ORDERS_NA,0,not used here - shipments stay 'Ready' in WMS at this site (outbound runs on trailer loading): follow outbound on the Trucks page,
-NARRATIVE,PREV_LIVE,0,live value - no day history,
+NARRATIVE,PREV_LIVE,0,- (live KPI),
 NARRATIVE,STALE_NOTE,0,  |  🟣 Stale records: {n} items older than {hours} h sit in flow locations (most in: {stage}) - verify physically and correct WMS (inventory accuracy).,
 NARRATIVE,STALE_ACTION,0,Inventory accuracy: {n} {unit} older than {hours} h - verify physically and correct the WMS record (move / dispatch / cancel / count).,
+NARRATIVE,HEALTH_NOTLIVE,14,"WAREHOUSE NOT LIVE IN THE REPLICA YET - {wait} activity checks wait for go-live, {run} other checks passed. Nothing to fix",
+NARRATIVE,HEALTH_V_REFRESH,15,"CAUSE: no refresh for {age} h - every number is old. REPORT OWNER: workspace > model > Refresh history, fix the error (usually the gateway sign-in), refresh.",
+NARRATIVE,HEALTH_V_NOTLOADED,16,"CAUSE: nothing loaded for this warehouse at the last refresh. REPORT OWNER: check the site's gateway connection, then refresh.",
+NARRATIVE,HEALTH_V_NOTLIVE,17,"CAUSE: warehouse not live in the replica yet ({days} days of transactions, newest {last}). The {wait} grey NOT LIVE checks turn green after go-live. Nothing to fix in the report.",
+NARRATIVE,HEALTH_V_LAG,18,CAUSE: replica behind - newest transaction {lag} min old although the report refreshed. REPORT OWNER: ask iDecide to check the replica feed (HVR).,
+NARRATIVE,HEALTH_V_OTHER,19,{fail} check(s) failed - each red row below says what to do and who.,
+NARRATIVE,HEALTH_V_OK,20,All {run} checks passed - the numbers can be trusted.,

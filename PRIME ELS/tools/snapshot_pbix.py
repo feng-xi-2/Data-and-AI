@@ -217,6 +217,30 @@ def _cpu_s(pid):
         return None
 
 
+SENSITIVITY_LABEL = "Business Use"   # tenant policy: a new .pbix needs a label before Desktop saves it (21-Nov: Save As hung 9 min)
+
+
+def answer_label(pid, label=SENSITIVITY_LABEL):
+    """Desktop's in-app 'Select a sensitivity label' dialog (a WebView, not a Windows dialog): pick the label, Apply. -> True if answered."""
+    out = ps(UIA_HEAD.replace("__PID__", str(pid)) + f"""
+$d = $root.FindFirst($TS::Descendants, (P $A::NameProperty "Add sensitivity label"))
+if (-not $d) {{ "NONE"; exit }}
+$d.GetCurrentPattern([Windows.Automation.ExpandCollapsePattern]::Pattern).Expand(); Start-Sleep 2
+$c = New-Object Windows.Automation.AndCondition((P $A::NameProperty "{label}"), (P $A::ControlTypeProperty ([Windows.Automation.ControlType]::ListItem)))
+$i = $root.FindFirst($TS::Descendants, $c)
+if (-not $i) {{ "NO_LABEL"; exit }}
+$i.GetCurrentPattern([Windows.Automation.SelectionItemPattern]::Pattern).Select(); Start-Sleep 2
+$c = New-Object Windows.Automation.AndCondition((P $A::NameProperty "Apply"), (P $A::ControlTypeProperty ([Windows.Automation.ControlType]::Button)))
+$root.FindFirst($TS::Descendants, $c).GetCurrentPattern([Windows.Automation.InvokePattern]::Pattern).Invoke(); "APPLIED"
+""")
+    if "NO_LABEL" in out:
+        raise Fail(f"Desktop asks for a sensitivity label but '{label}' is not offered - pick one in the Desktop window")
+    if "APPLIED" in out:
+        hb(f"  sensitivity label '{label}' applied (required by the tenant before saving)")
+        return True
+    return False
+
+
 def wait_written(path, before, timeout=240, pid=None, busy_max=1800):
     """Wait until the file changed and stayed the same for one poll. While Desktop is still working (its CPU time rises) the wait goes
     on up to busy_max s - a paging PC took 9.5 min (19-Nov) and > 10 min (20-Nov) to compress a 23 MB model."""
@@ -232,6 +256,8 @@ def wait_written(path, before, timeout=240, pid=None, busy_max=1800):
         hb(f"  saving {el} s: {st[1] / 1e6:.1f} MB" + (" (Desktop busy)" if busy else "") + (f" | dialog: {', '.join(dlg)}" if dlg else ""))
         if st != before and st[1] > 0 and st == last:
             return True
+        if pid and st == before and not busy and el % 30 < 10:
+            answer_label(pid)
         last = st
         if el >= timeout and not (busy and el < busy_max):
             return False

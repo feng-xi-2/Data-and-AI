@@ -247,6 +247,12 @@ def run(defn: Path, report_def: Path, out_md: Path):
             if m.group(1).lower() in reserved:
                 owner = re.findall(r"(?m)^\s*(?:measure|column|table)\s+('(?:[^']|'')+'|[^\s=]+)", txt[:m.start()])
                 crit.append(f"C6 {tf.stem} {owner[-1] if owner else ''}: VAR name '{m.group(1)}' is a reserved DAX word - syntax error in the engine")
+    # C8 Copilot readiness (Microsoft 'Prep data for AI'): every measure and visible column carries a description (tools/ai_descriptions.py)
+    import ai_descriptions
+    cov = ai_descriptions.coverage(defn.parent)
+    for k, (have, tot) in cov.items():
+        if have < tot:
+            crit.append(f"C8 {tot - have} of {tot} {k}s without a description - Copilot cannot explain them (tools/ai_descriptions.py)")
     md = ["# Model / report best-practice check", "",
           "Run by `py tools/build_pbip.py` on every build (rules: Microsoft skills-for-fabric modeling guidelines, Tabular Editor BPA).", "",
           f"**CRITICAL: {len(crit)}** (build fails)  |  RECOMMENDED: {len(rec)}  |  broken filters removed at build: {len(pruned)}", ""]

@@ -62,7 +62,7 @@ def wait_lro(resp):
 def _service_inputs(f: Path, data: bytes) -> bytes:
     """The Desktop build reads the OneDrive-synced inputs file (File.Contents); the Service has no access to a laptop path -> the
     published Cfg_TargetInput reads the same file from SharePoint (config/inputs_source.csv SharePoint_Url, OAuth2 once)."""
-    if f.name != "Cfg_TargetInput.tmdl":
+    if f.name not in ("Cfg_TargetInput.tmdl", "expressions.tmdl"):
         return data
     import csv as _csv
     import os as _os
@@ -70,7 +70,9 @@ def _service_inputs(f: Path, data: bytes) -> bytes:
     local = _os.path.expandvars(src["Local_Path"]).replace('"', '""')
     url = src["SharePoint_Url"].replace('"', '""')
     t = data.decode("utf-8")
-    if 'Book = "embedded"' in t:                   # Embed_Inputs = 1 (config/build_options.csv): targets are in the model, nothing to repoint
+    if 'Book = "embedded"' in t or "Cfg_TargetInput_Src" in t and f.name == "Cfg_TargetInput.tmdl":
+        return data                                # embedded targets / the M lives in the staging expression (stage_config_queries)
+    if f.name == "expressions.tmdl" and f'File.Contents("{local}")' not in t:
         return data
     t2 = t.replace(f'File.Contents("{local}")', f'Web.Contents("{url}")').replace(f'Where = "{local}"', f'Where = "{url}"')
     if t2 == t and "Web.Contents" not in t:
@@ -100,13 +102,29 @@ def workspace_id(name):
     return w["id"], w["displayName"]
 
 
+UPDATED = {}
+
+
 def upsert(ws, kind, name, definition):
     items = requests.get(f"{FAB}/workspaces/{ws}/{kind}", headers=H(), timeout=60).json().get("value", [])
     cur = next((i for i in items if i["displayName"] == name), None)
     if cur:
         print(f" update {kind} {name} ({cur['id']})", flush=True)
-        r = wait_lro(requests.post(f"{FAB}/workspaces/{ws}/{kind}/{cur['id']}/updateDefinition", headers=H(),
-                                   json={"definition": definition}, timeout=300))
+        UPDATED[kind] = True
+        for attempt in range(13):   # 'Can't deploy as target because model is refreshing' (hourly schedule): wait for it, retry
+            try:
+                r = wait_lro(requests.post(f"{FAB}/workspaces/{ws}/{kind}/{cur['id']}/updateDefinition", headers=H(),
+                                           json={"definition": definition}, timeout=300))
+                if r.status_code >= 500 and attempt < 3:      # transient Service error (21-Nov: 500 InternalServerError) - retry
+                    print(f"   HTTP {r.status_code} from the Service - retry in 60 s ({attempt + 1}/3)", flush=True)
+                    time.sleep(60)
+                    continue
+                break
+            except SystemExit as e:
+                if "model is refreshing" not in str(e) or attempt == 12:
+                    raise
+                print(f"   the model is refreshing (schedule) - retry in 5 min ({attempt + 1}/12)", flush=True)
+                time.sleep(300)
         if r.status_code >= 300:
             raise SystemExit(f"{r.status_code} {r.text[:2000]}")
         return cur["id"]
@@ -131,12 +149,18 @@ def bind_gateway(sm_id, sites):
     by_gw, msgs = {}, {}
     for row in sites:
         name = (row.get("Gateway_Connection") or "").split(" (")[0].strip()
-        if not name or name.startswith("("):
-            msgs[row["SiteCode"]] = "no gateway connection configured"
-            continue
-        c = next((c for c in conns if (c.get("displayName") or "").lower() == name.lower()), None)
+        if name.startswith("("):
+            name = ""
+        c = next((c for c in conns if name and (c.get("displayName") or "").lower() == name.lower()), None)
+        if not c:   # any shared gateway connection to the same replica server + database (e.g. ZONING-AVR-JAKARTA, 20-Nov)
+            want = f"{row.get('ReplicaServer', '').split(',')[0].lower()};{row.get('ReplicaDatabase', '').lower()}"
+            c = next((c for c in conns if c.get("connectivityType") == "OnPremisesGateway"
+                      and ((c.get("connectionDetails") or {}).get("path") or "").lower() == want), None)
+            if c:
+                name = c.get("displayName") or c["id"]
         if not c:
-            msgs[row["SiteCode"]] = f"'{name}' not shared with this account - ask the replica owner to add you, then re-run publish"
+            msgs[row["SiteCode"]] = (f"'{name}' not shared with this account - ask the replica owner to add you, then re-run publish" if name else
+                                     f"no gateway connection to {row.get('ReplicaServer')};{row.get('ReplicaDatabase')} is shared with this account")
             continue
         by_gw.setdefault(c.get("gatewayId"), []).append((row["SiteCode"], c["id"], name))
     pbi = {"Authorization": "Bearer " + token("https://analysis.windows.net/powerbi/api/.default"), "Content-Type": "application/json"}
@@ -202,6 +226,10 @@ def main():
         base = f"{base} - {code}"
         d = ROOT / "dist" / ("_service" if "--service" in args else "") / code
         sites = [r for r in csv.DictReader(open(ROOT / "config" / "site_config.csv", encoding="utf-8-sig")) if r["SiteCode"] == code]
+        if "--test-server" in args:   # the TEST build (build_pbip.py <SITE> --service --test-server S): bind the connection of S + database
+            srv = args[args.index("--test-server") + 1]
+            base, d = f"{base} (TEST)", ROOT / "dist" / "_service_test" / code
+            sites = [dict(r, ReplicaServer=srv, Gateway_Connection="") for r in sites]
         if not sites or not (d / f"{base}.SemanticModel").exists():
             raise SystemExit(f"{d / (base + '.SemanticModel')} missing - build it first: py tools/build_pbip.py {code}"
                              + (" --service" if "--service" in args else ""))
@@ -223,6 +251,16 @@ def main():
            "settingsUrl": f"https://app.powerbi.com/groups/{'me' if wsname is None else ws}/settings/datasets/{sm}"}
     (d / ("_published.json" if "--site" not in args else f"_published_{wsdisp}.json")).write_text(json.dumps(out, indent=1), encoding="utf-8")
     print(json.dumps(out, indent=1))
+    if UPDATED.get("semanticModels") and "--site" in args and "--no-reload" not in args:
+        # a changed definition leaves the changed tables 'needs refresh' (warning icon in the model view, 'calculated table ... needs to
+        # be recalculated' in visuals) until processed: reload the embedded tables + recalculate now (no replica query, ~2-4 min)
+        import subprocess
+        cmd = [sys.executable, "-u", str(Path(__file__).with_name("service_refresh.py")), "--site", code, "--config"] + \
+              (["--workspace", wsname] if wsname else []) + (["--test"] if "--test-server" in args else [])
+        print("reloading embedded tables + recalculating after the republish:", flush=True)
+        rc = subprocess.call(cmd)
+        if rc:
+            raise SystemExit("reload after publish failed - run: " + " ".join(cmd[1:]))
 
 
 if __name__ == "__main__":

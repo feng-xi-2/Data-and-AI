@@ -86,6 +86,9 @@ def site_all(t):
     return f"CALCULATETABLE({t}, REMOVEFILTERS({t}))"
 
 
+NOT_LIVE_DAYS = 3     # under 72 h of transactions = not live (tools/site_config_check.py, hypercare-site-setup skill)
+_NUM = 'IF({v} = INT({v}), FORMAT({v}, "#,##0"), FORMAT({v}, "#,##0.##"))'   # "#,##0.##" alone prints "0." for whole numbers
+
 HEALTH = [
     ("Data Last Txn", "6 Health", "yyyy-mm-dd hh:nn", f'CALCULATE(MAX({DH}[Last_Event_Local]), {DH}[Source_Object] = "dlytrn")'),
     ("Replica First Txn", "6 Health", "yyyy-mm-dd hh:nn",
@@ -131,19 +134,47 @@ HEALTH = [
      'RETURN SWITCH(req, "Has_Production", [Feature Production] = 1, "Has_LevelA", [Feature LevelA] = 1, "Has_HOFF", [Feature HOFF] = 1, TRUE())'),
     ("Health Check Status", "6 Health", None,
      'VAR v = [Health Check Value]\nVAR op = SELECTEDVALUE(Cfg_HealthCheck[Operator])\nVAR e = SELECTEDVALUE(Cfg_HealthCheck[Expected])\n'
-     'RETURN SWITCH(TRUE(), ISBLANK(SELECTEDVALUE(Cfg_HealthCheck[Check_Key])), BLANK(), NOT [Health Check Applicable], "N/A", ISBLANK(v), "NO DATA",\n'
-     '    op = "<=", IF(v <= e, "PASS", "FAIL"), op = ">=", IF(v >= e, "PASS", "FAIL"), op = "=", IF(v = e, "PASS", "FAIL"), "N/A")'),
+     'VAR raw = SWITCH(TRUE(), ISBLANK(SELECTEDVALUE(Cfg_HealthCheck[Check_Key])), BLANK(), NOT [Health Check Applicable], "N/A", ISBLANK(v), "NO DATA",\n'
+     '    op = "<=", IF(v <= e, "PASS", "FAIL"), op = ">=", IF(v >= e, "PASS", "FAIL"), op = "=", IF(v = e, "PASS", "FAIL"), "N/A")\n'
+     '-- a warehouse that is not live yet has no activity: its activity checks wait for go-live instead of failing (nothing to fix)\n'
+     'RETURN IF(raw IN {"FAIL", "NO DATA"} && [Health Site Not Live] && SELECTEDVALUE(Cfg_HealthCheck[Needs_Activity]) = 1, "NOT LIVE", raw)'),
+    ("Health Site Not Live", "6 Health", None,
+     f'-- same rule as tools/site_config_check.py: under {NOT_LIVE_DAYS} days of transactions in the replica = the warehouse is not live yet\n'
+     'VAR l = [Data Last Txn]\nRETURN COUNTROWS(' + DH + f') > 0 && (ISBLANK(l) || [Replica History Days] < {NOT_LIVE_DAYS})'),
+    ("Health Not Live Checks", "6 Health", "0",
+     'SUMX(ALL(Cfg_HealthCheck), IF([Health Check Status] = "NOT LIVE", 1, 0))'),
+    ("Health Check Status Icon", "6 Health", None,
+     'VAR s = [Health Check Status]\nRETURN SWITCH(s, "PASS", "✅ PASS", "FAIL", "❌ FAIL", "NOT LIVE", "⏳ NOT LIVE", "NO DATA", "⚪ NO DATA", s)'),
+    ("Health Verdict", "6 Health", None,
+     '-- ONE cause for the page (first match): refresh failed > site not loaded > site not live > replica behind > single checks\n'
+     'VAR f = [KPI Health Fails]\nVAR r = [Health Checks Run]\nVAR w = [Health Not Live Checks]\n'
+     'VAR refreshBad = CALCULATE([Health Check Status], Cfg_HealthCheck[Check_Key] = "H_REFRESH_AGE") = "FAIL"\n'
+     'VAR notLoaded = CALCULATE([Health Check Status], Cfg_HealthCheck[Check_Key] = "H_SITE_LOADED") = "FAIL"\n'
+     'VAR lagBad = CALCULATE([Health Check Status], Cfg_HealthCheck[Check_Key] = "H_DATA_LAG") = "FAIL"\n'
+     'VAR last = FORMAT([Data Last Txn], "dd-mmm hh:nn")\n'
+     'RETURN SWITCH(TRUE(),\n'
+     '    refreshBad, ' + fill(rca("NARRATIVE", '"HEALTH_V_REFRESH"'), {"age": 'FORMAT([KPI Refresh Age h], "0")'}) + ',\n'
+     '    notLoaded, ' + rca("NARRATIVE", '"HEALTH_V_NOTLOADED"') + ',\n'
+     '    [Health Site Not Live], ' + fill(rca("NARRATIVE", '"HEALTH_V_NOTLIVE"'),
+                                       {"days": 'FORMAT(COALESCE([Replica History Days], 0), "0")', "last": 'COALESCE(last, "none")', "wait": 'FORMAT(w, "0")',
+                                        "fail": 'FORMAT(f, "0")'}) + ',\n'
+     '    lagBad, ' + fill(rca("NARRATIVE", '"HEALTH_V_LAG"'), {"lag": 'FORMAT([KPI Data Lag Min], "#,##0")'}) + ',\n'
+     '    f > 0, ' + fill(rca("NARRATIVE", '"HEALTH_V_OTHER"'), {"fail": 'FORMAT(f, "0")'}) + ',\n'
+     '    ' + fill(rca("NARRATIVE", '"HEALTH_V_OK"'), {"run": 'FORMAT(r, "0")'}) + ')'),
     ("KPI Health Fails", "6 Health", "0",
      'SUMX(ALL(Cfg_HealthCheck), IF([Health Check Status] = "FAIL", 1, 0))'),
     ("Health Checks Run", "6 Health", "0",
      'SUMX(ALL(Cfg_HealthCheck), IF([Health Check Status] IN {"PASS", "FAIL"}, 1, 0))'),
     ("Health Check Value Text", "6 Health", None,
-     'VAR v = [Health Check Value]\nRETURN IF(ISBLANK(v), "-", FORMAT(v, "#,##0.##") & " " & SELECTEDVALUE(Cfg_HealthCheck[Unit]))'),
+     'VAR v = [Health Check Value]\nRETURN IF(ISBLANK(v), "-", ' + _NUM.format(v="v") + ' & " " & SELECTEDVALUE(Cfg_HealthCheck[Unit]))'),
     ("Health Check Rule", "6 Health", None,
-     'IF(HASONEVALUE(Cfg_HealthCheck[Check_Key]), SELECTEDVALUE(Cfg_HealthCheck[Operator]) & " " & FORMAT(SELECTEDVALUE(Cfg_HealthCheck[Expected]), "#,##0.##") & " " & SELECTEDVALUE(Cfg_HealthCheck[Unit]))'),
+     'VAR e = SELECTEDVALUE(Cfg_HealthCheck[Expected])\n'
+     'RETURN IF(HASONEVALUE(Cfg_HealthCheck[Check_Key]), SELECTEDVALUE(Cfg_HealthCheck[Operator]) & " " & ' + _NUM.format(v="e") +
+     ' & " " & SELECTEDVALUE(Cfg_HealthCheck[Unit]))'),
     ("Health Banner", "6 Health", None,
-     'VAR f = [KPI Health Fails]\nVAR r = [Health Checks Run]\nRETURN IF(f = 0, "✅ " & ' +
-     fill(rca("NARRATIVE", '"HEALTH_OK"'), {"run": "r"}) + ', "❌ " & ' + fill(rca("NARRATIVE", '"HEALTH_FAIL"'), {"fail": "f", "run": "r"}) + ')'),
+     'VAR f = [KPI Health Fails]\nVAR r = [Health Checks Run]\nVAR w = [Health Not Live Checks]\nRETURN SWITCH(TRUE(), f > 0, "❌ " & ' +
+     fill(rca("NARRATIVE", '"HEALTH_FAIL"'), {"fail": "f", "run": "r"}) + ', w > 0, "⏳ " & ' +
+     fill(rca("NARRATIVE", '"HEALTH_NOTLIVE"'), {"wait": "w", "run": "r"}) + ', "✅ " & ' + fill(rca("NARRATIVE", '"HEALTH_OK"'), {"run": "r"}) + ')'),
 ]
 
 

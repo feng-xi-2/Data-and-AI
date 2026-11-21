@@ -77,6 +77,7 @@ def num(x):
 
 
 sites = [r for r in v.rows("site_config.csv") if (r["SiteCode"] in ONLY if ONLY else r["SiteCode"].upper() not in __import__("pbi_common").excluded_sites())]
+sites = [v.tokens(r["SiteCode"])[0] for r in sites]   # --overrides / --server: the same site settings the tested file was built with
 plan, dax = [], []
 for site in sites:
     code = site["SiteCode"]

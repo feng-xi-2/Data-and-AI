@@ -21,7 +21,14 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-PID = int(sys.argv[1])
+# --service <workspaceId>/<datasetId> --model <...SemanticModel>: audit the PUBLISHED model (executeQueries; metadata from the TMDL)
+SVC = None
+if "--service" in sys.argv:
+    sys.path.insert(0, str(HERE))
+    from svc_dax import Svc, tmdl_columns
+    SVC = Svc(sys.argv[sys.argv.index("--service") + 1])
+    MODEL_DIR = Path(sys.argv[sys.argv.index("--model") + 1])
+PID = 0 if SVC else int(sys.argv[1])
 ONLY = set(sys.argv[sys.argv.index("--sites") + 1].upper().split(",")) if "--sites" in sys.argv else set()
 OUT = Path(__file__).resolve().parents[2] / "_uitest"
 OUT.mkdir(parents=True, exist_ok=True)
@@ -34,6 +41,8 @@ GATES = {"Level A": "Has_LevelA", "bin A": "Has_LevelA", "Outbound Pallet from I
 
 
 def batch(queries, tag):
+    if SVC:
+        return SVC.batch(queries, tag)
     qf, rf = OUT / f"_q_{tag}.json", OUT / f"_r_{tag}.json"
     qf.write_text(json.dumps(queries), encoding="utf-8")
     if rf.exists():
@@ -51,6 +60,8 @@ def tref(t):
 
 
 def all_rows(dax):
+    if SVC:
+        return SVC.rows(dax)
     p = subprocess.run(["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(HERE / "pbi_dax.ps1"), "-ProcId", str(PID),
                         "-Dax", dax, "-TimeoutSec", "120"], capture_output=True, text=True, timeout=300)
     d = json.loads(p.stdout.strip())
@@ -59,8 +70,15 @@ def all_rows(dax):
     return d
 
 
-tables = {r["[ID]"]: r["[Name]"] for r in all_rows('EVALUATE SELECTCOLUMNS(INFO.TABLES(), "ID", [ID], "Name", [Name])')}
-cols = all_rows('EVALUATE SELECTCOLUMNS(FILTER(INFO.COLUMNS(), [Type] IN {1, 2}), "T", [TableID], "C", [ExplicitName], "DT", [ExplicitDataType])')
+if SVC:
+    _tc = tmdl_columns(MODEL_DIR)
+    _names = sorted({t for t, _, _ in _tc})
+    tables = {i: n for i, n in enumerate(_names)}
+    _ids = {n: i for i, n in tables.items()}
+    cols = [{"[T]": _ids[t], "[C]": c, "[DT]": dt} for t, c, dt in _tc]
+else:
+    tables = {r["[ID]"]: r["[Name]"] for r in all_rows('EVALUATE SELECTCOLUMNS(INFO.TABLES(), "ID", [ID], "Name", [Name])')}
+    cols = all_rows('EVALUATE SELECTCOLUMNS(FILTER(INFO.COLUMNS(), [Type] IN {1, 2}), "T", [TableID], "C", [ExplicitName], "DT", [ExplicitDataType])')
 sites = all_rows('EVALUATE SELECTCOLUMNS(Cfg_Site, "c", Cfg_Site[SiteCode], "p", Cfg_Site[Has_Production], "a", Cfg_Site[Has_LevelA], '
                  '"h", Cfg_Site[Has_HOFF], "s", Cfg_Site[Has_SAP_Plan], "q", Cfg_Site[Has_SAP_Prod], "r", Cfg_Site[Has_RPM_Master])')
 FLAGKEY = {"Has_Production": "[p]", "Has_LevelA": "[a]", "Has_HOFF": "[h]", "Has_SAP_Plan": "[s]", "Has_SAP_Prod": "[q]", "Has_RPM_Master": "[r]"}
@@ -146,15 +164,17 @@ for r in rows:
     out.append(r)
 # verified, explained patterns (config/field_expectations.csv) -> EXPECTED with the reason; anything else stays a defect
 EXPECT = list(csv.DictReader(open(ROOT / "config" / "field_expectations.csv", encoding="utf-8-sig")))
+ONE_SITE = len({r["Site"] for r in out}) == 1      # single-site file: 'empty at this site' and 'empty at every site' are the same fact
 for r in out:
     if not r["Flag"]:
         continue
     keep, why = [], []
     for fl in r["Flag"].split(","):
         hit = None
+        same = {fl, "EMPTY_FOR_SITE", "EMPTY_ALL_SITES"} if ONE_SITE and fl in ("EMPTY_FOR_SITE", "EMPTY_ALL_SITES") else {fl}
         for e in EXPECT:
             sites = {x.strip() for x in e["Sites"].split(",")}
-            if (e["Flag"] == fl and ("*" in sites or r["Site"] in sites) and re.search(e["Table"], r["Table"])
+            if (e["Flag"] in same and ("*" in sites or r["Site"] in sites) and re.search(e["Table"], r["Table"])
                     and ((e["Column"] == "*") == (r["Column"] == "*")) and (e["Column"] == "*" or re.search(e["Column"], r["Column"]))):
                 if fl == "FUTURE_DATE" and e["Max_Days_Ahead"] and r["Max"]:
                     if datetime.strptime(r["Max"], "%Y-%m-%d %H:%M") > datetime.now() + timedelta(days=int(e["Max_Days_Ahead"])):

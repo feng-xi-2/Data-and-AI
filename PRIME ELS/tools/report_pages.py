@@ -40,8 +40,23 @@ def proj(entity, prop, measure=True, label=None):
     return p
 
 
+_TITLE_JUNK = [re.compile(r"^\s*\d+[a-z]?[.)]?\s+(?=[A-Z#(])"),                       # '1. ', '2 ' numbering (inconsistent across pages)
+               re.compile(r"\s*\((?:Excel|config/|BD original|Binh Duong template)[^)]*\)"),  # source / file names: Field Guide has them
+               re.compile(r"\s*\(config/[^)]*\)")]
+
+
+def clean_title(t):
+    """Business titles: no numbering, no Excel sheet / config file names (the Field Guide lists the sources)."""
+    if not isinstance(t, str):
+        return t
+    for rx in _TITLE_JUNK:
+        t = rx.sub("", t)
+    return t.strip()
+
+
 def container(page, key, vtype, x, y, w, h, z, visual_extra, title=None, border=True):
     """Border / shadow / background come from the theme (PRIME_ELS_Theme.json) so every tab looks the same; border=False = bare."""
+    title = clean_title(title)
     vco = {"title": [{"properties": {"show": lit("true" if title else "false"), **({"text": lit(f"'{title}'")} if title else {})}}]}
     if not border:
         vco["border"] = [{"properties": {"show": lit("false")}}]
@@ -208,7 +223,9 @@ def input_slicer(page, kpi, lvl, x, y, w, h, z, hidden=False):
     """What-if input box (single value) for one KPI threshold level; synced on every page so all tabs use the typed value."""
     ent = input_table(kpi, lvl)
     q = {"queryState": {"Values": {"projections": [dict(proj(ent, "Value", False, "Value"), active=True)]}}}
+    # responsive off: a small responsive slicer collapses to a funnel icon (the Service draws the page at < 100 % zoom)
     objects = {"data": [{"properties": {"mode": lit("'Single'")}}], "header": [{"properties": {"show": lit("false")}}],
+               "general": [{"properties": {"responsive": lit("false")}}],
                "numericInputStyle": [{"properties": {"textSize": lit("11D")}}]}
     c = container(page, f"in_{kpi}_{lvl}", "slicer", x, y, w, h, z,
                   {"query": q, "objects": objects, "syncGroup": {"groupName": ent, "fieldChanges": True, "filterChanges": True}}, border=not hidden)
@@ -262,12 +279,52 @@ def banner(page, key, page_title):
     win = single_card(page, "window_label", 656, y + 8, 618, hh - 12, 8, "Window Label", 10, NAVY)
     return [bg, fb, title, name, ctx, site_slicer(page, 10, y, 230, hh, 4), day, shf, win] + home + synced_inputs(page)
 
+GUIDE_TEXT = {r["Page_Key"]: (r.get("What_It_Shows") or r.get("Purpose") or "", r.get("How_To_Read") or "") for r in _GUIDE}
+
+
 def guide(page, key, y):
-    c = card(page, "guide", 0, y, W, GUIDE_H, 9000, [("Page Guide Calc", "How it is calculated"), ("Page Guide Config", "How to configure")],
-             value_size=9, cols=2)
-    c["visual"]["visualContainerObjects"]["background"] = [{"properties": {"show": lit("true"), "color": {"solid": {"color": lit(f"'{LIGHT}'")}}}}]
-    c["filterConfig"] = page_filter(PG, "Page_Key", key)
-    return c
+    """Footer: two plain-language paragraphs (config/page_guide.csv What_It_Shows / How_To_Read) as static text boxes - they wrap
+    (a multi-row card cut them to one line in the Service), need no query, and carry no table / file names (those are for the report
+    owner: Field Guide > 'How each page is calculated and configured')."""
+    shows, read = GUIDE_TEXT.get(key, ("", ""))
+    head = {"fontSize": "9pt", "color": NAVY, "fontFamily": "Segoe UI Semibold"}
+    body = {"fontSize": "9pt", "color": "#33475B"}
+    half = W // 2
+    out = []
+    for i, (h, t) in enumerate((("What this page shows", shows), ("How to read it  ·  what to do", read))):
+        out.append(textbox(page, f"guide{'' if i == 0 else '_read'}", i * half, y, half - (0 if i else 2), GUIDE_H, 9000 + i,
+                           [(h, head), (t, body)], bg=LIGHT))
+    return out
+
+
+def kpi_tile(page, k, x, y, w, h, z, title):
+    """Industrial KPI tile: one white panel; the actual value big and in its status colour (read from across the room), the status
+    line under it, then the context (previous day, prior-days average, target, limits, forecast) small. Three visuals share the
+    tile title text so the test tools (visual_expectations.csv) match all of them."""
+    title = clean_title(title)
+    panel = band(page, f"tile_{k}_bg", x, y, w, h, z, "#FFFFFF")
+    panel["visual"]["objects"]["outline"] = [{"properties": {"show": lit("true")}},
+                                             {"properties": {"lineColor": {"solid": {"color": lit("'#D9DFE8'")}}, "weight": lit("1D")},
+                                              "selector": {"id": "default"}}]   # colour on the default state, else Power BI draws it dark
+    hero = single_card(page, f"tile_{k}", x + 4, y + 4, w - 8, 100, z + 1, f"Card {k} Value", 18, "#1F2D3D")
+    vco = hero["visual"]["visualContainerObjects"]
+    vco["title"] = [{"properties": {"show": lit("true"), "text": lit(f"'{title}'"), "fontSize": lit("11D")}}]
+    lab = hero["visual"]["objects"]
+    lab["labels"][0]["properties"]["color"] = {"solid": {"color": {"expr": fld(K, f"Card {k} Color", True)}}}
+    lab["categoryLabels"] = [{"properties": {"show": lit("true"), "fontSize": lit("9D"), "color": {"solid": {"color": lit(f"'{GREY}'")}}}}]
+    hero["visual"]["query"]["queryState"]["Values"]["projections"][0]["displayName"] = "Actual (report day)"
+    status = single_card(page, f"tile_{k}_st", x + 4, y + 104, w - 8, 28, z + 2, f"Card {k} Status", 11, "#1F2D3D")
+    status["visual"]["objects"]["labels"][0]["properties"]["color"] = {"solid": {"color": {"expr": fld(K, f"Card {k} Color", True)}}}
+    status["visual"]["visualContainerObjects"]["title"] = [{"properties": {"show": lit("false"), "text": lit(f"'{title} · status'")}}]
+    detail = card(page, f"tile_{k}_ctx", x + 4, y + 134, w - 8, h - 138, z + 3,
+                  [(f"Card {k} Prev", "Previous day"), (f"Card {k} Avg Prior", "Prior-days average"), (f"Card {k} Target", "Target"),
+                   (f"Card {k} Limits", "Warning / critical at"), (f"Card {k} Predicted", "Forecast end of day")], value_size=9)
+    dv = detail["visual"]["visualContainerObjects"]
+    dv["title"] = [{"properties": {"show": lit("false"), "text": lit(f"'{title} · context'")}}]
+    dv["border"] = [{"properties": {"show": lit("false")}}]
+    dv["dropShadow"] = [{"properties": {"show": lit("false")}}]
+    dv["background"] = [{"properties": {"show": lit("false")}}]
+    return [panel, hero, status, detail]
 
 
 def page_cockpit():
@@ -278,23 +335,21 @@ def page_cockpit():
     tiles = [("PPH", "1 Production - pallets / h"), ("TTAT_IN", "2 Inbound TTAT"), ("TTAT_OUT", "3 Outbound TTAT"),
              ("LOC_UTIL", "4 Location utilisation"), ("USER_PROD", "5 User productivity"), ("HEALTH_FAILS", "6 Daily health checks")]
     for i, (k, t) in enumerate(tiles):
-        v.append(card(p, f"tile_{k}", 10 + i * 211, y0 + 66, 203, 262, 10 + i,
-                      [(f"Card {k} Value", "Actual (report day)"), (f"Card {k} Status", "Status"), (f"Card {k} Prev", "Previous day"),
-                       (f"Card {k} Avg Prior", "Prior-days average"), (f"Card {k} Target", "Target"),
-                       (f"Card {k} Limits", "Warning / critical at"), (f"Card {k} Predicted", "Prediction")],
-                      title=t, value_size=11, color_measure=f"Card {k} Color"))
-    yn = y0 + 66 + 270
+        v.extend(kpi_tile(p, k, 10 + i * 211, y0 + 64, 203, 336, 30 + i * 4, t))
+    yn = y0 + 64 + 344
     hn = BANNER_H + BODY_H - yn - 6
+    # left: the two narratives stacked (one or two sentences each); right: the open alerts get the width they need
+    hh = (hn - 8) // 2
     for i, (m, t) in enumerate([("Narrative Verdict", "Where is the constraint?"), ("Narrative Production Outlook", "Production outlook")]):
-        v.append(text_card(p, f"narr{i}", 10 + i * 338, yn, 330, hn, 20 + i, m, t, 12))
+        v.append(text_card(p, f"narr{i}", 10, yn + i * (hh + 8), 400, hh, 20 + i, m, t, 11))
     # every measure column re-runs the KPI chain for all rules: ONE measure carries status, actual vs target and the action
     # ("🔴 CRITICAL" sorts before "🟠 WARNING"); blank for rules that are not breached -> only open alerts are listed
-    v.append(table(p, "todo", 686, yn, 584, hn, 22,
+    v.append(table(p, "todo", 418, yn, 852, hn, 22,
                    [(K, "Open Alert Text", True, "Status · actual (target) -> what to do"), (AR, "Rule", False, "Breached rule"),
                     (AR, "Owner", False, "Owner")],
                    "What to do now (open alerts, critical first)",
                    sort=(K, "Open Alert Text", True, "Ascending"),
-                   widths={"Open Alert Text": 340, "Rule": 150, "Owner": 74}))
+                   widths={"Open Alert Text": 520, "Rule": 210, "Owner": 100}))
     return p, "Hypercare Cockpit", "COCKPIT", v
 
 
@@ -393,18 +448,21 @@ def page_config_health():
     y0 = BANNER_H + 6
     bottom = BANNER_H + BODY_H - 6
     v = [*banner(p, "CONFIG", "Config & Health"),
-         card(p, "banner2", 10, y0, 560, 56, 2, [("Health Banner", "Data trust")], value_size=11),
+         text_card(p, "verdict", 10, y0, 560, 100, 2, "Health Verdict", "1. Can the numbers be trusted? Cause and what to do", 10),
          card(p, "fresh", 578, y0, 692, 56, 3,
               [("Data Last Txn", "Newest dlytrn (site time)"), ("KPI Data Lag Min", "Replica lag at refresh"),
                ("Data Snapshot UTC", "Refreshed (UTC)"), ("KPI Refresh Age h", "Refresh age"), ("Site WMS", "WMS engine")],
               value_size=11, cols=5)]
     yt = y0 + 64
-    v.append(table(p, "checks", 10, yt, 560, 296, 10,
+    ylt = y0 + 108      # left column starts under the verdict box; the feeds / issues tables keep their place
+    v.append(table(p, "checks", 10, ylt, 560, yt + 296 - ylt, 10,
                    [(HC, "Check_No", False, "#"), (HC, "Check", False, "Daily health check"), (K, "Health Check Value Text", True, "Actual"),
-                    (K, "Health Check Rule", True, "Rule"), (K, "Health Check Status", True, "Status"),
-                    (HC, "Why", False, "If it fails")],
-                   "1. Data health of the selected site (Excel VALIDATION)", sort=(HC, "Check_No", False, "Ascending"),
-                   widths={"Check_No": 24, "Check": 190, "Health Check Value Text": 70, "Health Check Rule": 70, "Health Check Status": 50, "Why": 120}))
+                    (K, "Health Check Rule", True, "Rule"), (K, "Health Check Status Icon", True, "Status"),
+                    (HC, "What_To_Do", False, "What to do"), (HC, "Owner", False, "Who")],
+                   "Daily health checks - what to do and who (⏳ NOT LIVE = waits for go-live)",
+                   sort=(HC, "Check_No", False, "Ascending"),
+                   widths={"Check_No": 22, "Check": 130, "Health Check Value Text": 58, "Health Check Rule": 56, "Health Check Status Icon": 66,
+                           "What_To_Do": 160, "Owner": 68}))
     # every site side by side (not filtered by the Site slicer - see visualInteractions): empty sources show red = where a page will be empty
     from report_diag import matrix          # late import: report_diag builds on this module
     v.append(matrix(p, "feeds", 10, yt + 304, 560, 180, 11, [("Data Health", "Source_Object", "Replica source")],
@@ -423,15 +481,17 @@ def page_config_health():
     small = {"fontSize": "9pt", "color": GREY}
     v.append(textbox(p, "in_title", gx, yt, gw, 70, 20,
                      [("2. Alert threshold inputs (applies to every page of this report)", head),
-                      ("Try a value: type a number + Enter - only for you, NOT saved. To save a target for everyone: inputs file, tab Alert targets. Eraser = clear.", small)]))
-    cx = [gx, gx + 230, gx + 384, gx + 538]
-    for i, lbl in enumerate(["KPI (unit)", "Target", "Warning at", "Critical at"]):
-        v.append(textbox(p, f"in_h{i}", cx[i], yt + 72, 150 if i else 226, 34, 21 + i, [(lbl, head)]))
+                      ("Try a value: type a number + Enter - only for you, NOT saved. An empty box shows 0: the value in use is in the right column. "
+                       "To save a target for everyone: inputs file, tab Alert targets.", small)]))
+    cx = [gx, gx + 200, gx + 322, gx + 444, gx + 566]
+    for i, lbl in enumerate(["KPI (unit)", "Target", "Warning at", "Critical at", "In use now"]):
+        v.append(textbox(p, f"in_h{i}", cx[i], yt + 72, 196 if i == 0 else 122 if i < 4 else 126, 34, 21 + i, [(lbl, head)]))
     for r_i, r in enumerate(INPUTS):
         y = yt + 108 + r_i * 50
-        v.append(textbox(p, f"in_l{r_i}", gx, y, 226, 50, 30 + r_i, [(f"{r['Label']} ({r['Input_Unit']})", {"fontSize": "9pt", "color": "#1F2D3D"})]))
+        v.append(textbox(p, f"in_l{r_i}", gx, y, 196, 50, 30 + r_i, [(f"{r['Label']} ({r['Input_Unit']})", {"fontSize": "9pt", "color": "#1F2D3D"})]))
         for l_i, (lvl, _) in enumerate(INPUT_LEVELS):
-            v.append(input_slicer(p, r["KPI_Key"], lvl, cx[l_i + 1], y, 150, 40, 40 + r_i * 3 + l_i))
+            v.append(input_slicer(p, r["KPI_Key"], lvl, cx[l_i + 1], y, 118, 40, 40 + r_i * 3 + l_i))
+        v.append(card(p, f"in_use{r_i}", cx[4], y, 126, 40, 60 + r_i, [(f"Thr {r['KPI_Key']} In Use", "target / warn / crit")], value_size=9))
     yth = yt + 108 + len(INPUTS) * 50 + 6
     v.append(table(p, "thr", gx, yth, gw, bottom - yth, 12,
                    [(TH, "Pillar", False, "Pillar"), (TH, "KPI_Name", False, "KPI / setting"), (TH, "Direction", False, "Dir"),
@@ -497,35 +557,42 @@ def band(page, key, x, y, w, h, z, color):
     return container(page, key, "shape", x, y, w, h, z, {"objects": obj}, border=False)
 
 
+REPORT_SITES = []                    # set by build_pbip before add_pages: the sites of this file (Copilot examples on Home)
+
+
 def home_extras(p):
-    """Home (right part): how to add / remove a site, how to set alert targets, the sites in this report. The page index (left part) is
-    written by home_index() once every page exists."""
+    """Home (right part), for the people who USE the report: how to read it, what to ask Copilot (examples with the sites of this file),
+    the sites in this report. How to add a site / change targets is one owner note (docs/HOW_TO_UPDATE.md). The page index (left part)
+    is written by home_index() once every page exists."""
+    import copilot_ai
     x0, y = 790, BANNER_H + 10
     w = W - x0 - 10
     head = {"fontSize": "12pt", "fontWeight": "bold", "color": NAVY}
     body = {"fontSize": "9.5pt", "color": "#252423"}
     note = {"fontSize": "8.5pt", "color": GREY}
-    site_steps = [("1  Add or remove a site  (max 6 sites in this report)", head),
-                  ("① Inputs file (SharePoint > Data Projects > PRIME ELS > Hypercare KPI > Hypercare_KPI_Inputs.xlsx), tab Sites: add one row "
-                   "- code, name, PrIME 2014 / 2022, replica server + database, UTC offset, shift starts, hypercare start, SAP plant.", body),
-                  ("② Run  py tools/add_site.py <CODE>  - it reads the replica, proposes every technical setting with evidence, checks every query, "
-                   "builds and tests the site.", body),
-                  ("③ Publish  (py tools/publish.py)  and confirm the items of docs/ONBOARDING_<CODE>.md with the site.", body),
-                  ("Remove a site: delete its row in Sites, then  py tools/apply_inputs.py --confirm  and rebuild. A 7th site is refused.", note)]
-    alert_steps = [("2  Set alert targets", head),
-                   ("Every site follows the BD thresholds (rows 'All sites' in the Alert targets tab of the same inputs file).", body),
-                   ("To change one site: add a row with its site code and the KPI - Target, Warning at, Critical at. The targets are "
-                    + INPUTS_WHEN + ".", body),
-                   ("Check what is in use: Config & Health > Alert targets in use (source + any input problem). Try a value without saving: the "
-                    "input boxes on Config & Health (only for you, not saved).", note)]
-    v = [textbox(p, "home_sites_howto", x0, y, w, 250, 902, site_steps, bg=LIGHT),
-         textbox(p, "home_alerts_howto", x0, y + 258, w, 200, 903, alert_steps, bg=LIGHT)]
-    t = table(p, "home_sites", x0, y + 466, w, BANNER_H + BODY_H - (y + 466) - 6, 904,
+    use = [("How to use this report", head),
+           ("① Pick the site, day and shift at the top - every page follows (blank day = today, blank shift = whole day).", body),
+           ("② Start with the Hypercare Cockpit: the 6 hypercare KPIs against target and 'What to do now'.", body),
+           ("③ Red = beyond the critical limit, amber = beyond the warning limit, green = on target; N/A = the site has no such "
+            "process, NO DATA = no activity yet.", body),
+           ("The box at the bottom of every page explains what the page shows and how to read it.", note)]
+    try:
+        ex = copilot_ai.example_prompts(REPORT_SITES or None)[:4]
+    except SystemExit:
+        ex = []
+    ask = [("Ask Copilot  (button 'Copilot', top right)", head)] + [(f"•  {e}", body) for e in ex] + \
+          [("Name the site and the KPI; spelling mistakes are fine (\"Jakrta\", \"thruput\"). More questions: page Ask Copilot.", note)]
+    v = [textbox(p, "home_sites_howto", x0, y, w, 232, 902, use, bg=LIGHT),
+         textbox(p, "home_alerts_howto", x0, y + 240, w, 218, 903, ask, bg=LIGHT)]
+    t = table(p, "home_sites", x0, y + 466, w, BANNER_H + BODY_H - (y + 466) - 58, 904,
               [("Cfg_Site", "SiteCode", False, "Code"), ("Cfg_Site", "SiteName", False, "Site"), ("Cfg_Site", "WMS_Version", False, "WMS"),
                (K, "Prod Plan Short", True, "Production"), ("Cfg_Site", "Config_Status", False, "Configuration status")],
               "Sites in this report", sort=("Cfg_Site", "SiteCode", False, "Ascending"),
               widths={"SiteCode": 74, "SiteName": 100, "WMS_Version": 64, "Prod Plan Short": 120, "Config_Status": 150})
     v.append(t)
+    v.append(textbox(p, "home_owner_note", x0, BANNER_H + BODY_H - 52, w, 50, 906,
+                     [("Report owner: add / remove a site or change alert targets in the inputs workbook (Sites / Alert targets tabs), "
+                       "then rebuild - see docs/HOW_TO_UPDATE.md.", note)]))
     return v
 
 
@@ -680,6 +747,7 @@ LABEL_CHARTS = {"columnChart", "clusteredColumnChart", "barChart", "clusteredBar
                 "lineClusteredColumnComboChart", "lineStackedColumnComboChart", "ribbonChart", "waterfallChart", "funnel", "pieChart", "donutChart",
                 "hundredPercentStackedColumnChart", "hundredPercentStackedBarChart"}
 STACKED = {"columnChart", "barChart", "lineStackedColumnComboChart"}
+BAR_CHARTS = {"barChart", "clusteredBarChart", "hundredPercentStackedBarChart"}
 
 
 def label_all_charts(pages_dir: Path):
@@ -701,6 +769,13 @@ def label_all_charts(pages_dir: Path):
             base.setdefault("properties", {})["show"] = lit("true")
         if vt in STACKED and "totals" not in obj and not any(e.get("selector") for e in labels):
             obj["totals"] = [{"properties": {"show": lit("true")}}]
+        if vt in BAR_CHARTS:   # horizontal bars: room for the category labels (default 25 % cut 'LEDOOR01' / '(no pallet moves)', 20-Nov)
+            ca = obj.setdefault("categoryAxis", [])
+            cbase = next((e for e in ca if not e.get("selector")), None)
+            if cbase is None:
+                ca.insert(0, {"properties": {"maxMarginFactor": lit("35L")}})
+            else:
+                cbase.setdefault("properties", {}).setdefault("maxMarginFactor", lit("35L"))
         vf.write_text(json.dumps(j, indent=1, ensure_ascii=False), encoding="utf-8")
         n += 1
     return n
@@ -711,6 +786,12 @@ def _standardize(j):
     _clear_site_selections(j)
     _sort_time_axis(j)
     vco = j.get("visual", {}).get("visualContainerObjects", {})
+    if j.get("visual", {}).get("visualType") == "shape":
+        pos = j.get("position", {})
+        if pos.get("width", 0) * pos.get("height", 0) > 100000:     # BD template background panels (dark grey) -> theme panel colour
+            for f in j["visual"].setdefault("objects", {}).get("fill", []):
+                if "fillColor" in f.get("properties", {}):
+                    f["properties"]["fillColor"] = {"solid": {"color": lit(f"'{LIGHT}'")}}
     if j.get("visual", {}).get("visualType") in ("shape", "textbox", "image", "actionButton"):
         return
     for k in ("background", "border", "dropShadow", "visualHeader"):
@@ -718,6 +799,9 @@ def _standardize(j):
     for t in vco.get("title", []):
         for k in ("fontColor", "fontSize", "background", "fontFamily", "alignment", "bold", "titleWrap"):
             t.get("properties", {}).pop(k, None)
+        tx = t.get("properties", {}).get("text", {}).get("expr", {}).get("Literal", {})
+        if isinstance(tx.get("Value"), str) and tx["Value"].startswith("'"):
+            tx["Value"] = "'" + clean_title(tx["Value"][1:-1].replace("''", "'")).replace("'", "''") + "'"
 
 
 def _trim_small_overlaps(vis, gone, limit=24):
@@ -741,6 +825,73 @@ def _trim_small_overlaps(vis, gone, limit=24):
                 upper["height"] -= oy + 4
     for n, vf, j in items:
         vf.write_text(json.dumps(j, ensure_ascii=False), encoding="utf-8")
+
+
+def _texts(j):
+    try:
+        return " ".join(r.get("value", "") for p in j["visual"]["objects"]["general"][0]["properties"]["paragraphs"]
+                        for r in p.get("textRuns", []))
+    except (KeyError, IndexError, TypeError):
+        return ""
+
+
+def _compact_top(pdir, vis, gone):
+    """BD template pages under the new banner: the old header band held a duplicate page title, a 'last refresh' card (the banner
+    shows both) and page slicers at random x. -> drop the duplicates, put the page slicers in ONE row under the filter bar, and move the
+    content up so no empty band is left. Returns the vertical gap removed (page height shrinks by it)."""
+    band_lo, band_hi = BANNER_H, BANNER_H + 112
+    top = {n: (vf, j) for n, (vf, j) in vis.items() if n not in gone and not j.get("parentGroupName") and not j.get("isHidden")}
+    drop = set()
+    for n, (vf, j) in vis.items():
+        if n in gone or "visual" not in j:
+            continue
+        vt = j["visual"].get("visualType")
+        par = vis.get(j.get("parentGroupName", ""), (None, j))[1]
+        y = par["position"]["y"] if j.get("parentGroupName") else j["position"]["y"]
+        if not (band_lo <= y < band_hi):
+            continue
+        q = json.dumps(j["visual"].get("query", {}))
+        if (vt == "textbox" and len(_texts(j).strip()) <= 60) or (vt in ("card", "cardVisual", "multiRowCard") and "Refresh" in q
+                                                                 and '"Measure"' in q and q.count('"Property"') <= 2):
+            drop.add(n)
+    for g, (vf, j) in vis.items():                     # groups left empty go too
+        if "visualGroup" in j and g not in gone:
+            kids = [n for n, (_, k) in vis.items() if k.get("parentGroupName") == g and n not in gone]
+            if kids and all(k in drop for k in kids):
+                drop.add(g)
+    for n in drop:
+        shutil.rmtree(vis[n][0].parent, ignore_errors=True)
+    gone |= drop
+    top = {n: v for n, v in top.items() if n not in drop}
+    row_types = ("slicer", "actionButton")
+    slicers = sorted([(j["position"]["x"], n) for n, (vf, j) in top.items()
+                      if band_lo <= j["position"]["y"] < band_hi and
+                      (("visual" in j and j["visual"].get("visualType") in row_types) or "visualGroup" in j)])
+    row_h = max((min(top[n][1]["position"]["height"], 80) for _, n in slicers), default=0)
+    x = 10
+    for _, n in slicers:
+        j = top[n][1]
+        w = j["position"]["width"] if "visualGroup" in j else min(max(j["position"]["width"], 140), 200)
+        j["position"].update(x=x, y=band_lo + 4, height=min(j["position"]["height"], 80), width=w)
+        x += w + 8
+    rest = [j for n, (vf, j) in top.items() if not any(n == s for _, s in slicers)]
+    want = band_lo + (row_h + 6 if slicers else 6)
+    ymin = min((j["position"]["y"] for j in rest), default=want)
+    gap = max(0, int(ymin - want))
+    if gap > 8:
+        for j in rest:
+            j["position"]["y"] -= gap
+    else:
+        gap = 0
+    for n, (vf, j) in top.items():
+        vf.write_text(json.dumps(j, ensure_ascii=False), encoding="utf-8")
+    return gap
+
+
+def _content_bottom(vis, gone):
+    """Lowest edge of every remaining top-level visual (hidden / bookmark-toggled ones included, so nothing can overlap the guide)."""
+    return max((j["position"]["y"] + j["position"]["height"] for n, (vf, j) in vis.items()
+                if n not in gone and not j.get("parentGroupName") and "position" in j), default=0)
 
 
 def _shift_existing(pdir, key, page_name, display):
@@ -778,6 +929,11 @@ def _shift_existing(pdir, key, page_name, display):
             sj = sj.replace(f'"value":"{t}', '"value":"').replace(f'"value": "{t}', '"value": "')
         vf.write_text(sj, encoding="utf-8")
     _trim_small_overlaps(vis, gone)
+    gap = _compact_top(pdir, vis, gone) if key != "HOME" else 0
+    old_h -= gap
+    if key != "HOME":                                  # no empty band between the last visual and the guide
+        old_h = max(200, min(old_h, int(_content_bottom(vis, gone) - BANNER_H) + 8))
+    pj["height"] = BANNER_H + old_h + GUIDE_H
     pj["visualInteractions"] = [x for x in pj.get("visualInteractions", []) if x["source"] not in gone and x["target"] not in gone]
     if key == "HOME":
         for vf in list((pdir / "visuals").glob("*/visual.json")):
@@ -786,7 +942,7 @@ def _shift_existing(pdir, key, page_name, display):
         pj["visualInteractions"] = []
         extra = banner(page_name, key, title) + home_extras(page_name)
     else:
-        extra = banner(page_name, key, title) + [guide(page_name, key, BANNER_H + old_h)]
+        extra = banner(page_name, key, title) + guide(page_name, key, BANNER_H + old_h)
     if key == "PRED":
         extra += pred_extras(page_name)
     (pdir / "page.json").write_text(json.dumps(pj, indent=1, ensure_ascii=False), encoding="utf-8")
@@ -824,7 +980,7 @@ def add_pages(defn: Path, default_site_name):
         if pid == "config_health":
             page["visualInteractions"] = [{"source": hid(pid, "site_slicer"), "target": hid(pid, t), "type": "NoFilter"} for t in ("issues", "feeds")]
         (pdir / "page.json").write_text(json.dumps(page, indent=1), encoding="utf-8")
-        for vis in visuals + [guide(pid, key, height - GUIDE_H)]:
+        for vis in visuals + guide(pid, key, height - GUIDE_H):
             vd = pdir / "visuals" / vis["name"]
             vd.mkdir(exist_ok=True)
             (vd / "visual.json").write_text(json.dumps(vis, indent=1, ensure_ascii=False), encoding="utf-8")

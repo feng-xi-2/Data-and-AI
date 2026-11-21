@@ -6,6 +6,7 @@ Draws every page as a wireframe PNG (visual boxes with type + title, header band
   OVERLAP   two visible data visuals overlap (more than 4 px both ways)
   OFF_PAGE  a visual reaches beyond the page width / height
   TINY      a data visual smaller than 40 x 30 px
+  COLLAPSED_SLICER  a responsive slicer under 50 px tall - the Service shows only a funnel icon (set responsive off)
   DUPLICATE the same visual (fields + visual filters) on two pages
   TEXT_OVERFLOW  a text box whose text (estimated from font size and width) does not fit - Power BI shows a scrollbar / cuts it
 Exit 1 when any finding exists; summary -> docs/LAYOUT_CHECK.md, images -> <out>/<nn> <page>.png
@@ -22,6 +23,7 @@ DEFN = Path(args[0]) if args else ROOT / "dist" / "ALL_SITES" / "WH Hypercare KP
 OUT = Path(sys.argv[sys.argv.index("--out") + 1]) if "--out" in sys.argv else (Path(__file__).resolve().parents[2] / "_uitest" / "layout")
 OUT.mkdir(parents=True, exist_ok=True)
 DECOR = {"shape", "image", "textbox", "actionButton"}
+SLICER_MIN_H = 50     # 21-Nov: 150 x 40 input boxes collapsed to a funnel icon in the Service (84 % fit-to-width); 54 px dropdowns draw fine
 COLORS = {"slicer": "#7FA7D1", "card": "#B4C7E7", "multiRowCard": "#B4C7E7", "cardVisual": "#B4C7E7", "tableEx": "#C9E4CA", "pivotTable": "#C9E4CA",
           "barChart": "#F8CBAD", "clusteredBarChart": "#F8CBAD", "columnChart": "#F8CBAD", "clusteredColumnChart": "#F8CBAD",
           "lineClusteredColumnComboChart": "#FFE699", "lineChart": "#FFE699"}
@@ -66,10 +68,12 @@ def main():
                     if other and other[0] != pj["displayName"]:
                         vis_tf.append(f"DUPLICATE {v_['visualType']} '{title_of(v_)[:40]}' also on page '{other[0]}' ('{other[1][:40]}') - keep one home")
                     seen_sig.setdefault(sig, (pj["displayName"], title_of(v_)))
-            vis.append((j["visual"].get("visualType"), int(p["x"]), int(p["y"]), int(p["width"]), int(p["height"]), title_of(j["visual"])))
+            resp_off = v_.get("objects", {}).get("general", [{}])[0].get("properties", {}).get("responsive", {}).get("expr", {}) \
+                .get("Literal", {}).get("Value") == "false"
+            vis.append((j["visual"].get("visualType"), int(p["x"]), int(p["y"]), int(p["width"]), int(p["height"]), title_of(j["visual"]), resp_off))
         img = Image.new("RGB", (W, H), "#FFFFFF")
         d = ImageDraw.Draw(img)
-        for vt, x, y, w, h, t in sorted(vis, key=lambda v: (v[0] not in DECOR, v[2])):
+        for vt, x, y, w, h, t, _ in sorted(vis, key=lambda v: (v[0] not in DECOR, v[2])):
             if vt in DECOR:
                 d.rectangle([x, y, x + w, y + h], outline="#D0D0D0")
                 continue
@@ -100,11 +104,14 @@ def main():
                 vis_tf.append(data_tf)
         page_f = list(vis_tf)
         for i, a in enumerate(data):
-            vt, x, y, w, h, t = a
+            vt, x, y, w, h, t, resp = a
             if x + w > W + 2 or y + h > H + 2:
                 page_f.append(f"OFF_PAGE {vt} '{t[:40]}' ({x},{y},{w}x{h}) page {W}x{H}")
             if vt != "slicer" and (w < 40 or h < 30):
                 page_f.append(f"TINY {vt} '{t[:40]}' {w}x{h}")
+            if vt == "slicer" and h < SLICER_MIN_H and not resp:
+                page_f.append(f"COLLAPSED_SLICER '{t[:40]}' {w}x{h}: a responsive slicer under {SLICER_MIN_H} px shows only a funnel icon "
+                              f"in the Service (page drawn below 100 %) - set general.responsive = false or make it taller")
             for b in data[i + 1:]:
                 ox = min(x + w, b[1] + b[3]) - max(x, b[1])
                 oy = min(y + h, b[2] + b[4]) - max(y, b[2])

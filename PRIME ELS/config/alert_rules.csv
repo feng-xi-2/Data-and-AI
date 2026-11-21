@@ -22,3 +22,4 @@ Rule_No,Pillar,Rule,KPI_Key,Insight_If_Breached,Recommended_Action,Owner
 21,Users,User productivity - pallets per active user-hour,USER_PROD,RF users are moving fewer pallets per hour than the standard,Review the User Productivity page - training / task interleaving / travel,Shift leader
 22,Health,Replica data freshness,DATA_LAG,The replica is behind the WMS - numbers are stale,Check HVR (data-replica-latency skill) before acting on alerts,Report owner
 23,Health,Model refresh age,REFRESH_AGE,The semantic model has not refreshed recently,Check the scheduled refresh / gateway credentials in the Service,Report owner
+24,Warehouse,Take-away backlog - pallets queued in the line take-away lanes,LTA_QUEUE,Finished pallets wait at the line take-away lanes - put-away is behind production,Add forklift / put-away capacity at the take-away lanes and check free storage spots,Warehouse lead

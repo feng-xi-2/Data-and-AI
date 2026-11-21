@@ -35,6 +35,10 @@ def rows(name):
 
 def tokens(code):
     site = next(r for r in rows("site_config.csv") if r["SiteCode"] == code)
+    if "--overrides" in sys.argv and (ROOT / "config" / "service_overrides.csv").exists():   # same rows as build_pbip --overrides / --service
+        site = dict(site, **{o["Setting"]: o["Value"] for o in rows("service_overrides.csv") if o["SiteCode"] == code})
+    if "--server" in sys.argv:          # e.g. the non-prod rehearsal replica of the same warehouse (row counts with real history)
+        site = dict(site, ReplicaServer=sys.argv[sys.argv.index("--server") + 1])
     eng = next(r for r in rows("engine_profiles.csv") if r["WMS_Version"] == site["WMS_Version"])
     tok = {k: v for k, v in eng.items() if k not in ("WMS_Version", "Notes")}
     tok.update({k: v for k, v in site.items() if v not in ("", None)})
@@ -173,7 +177,7 @@ def run(code, do_exec=True):
 
 
 if __name__ == "__main__":
-    args = [a for i, a in enumerate(sys.argv[1:], 1) if not a.startswith("--") and sys.argv[i - 1] != "--only"]
+    args = [a for i, a in enumerate(sys.argv[1:], 1) if not a.startswith("--") and sys.argv[i - 1] not in ("--only", "--server")]
     if "--inc-check" in sys.argv:
         nbad = sum(inc_check(s.upper()) for s in args or [r["SiteCode"] for r in rows("site_config.csv")])
         sys.exit(1 if nbad else 0)

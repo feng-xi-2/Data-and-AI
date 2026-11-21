@@ -76,6 +76,12 @@ def _thr_measures():
                         f'VAR inp = [Input {k} {lvl}]\nVAR t = [Thr {k} Target]\nVAR tc = {lookup(k, "Target")}\n'
                         f'VAR saved = {lookup(k, col)}\nVAR p = {lookup(k, pct)}\nVAR a = {lookup(k, ab)}\nVAR dir = {lookup(k, "Direction")}\n'
                         f'RETURN SWITCH(TRUE(), NOT ISBLANK(inp), inp, NOT ISBLANK(a) || t = tc, saved, dir = "Higher", t * p, dir = "Lower", t * (1 + p), saved)'))
+        # an empty what-if box shows the bottom of its range ("0 plt") - this card says what is actually in use, in the box's unit
+        mul = f" * {scale}" if scale not in ("1", "") else ""
+        fmt = r["Input_Format"]
+        out.append((f"Thr {k} In Use", "0 Scorecard\\Inputs", None,
+                    f'FORMAT([Thr {k} Target]{mul}, "{fmt}") & " / " & FORMAT([Thr {k} Warn]{mul}, "{fmt}") & " / " & '
+                    f'FORMAT([Thr {k} Crit]{mul}, "{fmt}")'))
     for lvl, col in (("Target", "Target"), ("Warn", "Warn_At"), ("Crit", "Crit_At")):
         body = ",\n    ".join(f'"{r["KPI_Key"]}", [Thr {r["KPI_Key"]} {lvl}]' for r in INPUTS)
         out.append((f"Thr Eff {lvl}", "0 Scorecard\\Inputs", None,
@@ -159,7 +165,8 @@ CONTEXT = [
     ("Window Label", "0 Context", None,
      '-- what every page shows: day + shift window in site time (the global Day / Shift slicers)\n'
      'VAR d = [Report Date]\nVAR k = [Shift Selected]\n'
-     'VAR span = FORMAT([Win Start], "hh:nn") & " - " & FORMAT([Win End], "hh:nn")\n'
+     'VAR span = FORMAT([Win Start], "hh:nn") & " - " & IF(INT([Win End]) > INT([Win Start]) && FORMAT([Win End], "hh:nn") = "00:00", "24:00", '
+     'FORMAT([Win End], "hh:nn") & IF(INT([Win End]) > INT([Win Start]), " (+1 day)", ""))\n'
      'VAR dayTxt = FORMAT(d, "ddd dd-mmm-yyyy") & IF(ISFILTERED(DimDate[Date]) && HASONEVALUE(DimDate[Date]), "", " (auto: " & IF([Report Is Today], "today", "last day with activity") & ")")\n'
      'RETURN IF(ISBLANK(d), BLANK(), dayTxt & "  |  " & IF(ISBLANK(k), "whole shift day " & span, IF([Win Hours] <= 0, "shift " & k & " not worked at this site", '
      '"shift " & k & " " & span)) & " (site time)")'),
@@ -220,10 +227,13 @@ CONTEXT = [
 
 
 def _prod(filter_extra=""):
-    # production configured for the site -> 0 pallets is a real value (line stopped), not "no data"
+    # production configured for the site -> 0 pallets is a real value (line stopped), not "no data" - but only once the site has
+    # produced in PrIME at all: a site whose loaded window holds no production pallet (not live yet, e.g. Jakarta ID12 20-Nov) shows
+    # NO DATA instead of a CRITICAL 0 plt/h that would send the team to "escalate to production"
     return (f'VAR d = [Report Date]\nVAR p = CALCULATE(SUM({PT}[PalletsLeftFromLine]), REMOVEFILTERS(DimDate), '
             f'REMOVEFILTERS(DimDateBucket), REMOVEFILTERS({PT}[shift_date]), {PT}[shift_date] = d{filter_extra})\n'
-            'RETURN IF([Feature Production] = 1, COALESCE(p, 0))')
+            f'VAR seen = CALCULATE(COUNTROWS({PT}), REMOVEFILTERS(DimDate), REMOVEFILTERS(DimDateBucket), REMOVEFILTERS({PT}[shift_date]))\n'
+            'RETURN IF([Feature Production] = 1 && seen > 0, COALESCE(p, 0))')
 
 
 CONTEXT += _thr_measures()

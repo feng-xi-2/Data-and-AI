@@ -219,11 +219,15 @@ ALERTS = [
      'RETURN IF(c + w = 0, "✅ " & ' + rca("NARRATIVE", '"ALL_CLEAR"') + ', IF(c > 0, "🔴 " & ' +
      fill(rca("NARRATIVE", '"STATE_CRIT"'), {"crit": "c", "warn": "w"}) + ', "🟠 " & ' + fill(rca("NARRATIVE", '"STATE_WARN"'), {"warn": "w"}) + '))'),
     ("Narrative Production Outlook", "7 Alerts", None,
+     # a finished report window (a past day / shift) has no 'rest of the day': report the result, not a recovery rate
+     # (20-Nov Jakarta: 'Recovering the gap needs 0 pallets/hr' on a closed day)
      'VAR k = IF([Feature Production] <> 1, "PROD_OFF", IF([Prod Pallets Day] = 0, "PROD_NONE", '
-     'IF([Prod Projected EOD] < [Prod Ramp Plan Day], "PROD_BEHIND", "PROD_ONTRACK")))\n'
+     'IF([Elapsed Hours] >= [Win Hours], IF([Prod Pallets Day] < [Prod Ramp Plan Day], "PROD_CLOSED_BEHIND", "PROD_CLOSED_MET"), '
+     'IF([Prod Projected EOD] < [Prod Ramp Plan Day], "PROD_BEHIND", "PROD_ONTRACK"))))\n'
      'VAR t = ' + rca("NARRATIVE", "k") + '\nRETURN ' +
      fill("t", {"rate": 'FORMAT(COALESCE([Prod Run Rate 3h], [KPI PPH], 0), "0.0")', "proj": 'FORMAT(COALESCE([Prod Projected EOD], 0), "#,##0")',
                 "plan": 'FORMAT([Prod Ramp Plan Day], "#,##0")', "req": 'FORMAT(COALESCE([Prod Required Rate], 0), "0")',
+                "done": 'FORMAT([Prod Pallets Day], "#,##0")', "pct": 'FORMAT(DIVIDE([Prod Pallets Day], [Prod Ramp Plan Day]), "0%")',
                 "last": 'IF(ISBLANK([Prod Last Pallet Time]), "never in the loaded window", FORMAT([Prod Last Pallet Time], "ddd dd-mmm hh:00"))',
                 "hours": 'FORMAT([Elapsed Hours], "0.0")'})),
     ("Verdict Key", "7 Alerts", None,

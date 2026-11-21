@@ -10,4 +10,6 @@ WITH t AS (
     GROUP BY a.trlr_id
 )
 SELECT AVG(CAST(DATEDIFF(MINUTE, chk, cls) AS FLOAT)) AS v
-FROM t WHERE chk IS NOT NULL AND dsp IS NOT NULL AND dsp < '{SNAP}' AND cls >= '{FROM}' AND cls < '{TO}'
+FROM t WHERE chk IS NOT NULL AND dsp IS NOT NULL
+  -- loaded trucks only (BD definition): an empty trailer closed days later is not a truck turnaround (20-Nov Jakarta TRL0294709, 0 pallets, 36 h)
+  AND EXISTS (SELECT 1 FROM {S}.dlytrn d WHERE d.wh_id = '{WH_ID}' AND d.tostol = t.trlr_id AND d.lodnum IS NOT NULL) AND dsp < '{SNAP}' AND cls >= '{FROM}' AND cls < '{TO}'

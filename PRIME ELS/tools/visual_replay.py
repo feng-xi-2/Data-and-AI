@@ -1,6 +1,8 @@
 """Visual replay test: every data visual of every page, for every site and several days, through the model - the way the visual queries it.
 
     py tools/visual_replay.py <PBIDesktop PID> [--days 4] [--report <path to .Report/definition>] [--sites A,B]
+                              [--pages "A,B"] [--timeout 60]
+    py tools/visual_replay.py --service <workspaceId>/<datasetId> ...   # the PUBLISHED model (executeQueries API, 4 in parallel)
 
 For each page x visual (not slicers / text / shapes / images) the visual's fields are read from the PBIR definition
 (queryState projections: grouping columns, measures, aggregations) together with its visual- and page-level filters,
@@ -25,7 +27,9 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 args = sys.argv[1:]
-PID = int(args[0])
+# --service <workspaceId>/<datasetId>: replay against the PUBLISHED model (executeQueries REST API) instead of an open Desktop
+SERVICE = args[args.index("--service") + 1] if "--service" in args else ""
+PID = 0 if SERVICE else int(args[0])
 
 
 def opt(name, default):
@@ -35,6 +39,7 @@ def opt(name, default):
 DAYS = int(opt("--days", "4"))
 REPORT = Path(opt("--report", str(ROOT / "dist" / "ALL_SITES" / "WH Hypercare KPI.Report" / "definition")))
 PAGES_ONLY = [x.strip() for x in opt("--pages", "").split(",") if x.strip()]     # display names, e.g. "Process Flow,Trucks & TTAT"
+TIMEOUT_S = opt("--timeout", "60")   # per-query seconds; raise on a low-memory PC
 OUT_DIR = Path(__file__).resolve().parents[2] / "_uitest"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 OUT_DIR.mkdir(exist_ok=True)
@@ -202,14 +207,72 @@ for pj in sorted(REPORT.glob("pages/*/page.json")):
                   "date_slicers": sorted(dslic), "slicers": sorted(oslic), "visuals": vis})
 
 # ------------------------------------------------------------------ sites, page requirements
+_svc_tok = {"t": None, "at": 0}
+
+
+def svc_query(dax, all_rows=False):
+    """One DAX query on the published model (executeQueries): same result shape as run_dax_batch.ps1. Retries 429 / network drops."""
+    import hashlib
+    import requests
+    sys.path.insert(0, str(HERE))
+    from publish import token
+    if time.time() - _svc_tok["at"] > 1800:
+        _svc_tok.update(t=token("https://analysis.windows.net/powerbi/api/.default"), at=time.time())
+    ws, ds = SERVICE.split("/")
+    url = f"https://api.powerbi.com/v1.0/myorg/groups/{ws}/datasets/{ds}/executeQueries"
+    t0 = time.time()
+    for attempt in range(6):
+        try:
+            r = requests.post(url, headers={"Authorization": "Bearer " + _svc_tok["t"]}, timeout=int(TIMEOUT_S) + 60,
+                              json={"queries": [{"query": dax}], "serializerSettings": {"includeNulls": True}})
+        except requests.RequestException as e:
+            time.sleep(10 * (attempt + 1))
+            err = f"network: {type(e).__name__}"
+            continue
+        if r.status_code == 429:
+            time.sleep(int(r.headers.get("Retry-After", "20")))
+            continue
+        ms = int((time.time() - t0) * 1000)
+        if r.status_code != 200:
+            try:
+                e = r.json().get("error", {})
+                det = e.get("pbi.error", {}).get("details", [])
+                msg = next((d.get("detail", {}).get("value") for d in det if d.get("code") == "DetailsMessage"), None) or e.get("message") or r.text
+            except ValueError:
+                msg = r.text
+            return {"rows": 0, "first": None, "error": str(msg)[:400], "ms": ms}
+        res = r.json()["results"][0]
+        if res.get("error"):
+            return {"rows": 0, "first": None, "error": json.dumps(res["error"])[:400], "ms": ms}
+        rows = res["tables"][0].get("rows", []) if res.get("tables") else []
+        blob = "\x1e".join("\x1f".join("" if v is None else str(v) for v in row.values()) for row in rows)
+        return {"rows": len(rows), "first": rows[0] if rows else None, "ms": ms,
+                "hash": hashlib.sha1(blob.encode("utf-8")).hexdigest()[:16], **({"all": rows} if all_rows else {})}
+    return {"rows": 0, "first": None, "error": f"executeQueries failed after retries ({err if 'err' in dir() else 'HTTP 429'})",
+            "ms": int((time.time() - t0) * 1000)}
+
+
 def run_batch(queries, tag):
     """Runs the queries with live heartbeat output (never captured / silent); a non-zero exit or missing result file stops the test."""
+    if SERVICE:
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+        out, t0, beat, nerr = {}, time.time(), time.time(), 0
+        svc_query("EVALUATE ROW(\"x\", 1)")            # token once, before the threads
+        with ThreadPoolExecutor(4) as ex:              # executeQueries allows 120 queries / minute per user
+            futs = {ex.submit(svc_query, q["dax"]): q["id"] for q in queries}
+            for i, f in enumerate(as_completed(futs), 1):
+                out[futs[f]] = dict(f.result(), id=futs[f])
+                nerr += bool(out[futs[f]].get("error"))
+                if time.time() - beat > 30:
+                    print(f"[{time.strftime('%H:%M:%S')}] heartbeat: {i}/{len(queries)} done, errors {nerr} ({time.time() - t0:.0f}s)", flush=True)
+                    beat = time.time()
+        return out
     qf, rf = OUT_DIR / f"_q_{tag}.json", OUT_DIR / f"_r_{tag}.json"
     qf.write_text(json.dumps(queries), encoding="utf-8")
     if rf.exists():
         rf.unlink()
     p = subprocess.run(["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(HERE / "run_dax_batch.ps1"), "-ProcId", str(PID),
-                        "-InJson", str(qf), "-OutJson", str(rf), "-TimeoutSec", "60"], timeout=14400)
+                        "-InJson", str(qf), "-OutJson", str(rf), "-TimeoutSec", TIMEOUT_S], timeout=14400)
     if p.returncode != 0 or not rf.exists():
         raise SystemExit(f"!! DAX batch '{tag}' failed (exit {p.returncode}) - see the lines above")
     res = json.loads(rf.read_text(encoding="utf-8-sig"))
@@ -217,6 +280,9 @@ def run_batch(queries, tag):
 
 
 csv_sites = list(csv.DictReader(open(ROOT / "config" / "site_config.csv", encoding="utf-8-sig")))
+if "--overrides" in sys.argv and (ROOT / "config" / "service_overrides.csv").exists():   # same settings as build_pbip --overrides
+    _ov = list(csv.DictReader(open(ROOT / "config" / "service_overrides.csv", encoding="utf-8-sig")))
+    csv_sites = [dict(s, **{o["Setting"]: o["Value"] for o in _ov if o["SiteCode"] == s["SiteCode"]}) for s in csv_sites]
 _ex = {v.strip().upper() for r in csv.DictReader(open(ROOT / "config" / "build_options.csv", encoding="utf-8-sig"))
        if r["Setting"] == "AllSites_Exclude" for v in r["Value"].split("|") if v.strip()} if (ROOT / "config" / "build_options.csv").exists() else set()
 _only_arg = opt("--sites", "")
@@ -262,6 +328,17 @@ def dax_value(v):
 def slicer_values(t, c, site, n):
     dax = (f'EVALUATE TOPN({n}, FILTER(ADDCOLUMNS(CALCULATETABLE(VALUES({cref(t, c)}), TREATAS({{"{site}"}}, Cfg_Site[SiteCode])), '
            f'"@n", CALCULATE(COUNTROWS({tref(t)}), TREATAS({{"{site}"}}, Cfg_Site[SiteCode]))), NOT ISBLANK({cref(t, c)}) && [@n] > 0), [@n], DESC)')
+    if SERVICE:
+        for attempt in range(3):     # 21-Nov: one transient Service error on this query marked a whole page ERROR - retry first
+            r = svc_query(dax, all_rows=True)
+            if not r.get("error"):
+                break
+            time.sleep(5 * (attempt + 1))
+        if r.get("error"):
+            return None
+        q = r.get("all") or []
+        key = next((k for k in (q[0] if q else {}) if k != "[@n]"), None)
+        return [x[key] for x in q] if key else []
     p = subprocess.run(["powershell.exe", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(HERE / "pbi_dax.ps1"), "-ProcId", str(PID),
                         "-Dax", dax, "-TimeoutSec", "120"], capture_output=True, text=True, timeout=300)
     try:
@@ -366,6 +443,8 @@ for qid, (p, v, s, d) in index.items():
                  "Status": st, "Rows": r.get("rows"), "Sample": json.dumps(first, ensure_ascii=False, default=str)[:200],
                  "Error": (r.get("error") or "")[:200], "Skipped filters": ";".join(v["skipped"] + p["skipped"]), "Ms": r.get("ms")})
 out = OUT_DIR / ("visual_filters.csv" if FILTER_N else "visual_replay.csv")
+if not rows:
+    sys.exit(f"ERROR: no visuals replayed - check --report (folder not found or no pages): {REPORT}")
 with open(out, "w", newline="", encoding="utf-8") as fh:
     w = csv.DictWriter(fh, fieldnames=list(rows[0]))
     w.writeheader()

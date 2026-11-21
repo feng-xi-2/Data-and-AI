@@ -82,7 +82,7 @@ def typed(cols, nums):
 
 def _sort_by(tmdl, col, by):
     """sortByColumn on a config-table column (the build asserts the 1:1 mapping)."""
-    out, k = re.subn(r"(\tcolumn " + re.escape(col) + r"\n(?:\t\t[^\n]*\n)*?\t\tsourceColumn: " + re.escape(col) + r"\n)",
+    out, k = re.subn(r"(\tcolumn " + re.escape(col) + r"\n(?:\t\t[^\n]*\n)*?\t\tsourceColumn: \[?" + re.escape(col) + r"\]?\n)",
                      lambda m: m.group(1) + f"\t\tsortByColumn: {by}\n", tmdl, count=1)
     assert k == 1, f"sort column {col} not found"
     return out
@@ -116,9 +116,50 @@ def stage_rows():
                         "Meaning": r["Meaning"], "Action": r["Action"], "Owner": r["Owner"]})
     return out
 
+M_NEEDED = {"Cfg_Site", "Cfg_Engine", "Cfg_LineMap", "Cfg_TargetInput", "Cfg_ThresholdBase"}   # read by Power Query (SiteTokens, M steps)
+DAX_TYPE = {"int64": "INTEGER", "double": "DOUBLE", "string": "STRING", "dateTime": "DATETIME", "boolean": "BOOLEAN", "decimal": "CURRENCY"}
+
+
+def dax_str(v):
+    return '"' + str(v).replace('"', '""') + '"'
+
+
+def dax_datatable(rows, cols, types):
+    """DATATABLE(...) with the config rows: blanks -> BLANK(), numbers checked at build (a bad number fails the build, not the refresh)."""
+    def val(v, t):
+        if v is None or (isinstance(v, str) and not v.strip()):
+            return "BLANK()"
+        if t == "int64":
+            return str(int(float(v)))
+        if t in ("double", "decimal"):
+            return repr(float(v))
+        if t == "boolean":
+            return "TRUE" if str(v).strip().lower() in ("1", "true", "yes") else "FALSE"
+        return dax_str(v)
+    head = ", ".join(f"{dax_str(c)}, {DAX_TYPE[types[c]]}" for c in cols)
+    body = ",\n    ".join("{" + ", ".join(val(r.get(c), types[c]) for c in cols) + "}" for r in rows) or \
+        "{" + ", ".join("BLANK()" for _ in cols) + "}"
+    return f"DATATABLE({head},\n    {{\n    {body}\n    }})" + ("" if rows else " -- no rows")
+
+
+def dax_config_table(name, cols, rows, types, desc="", hidden=False):
+    """Config table as a DAX CALCULATED table (Microsoft: compute static / derived tables in the engine): no Power Query evaluation, no
+    gateway round trip at refresh (each embedded M table cost ~35 s of a gateway slot per refresh, measured 20/21-Nov)."""
+    s = "".join(f"/// {ln}\n" for ln in desc.splitlines()) if desc else ""
+    s += f"table {q(name)}\n" + ("\tisHidden\n" if hidden else "") + f"\tlineageTag: {tag(name)}\n\n"
+    for c in cols:
+        s += (f"\tcolumn {q(c)}\n\t\tdataType: {types[c]}\n\t\tlineageTag: {tag(name, 'col', c)}\n\t\tsummarizeBy: none\n"
+              f"\t\tisNameInferred\n\t\tsourceColumn: [{c}]\n\n\t\tannotation SummarizationSetBy = Automatic\n\n")
+    s += f"\tpartition {q(name)} = calculated\n\t\tmode: import\n" + tmdl_source_block(dax_datatable(rows, cols, types)) + "\n"
+    s += "\tannotation PBI_Id = calculated\n"
+    return s
+
+
 def config_table(name, csv_name, nums, extra_steps="", extra_cols=(), desc="", rows=None):
     rows = read_csv(csv_name) if rows is None else rows
     cols = list((rows[0] if rows else read_csv(csv_name)[0]).keys())
+    if not extra_steps and not extra_cols and name not in M_NEEDED:
+        return dax_config_table(name, cols, rows, {c: TDMAP[nums.get(c, "type text")] for c in cols}, desc)
     m = f"let\n    Source = {enter_data_source(rows, cols)},\n    Typed = {typed(cols, nums)}{extra_steps}\nin\n    Result"
     if not extra_steps:
         m = m.replace("\nin\n    Result", ",\n    Result = Typed\nin\n    Result")
@@ -302,7 +343,7 @@ def build_config_tables():
         desc="LTA takeaway source -> production line / category per site (replaces the hard-coded VALUES list).")
     t["Cfg_AlertRule"] = config_table("Cfg_AlertRule", "alert_rules.csv", {"Rule_No": "Int64.Type"},
                                       desc="Alert rules + RCA insight + recommended action (Excel ALERTS sheet).")
-    t["Cfg_HealthCheck"] = config_table("Cfg_HealthCheck", "health_checks.csv", {"Check_No": "Int64.Type", "Expected": "type number"},
+    t["Cfg_HealthCheck"] = config_table("Cfg_HealthCheck", "health_checks.csv", {"Check_No": "Int64.Type", "Expected": "type number", "Needs_Activity": "Int64.Type"},
                                         desc="Daily data-health checks (Excel VALIDATION sheet, generic part).")
     t["Cfg_RCA"] = config_table("Cfg_RCA", "rca_rules.csv", {"Priority": "Int64.Type"},
                                 desc="Root-cause, verdict and narrative TEXTS ({placeholders} are filled by the _KPI measures). Type = LINE_RCA / VERDICT / NARRATIVE.")
@@ -329,7 +370,7 @@ def build_config_tables():
         "Cfg_FieldGuide", "field_guide.csv", {"Order": "Int64.Type"}, rows=[r for r in read_csv("field_guide.csv") if r["Page"] not in sap_pages],
         desc="FIELD GUIDE - every page field: meaning, unit of measure, grouping, colour rule and source (config/field_guide.csv).")
     t["Cfg_CopilotQuestions"] = config_table(
-        "Cfg_CopilotQuestions", "copilot_questions.csv", {"Order": "Int64.Type"},
+        "Cfg_CopilotQuestions", "copilot_questions.csv", {"Order": "Int64.Type"}, rows=copilot_ai.questions_for(SITES),
         desc="COPILOT QUESTION TEMPLATES (config/copilot_questions.csv): template, example, what you get - the Ask Copilot page; "
              "the Steps column is the answer recipe in the Copilot AI instructions.")
     t["Cfg_StockAge"] = _sort_by(config_table(
@@ -458,7 +499,7 @@ def set_sites(codes=None):
     of ALL configured sites (a single-site file makes its site the default; an excluded site can still have its own file)."""
     global SITES
     rows = apply_build_options(read_csv("site_config.csv"))
-    if SERVICE and (ROOT / "config" / "service_overrides.csv").exists():
+    if (SERVICE or "--overrides" in sys.argv) and (ROOT / "config" / "service_overrides.csv").exists():
         # the Service (workspace) model of a site may read another warehouse than the shared Desktop file, e.g. Jakarta ID12 (production,
         # not live yet) in the workspace while the shared .pbix keeps ID01 (DC, live) - config/service_overrides.csv
         ov = read_csv("service_overrides.csv")
@@ -468,6 +509,11 @@ def set_sites(codes=None):
         rows = [dict(r, **{o["Setting"]: o["Value"] for o in ov if o["SiteCode"] == r["SiteCode"]}) for r in rows]
         for o in ov:
             print(f"   service override {o['SiteCode']}.{o['Setting']} = {o['Value']} ({o['Why']})")
+    if "--test-server" in sys.argv:     # TEST build: every site of this build reads that replica server; binding by server + database
+        srv = sys.argv[sys.argv.index("--test-server") + 1]
+        rows = [dict(r, ReplicaServer=srv, Gateway_Connection="", Config_Status=f"TEST DATA ({srv.split('.')[0]}) - not live numbers")
+                for r in rows]
+        print(f"   TEST build: replica server {srv} (Config_Status says TEST DATA on every page)")
     if codes:
         unknown = set(codes) - {r["SiteCode"] for r in rows}
         if unknown:
@@ -565,8 +611,11 @@ def site_partitions(table, body_by_site):
                 days = (date.today() - datetime.strptime(s["Hypercare_Start"][:10], "%Y-%m-%d").date()).days + 366
             else:
                 days = int(s.get(win) or 30) + 1
-            out += ("\trefreshPolicy\n\t\tpolicyType: basic\n\t\trollingWindowGranularity: day\n"
-                    f"\t\trollingWindowPeriods: {days}\n\t\tincrementalGranularity: day\n\t\tincrementalPeriods: {int(inc['Recent_Days'])}\n"
+            # Microsoft: archive in coarse partitions, refresh only the recent ones - a 397-day window in DAILY partitions made the
+            # first Service load ~400 gateway queries per table (20-Nov, Jakarta: 17+ min for 5 tables); > 62 days -> months
+            gran, periods = ("month", days // 30 + 2) if days > 62 else ("day", days)
+            out += (f"\trefreshPolicy\n\t\tpolicyType: basic\n\t\trollingWindowGranularity: {gran}\n"
+                    f"\t\trollingWindowPeriods: {periods}\n\t\tincrementalGranularity: day\n\t\tincrementalPeriods: {int(inc['Recent_Days'])}\n"
                     + tmdl_source_block(expr).replace("\t\tsource = ", "\t\tsourceExpression = ", 1) + "\n")
             parts = [(table + " - " + code, rsrc)]
         elif inc and "__Tok = SiteTokens(__Site)," in src:
@@ -592,6 +641,10 @@ def per_site_bodies(table, body, gate_cols):
     """Build-time gate per site (source left out when the flag is 0) + site binding."""
     out = {}
     bgate = BUILD_GATE.get(table)
+    if SERVICE and not bgate and FEATURE_GATE.get(table):
+        # Service builds: the site settings are fixed in the model (Cfg_Site_Src), so a feature that is OFF is left out at build -
+        # its query no longer goes through the gateway every refresh just to return an empty table (21-Nov: 10 of 41 for Jakarta)
+        bgate = FEATURE_GATE[table]
     for s in SITES:
         if bgate and str(s.get(bgate, "0")) != "1":
             how = (f"Include_SAP_CDL = 1 in config/build_options.csv and {bgate} = 1 in config/site_config.csv" if bgate in SAP_FLAGS
@@ -1274,6 +1327,47 @@ def prune_left_out(defn, gone):
     return gone, removed_m, removed_c
 
 
+STAGED = ("Cfg_Site", "Cfg_Engine", "Cfg_LineMap", "Cfg_TargetInput")
+
+
+def stage_config_queries(defn: Path):
+    """Power Query best practice: other queries reference a NON-loaded staging query, never a loaded table. Every replica partition
+    reads Cfg_Site / Cfg_Engine / Cfg_LineMap (SiteTokens) - loaded-table references make the transactional (scheduled) refresh hold
+    the partitions back (21-Nov: 31 tables 612 s transactional vs 106 s committed per table). -> '<table>_Src' expressions carry the
+    M, the loaded table and every other M query reference the expression."""
+    ex = defn / "expressions.tmdl"
+    etext = ex.read_text(encoding="utf-8")
+    added = ""
+    for n in STAGED:
+        tf = defn / "tables" / f"{n}.tmdl"
+        if not tf.exists() or f"expression {n}_Src " in etext:
+            continue
+        t = tf.read_text(encoding="utf-8")
+        m = re.search(r"(\tpartition [^\n]+ = m\n\t\tmode: import\n\t\tsource = ```\n)(.*?)(\n\t\t\t\t```)", t, re.S)
+        if not m:
+            continue
+        body = "\n".join(ln[2:] if ln.startswith("\t\t") else ln for ln in m.group(2).splitlines())
+        added += (f"/// Staging query of {n} (not loaded) - every M query references this, not the loaded table.\n"
+                  f"expression {n}_Src = ```\n{body}\n\t\t```\n\tlineageTag: {tag(n + '_Src')}\n\n\tannotation PBI_ResultType = Table\n\n")
+        t = t[:m.start(2)] + f"\t\t\t\t{n}_Src" + t[m.end(2):]
+        tf.write_text(t, encoding="utf-8")
+    if not added:
+        return 0
+    ref = re.compile(r"(?<![\w\"\.\[#'])(" + "|".join(STAGED) + r")(?=\s*[,)\n])")
+
+    def swap(text):
+        return "\n".join(ln if ln.lstrip().startswith("///") else ref.sub(lambda x: x.group(1) + "_Src", ln) for ln in text.splitlines())
+    etext = swap(etext)
+    ex.write_text(etext.rstrip("\n") + "\n\n" + added, encoding="utf-8")
+    for tf in (defn / "tables").glob("*.tmdl"):
+        t = tf.read_text(encoding="utf-8")
+        parts = re.split(r"(\tpartition [^\n]+ = m\n\t\tmode: import\n\t\tsource = ```\n.*?\n\t\t\t\t```)", t, flags=re.S)
+        new = "".join(swap(p) if i % 2 else p for i, p in enumerate(parts))
+        if new != t:
+            tf.write_text(new, encoding="utf-8")
+    return len(STAGED)
+
+
 def build_model(out_sm):
     defn = out_sm / "definition"
     if out_sm.exists():
@@ -1328,6 +1422,8 @@ def build_model(out_sm):
     apply_strip_formats(defn)
     ncol, unmatched = apply_column_units(defn)
     (defn / "expressions.tmdl").write_text(expressions_tmdl(), encoding="utf-8")
+    if SERVICE:
+        stage_config_queries(defn)
     model = (defn / "model.tmdl").read_text(encoding="utf-8")
     for d in dropped:
         model = re.sub(r"ref table " + re.escape(q(d)) + r"\n", "", model)
@@ -1343,10 +1439,28 @@ def build_model(out_sm):
     scope = "all configured PrIME 2014 / 2022 sites in one model; the Site slicer picks one" if len(SITES) > 1 else \
         f"site {SITES[0]['SiteName']} only (single-site file - loads and needs credentials for this replica only)"
     model = model.replace("model Model\n", f"/// WH Hypercare KPI - {scope}. See README.md\nmodel Model\n", 1)
+    # refresh parallelism (Desktop Options > Current file > Data load > 'Maximum number of concurrent jobs'; applies in the Service too -
+    # default 6): config/build_options.csv Refresh_Max_Parallelism
+    par = OPTS.get("Refresh_Max_Parallelism", "").strip()
+    if par and "maxParallelismPerRefresh" not in model:
+        model = model.replace("\tculture: ", f"\tmaxParallelismPerRefresh: {int(par)}\n\tculture: ", 1)
+    # every replica table uses ONE data source (server + database): connections per source cap the parallel gateway queries of a
+    # transactional (scheduled) refresh - config/build_options.csv Source_Max_Connections (model property dataSourceDefaultMaxConnections)
+    con = OPTS.get("Source_Max_Connections", "").strip()
+    if con and "dataSourceDefaultMaxConnections" not in model:
+        model = model.replace("\tculture: ", f"\tdataSourceDefaultMaxConnections: {int(con)}\n\tculture: ", 1)
     (defn / "model.tmdl").write_text(model, encoding="utf-8")
     (out_sm / "definition.pbism").write_text(json.dumps({"version": "4.2", "settings": {}}, indent=2), encoding="utf-8")
     nai = copilot_ai.apply_pbip(out_sm, SITES)
     print(f"   Copilot AI instructions: {nai} / {copilot_ai.LIMIT} characters (config/copilot_instructions.md) in culture {copilot_ai.CULTURE}")
+    import ai_descriptions          # every table / measure / visible column gets a Copilot-ready description (meaning first, then formula)
+    dc = ai_descriptions.apply(out_sm)
+    print("   descriptions: " + ", ".join(f"{v[1]}/{v[0]} {k}s" for k, v in dc.items()) + " (config/column_glossary.csv + field guide)")
+    nd = ai_descriptions.write_dictionary(out_sm)
+    print(f"   Copilot field dictionary: {nd} rows ('{ai_descriptions.DICT}' table)")
+    import bpa_fixes                # Microsoft BPA rules (tools/bpa_fixes.py) - before the AI schema so hidden helpers stay out of it
+    print("   best-practice (BPA) fixes: " + ", ".join(f"{k} {v}" for k, v in bpa_fixes.apply(out_sm).items()))
+    copilot_ai.write_schema(out_sm)
     return report, nmeas, nrel, ncol, unmatched
 
 
@@ -1371,6 +1485,7 @@ def build_all(out=None, base=PRODUCT):
         "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definitionProperties/2.0.0/schema.json",
         "version": "4.0", "datasetReference": {"byPath": {"path": f"../{base}.SemanticModel"}}}, indent=2), encoding="utf-8")
     default = next((s["SiteName"] for s in SITES if str(s.get("Is_Default")) == "1"), SITES[0]["SiteName"])
+    report_pages.REPORT_SITES = list(SITES)
     npages = report_pages.add_pages(rep_dir / "definition", default)
     scoped = report_pages.scope_column_visuals(rep_dir / "definition", SITE_TABLES)
     if scoped:
@@ -1451,12 +1566,17 @@ def main(argv):
     """no argument  : dist/ALL_SITES (every site, Site slicer) + dist/<SITE>/WH Hypercare KPI - <SITE>.pbip for every site
        SITE [SITE]  : only those single-site files
        --all-only   : only dist/ALL_SITES"""
-    codes = [a.upper() for a in argv if not a.startswith("--")]
+    vals = {argv[i + 1] for i, a in enumerate(argv[:-1]) if a in ("--test-server",)}
+    codes = [a.upper() for a in argv if not a.startswith("--") and a not in vals]
     if "--service" in argv:
         global SERVICE
         SERVICE = True
+        test = argv[argv.index("--test-server") + 1] if "--test-server" in argv else ""
         for code in codes or [r["SiteCode"] for r in read_csv("site_config.csv")]:
-            build_one("SERVICE FILE (incremental refresh policy)", ROOT / "dist" / "_service" / code, f"{PRODUCT} - {code}", [code])
+            if test:   # same Service model on another replica of the site (e.g. the rehearsal DB): its own folder + name, never the live one
+                build_one(f"SERVICE TEST FILE on {test}", ROOT / "dist" / "_service_test" / code, f"{PRODUCT} - {code} (TEST)", [code])
+            else:
+                build_one("SERVICE FILE (incremental refresh policy)", ROOT / "dist" / "_service" / code, f"{PRODUCT} - {code}", [code])
         set_sites(None)
         print(f"tokens check: {check_tokens()} distinct tokens, all resolvable")
         return

@@ -88,6 +88,100 @@ py tools/publish.py --workspace "<workspace>" --bind-only --site JAKARTA   # onc
 ```
 Then in the Service: model settings > refresh now + schedule hourly; Q&A on; *Approved for Copilot* on.
 
+**Load and test in the workspace (no Desktop needed, measured 20-Nov on Jakarta):**
+```powershell
+# refresh: ONE enhanced refresh, tables in parallel, per-table progress every 30 s (or table by table: drop --all)
+py tools/service_refresh.py --site JAKARTA --workspace "<workspace>" --all --parallel 6
+py tools/service_refresh.py --site JAKARTA --workspace "<workspace>" --status      # what is running now
+# test every visual / day / slicer value on the PUBLISHED model (executeQueries API, 4 queries in parallel)
+py tools/visual_replay.py --service <workspaceId>/<modelId> --report "dist/_service/JAKARTA/WH Hypercare KPI - JAKARTA.Report/definition" --sites JAKARTA --overrides --days 3
+# a site that is not live yet: the same model on its rehearsal / non-prod replica, as a separate "... (TEST)" model + report
+py tools/build_pbip.py JAKARTA --service --test-server <replica-server>.database.windows.net
+py tools/publish.py --workspace "<workspace>" --site JAKARTA --service --test-server <replica-server>.database.windows.net
+py tools/service_refresh.py --site JAKARTA --test --workspace "<workspace>" --all
+```
+- Right after a publish the calculated tables (Cfg_Threshold, KPI Scorecard, Site Summary, Site Activity ...) are empty: every visual
+  shows *"calculated table ... needs to be recalculated or refreshed"* and the header cards draw white error boxes over the banner
+  until the first refresh completes. Not a defect - refresh first, then test.
+- **After a REpublish** (model already loaded) imported data is kept: run `py tools/service_refresh.py --site <SITE> --config`
+  (reloads the embedded tables - Cfg_*, Input *, Field Dictionary: new RCA texts / thresholds / descriptions - then recalculates;
+  ~4 min, no replica query). A full reload is only needed when a replica query changed.
+- `publish.py` waits and retries while a scheduled refresh runs ("Can't deploy as target because model is refreshing").
+- Timings measured 20/21-Nov through iDecide's PROD gateway (shared with other teams): ~13 s per table alone, several minutes per
+  batch of 6 when two models load at once - load one model at a time. `--all` = plain tables with **partialBatch** (each table usable
+  as soon as it is loaded), the incremental tables **transactional** (the Service refuses partialBatch for refresh-policy tables),
+  then calculate. Incremental history > 62 days is kept in **monthly** partitions (a 397-day window in daily partitions = ~800
+  gateway queries on the first load), the last `Recent_Days` days daily.
+- **Refresh speed (21-Nov).** The scheduled refreshes took 1,484-1,869 s every hour although the model is only
+  ~11 MB (memory check below) - the time went into gateway round trips (~35-60 s per Power Query table, also for config tables that
+  never touch the replica) at the busiest slot of the shared gateway. Best-practice fixes, all in the generator:
+  1. config tables that Power Query does not need are **DAX calculated tables** (`DATATABLE`, `build_pbip.dax_config_table`;
+     16 tables + the Field Dictionary) - computed in the engine, no gateway query. Only Cfg_Site / Cfg_Engine / Cfg_LineMap /
+     Cfg_TargetInput / Cfg_ThresholdBase stay Power Query (the site SQL tokens read them): 46 -> 31 gateway queries;
+  2. **refresh parallelism 12** (model property `maxParallelismPerRefresh` = Desktop *Options > Current file > Data load > Maximum
+     number of concurrent jobs*; the Service default is 6) - `config/build_options.csv Refresh_Max_Parallelism`;
+  3. schedule at **:30** every hour (not the top of the hour when every model on the gateway refreshes);
+  4. **staging queries**: Cfg_Site / Cfg_Engine / Cfg_LineMap / Cfg_TargetInput M lives in non-loaded `<table>_Src` expressions that
+     every M query references (`build_pbip.stage_config_queries`, Service builds) - Power Query best practice: never reference a
+     loaded table from another query;
+  5. **12 connections per data source** (model property `dataSourceDefaultMaxConnections`, build option Source_Max_Connections) -
+     every replica table shares one source.
+  Measured (TEST model, 21-Nov): before = 1,458 s for one whole-model refresh; after = 88 s / 495 s / 1,030 s for three schedule-style
+  refreshes in a row (same model, minutes apart). The same SQL run directly on the replica: 1 - 3 s per query - **the remaining time
+  and its variation are queueing in iDecide's shared gateway**, not the model or the replica. Evidence + request to iDecide:
+  `Email_iDecide_gateway_refresh_performance.txt` (M&M folder).
+  6. **Features that are OFF for the site are left out at build** (Service builds; `build_pbip.per_site_bodies`): the site settings
+     are fixed in the model, so a Level A / hand-off table of a site without Level A no longer sends a query through the gateway every
+     hour just to return an empty table (Jakarta: 33 -> 23 replica queries per refresh).
+  Measured after 6 (21-Nov): on-demand full refresh TEST **44 s**, PROD **39 s**; the scheduled run at :30 took 432 s - the same
+  model, so the rest is the shared gateway at schedule time. Scheduled refreshes only start at :00 / :30; a quieter minute (e.g. :45)
+  needs a Power Automate flow (Recurrence -> "Refresh a dataset") instead of the built-in schedule.
+- **Real-data TEST environment** (a site that is not live, or a replica the Service cannot reach): `py tools/test_env.py BINHDUONG
+  [--tests] [--min-free-gb 1]` builds the site file, refreshes it in Desktop from the replica, saves the .pbix (answers the tenant's
+  *sensitivity label* question with "Business Use"), imports it WITH data into the workspace as *WH Hypercare KPI - BINHDUONG (TEST
+  data)* and, with `--tests`, runs alerts / every visual x day / every slicer value / every field on it. Not refreshed by the
+  Service (snapshot) - rerun to update. Needs ~2 GB free memory for the Desktop refresh.
+- **On-screen test** (what the query tests cannot see): open every page of the published report at the real window size and count
+  error boxes and collapsed slicers (`.slicerResponsiveIcon`), screenshot each page. Build gate `layout_preview.py` COLLAPSED_SLICER
+  stops a responsive slicer under 50 px tall before it is published.
+- **Model health (Microsoft rules).** The Service's *Best practice analyzer* / *Memory analyzer* buttons create a Fabric notebook -
+  refused in <workspace> ("Creating Notebook is not currently supported in this workspace" - a Fabric admin setting). Same
+  checks without notebooks:
+  - **BPA:** Tabular Editor 2 (free, portable) with the community rules `microsoft/Analysis-Services/BestPracticeRules/BPARules.json` on
+    the built TMDL: `TabularEditor.exe "<...SemanticModel>\definition" -A BPARules.json -V`. Fixed in every build by `tools/bpa_fixes.py`
+    (hidden non-key columns `isAvailableInMdx: false`, no default summarisation on visible numbers, helper measures hidden, thousands
+    separators on counts). Known false positives of the offline run: relationship / date-table type rules (calculated columns have no
+    declared type in TMDL - all 9 relationship pairs verified equal in the live model), 'Remove unnecessary measures' (TE does not see
+    the report visuals), 'Whole numbers ... #,0' (unit formats such as `#,0 "plt"` are intentional).
+  - **Memory (VertiPaq):** Service > model > DAX query view: `INFO.STORAGETABLECOLUMNS()` / `INFO.STORAGETABLECOLUMNSEGMENTS()`
+    (the INFO functions work there, not through the executeQueries API). Jakarta: 9.7 MB dictionaries + 1.2 MB data.
+- **Tests on the published model** (no Desktop): `visual_replay.py --service` (every visual x day; `--filters 3` = every slicer value),
+  `audit_fields.py --service <ws>/<model> --model <...SemanticModel>` (every column of every site table: empty / negative / future /
+  old values), `alert_test.py --service <ws>/<model> --site <SITE>` (every KPI status recomputed from actual vs limits, every alert
+  rule = its KPI, breached rules carry action + owner, 'What to do now' lists exactly the breached rules).
+- `publish.py` reloads the embedded tables and recalculates by itself after a REpublish (`--no-reload` to skip) - no 'needs refresh'
+  warning icons in the model view and no 'calculated table ... needs to be recalculated' visuals after a publish.
+- Refresh schedule: hourly at :30 (24 slots, SE Asia Standard Time, mail on failure) set on the workspace model with the REST API
+  (`refreshSchedule`); F2048 capacity allows 48 a day. A scheduled refresh = whole model with the incremental policy (only the
+  recent partitions re-read).
+- At a fractional fit-to-width zoom (e.g. 84 % in a narrow window) the Service can clip the first characters of axis labels; at
+  100 %+ they are complete (measured: 124 % shows '40 plt/h' in full). Not a report defect.
+- The binding picks the gateway connection by name (Cfg_Site Gateway_Connection) or else by replica server + database
+  (TEST builds: e.g. `MI-JAKARTA-DEV-FULL-PaaS-ADHOC`).
+
+**Copilot readiness (every build, Microsoft 'Prep data for AI' guidance):**
+- every table / measure / visible column gets a description - meaning and unit first (Copilot reads ~200 characters), then the
+  formula: `tools/ai_descriptions.py`, words from `config/column_glossary.csv` (WMS codes, site settings) + field guide; gate C8
+  fails the build when one is missing;
+- **'Field Dictionary'** table (same tool): one row per table / measure / visible column / site setting with Meaning and Formula -
+  Copilot answers "what does LOC_LTA mean / how is X calculated" from these rows (Microsoft: descriptions mainly steer DAX
+  generation, Copilot answers from data); tested 21-Nov in the workspace;
+- AI data schema `Copilot/schema.json` from `config/copilot_schema.csv`: helper measures (strip copies, colours, labels, Card / Thr /
+  Rows) and parameter tables hidden from Copilot, everything a visible measure depends on kept;
+- AI instructions `config/copilot_instructions.md` (limit 10,000 characters, the build fails above): EXPLAIN section = field meaning,
+  how a KPI is calculated ([How Calculated] / [Numbers Behind]), root cause ([Meaning If Breached], [What To Check], Cfg_AlertRule),
+  fuzzy matching of site / KPI / field words; example questions use the sites of the file (`copilot_ai.questions_for`).
+
 ## Publish the code to GitHub (public copy - code, queries, skills, docs; never data or access)
 
 ```powershell

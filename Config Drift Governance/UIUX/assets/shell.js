@@ -107,9 +107,7 @@
 
     // ---- Knowledge ----
     html += '<div class="sidebar__group-label">Knowledge</div>';
-    html += topLink("semantic", "Semantic Layer", "data-knowledge.html#semantic", "layers", null, active);
-    html += topLink("graph", "Knowledge Graph", "knowledge-graph.html", "graph", "live", active);
-    html += topLink("rpgraph", "RTCIS ↔ PrIME Graph", "knowledge-graph.html#rp", "graph", "validated", active);
+    html += topLink("graph", "Semantic Layer & Knowledge Graph", "knowledge-graph.html", "graph", "live", active);
     html += topLink("data", "Warehouse Data & Knowledge", "data-knowledge.html", "data", null, active);
 
     html += "</nav>";

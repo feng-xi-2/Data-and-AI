@@ -20,6 +20,7 @@
   </div>
 
   <script src="./assets/data.js"></script>
+  <script src="./assets/sql-remediation-dialog.js"></script>
   <script>
     (function () {
       var id = new URLSearchParams(location.search).get("id");
@@ -73,6 +74,10 @@
       /* ---- Special UI: dialog-box assistant (e.g. WHS NL Query) ---- */
       if (a.dialog) { renderDialog(a, statusChip); return; }
 
+      /* ---- Live SQL Remediation box (assets/sql-remediation-dialog.js, backend kg_api.py /rp/chat) ---- */
+      var live = a.liveDialog === "sql-remediation" && window.SQLRemDialog
+        ? '<div id="sr-mount" style="margin-bottom:var(--space-6)"></div>' : "";
+
       document.getElementById("d-body").innerHTML =
         '<div class="detail-head">'
         + '<div class="detail-head__icon">' + a.icon + "</div>"
@@ -85,6 +90,8 @@
 
         + '<p class="text-soft" style="max-width:760px;margin-bottom:var(--space-6)">' + a.desc + "</p>"
 
+        + live
+
         + '<div class="section__eyebrow">Agentic flow</div>'
         + '<div style="margin:var(--space-3) 0 var(--space-6)">' + flowCanvas(a) + "</div>"
 
@@ -92,6 +99,7 @@
         + '<div class="card"><div class="section__eyebrow">Agents used</div><div class="flex flex-wrap gap-2 mt-4">' + chips(a.agents, "agent", "agent.html") + "</div></div>"
         + '<div class="card"><div class="section__eyebrow">Skills used</div><div class="flex flex-wrap gap-2 mt-4">' + chips(a.skills, "skill", "skill.html") + "</div></div>"
         + "</div>";
+      if (live) window.SQLRemDialog.mount(document.getElementById("sr-mount"));
 
       /* ---- Dialog-box renderer (NL Query) ---------------------------- */
       function renderDialog(a, statusChip) {

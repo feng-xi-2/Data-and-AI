@@ -479,10 +479,12 @@ def page_config_health():
     gx, gw = 578, 692
     head = {"fontSize": "10pt", "fontWeight": "bold", "color": NAVY}
     small = {"fontSize": "9pt", "color": GREY}
+    save_how = ("For everyone: Hypercare_KPI_Inputs.xlsx in SharePoint PRIME ELS > Hypercare KPI, tab Alert targets; live after the owner "
+                "republishes." if _OPTS.get("Embed_Inputs", "1") == "1" else
+                "For everyone: Hypercare_KPI_Inputs.xlsx in SharePoint PRIME ELS > Hypercare KPI, tab Alert targets; live at the next refresh.")
     v.append(textbox(p, "in_title", gx, yt, gw, 70, 20,
                      [("2. Alert threshold inputs (applies to every page of this report)", head),
-                      ("Try a value: type a number + Enter - only for you, NOT saved. An empty box shows 0: the value in use is in the right column. "
-                       "To save a target for everyone: inputs file, tab Alert targets.", small)]))
+                      ("Try a value: number + Enter (only you, not saved; value in use on the right). " + save_how, small)]))
     cx = [gx, gx + 200, gx + 322, gx + 444, gx + 566]
     for i, lbl in enumerate(["KPI (unit)", "Target", "Warning at", "Critical at", "In use now"]):
         v.append(textbox(p, f"in_h{i}", cx[i], yt + 72, 196 if i == 0 else 122 if i < 4 else 126, 34, 21 + i, [(lbl, head)]))

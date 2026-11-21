@@ -1,6 +1,6 @@
 # Layout check
 
-`py tools/layout_preview.py` on `dist\_service_test\JAKARTA\WH Hypercare KPI - JAKARTA (TEST).Report\definition` - wireframes in `JAKARTA` (next to the kit, folder _uitest)
+`py tools/layout_preview.py` on `dist\_service\JAKARTA\WH Hypercare KPI - JAKARTA.Report\definition` - wireframes in `JAKARTA` (next to the kit, folder _uitest)
 
 | # | Page | Size | Display | Data visuals | Findings |
 |---|---|---|---|---|---|

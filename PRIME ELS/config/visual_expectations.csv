@@ -13,7 +13,7 @@ Page,Visual,Condition,Reason,Check
 ^Hypercare Cockpit$,(?i)daily health checks,TRUE(),live health checks of the last refresh - no day history (by design),DAY_INSENSITIVE
 ^Hypercare Cockpit$,(?i)production - pallets / h,"MAX(Cfg_Site[Has_Production]) = 0 || COALESCE([Prod Pallets Day], 0) = 0","site without production pallets in PrIME (feature off, or none received in the window): the tile shows the same N/A / no-production state on every day",DAY_INSENSITIVE
 ^Hypercare Cockpit$,(?i)where is the constraint,TRUE(),structural verdict from the live racking / Level A snapshot (not day-based): the same text on every day by design,DAY_INSENSITIVE
-^Hypercare Cockpit$,(?i)where is the constraint,"CONTAINSSTRING([Narrative Verdict], ""no structural constraint"")",every compared site has no structural constraint - the verdict text is the same by design,SAME_FOR_ALL_SITES
+^Hypercare Cockpit$,(?i)where is the constraint,"CONTAINSSTRING([Narrative Verdict], ""no constraint detected"")",every compared site has no constraint - the verdict text is the same by design,SAME_FOR_ALL_SITES
 ^Line RCA & Shifts$,(?i)^production lines,ISEMPTY('Produced Pallet'),no production pallets at these sites: the table shows the same 'no production' state,SAME_FOR_ALL_SITES
 ^Production SAP vs PrIME$,(?i)production explanation action,TRUE(),"action text follows the site's production model and window, not the day",DAY_INSENSITIVE
 ^Config & Health$,(?i)health banner,TRUE(),"live data-trust state of the last refresh (freshness, feeds) - not day-based; the global Day slicer does not change it",DAY_INSENSITIVE

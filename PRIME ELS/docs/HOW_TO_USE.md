@@ -64,10 +64,22 @@ Buttons: **Ctrl + click** in Power BI Desktop, a normal click in the Service. Ev
 
 ## Step 5 – Change an alert target
 
-Open **Hypercare_KPI_Inputs.xlsx** in the PRIME ELS SharePoint folder (*Data Projects → PRIME ELS → Hypercare KPI*), tab **Alert targets**:
-Site = `All sites` for everyone or your site code for your site → Target / Warning at / Critical at → save → tell the hypercare team.
-The targets are **copied into the report file when it is built**, so the file never needs the workbook; the team rebuilds and re-shares
-the file (`py tools/build_pbip.py <SITE>`). Only want to try a value? Config & Health → *Alert threshold inputs* (only for you, not saved).
+**Today (works now):** open **Hypercare_KPI_Inputs.xlsx** in the PRIME ELS SharePoint folder (*Data Projects → PRIME ELS → Hypercare
+KPI*), tab **Alert targets**: Site = `All sites` for everyone or your site code for your site → Target / Warning at / Critical at →
+save → tell the report owner. The targets are **copied into the report when it is published** (faster refresh), so the change shows
+after the owner republishes (`py tools/build_pbip.py <SITE> --service` + `py tools/publish.py ...`). The Config & Health page says
+the same next to the threshold boxes; the table *Thresholds in use for the selected site* shows what is active and its source.
+Only want to try a value? Config & Health → *Alert threshold inputs* (only for you, not saved; the right column shows the value in use).
+
+**Self-service option (tested 21-Nov, waiting for one sign-in):** SharePoint list **Hypercare KPI Targets (TEST)** on the *OSS
+warehousing data and GenAI* site - one row per Site × KPI (23 rows = the workbook tab), number columns for the limits, Direction as a
+Higher / Lower / Band choice, version history shows who changed what. Anyone with edit rights on the site edits a row in the browser;
+Power BI reads the list at every refresh (no republish). To switch it on:
+1. Model owner, once, in Edge: workspace → *Targets List Test (SharePoint)* → Settings → **Data source credentials → Edit
+   credentials → OAuth2 → Sign in** (the pop-up must be allowed). Then *Refresh now* and check the table shows 23 rows.
+2. Report owner: `config/build_options.csv` **Targets_Source = SharePointList** (planned build switch) and republish; the
+   SharePoint data source of the main model is mapped to the same cloud connection next to the replica gateway connection.
+3. Rename the list (drop "(TEST)") and give edit rights only to the people who own targets.
 
 ## Step 6 – Ask Copilot about the KPIs and the action plan
 

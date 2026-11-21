@@ -1,0 +1,6 @@
+Table,Fields,Why
+KPI Scorecard,*,Copilot answer table: one row per site x KPI (value / target / limits / status / forecast / action / owner)
+Site Summary,*,Copilot answer table: one row per site (alert counts / state / constraint / fix order / outlook / data as of)
+Cfg_Site,SiteCode|SiteName|Region|WMS_Version,site filter for the history measures below
+DimDate,Date,day filter for the history measures (one site-local shift day per row)
+_KPI,KPI TTAT In|KPI TTAT Out|KPI GR Time|KPI PPH|Prod Pallets Day|KPI Loc Util|KPI User Productivity|KPI Active Users|User Pallets Moved|Inbound Trucks|Outbound Trucks,history / trend questions by DimDate[Date] and Cfg_Site[SiteCode]

@@ -1,0 +1,2 @@
+// rows of 'WorkLine Activities' in the model for one site (replace the site code)
+EVALUATE ROW("n", CALCULATE(COUNTROWS('WorkLine Activities'), TREATAS({"<SITE>"}, Cfg_Site[SiteCode])) + 0)

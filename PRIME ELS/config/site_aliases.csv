@@ -1,0 +1,7 @@
+SiteCode,Aliases,Note
+BINHDUONG,BD|Bình Dương|Vietnam,"Abbreviation, local spelling, country. Code, name, WH_ID and SAP plant are added automatically; typos are handled by the fuzzy-match rule of copilot_instructions.md"
+MINHANG,MH|Shanghai|Braun Shanghai,
+JAKARTA,JKT|Indonesia,
+AKASHI,AKS|Japan,
+XIQING,XQ|Tianjin,
+ATHENS,ATH|Greece,

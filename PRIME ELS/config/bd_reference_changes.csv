@@ -1,0 +1,11 @@
+Table,Reason
+TTAT,"Intended fixes: one row per trailer (trailer number / carrier move can change during the visit - BD placeholder SDC_xx at check-in -> container at close split the trailer and dropped it); inbound trucks linked to receipts through rcvtrk (about 40 % of BD inbound trailers carry no TRKNUM and were dropped); warehouse scope (wh_id); history bounded from Hypercare_Start"
+Pallet From LTA To Level A,"Intended fix: produced pallet = work-order pallet moving out of the RDT area into storage; the original counted only oprcod LTASTO_* and work orders LIKE '00%' (BD put-away uses UTR / FL_XFR since go-live)"
+Planned Pallet PO,Intended fix: work orders bounded to +-WO_WINDOW_DAYS (the original read every work order ever planned)
+Pallets Location,Intended fix: FIFO dates more than 1 year ahead are keying errors (BD had year 6026) and are blanked; aging is computed only from dates already passed (no negative aging)
+Pallets Movement,"Rolling MOVEMENT_DAYS window (the original read 933k rows since go-live); zone columns returned as text on every engine (PrIME 2014 zones are text) - same values; checked on the same 7 days: original 77,291 vs generated 77,284 rows, 0 differences except 7-8 rows that aged out of the window between the two queries"
+WorkLine Activities,"Live table: rolling DETAIL_DAYS window (original read since go-live); rows arrive / age out between the two queries"
+Shipped Pallet,History bounded from Hypercare_Start - 1 day (the original filtered only after the CTE); live rows may arrive between the two queries
+Pallet cleaned up from bin A,Live table: rows may arrive between the two queries
+Produced Pallet,Live table: rows may arrive between the two queries
+Level A Available Pallet Spot,Intended fix: free spots clamped at 0 (a location committed beyond its capacity showed -1 free spots and reduced the total)

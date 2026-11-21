@@ -1,0 +1,43 @@
+Site,KPI_Key,Pillar_No,Pillar,KPI_Name,Unit,Format,Direction,Target,Warn_Pct,Crit_Pct,Warn_Abs,Crit_Abs,Requires,Basis,Predicted,No_Activity_Text,Source_Note
+*,PPH,1,Production,Pallets per hour (takeaway),plt/h,0.0,Higher,120,0.9,0.8,,,Has_Production,DAY,Y,0 pallets produced,Excel CONFIG Cfg_PPH_Target/Warn/Crit - ASSUMPTION confirm with site ops
+*,RAMP_ATTAIN,1,Production,Day output vs ramp-up plan (pro-rated),%,0%,Higher,1,0.9,0.8,,,Has_Production,DAY,Y,no activity this day,Excel Cfg_Ramp_Warn/Crit; plan = RAMP_DAY_PLAN x elapsed hours / 24
+*,SHIFT_ATTAIN,1,Production,Current shift attainment,%,0%,Higher,1,0.9,0.8,,,Has_Production,DAY,N,no activity this day,Excel Cfg_Shift_Warn/Crit; shift target = PPH target x elapsed shift hours
+*,LINES_IN_ALERT,1,Production,Takeaway lines in alert (down / low / surge),lines,0,Lower,0,,,0.5,4.5,Has_Production,DAY,N,no activity this day,Excel ALERTS rule 4 (>=1 warning; >=5 critical)
+*,TREND_HOURS,1,Production,Consecutive declining hours,h,0,Lower,3,,,2.5,99,Has_Production,DAY,N,no activity this day,Excel Cfg_Trend_Hours (warning only)
+*,RAMP_DAY_PLAN,1,Production,Ramp-up plan pallets per day,plt/day,"#,##0",Info,2880,,,,,Has_Production,DAY,N,no activity this day,Excel Cfg_Ramp_Target (defaults to PPH target x 24) - overwrite with the real ramp-up plan
+*,MIN_BASE,1,Production,Minimum hourly baseline before a line can alert,plt/h,0.0,Info,2,,,,,Has_Production,DAY,N,no activity this day,Excel Cfg_Min_Base
+*,LOOKBACK,1,Production,Baseline look-back window,days,0,Info,14,,,,,Has_Production,DAY,N,no activity this day,Excel Cfg_Lookback
+*,SURGE_FACTOR,1,Production,Surge factor vs baseline,x,0.0,Info,1.5,,,,,Has_Production,DAY,N,no activity this day,Excel LTA_MONITOR!B6
+*,TTAT_IN,2,Inbound,Inbound truck turnaround (check-in to dispatch),min,0,Lower,45,0.1,0.2,,,,DAY,Y,no inbound truck closed this day,Excel Cfg_TTAT_Target - ASSUMPTION confirm SLA
+*,TTAT_IN_MAX,2,Inbound,Worst inbound truck today,min,0,Lower,45,0.1,0.2,,,,DAY,N,no inbound truck closed this day,Excel ALERTS rule 2
+*,GR_TIME,2,Inbound,Goods receipt time (first scan to close),min,0.0,Lower,10,0,0.5,,,,DAY,N,no inbound truck closed this day,Excel Cfg_GR_Target ('GR time 10mins')
+*,TTAT_OUT,3,Outbound,Outbound truck turnaround (check-in to close),min,0,Lower,45,0.1,0.2,,,,DAY,Y,no outbound truck closed this day,Same SLA as inbound until the site sets its own
+*,OUT_LOAD_TIME,3,Outbound,Outbound trailer loading time (loading start to loaded),min,0,Lower,45,0.1,0.2,,,,DAY,N,no outbound load this day,Excel ALERTS rule 16 (Query13)
+*,PICK_A_SPLIT,3,Outbound,% of outbound pallets picked from Level A,%,0%,Band,0.8,,,0.05,0.1,Has_LevelA,DAY,N,no activity this day,Excel Cfg_Pick_A_Target +/- Cfg_Split_Tol
+*,LOC_UTIL,4,Warehouse,Storage location utilisation - live now (occupied / usable),%,0.0%,Lower,0.85,0,0.0588,,,,LIVE,Y,no location snapshot loaded,New - generic for every PrIME site (locmst useflg=1 stoflg=1)
+*,LVLA_UTIL,4,Warehouse,Level A utilisation - live now,%,0.0%,Lower,0.85,0,0.0588,,,Has_LevelA,LIVE,Y,no Level A snapshot loaded,Excel Cfg_Max_UtilA (+5pt = critical)
+*,MIN_SHORT,4,Warehouse,Free SHORT pallet spots (< tall height),locs,0,Higher,10,1,0.5,,,Has_LevelA,LIVE,N,no activity this day,Excel Cfg_Min_Short
+*,MIN_TALL,4,Warehouse,Free TALL pallet spots (>= tall height),locs,0,Higher,10,1,0.5,,,Has_LevelA,LIVE,N,no activity this day,Excel Cfg_Min_Tall
+*,HOFF_IN,4,Warehouse,Pallets staged in HOFF IN,plt,0,Lower,400,0,0.25,,,Has_HOFF,LIVE,N,no activity this day,Excel Cfg_Max_Hoff (x1.25 = critical)
+*,LTA_QUEUE,4,Warehouse,Pallets queued in LTA,plt,0,Lower,10,0,1,,,Has_Production,LIVE,N,no activity this day,Excel Cfg_Max_Queue
+*,IMBALANCE,4,Warehouse,Inbound vs outbound imbalance |In-Out|/In,%,0%,Lower,0.2,0,0.5,,,Has_LevelA,DAY,N,no activity this day,Excel Cfg_Max_Imbal (x1.5 = critical)
+*,STORE_A_SPLIT,4,Warehouse,% of LTA output deposited to Level A,%,0%,Band,0.8,,,0.05,0.1,Has_LevelA,DAY,N,no activity this day,Excel Cfg_Store_A_Target +/- Cfg_Split_Tol
+*,IDLE_A,4,Warehouse,% of Level A blocked by idle stock,%,0%,Lower,0.2,0,1,,,Has_LevelA,LIVE,N,no activity this day,Excel Cfg_Max_Idle_A (x2 = critical)
+*,USER_PROD,5,Users,Pallets moved per active user-hour,plt/user-h,0.0,Higher,20,0.9,0.8,,,,DAY,N,no RF pallet moves this day,New - ASSUMPTION set the site standard
+*,ACTIVE_USERS,5,Users,Active RF users (report day),users,0,Info,0,,,,,,DAY,N,no RF users this day,Information only
+*,DATA_LAG,6,Health,Replica data lag (site-local now - newest dlytrn),min,0,Lower,60,0,1,,,,LIVE,N,replica not loaded,data-replica-latency skill; > 2 h = critical
+*,REFRESH_AGE,6,Health,Hours since last model refresh,h,0.0,Lower,2,0,1,,,,LIVE,N,not refreshed yet,Scheduled refresh should run hourly
+*,HEALTH_FAILS,6,Health,Failed data-health checks,checks,0,Lower,0,,,0.5,0.5,,LIVE,N,no activity this day,Excel ALERTS rule 17 / VALIDATION sheet
+*,SYNC_CAP,1,Production,Sync ratio cap (ratios above are treated as data noise),x,0.0,Info,1.5,,,,,,DAY,N,no activity this day,Original DAX Ratio > 1.5
+*,BUCKET_HOURS,1,Production,Hours per time bucket (Avg pallets/h = bucket total / this),h,0,Info,4,,,,,,DAY,N,no activity this day,"Original DAX DIVIDE(...,4)"
+*,PRED_HORIZON_H,4,Warehouse,Prediction horizon for utilisation forecast,h,0,Info,8,,,,,,DAY,N,no activity this day,One shift ahead
+*,RCA_IDLE_HOURS,1,Production,Idle hours before a line stop is treated as extended (RCA),h,0,Info,3,,,,,,DAY,N,no activity this day,Excel LTA_RCA $G>=3
+*,FORECAST_DAYS,2,Inbound,Days of history for the TTAT trend forecast,days,0,Info,7,,,,,,DAY,N,no activity this day,Linear trend window
+*,FORECAST_MIN_DAYS,2,Inbound,Minimum days with data before a trend is fitted,days,0,Info,3,,,,,,DAY,N,no activity this day,Else 7-day average
+*,RUN_RATE_HOURS,1,Production,Hours in the run-rate window used for the production projection,h,0,Info,3,,,,,,DAY,N,no activity this day,Prediction = pallets + run rate of the last N complete hours x remaining hours
+*,HOUR_VS_BASE,6,Health,Hourly pallets moved vs same-hour baseline (hourly report),x baseline,0%,Higher,1,0.9,0.8,,,,DAY,N,no activity this day,Excel HOURLY_ALERT status (generic: RF pallet moves instead of LTA takeaway)
+*,COMPARE_DAYS,1,Production,SAP vs WMS production comparison window,days,0,Info,7,,,,,,DAY,,,Window of the SAP Production page coverage sentence
+*,WMS_COVERAGE,1,Production,PrIME production pallets as share of SAP FG receipts,%,0%,Higher,0.95,0.9,0.5,,,Has_SAP_Prod,DAY,,,Below Crit_At the SAP page says production is not (yet) received in PrIME
+*,STALE_HOURS,4,Warehouse,"Stale record age in a flow stage (inventory accuracy, not a live blockage)",h,0,Info,72,,,,,,DAY,,,"Process Flow: items waiting longer than this in a stage are listed as STALE records (verify + correct WMS), not as the live blockage"
+*,PM_MIN_CASES,4,Warehouse,Process mining noise floor (cases per hand-off),cases,0,Info,30,,,,,,DAY,,,Process Mining: a hand-off between two steps is shown / ranked only when at least this many distinct pallets / orders / trucks made it (keeps one-off rescans out of the map)
+*,STOCK_OLD_DAYS,4,Warehouse,Old stock age,days,0,Info,30,,,,,,DAY,,,Inventory: pallets whose FIFO / receipt date is older than this count as old stock (rotation / obsolescence check)

@@ -1,0 +1,34 @@
+Table,Basis,Day_Field,Meaning
+Produced Pallet,DAY,shift_date,Pallets leaving the LTA lane / received from work orders per line and hour of the shift day
+Shipped Pallet,DAY,shift_date,Pallets shipped (first LOAD event per LPN) per shift day
+User Activity,DAY,Shift_Date,RF user activity per user and hour; report day = Shift_Date
+TTAT,DAY,Check-in Date,One row per trailer (+ GCAS breakdown); KPIs pick trucks by dispatch (inbound) / close (outbound) time in the shift day
+Outbound TTA,DAY,Close Date,One row per outbound trailer; loading and turnaround times
+Outbound Pallet from Inv,DAY,Day,Outbound pallets allocated per day from Level A vs other locations
+Pallet From LTA To Level A,DAY,Day,Produced pallets put away from the RDT area per day / hour (Level A vs other)
+Pallet cleaned up from bin A,DAY,MOVE_DATE,Pallets moved out of Level A bins
+WorkLine Activities,WINDOW,Date,Work-line transactions of the last DETAIL_DAYS days
+Pallets Movement,WINDOW,txn_time,Every pallet transaction of the last MOVEMENT_DAYS days (detail / trace)
+Location Utilisation,SNAPSHOT,,Storage locations and their occupancy right now (locmst) - does not change with the day slicer
+Level A Available Pallet Spot,SNAPSHOT,,Free Level A spots right now
+Level A Occupied Pallet,SNAPSHOT,,Occupied Level A spots right now
+Pallets Location,SNAPSHOT,,Every pallet in stock right now with its location and aging
+Pallet in Level A not active shipment,SNAPSHOT,,Level A pallets not on an active shipment right now
+Pallet from LTA to short/tall location,SNAPSHOT,,Pallets queued in LTA right now with their target height class
+Pallet From HOFFIN,SNAPSHOT,,Pallets staged in HOFF IN / OUT right now
+Short PO,SNAPSHOT,,Open replenishments for work orders right now
+Data Health,META,,Replica freshness at the last refresh
+Date Refresh,META,,Time of the last refresh
+Planned Pallet PO,PLAN,shift_date,Work-order plan within +-WO_WINDOW_DAYS
+Planned PO RPM Breakdown,PLAN,Planned Start Date,Component (RPM) need per work order within +-WO_WINDOW_DAYS
+SAP Plan PO,PLAN,Slot Shift Date,SAP planned / process orders (Databricks)
+Shipping Market,PLAN,,Shipping destination per FG GCAS (Databricks)
+Pallet Pattern,MASTER,,Footprint (cases per pallet) per GCAS
+RPM Masterdata,MASTER,,RPM material master (files)
+Open Trailers,SNAPSHOT,,"Trucks on site now (checked in, not dispatched) with process stage and minutes in status"
+Shipments,SNAPSHOT,,"Outbound shipments of the last ACT_DAYS days with WMS status, open flag and minutes in status"
+Pallets In Flow,SNAPSHOT,,Pallets in a non-storage process stage now with minutes since the last move
+SAP Production,DAY,Posting_Date,"SAP FG goods receipts (MATDOC 101 / 102) per plant, posting day and material"
+Process Edges,WINDOW,,Process mining: directly-follows edges (pallet / order / truck) measured over the last MOVEMENT_DAYS days - does not change with the day slicer
+Inventory,SNAPSHOT,,"All pallets in stock now (finished goods and materials) by area, location class, status and age band"
+Truck Staging,WINDOW,,One row per truck x staging / receiving lane (last DETAIL_DAYS days): dock and pallets per lane

@@ -1,0 +1,20 @@
+Direction,Status_Code,Stage_Key,Note
+Inbound,OR,T_IN_YARD,Open For Receiving (checked in at the gate)
+Inbound,CI,T_IN_YARD,Checked In
+Inbound,PFL,T_IN_YARD,Pending from Location (yard move)
+Inbound,PTL,T_IN_YARD,Pending to Location (yard move)
+Inbound,R,T_IN_UNLOAD,Receiving
+Inbound,UNLD,T_IN_UNLOAD,Unloading
+Inbound,SUSP,T_IN_UNLOAD,Suspended (receiving interrupted)
+Inbound,C,T_IN_CLOSE,Closed - not dispatched
+Inbound,P,T_IN_CLOSE,Pend Dispatch
+Outbound,O,T_OUT_YARD,Open For Shipping
+Outbound,OLDG,T_OUT_YARD,Open For Loading
+Outbound,CI,T_OUT_YARD,Checked In
+Outbound,PFL,T_OUT_YARD,Pending from Location (yard move)
+Outbound,PTL,T_OUT_YARD,Pending to Location (yard move)
+Outbound,LDG,T_OUT_LOAD,Loading
+Outbound,SUSP,T_OUT_LOAD,Suspended (loading interrupted)
+Outbound,L,T_OUT_CLOSE,Loaded
+Outbound,C,T_OUT_CLOSE,Closed - not dispatched
+Outbound,P,T_OUT_CLOSE,Pend Dispatch

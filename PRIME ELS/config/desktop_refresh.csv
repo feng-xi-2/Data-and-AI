@@ -1,0 +1,5 @@
+Setting,Value,Why
+Quiet_From_Hour,8,"Office hours on the PC that runs the scheduled task (local clock): no automatic refresh of the open Power BI Desktop report from this hour - no 'Working on it' box while you work"
+Quiet_To_Hour,19,"Automatic Desktop refresh resumes at this hour (the 30-min cycle and the daily full load at night are unchanged); the published Service report keeps refreshing all day"
+Snapshot_Hour_1,7,"The scheduled task saves the all-sites report WITH its data as a .pbix and uploads it to SharePoint (PRIME ELS / Hypercare KPI) after this hour's refresh (PC clock) - new users open that file, no refresh needed. It opens the file itself when Desktop is closed"
+Snapshot_Hour_2,19,"Second daily copy (PC clock); 07:00 + 19:00 SGT = morning in Asia, midday in Europe. -1 = off"

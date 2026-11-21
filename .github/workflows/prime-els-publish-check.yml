@@ -1,0 +1,29 @@
+name: PRIME ELS publish check
+
+# Blocks a merge when the public PRIME ELS kit could expose a secret, a token, user access information or an internal host.
+# Same scan as tools/export_public.py runs locally before anything is copied here.
+on:
+  pull_request:
+    paths:
+      - "PRIME ELS/**"
+      - ".github/workflows/prime-els-publish-check.yml"
+  push:
+    branches: [main]
+    paths:
+      - "PRIME ELS/**"
+
+permissions:
+  contents: read
+
+jobs:
+  publish-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: No secret, token, user access info or internal host
+        run: python "PRIME ELS/tools/check_publish.py" "PRIME ELS"
+      - name: Python sources compile
+        run: python -m compileall -q "PRIME ELS/tools" "PRIME ELS/skill" "PRIME ELS/theme"

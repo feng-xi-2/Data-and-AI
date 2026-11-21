@@ -1,0 +1,2 @@
+// rows of 'TTAT' in the model for one site (replace the site code)
+EVALUATE ROW("n", CALCULATE(COUNTROWS('TTAT'), TREATAS({"<SITE>"}, Cfg_Site[SiteCode])) + 0)

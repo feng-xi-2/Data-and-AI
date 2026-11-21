@@ -1,0 +1,4 @@
+Table,Hour_Expr,Day_Column,Note
+User Activity,'User Activity'[Activity_Hour],Shift_Date,RF pallet moves per user and clock hour
+Produced Pallet,VALUE('Produced Pallet'[ReportHour]),shift_date,produced pallets per line and clock hour (ReportHour = text 00-23)
+Shipped Pallet,'Shipped Pallet'[Hour],shift_date,pallet events per clock hour

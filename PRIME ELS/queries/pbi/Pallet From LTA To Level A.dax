@@ -1,0 +1,2 @@
+// rows of 'Pallet From LTA To Level A' in the model for one site (replace the site code)
+EVALUATE ROW("n", CALCULATE(COUNTROWS('Pallet From LTA To Level A'), TREATAS({"<SITE>"}, Cfg_Site[SiteCode])) + 0)

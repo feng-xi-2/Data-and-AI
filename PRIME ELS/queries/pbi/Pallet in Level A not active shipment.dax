@@ -1,0 +1,2 @@
+// rows of 'Pallet in Level A not active shipment' in the model for one site (replace the site code)
+EVALUATE ROW("n", CALCULATE(COUNTROWS('Pallet in Level A not active shipment'), TREATAS({"<SITE>"}, Cfg_Site[SiteCode])) + 0)

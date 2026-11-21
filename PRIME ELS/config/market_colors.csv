@@ -1,0 +1,11 @@
+Market,Market_Name,Color
+JP,Japan,#FFADAD
+MY,Malaysia,#FFD6A5
+AU,Australia,#FDFFB6
+TH,Thailand,#CAFFBF
+SG,Singapore,#9BF6FF
+KR,Korea,#A0C4FF
+VN,Vietnam,#BDB2FF
+PH,Philippines,#FFC6FF
+*MULTI,Multiple markets,#BFBFBF
+*UNMAPPED,New / unmapped market,#FF00FF

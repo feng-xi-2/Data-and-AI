@@ -1,0 +1,11 @@
+Band_No,Band,From_Min,To_Min,Note
+1,< 30 min,0,30,Shared time bands: TTAT distribution (Trucks page) and time-in-stage heat maps (Process Flow / Pallet Flow / Orders)
+2,30-60 min,30,60,
+3,1-1.5 h,60,90,
+4,1.5-2 h,90,120,
+5,2-3 h,120,180,
+6,3-4 h,180,240,
+7,4-8 h,240,480,
+8,8-24 h,480,1440,
+9,1-3 days,1440,4320,
+10,> 3 days,4320,10000000,

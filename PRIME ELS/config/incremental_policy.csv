@@ -1,0 +1,6 @@
+Table,Date_Column,Anchor,Recent_Days,Service_Window,Why
+Pallets Movement,d.trndte,"AND d.trndte >= DATEADD(DAY, -{MOVEMENT_DAYS}, GETDATE())",2,MOVEMENT_DAYS,One row per WMS transaction (immutable once written) - largest table (Xiqing 491k rows / 92 s full vs 17 s recent)
+WorkLine Activities,d.trndte,"ELSE DATEADD(DAY, -{DETAIL_DAYS}, GETDATE()) END",2,DETAIL_DAYS,One row per work-line transaction (immutable)
+User Activity,d.trndte,"WHERE d.trndte >= DATEADD(DAY, -{ACT_DAYS}, GETDATE())",2,ACT_DAYS,Grouped by day + hour of the transaction - a midnight boundary never splits a group
+Pallet From LTA To Level A,a.trndte,"WHERE a.trndte >= '{START_DT}'",2,HYPERCARE,Grouped by day + hour of the put-away (a) - receipt (b) may be older; rescanned since go-live every 15 min before
+Pallet cleaned up from bin A,b.trndte,and b.trndte >= a.trndte,2,HYPERCARE,One row per final move (b) - the Level A pick (a) may be older

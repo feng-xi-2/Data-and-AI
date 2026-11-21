@@ -1,0 +1,104 @@
+Pattern,Meaning
+(?i)^Cfg_Site\|WMS(_Version)?$,Site setting: WMS generation of the replica - PrIME 2014 (schema prodwms) or PrIME 2022 (schema dbo)
+(?i)^Cfg_Site\|WH_ID$,Site setting: warehouse id inside the replica the report reads (a replica can hold several warehouses)
+(?i)^Cfg_Site\|UTC_Offset_h$,Site setting: hours the site clock is ahead of UTC - the report day and 'today' use site-local time
+(?i)^Cfg_Site\|Shift[123]_Start$,Site setting: start hour (site-local) of that shift; Shift1_Start also starts the report (shift) day
+(?i)^Cfg_Site\|ShiftDay_Start_Min$,Site setting: minute after midnight the report (shift) day starts (390 = 06:30)
+(?i)^Cfg_Site\|Hypercare_Start$,Site setting: go-live / hypercare start date - history before it is not counted
+(?i)^Cfg_Site\|Has_Production$,Site setting: 1 = the site produces pallets (production KPIs on); 0 = DC only (production shows N/A)
+(?i)^Cfg_Site\|Prod_Model$,"Site setting: how a produced pallet is counted - WO = work-order receipt, LTA = pallet leaving the line take-away lane"
+(?i)^Cfg_Site\|PROD_,Site setting: SQL condition / scope used to count produced pallets for this site (from the site profile)
+(?i)^Cfg_Site\|OPR_LTA_STORE$,Site setting: operation code of the put-away from the line take-away lane to storage
+(?i)^Cfg_Site\|LOC_LTA$,Site setting: location pattern of the line take-away (LTA) lanes where finished pallets leave production
+(?i)^Cfg_Site\|LOC_PROD_SUPPLY$,Site setting: location pattern of the line supply locations (materials delivered to the lines)
+(?i)^Cfg_Site\|LOC_PROD_CHECKIN$,Site setting: production check-in location (BD line feature)
+(?i)^Cfg_Site\|Has_LevelA$,Site setting: 1 = the site uses ground-level (Level A) pick faces; 0 = Level A visuals show N/A
+(?i)^Cfg_Site\|(AREA_LEVEL_A_PICK|LOC_LEVEL_A|A_LOCATION)$,Site setting: area / location pattern of the Level A (ground-level) pick faces
+(?i)^Cfg_Site\|AREA_RDTS$,Site setting: area pattern of the RF / forklift 'in transit' area (pallet on a truck or forklift between two locations)
+(?i)^Cfg_Site\|Has_HOFF$,Site setting: 1 = production hands pallets over through hand-off (HOFF) lanes
+(?i)^Cfg_Site\|LOC_HOFF_(IN|OUT)$,Site setting: location of the production hand-off lane (IN = into the lane / OUT = out of it)
+(?i)^Cfg_Site\|LOC_PROBLEM$,Site setting: problem / quarantine locations - pallets there count as 'blocked'
+(?i)^Cfg_Site\|LOC_RETURN$,Site setting: return locations
+(?i)^Cfg_Site\|AREA_RCV_(STAGE|DOCK)$,Site setting: receiving area where inbound pallets land (stage or dock)
+(?i)^Cfg_Site\|LOC_DOOR_PATTERN$,Site setting: door locations pallets are moved to before loading (the LOAD step of shipped pallets)
+(?i)^Cfg_Site\|LOC_TRAILER$,Site setting: trailer / yard locations
+(?i)^Cfg_Site\|LOC_EOL,Site setting: end-of-line locations (BD line feature)
+(?i)^Cfg_Site\|LOC_TYPE|LOC_TYP_JOIN$,Site setting: how location types are read from the replica (2014 vs 2022 tables)
+(?i)^Cfg_Site\|FG_PRTNUM_LIKE$,Site setting: part-number pattern of finished goods - only these count as produced pallets
+(?i)^Cfg_Site\|(PRTDSC|DSC)_LOCALE$,Site setting: language of the part / location descriptions read from the replica
+(?i)^Cfg_Site\|USR_EXCLUDE$,Site setting: user ids kept out of user productivity (robots / interfaces / system users)
+(?i)^Cfg_Site\|ROBOT_TXN_PER_HOUR$,Site setting: transactions per hour above which a user id is treated as a robot / interface
+(?i)^Cfg_Site\|ZONES_EXCL_(PICK|BIN)$,Site setting: storage zones not counted in location utilisation (e.g. RPM / QA)
+(?i)^Cfg_Site\|(STO_ZONE_JOIN|ZONE_COL)$,Site setting: how storage zones are joined in the replica (2014 vs 2022 tables)
+(?i)^Cfg_Site\|TALL_HEIGHT_CM$,Site setting: pallet height (cm) above which a pallet / location counts as tall
+(?i)^Cfg_Site\|(LT_LINE_COND|LT_RCV_COND|LT_SHIP_COND|PROD_ARRIVED_COND|PROD_LEFT_COND|TTAT_IN_RCPT_COND|TTAT_IN_SRC|LTA_Source)$,Site setting: SQL condition the site profile chose for this step (which transactions count)
+(?i)^Cfg_Site\|(ACT_DAYS|DETAIL_DAYS|MOVEMENT_DAYS|WO_WINDOW_DAYS|CAL_FUTURE_DAYS)$,Site setting: days of history loaded for that table group (larger = slower refresh)
+(?i)^Cfg_Site\|(SAP_Plant|Has_SAP_Prod|Has_SAP_Plan|SAP_PALLET_UOM)$,Site setting: SAP plant / SAP production plan link (CDL) - off when the SAP option is off
+(?i)^Cfg_Site\|(Has_RPM_Master|RPM_.*|CTMZ_LINE|WORKSTATION_LTA|PROD_SCOPE)$,Site setting: BD line feature (RPM master data / customisation line / LTA workstation)
+(?i)^Cfg_Site\|(Databricks_Host|Databricks_HttpPath)$,Site setting: Databricks (CDL) endpoint for the SAP plan - used only when the SAP option is on
+(?i)^Cfg_Site\|(ReplicaServer|ReplicaDatabase|Gateway_Connection)$,Site setting: data replica server / database / Power BI gateway connection the site's data comes from
+(?i)^Cfg_Site\|Config_Status$,Site setting: state of the site's setup - NEW / AUTO-PROFILED / VALIDATED / NOT LIVE YET
+(?i)^Cfg_Site\|(Is_Default)$,Site setting: 1 = the site the report opens on
+(?i)^Cfg_Site\|(SiteCode|SiteName|Region|Site)$,"Site identity: short code, display name and region of the warehouse"
+(?i)\|(lodnum|LPN|Pallet LPN|Pallet|to_lodnum)$,"Pallet id (LPN / load number, WMS lodnum) - one physical pallet"
+(?i)\|(subnum)$,Case / sub-load id inside a pallet (WMS subnum)
+(?i)\|(dtlnum)$,Detail id of the inventory line on the pallet (WMS dtlnum)
+(?i)\|(prtnum|GCAS|fg_gcas|FG_GCAS|FG GCAS|material_gcas|Material|Material No\.|Component_GCAS|Item)$,"Product / material code (P&G GCAS, WMS prtnum)"
+(?i)\|(FG[ _]Description|FG_DESCRIPTION|MATERIAL_DESCRIPTION|material_desc|Component_Description|PCDescription|Description|description)$,Product / material description text
+(?i)\|(stoloc|Location|from_loc|to_loc|Dest Location|DESTINATION_LOC|FINAL_LOCATION|WH_LOCATION|Staging Lane|Dock|Dock ID|Door / Yard)$,"Warehouse location (WMS stoloc): storage bin, lane, door or dock"
+(?i)\|(from_area|to_area|Area|Lane Area)$,"Warehouse area (WMS arecod) of the location: storage, staging, RF transit, production, ..."
+(?i)\|(from_zone|to_zone|Zone)$,Storage zone of the location
+(?i)\|(trndte|txn_time|Activity_Date|MOVE_DATE|LAST_ACTION_TIME|REQUEST_ACTION_TIME|received_dte|last_move_dte|newdte)$,"Date-time of the WMS transaction (site-local time, from dlytrn.trndte)"
+(?i)\|(fifo_dte|FIFO_DATE)$,FIFO date of the inventory (used for stock age)
+(?i)\|(actcod|Activity_Code|Activity|Action)$,"WMS activity code of the transaction (e.g. RCV receive, PCK pick, LOAD load, MOVE move)"
+(?i)\|(oprcod|Operation)$,WMS operation code of the transaction (the RF screen / task that created it)
+(?i)\|(Actcod_List|Oprcod_List)$,List of WMS activity / operation codes that make up this step
+(?i)\|(usr_id|UserId|User_Id|Operator|LAST_ACTION_BY|REQUEST_BY|Changed_By)$,WMS user id (RF operator) who did the transaction
+(?i)\|(devcod)$,RF device id used for the transaction
+(?i)\|(trnqty|Qty_BUoM|Qty \(BUOM\)|ONHAND_QTY_BUOM|consumed_qty|delivered_qty|required_qty|Available_qty)$,Quantity in base units of measure (BUOM)
+(?i)\|(untpal|qty_per_pallet|mat_qty_per_pallet|Quantity per Pallet|cases_per_pallet|fg_cases_per_pallet|FG_Cases_Per_Pallet|UOMperPallet_EXWH|UOMperPlt_BDWH)$,Units (or cases) on one full pallet - converts quantities to pallets
+(?i)\|(uomcod|UOM|Unit)$,Unit of measure code
+(?i)\|(WRK_ORDER|work_order|Work Order|Work Order Line)$,Production work order (WMS wkonum) - one production run on a line
+(?i)\|(WO_STATUS)$,Status of the production work order
+(?i)\|(Line|Prod_Line|Production Line|PRODUCT_LINE|product_line|CTMZ_LINE)$,Production line
+(?i)\|(Trailer Code|Trailer Number|TrailerID|Truck Number|Load)$,Truck / trailer id (WMS trlr_num / carrier move)
+(?i)\|(Shipment)$,Shipment id (outbound order to a customer)
+(?i)\|(Carrier)$,Carrier (transport company) of the truck
+(?i)\|(Check-in|Check-in Date)$,Time the truck checked in at the gate (start of TTAT)
+(?i)\|(Close|Close Date|Transport Equipment Close|Dispatch|Dispatch Date)$,Time the truck was closed / dispatched (end of outbound TTAT)
+(?i)\|(Start Loading|First Scan / Start Loading|First Pallet)$,Time of the first pallet loaded / received on the truck
+(?i)\|(End Loading|Last Pallet)$,Time of the last pallet loaded / received on the truck
+(?i)\|TTAT,"Truck turn-around time = check-in to close (outbound) or check-in to last receipt (inbound); BD definition: only trucks with pallets"
+(?i)\|(INV_STATUS|Inv Status|Status Code)$,Inventory status of the pallet (e.g. available / hold / quarantine)
+(?i)\|(shift_date|Shift_Date|Shift Date|Report Day|ReportDate)$,"Report (shift) day: the day starts at the site's first shift start (Cfg_Site.Shift1_Start), not midnight"
+(?i)\|(Shift|Shift_No|Shift Number|Shift Name|Parent Shift)$,Shift of the shift day (1 / 2 / 3 by the site's shift start hours)
+(?i)\|(Hour|Hour_Of_Day|Hour Of Day|Activity_Hour|ReportHour|Shift Hour)$,Hour of the day (site-local) of the activity
+(?i)\|(Site|SiteCode|Site Name|SiteName)$,Warehouse site (one row per site in a multi-site model; the Site slicer filters it)
+(?i)\|(Pallets|PALLETS|Pallets_Moved|pallet_equiv)$,Number of pallets
+(?i)\|(Transactions)$,Number of WMS transactions
+(?i)\|(Minutes In Location|Min in Location|Minutes In Status|Minutes On Site|Minutes Since Created|Age_Min|AGING_MINUTES|Aging \(Min\)|total_minutes|min_since_prev_txn|overlap_minutes)$,Elapsed time in minutes
+(?i)\|(KPI|KPI_Name|KPI Key|KPI_Key)$,"KPI name / key (PPH, TTAT_IN, TTAT_OUT, LOC_UTIL, USER_PROD, ...) - see Cfg_KpiExplain for how each is calculated"
+(?i)\|(Target|Target Text)$,KPI target for the site (Alert targets tab of the inputs file; All-sites row = BD default)
+(?i)\|(Warn_.*|Warning_At|Warning Limit|Warn_At)$,"KPI warning limit - beyond it the KPI turns amber (WARNING)"
+(?i)\|(Crit_.*|Critical_At|Critical Limit|Crit_At)$,"KPI critical limit - beyond it the KPI turns red (CRITICAL)"
+(?i)\|(Status|Forecast Status|Overall State)$,"Status against the limits: OK / WARNING / CRITICAL; NO DATA = no activity; N/A = the site has no such process"
+(?i)\|(Actual|Actual Text)$,KPI value of the report day (today = so far)
+(?i)\|(Predicted|Forecast End Of Day|Forecast Text|Production Outlook)$,End-of-day forecast of the KPI from the run rate / trend
+(?i)\|(Recommended Action|Recommended_Action|Action Plan|What To Check|Insight_If_Breached|Meaning If Breached)$,What to do when the KPI is off target - the owner and first check
+(?i)\|(How Calculated|How_Calculated|Numbers|Numbers Behind|Prediction_Method|Diagnosis|Likely_Cause)$,Plain-language explanation of the KPI calculation / diagnosis (from config/kpi_explain.csv)
+(?i)\|(Data As Of|LAST_REFRESHED|Last Refresh DateTime|Db_Utc_Now|Snapshot)$,Time the data was last read from the replica
+(?i)\|(dlytrn_id)$,Id of the WMS transaction row (dlytrn) - unique per transaction
+(?i)\|(frinvs|toinvs)$,Inventory status before (frinvs) / after (toinvs) the transaction
+(?i)\|(reacod)$,Reason code entered with the transaction (adjustments / holds)
+(?i)\|(movref)$,Move reference of the transaction (links the steps of one move)
+(?i)\|(ftpcod)$,Footprint code of the product (pallet / case dimensions master data)
+(?i)\|(cmnt)$,Free-text comment on the transaction
+(?i)\|(Direction)$,Inbound (truck delivers) or outbound (truck ships)
+(?i)\|(Move_Class|Edge_Kind|Flow_Role|Counts_As_Move)$,"Process step class of the move (receive, put-away, replenish, pick, load, ...) from config/movement_classes.csv"
+(?i)\|(From_Step|To_Step|Stage|Stage_Key)$,"Process step of the warehouse flow (config/process_stages.csv: receive, storage, line supply, production, shipping)"
+(?i)\|(Height_Class|height_category|Level_Class|Location_Class|Location Class|LEVEL_TYPE)$,"Location / pallet class: Level A (ground pick face), short or tall storage, staging, ..."
+(?i)\|(Age_Band|Aging Bucket|Band|Bucket|Bucket_4h)$,Time band the row falls into (for grouping / colouring)
+(?i)\|(Page|Page_Key|Visual|Field)$,Report page / visual / field the guide row explains
+(?i)\|(Setting|Value|Tier|Every_Minutes)$,Configuration item and its value (shown on Config & Health)
+(?i)\|(Date|Day)$,Calendar date
+(?i)^Dim,"Calendar / time attribute for slicing (date, week, month, hour, shift bucket)"

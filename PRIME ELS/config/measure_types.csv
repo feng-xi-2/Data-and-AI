@@ -1,0 +1,623 @@
+Measure,DataType
+Active Users Prev,6
+Active Users Prev (strip),6
+Alert Action,2
+Alert Actual,2
+Alert Detail Text,2
+Alert Insight,2
+Alert Numbers,2
+Alert Predicted,2
+Alert Status,2
+Alert Status Color,2
+Alert Status Label,2
+Alert Threshold,2
+Alert Why,2
+Alerts Critical,6
+Alerts Warning,6
+Area Moves Day,6
+Avg Process Time (hh:mm),2
+Avg Prod Plt/h,8
+Avg Shipped Plt/h,8
+Avg TTAT (hh:mm),2
+Band Cell Color,2
+Band Items,6
+Band Trucks In,6
+Band Trucks Out,6
+Card GR_TIME Avg Prior,2
+Card GR_TIME Color,2
+Card GR_TIME Limits,2
+Card GR_TIME Name,2
+Card GR_TIME Predicted,2
+Card GR_TIME Prev,2
+Card GR_TIME Status,2
+Card GR_TIME Target,2
+Card GR_TIME Value,2
+Card HEALTH_FAILS Avg Prior,2
+Card HEALTH_FAILS Color,2
+Card HEALTH_FAILS Limits,2
+Card HEALTH_FAILS Name,2
+Card HEALTH_FAILS Predicted,2
+Card HEALTH_FAILS Prev,2
+Card HEALTH_FAILS Status,2
+Card HEALTH_FAILS Target,2
+Card HEALTH_FAILS Value,2
+Card LOC_UTIL Avg Prior,2
+Card LOC_UTIL Color,2
+Card LOC_UTIL Limits,2
+Card LOC_UTIL Name,2
+Card LOC_UTIL Predicted,2
+Card LOC_UTIL Prev,2
+Card LOC_UTIL Status,2
+Card LOC_UTIL Target,2
+Card LOC_UTIL Value,2
+Card LVLA_UTIL Avg Prior,2
+Card LVLA_UTIL Color,2
+Card LVLA_UTIL Limits,2
+Card LVLA_UTIL Name,2
+Card LVLA_UTIL Predicted,2
+Card LVLA_UTIL Prev,2
+Card LVLA_UTIL Status,2
+Card LVLA_UTIL Target,2
+Card LVLA_UTIL Value,2
+Card PPH Avg Prior,2
+Card PPH Color,2
+Card PPH Limits,2
+Card PPH Name,2
+Card PPH Predicted,2
+Card PPH Prev,2
+Card PPH Status,2
+Card PPH Target,2
+Card PPH Value,2
+Card TTAT_IN Avg Prior,2
+Card TTAT_IN Color,2
+Card TTAT_IN Limits,2
+Card TTAT_IN Name,2
+Card TTAT_IN Predicted,2
+Card TTAT_IN Prev,2
+Card TTAT_IN Status,2
+Card TTAT_IN Target,2
+Card TTAT_IN Value,2
+Card TTAT_OUT Avg Prior,2
+Card TTAT_OUT Color,2
+Card TTAT_OUT Limits,2
+Card TTAT_OUT Name,2
+Card TTAT_OUT Predicted,2
+Card TTAT_OUT Prev,2
+Card TTAT_OUT Status,2
+Card TTAT_OUT Target,2
+Card TTAT_OUT Value,2
+Card USER_PROD Avg Prior,2
+Card USER_PROD Color,2
+Card USER_PROD Limits,2
+Card USER_PROD Name,2
+Card USER_PROD Predicted,2
+Card USER_PROD Prev,2
+Card USER_PROD Status,2
+Card USER_PROD Target,2
+Card USER_PROD Value,2
+Cfg Bucket Hours,8
+Cfg Sync Cap,8
+Clean Up BinA to BinUp,6
+Constraint HOFF Backlog,11
+Constraint LevelA Congested,11
+Constraint Short Blocked,11
+Cumulative Delta,6
+DQ Last Refresh,2
+Daily Predicted,2
+Daily Status,2
+Daily Target,2
+Daily Value,2
+Daily_% Prod/Plan Sync,8
+Daily_% Ship/Prod Sync,8
+Daily_Planned Pallets,8
+Daily_Produced Pallets,6
+Daily_Shipped Pallets,6
+Daily_螖 Prod-Plan,8
+Daily_螖 Ship-Prod,6
+Dashboard Title,2
+Data As Of,2
+Data Last Txn,9
+Data Snapshot UTC,9
+Elapsed Hours,8
+Feature HOFF,6
+Feature LevelA,6
+Feature Production,6
+Feature RPM,6
+Feature SAP Plan,6
+Feature SAP Prod,6
+Feed Fill,2
+Feed Last Event,9
+Feed Rows 24h,6
+Flow In Pallets Day,6
+Flow Items Critical,6
+Flow Items Critical (strip),6
+Flow Items Stale,6
+Flow Items Stale (strip),6
+Flow Items Waiting,6
+Flow Items Waiting (strip),6
+Flow Items Warning,6
+Flow Items Warning (strip),6
+Flow Net Per Hour,8
+Flow Out Pallets Day,6
+Flow Snapshot,9
+Flow Snapshot Label,2
+Flow Verdict,2
+Gantt First Checkin,9
+Gantt Note,2
+Gantt Start Min,8
+HOFF OUT Total,6
+HOFF_FG_Pallet,6
+HOFF_PM_Pallet,6
+Health Banner,2
+Health Check Applicable,11
+Health Check Rule,2
+Health Check Status,2
+Health Check Value,8
+Health Check Value Text,2
+Health Checks Run,6
+Hour Active Users,6
+Hour Baseline,8
+Hour In Window,6
+Hour Inbound Done,6
+Hour Inbound Done TTAT,8
+Hour Inbound TTAT,8
+Hour Inbound Trucks,6
+Hour Moves Baseline,8
+Hour Moves vs Baseline,8
+Hour Outbound Loads,6
+Hour Outbound TTAT,8
+Hour Pallets,6
+Hour Pallets Moved,6
+Hour Pallets Per User,8
+Hour Productivity Color,2
+Hour Productivity Font,2
+Hour Productivity Status,2
+Hour Productivity Target,8
+Hour Status,2
+Hour Status Color,2
+Hour Status Label,2
+Hour Users Below,6
+Hour Verdict,2
+Hour Verdict Key,2
+Hour vs Baseline,8
+Hourly Scan Summary,2
+Inbound Trucks,6
+Inbound Trucks (strip),6
+Inbound Trucks Prev,6
+Inbound Trucks Prev (strip),6
+Input LOC_UTIL Crit,8
+Input LOC_UTIL Target,8
+Input LOC_UTIL Warn,8
+Input PPH Crit,8
+Input PPH Target,8
+Input PPH Warn,8
+Input TTAT_IN Crit,8
+Input TTAT_IN Target,8
+Input TTAT_IN Warn,8
+Input TTAT_OUT Crit,8
+Input TTAT_OUT Target,8
+Input TTAT_OUT Warn,8
+Input USER_PROD Crit,8
+Input USER_PROD Target,8
+Input USER_PROD Warn,8
+Inv Band FG Pallets,6
+Inv Band Material Pallets,6
+Inv FG Pallets,6
+Inv FG Pallets (strip),6
+Inv Material Pallets,6
+Inv Material Pallets (strip),6
+Inv Max Age Days,6
+Inv Old Action,2
+Inv Old Cause,2
+Inv Old Pallets,6
+Inv Old Pallets (strip),6
+Inv Old Pallets Row,6
+Inv Old Row All Pallets,6
+Inv Old Row Max Age,6
+Inv Old Rule Text,2
+Inv Old Share,8
+Inv Old Share (strip),8
+Inv Pallets,6
+Inv Pallets (strip),6
+Inv Pallets Cell,6
+Item Action,2
+Item Age,2
+Item Age Min,6
+Item Over Warn,6
+Item Stale,6
+Item Status,2
+Item Status Color,2
+Item Status Label,2
+KPI Active Users,6
+KPI Active Users (strip),6
+KPI Actual,8
+KPI Actual Live,8
+KPI Actual Text,2
+KPI Applicable,11
+KPI Avg Prior Text,2
+KPI Avg Prior Value,8
+KPI Data Lag Min,8
+KPI Diagnosis,2
+KPI Free Short,8
+KPI Free Tall,8
+KPI GR Time,8
+KPI HOFF In,6
+KPI Health Fails,6
+KPI How Text,2
+KPI Idle A,8
+KPI Imbalance,8
+KPI LTA Queue,6
+KPI LevelA Util,8
+KPI LevelA Util Predicted,8
+KPI Limits Short,2
+KPI Lines In Alert,6
+KPI Lines In Alert (strip),6
+KPI Loc Util,8
+KPI Loc Util (strip),8
+KPI Loc Util Predicted,8
+KPI Numbers Text,2
+KPI Out Load Time,8
+KPI PPH,8
+KPI PPH (strip),8
+KPI PPH Predicted,8
+KPI Pick A Split,8
+KPI Predicted,8
+KPI Predicted Live,8
+KPI Predicted Status,2
+KPI Predicted Status Color,2
+KPI Predicted Status Label,2
+KPI Predicted Summary,2
+KPI Predicted Text,2
+KPI Prediction Method,2
+KPI Prev Text,2
+KPI Prev Value,8
+KPI Ramp Attain,8
+KPI Ramp Attain Predicted,8
+KPI Refresh Age h,8
+KPI Shift Attain,8
+KPI Show,6
+KPI Snap Ok,11
+KPI Status,2
+KPI Status Color,2
+KPI Status Label,2
+KPI Store A Split,8
+KPI TTAT In,8
+KPI TTAT In (strip),8
+KPI TTAT In Max,6
+KPI TTAT In Predicted,8
+KPI TTAT In Prev,8
+KPI TTAT In Prev (strip),8
+KPI TTAT Out,8
+KPI TTAT Out (strip),8
+KPI TTAT Out Predicted,8
+KPI TTAT Out Prev,8
+KPI TTAT Out Prev (strip),8
+KPI Target Short,2
+KPI Target Text,2
+KPI Trend Hours,6
+KPI Unit Suffix,2
+KPI User Productivity,8
+KPI User Productivity (strip),8
+KPI WMS Coverage,8
+KPI WMS Coverage (strip),8
+KPI Why Text,2
+LTA_Pallet to Short,6
+LTA_Pallet to Tall,6
+LTA_to Level A,6
+LTA_to NonLevel A,6
+LTA_toLevelOther,6
+Last Activity Text,2
+Last Pallet Move,9
+Last Production Pallet,9
+Last Refresh Site,9
+Last Refresh Time,2
+Last SAP Receipt Day,9
+Last Truck Closed,9
+LevelA Free Spots,8
+LevelA Idle Locations,6
+LevelA In Day,6
+LevelA Locations,6
+LevelA Other Day,6
+LevelA_Empty Pallet Spot Short,8
+LevelA_Empty Pallet Spot Tall,8
+LevelA_Occupied FG,6
+LevelA_Occupied PM,6
+LevelA_Plt wo Active Shipment,6
+Line Action,2
+Line Baseline Same Hr,8
+Line Day Pallets,6
+Line Day vs Baseline,8
+Line Hour Pallets,6
+Line Hours Idle,6
+Line Last Output Hour,6
+Line Latest Hr Pallets,6
+Line RCA Key,2
+Line Root Cause,2
+Line Status,2
+Line Variance,8
+Loc Area Occupied,6
+Loc Area Util,8
+Loc Free,6
+Loc Free (strip),6
+Loc Locations,6
+Loc Occupied,6
+Lookback Text,2
+Market Color,2
+Market Count,6
+Market Flag,2
+Market Legend Color,2
+Moves Day Trend,6
+Moves Hour,6
+Narrative Fix Order,2
+Narrative Production Outlook,2
+Narrative Verdict,2
+Next Refresh Site,8
+Now Site,9
+Open Alert Action,2
+Open Alert Actual,2
+Open Alert Rank,6
+Open Alert Status,2
+Open Alert Text,2
+Orders Flow Text,2
+Orders Flow Used,11
+Out Alloc LevelA,6
+Out Alloc Other,6
+Outbound Loads,6
+Outbound Pallets Shipped,6
+Outbound Trucks,6
+Outbound Trucks (strip),6
+Outbound Trucks Prev,6
+Outbound Trucks Prev (strip),6
+Outbound_Level A %,8
+Outbound_Picked From Level A,6
+Outbound_Picked From None Level A,6
+Overall Alert State,2
+PM Case Hours,8
+PM Cases,6
+PM Edge Verdict,2
+PM Flow Cases,6
+PM Median Min,8
+PM Median Text,2
+PM Min Cases,8
+PM Order Flow Note,2
+PM Orders Traced,6
+PM Orders Traced (strip),6
+PM Orders Waiting,6
+PM Orders Waiting (strip),6
+PM P95 Min,8
+PM P95 Text,2
+PM Pallet Flow Note,2
+PM Pallet Handoffs,6
+PM Pallet Handoffs (strip),6
+PM Trucks Traced,6
+PM Trucks Traced (strip),6
+PM Trucks Waiting,6
+PM Trucks Waiting (strip),6
+PM Verdict,2
+PM Window Days,6
+PM Window Text,2
+Page Guide Calc,2
+Page Guide Config,2
+Page Needs Flag,2
+Pallets In Flow Now,6
+Pallets In Flow Now (strip),6
+Pallets Moved Prev,6
+Pallets Moved Prev (strip),6
+Pallets Moved Prior Avg,8
+Pallets Moved Prior Avg (strip),8
+Pallets Over Crit,6
+Pallets Over Crit (strip),6
+Pallets Stale,6
+Pallets Stale (strip),6
+Predicted_Avg_Plt/h,8
+Predicted_Avg_Plt_Display,8
+Predicted_Avg_SU/h,8
+Predicted_Market Color,2
+Problem Pallet,6
+Prod Completed Hours,6
+Prod Last Hour Sort,6
+Prod Last Pallet Time,9
+Prod Lines Count,6
+Prod Pallets Day,6
+Prod Pallets Day (strip),6
+Prod Pallets Throughput,6
+Prod Plan Next Day,9
+Prod Plan Remark,2
+Prod Plan Rows Day,6
+Prod Plan Rows Site,6
+Prod Plan Short,2
+Prod Projected EOD,8
+Prod Projected EOD (strip),8
+Prod Ramp Plan Day,8
+Prod Required Rate,8
+Prod Required Rate (strip),8
+Prod Run Rate 3h,8
+Prod Run Rate 3h (strip),8
+Production Explanation,2
+Production Explanation Action,2
+Refresh Every Min,6
+Refresh Line,2
+Replica First Txn,9
+Replica History Days,6
+Report Date,9
+Report Date Auto,9
+Report Day Fallback,11
+Report Day In Replica,11
+Report Is Today,11
+Report Label,2
+Rows Data Health,6
+Rows Date Refresh,6
+Rows Inventory,6
+Rows Level A Available Pallet Spot,6
+Rows Level A Occupied Pallet,6
+Rows Location Utilisation,6
+Rows Open Trailers,6
+Rows Outbound Pallet from Inv,6
+Rows Outbound TTA,6
+Rows Pallet From HOFFIN,6
+Rows Pallet From LTA To Level A,6
+Rows Pallet Pattern,6
+Rows Pallet cleaned up from bin A,6
+Rows Pallet from LTA to short/tall location,6
+Rows Pallet in Level A not active shipment,6
+Rows Pallets In Flow,6
+Rows Pallets Location,6
+Rows Pallets Movement,6
+Rows Planned PO RPM Breakdown,6
+Rows Planned Pallet PO,6
+Rows Process Edges,6
+Rows Produced Pallet,6
+Rows RPM Masterdata,6
+Rows SAP Plan PO,6
+Rows SAP Production,6
+Rows Shipments,6
+Rows Shipped Pallet,6
+Rows Shipping Market,6
+Rows Short PO,6
+Rows TTAT,6
+Rows Truck Staging,6
+Rows User Activity,6
+Rows WorkLine Activities,6
+SAP GR Lines By Day,6
+SAP GR Lines Day,6
+SAP Material Pallets Day,8
+SAP Material Qty Day,8
+SAP Pallet Basis,2
+SAP Pallets By Day,8
+SAP Pallets Day,8
+SAP Pallets Day (strip),8
+SAP Pallets Prev,8
+SAP Pallets Prev (strip),8
+SAP Pallets Prior Avg,8
+SAP Pallets Prior Avg (strip),8
+SAP Pallets Window,8
+SAP Plant,2
+Shift Avg TTAT Min,8
+Shift Avg Wait Min,8
+Shift Avg Work Min,8
+Shift Label,2
+Shift Selected,6
+Shift Trucks,6
+Shift Verdict,2
+Shift Window Text,2
+Shipment Number,6
+Shipments Created Day,6
+Shipments Created Day (strip),6
+Shipments Created Prev,6
+Shipments Created Prev (strip),6
+Shipments Late,6
+Shipments Late (strip),6
+Shipments Loaded Day,6
+Shipments Loaded Day (strip),6
+Shipments Loaded Prev,6
+Shipments Loaded Prev (strip),6
+Shipments Open,6
+Shipments Open (strip),6
+Site Code,2
+Site Name,2
+Site Now,9
+Site Shift Today,9
+Site Shift1 Start h,6
+Site Shift2 Start h,6
+Site Shift3 Start h,6
+Site UTC Offset h,8
+Site WMS,2
+Sort_Helper,8
+Space Runway Hours,8
+Stage Action Now,2
+Stage Applicable,6
+Stage Items,6
+Stage Limits,2
+Stage NA Reason,2
+Stage Oldest,2
+Stage Oldest Min,6
+Stage Over Crit,6
+Stage Over Warn,6
+Stage Stale,6
+Stage Status,2
+Stage Status Color,2
+Stage Status Label,2
+Staging Lanes Used,6
+Staging Pallets,6
+Staging Pallets Per Truck,8
+Staging Rule Text,2
+Staging Truck TTAT,6
+Staging Trucks,6
+Stale Rule Text,2
+Thr Crit Text,2
+Thr Eff Crit,8
+Thr Eff Target,8
+Thr Eff Warn,8
+Thr Inputs Active,6
+Thr LOC_UTIL Crit,8
+Thr LOC_UTIL Target,8
+Thr LOC_UTIL Warn,8
+Thr PPH Crit,8
+Thr PPH Target,8
+Thr PPH Warn,8
+Thr Source,2
+Thr TTAT_IN Crit,8
+Thr TTAT_IN Target,8
+Thr TTAT_IN Warn,8
+Thr TTAT_OUT Crit,8
+Thr TTAT_OUT Target,8
+Thr TTAT_OUT Warn,8
+Thr Target Text,2
+Thr USER_PROD Crit,8
+Thr USER_PROD Target,8
+Thr USER_PROD Warn,8
+Thr Warn Text,2
+Thruput_Avg Plts/Hr,8
+Total Pallets,6
+Truck Close Time Range,6
+Truck Day Label,2
+Truck Day Start,8
+Truck Report Day Label,2
+Truck Rest Min,6
+Truck TTAT Min,6
+Truck Wait Min,6
+Truck Work Min,6
+Trucks On Site,6
+Trucks On Site (strip),6
+Trucks On Site In,6
+Trucks On Site Out,6
+Trucks Over Crit,6
+Trucks Over Crit (strip),6
+Trucks Stale,6
+Trucks Stale (strip),6
+User Active Hours,6
+User Active Hours (strip),6
+User Hour Color,2
+User Hour Rule Text,2
+User Main Step,2
+User Pallets Moved,6
+User Pallets Moved (strip),6
+User Pallets Prev,6
+User Pallets Prev (strip),6
+User Productivity 7d,8
+User Productivity 7d (strip),8
+User Productivity Prev,8
+User Productivity Prev (strip),8
+User Status,2
+User Transactions,6
+Verdict Key,2
+WMS Coverage By Day,8
+WMS Pallets By Day,6
+WMS Pallets Window,6
+Win Days,8
+Win End,9
+Win Hours,6
+Win Off End h,6
+Win Off Start h,6
+Win Start,9
+Window Label,2
+Health Site Not Live,11
+Health Verdict,2
+Health Check Status Icon,2
+Health Not Live Checks,6
+Thr PPH In Use,2
+Thr TTAT_IN In Use,2
+Thr TTAT_OUT In Use,2
+Thr LOC_UTIL In Use,2
+Thr USER_PROD In Use,2
+Staging Lane Dwell h,8

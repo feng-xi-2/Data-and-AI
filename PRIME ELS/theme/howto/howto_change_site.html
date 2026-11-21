@@ -1,0 +1,47 @@
+<!doctype html><html><head><meta charset='utf-8'><style>
+*{box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}
+body{margin:0;width:620px;height:700px;background:#fff;color:#252423;overflow:hidden}
+.hd{background:#0B2A4A;color:#fff;padding:12px 16px;font-size:19px;font-weight:600}
+.hd small{display:block;font-size:11.5px;font-weight:400;color:#cfdcec;margin-top:2px}
+.wrap{padding:10px 14px}
+.step{display:flex;gap:10px;margin:8px 0 6px}
+.n{flex:0 0 24px;height:24px;border-radius:12px;background:#D13438;color:#fff;font-weight:700;text-align:center;line-height:24px;font-size:13px}
+.t{font-size:13px;line-height:1.35}.t b{color:#0B2A4A}
+.ribbon{border:1px solid #d6d6d6;border-radius:4px;background:#f6f6f6;font-size:11px;margin:4px 0 0 34px;position:relative}
+.tabs{display:flex;gap:14px;padding:4px 8px;border-bottom:1px solid #ddd;color:#444}.tabs .on{color:#0B2A4A;font-weight:600;border-bottom:2px solid #F2C811}
+.btns{display:flex;gap:6px;padding:6px 8px}.btn{border:1px solid transparent;padding:3px 7px;border-radius:3px;background:#fff}
+.hl{outline:2px solid #D13438;outline-offset:1px}
+.menu{position:absolute;left:236px;top:52px;background:#fff;border:1px solid #bbb;box-shadow:0 2px 6px rgba(0,0,0,.2);font-size:11px;z-index:2}
+.menu div{padding:4px 12px}.menu .sel{background:#e5eefc}
+.dlg{border:1px solid #bbb;border-radius:4px;margin:4px 0 0 34px;box-shadow:0 2px 8px rgba(0,0,0,.15);font-size:11px}
+.dlg .ti{background:#f3f3f3;padding:5px 9px;font-weight:600;border-bottom:1px solid #ddd}
+.dlg .bd{padding:6px 10px}.fld{margin:3px 0}.fld i{display:block;color:#605E5C;font-style:normal}
+.fld span{display:block;border:1px solid #8a8886;padding:2px 5px;background:#fff;font-family:Consolas,monospace;font-size:10.5px}
+table{border-collapse:collapse;width:100%;font-size:10.5px;margin-top:4px}
+th{background:#0B2A4A;color:#fff;text-align:left;padding:3px 5px;font-weight:600}td{padding:3px 5px;border-bottom:1px solid #e8ecf2;font-family:Consolas,monospace}
+tr:nth-child(even) td{background:#F5F8FC}
+.note{background:#FFF4CE;border-left:4px solid #F2A900;padding:6px 9px;font-size:11.5px;margin:8px 0 0 34px}
+.two{display:flex;gap:8px;margin-left:34px}.card{flex:1;border:1px solid #D9DFE8;border-radius:6px;padding:6px 8px;font-size:11px}
+.card h4{margin:0 0 3px;font-size:12px;color:#003DA5}
+.ok{color:#107C10;font-weight:600}
+
+.bn{margin:4px 0 0 34px;background:#0B2A4A;border-radius:4px;color:#fff;display:flex;align-items:center;gap:8px;padding:6px 8px;font-size:12px;position:relative}
+.bn .tt{font-weight:600;font-size:13px;flex:1}.bn .pg{color:#9FC3E7;font-size:11px;flex:1}
+.dd{background:#fff;color:#252423;border:1px solid #8a8886;border-radius:3px;padding:2px 22px 2px 6px;font-size:11px;position:relative;min-width:120px}
+.dd:after{content:'\25BE';position:absolute;right:6px;top:1px}
+.lst{position:absolute;right:8px;top:44px;background:#fff;color:#252423;border:1px solid #bbb;box-shadow:0 2px 6px rgba(0,0,0,.2);font-size:11px;min-width:150px;z-index:3}
+.lst div{padding:4px 10px}.lst .sel{background:#e5eefc;font-weight:600}
+.inp{display:inline-block;border:1px solid #8a8886;padding:1px 6px;background:#fff;font-family:Consolas,monospace;font-size:11px;min-width:56px}
+</style></head><body><div class="hd">&#9312; How to change the site<small>Site file <b>WH Hypercare KPI - &lt;SITE&gt;</b> loads ONE site (open another site's file to switch). All-sites file: every site loaded, pick it in the Site slicer.</small></div>
+<div class="wrap">
+<div class="step"><div class="n">1</div><div class="t">Open the <b>Site</b> drop-down at the <b>top right of any page</b> (navy banner):</div></div>
+<div class="bn"><span class="tt">Minhang (BR01) PRIME ELS Dashboard</span><span class="pg">Hypercare Cockpit</span>
+<span style="font-size:10px;color:#cfdcec">Site</span><span class="dd hl">Minhang (BR01)</span>
+<div class="lst"><div>Binh Duong (VN07)</div><div class="sel">Minhang (BR01)</div><div>Jakarta (ID01)</div><div>Akashi (JP01)</div><div>Xiqing (CN74)</div><div>Athens (WMD1)</div></div></div>
+<div style="height:150px"></div>
+<div class="step"><div class="n">2</div><div class="t">Pick <b>one</b> site. The slicer is <b>synced on every page</b> and forces exactly one selection, so every table, chart, KPI, target, alert and RCA text switches to that site.</div></div>
+<div class="step"><div class="n">3</div><div class="t">The title becomes <b>&lt;Site&gt; PRIME ELS Dashboard</b>. Pages a site does not run (e.g. SAP plan, Level A) say <b>&#9888; NOT USED AT &lt;site&gt;</b> in the banner.</div></div>
+<div class="step"><div class="n">4</div><div class="t">Check <b>Config &amp; Health</b>: <span class="ok">ALL CHECKS PASSED</span> for the site (freshness, feeds, accuracy).</div></div>
+<div style="margin-left:34px"><table><tr><th>Site</th><th>WMS</th><th>Replica server</th><th>Database</th></tr><tr><td>Binh Duong (VN07)</td><td>PrIME 2022</td><td><replica-server></td><td>BINHDUONG_REPLICA</td></tr><tr><td>Minhang (BR01)</td><td>PrIME 2022</td><td><replica-server></td><td>MINHANG_REPLICA</td></tr><tr><td>Jakarta (ID01)</td><td>PrIME 2014</td><td><replica-server></td><td>JAKARTA</td></tr><tr><td>Akashi (JP01)</td><td>PrIME 2022</td><td><replica-server></td><td>AKASHI_REPLICA</td></tr><tr><td>Xiqing (CN74)</td><td>PrIME 2014</td><td><replica-server></td><td>XIQING</td></tr><tr><td>Athens (WMD1)</td><td>PrIME 2022</td><td><replica-server></td><td>ATHENS_REPLICA</td></tr></table></div>
+<div class="note">Sharing: send the <b>site file</b> (dist/&lt;SITE&gt;) - it needs only that replica (Microsoft account in Desktop; gateway MI-&lt;SITE&gt;_REPLICA-...-PaaS-ADHOC in the recipient's workspace).<br>Thresholds: type them on <b>Config &amp; Health &rarr; Alert threshold inputs</b> (Target / Warning / Critical boxes, <span class="inp">120</span>). Empty box = saved Cfg_Threshold value of the selected site.</div>
+</div></body></html>

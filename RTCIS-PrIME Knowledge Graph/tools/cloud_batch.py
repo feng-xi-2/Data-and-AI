@@ -92,7 +92,7 @@ def main():
     out["summary"] = {"ask": dict(Counter(x["status"] for x in out["ask"])), "convert": dict(Counter(x["status"] for x in out["convert"])),
                       "ask_by_engine": {e: dict(Counter(x["status"] for x in out["ask"] if x["engine"] == e)) for e in ("RTCIS", "PrIME2014", "PrIME2022")},
                       "execution_accuracy": {f"{x['site']} | {x['question']}": (x["accuracy"] or {}).get("ex") for x in out["ask"] if x.get("accuracy")}}
-    json.dump(out, open(os.path.join(KIT, "benchmark", "cloud_batch_results.json"), "w", encoding="utf-8"), indent=1, default=str)
+    json.dump(out, open(os.path.join(KIT, "benchmark", os.environ.get("KG_BATCH_OUT", "cloud_batch_results.json")), "w", encoding="utf-8"), indent=1, default=str)
     print(json.dumps(out["summary"], indent=1))
 
 

@@ -198,3 +198,24 @@ def test_guard_blocks_remote_execution_functions(sql):
 def test_guard_still_allows_quoted_reserved_names_and_normal_aliases():
     assert k.guard_sql('SELECT [delete] AS d, l.lodnum AS "exec" FROM dbo.invlod l')
     assert k.guard_sql("-- transliteration of the OpenQuery(RTCIS, ...) Oracle text\nSELECT 1 AS a /* not OPENROWSET( */")
+
+
+# --- one dialogue box: catches typed input sent to the wrong action ----------------------------------------------
+@pytest.mark.parametrize("text, same, mode, n", [
+    ("How many pallets are stored per area?", False, "ask", 1),
+    ("How many pallets are stored\nper location area, by building?", False, "ask", 1),     # one question over two lines
+    ("Pallets per area?\nOpen picks per wave?\n", False, "batch_ask", 2),
+    ("1. pallets per area\n2. open picks per wave", False, "batch_ask", 2),
+    ("SELECT ulid FROM live3.unitld", False, "convert", 1),
+    ("-- RTCIS stock\nWITH s AS (SELECT 1 a) SELECT a FROM s", False, "convert", 1),
+    ("SELECT ulid FROM live3.unitld", True, "validate", 1),
+    ("SELECT 1 a\n---\nSELECT 2 b", False, "batch_convert", 2),
+    ("SELECT 1 a\nGO\nSELECT 2 b", True, "batch_validate", 2),
+])
+def test_route_picks_the_action_from_what_was_typed(text, same, mode, n):
+    r = k.route(text, same_engine=same)
+    assert r["mode"] == mode and len(r["items"]) == n
+
+
+def test_route_strips_list_markers_from_batch_questions():
+    assert k.route("- pallets per area\n- open picks", same_engine=False)["items"] == ["pallets per area", "open picks"]

@@ -48,5 +48,26 @@ R08–R12 return 0 rows on DE08 — the **expert-validated** PrIME versions of t
 | SQL that ran but answered wrongly (0 rows from a wrong join) | validated join paths mined from the expert-validated SQL (`kg_core.join_paths`, `JOINS_WITH` edges), given to the model; PrIME 2014 borrows PrIME 2022 joins only where its catalog has both columns | `test_join_paths_*`, `test_ask_gives_the_validated_join_paths_*`, `test_prime2014_borrows_*`, `test_convert_gives_validated_joins_*` |
 | "Validated" ≠ correct | execution accuracy against reference answers | `test_exec_match_*` |
 
+## Round 4 — LangGraph Deep Agent (GPT-5.6 Sol), same questions and conversions
+
+`tools/kg_deep_agent.py` (`deepagents.create_deep_agent`): AGENTS.md + two curated skills, tools scoped to the request
+database, `run_sql` with the read-only guard and a 3-run cap, read-only agent files, deterministic re-validation of the final
+SQL. Raw: `cloud_batch_results_deep_agent.json`.
+
+| | Pipeline round 3 (GPT-5.2, single shot + 1 repair) | Deep Agent round 4 (GPT-5.6 Sol) |
+|---|---|---|
+| Questions validated | 11 / 11 | 11 / 11 |
+| Execution accuracy (5 scored) | 3 / 5 | **4 / 5** — DE08 inventory per part/status now identical (4,544 / 4,544) |
+| RTCIS unit loads per zone | finer grain (149 groups), equal after roll-up | finer grain again (204 groups) — still open |
+| Conversions validated, identical contract | 8 / 8 | 7 / 8 in the batch (R08 ended with prose and no SQL) → fixed test-first: fall back to the last successful run; R08 re-run: validated, identical contract |
+| Time per item | 15–30 s | 35–95 s |
+
+Model choice: the platform's newest models (GPT-6.1 Sol / Terra, GPT-6 Sol / Astra) only do tool calls on the Responses API,
+and the gateway rejects the multi-turn Responses input (assistant `phase` items, `different Azure OpenAI resource` on stored
+items). GPT-5.6 Sol is the newest model that does tool calls on Chat Completions; it is the Deep Agent default
+(`KG_AGENT_MODEL`). The single-shot pipeline stays available (`KG_ASSISTANT=pipeline`).
+
+## Round 3 detail
+
 Open: the inventory difference above; references for the 6 unscored questions; a larger held-out question set (BIRD-style) before
 any production use.

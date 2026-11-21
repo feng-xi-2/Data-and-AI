@@ -16,6 +16,8 @@ sys.path.insert(0, os.path.dirname(__file__))
 import kg_core as k  # noqa: E402
 
 SITES = {"RTCIS_EUS": "RTCIS", "RTCIS_LON": "RTCIS", "PRIME14_XQ": "PrIME2014", "PRIME22_DE08": "PrIME2022", "PRIME22_WMD1": "PrIME2022"}
+if os.environ.get("KG_SITES_JSON"):   # sites served by your replica endpoint: {"SITE_KEY": "RTCIS" | "PrIME2014" | "PrIME2022"}
+    SITES = json.loads(os.environ["KG_SITES_JSON"])
 
 
 class Ask(BaseModel):
@@ -58,6 +60,14 @@ class Approve(BaseModel):
     site: str
 
 
+class Chat(BaseModel):
+    text: str
+    site: str = "PRIME22_DE08"
+    target_site: str | None = None
+    params: dict | None = None
+    target_params: dict | None = None
+
+
 def _site(s):
     if s and s not in SITES:
         raise HTTPException(400, f"unknown site {s}; one of {', '.join(SITES)}")
@@ -67,17 +77,27 @@ LOCAL_ORIGIN = r"^(null|https?://(127\.0\.0\.1|localhost)(:\d+)?)$"
 LOCAL_HOST = re.compile(r"^(127\.0\.0\.1|localhost)(:\d+)?$")
 
 
+def _allowed():
+    """Local by default; a cloud deployment adds its own host / UI origin (comma-separated, exact match)."""
+    hosts = [h.strip().lower() for h in os.environ.get("KG_ALLOWED_HOSTS", "").split(",") if h.strip()]
+    origins = [o.strip() for o in os.environ.get("KG_ALLOWED_ORIGINS", "").split(",") if o.strip()]
+    origin_rx = LOCAL_ORIGIN if not origins else LOCAL_ORIGIN[:-2] + "|" + "|".join(re.escape(o) for o in origins) + ")$"
+    host_ok = (lambda h: bool(LOCAL_HOST.match(h)) or h.lower().split(":")[0] in hosts)
+    return origin_rx, host_ok
+
+
 def create_app(svc):
     app = FastAPI(title="RTCIS-PrIME knowledge graph API")
-    # the API acts as the signed-in user (replicas, model, Cosmos): only the local page may call it
-    app.add_middleware(CORSMiddleware, allow_origin_regex=LOCAL_ORIGIN, allow_methods=["GET", "POST"], allow_headers=["Content-Type"])
+    origin_rx, host_ok = _allowed()
+    # the API acts as the signed-in user / its identity (replicas, model, Cosmos): only the configured pages may call it
+    app.add_middleware(CORSMiddleware, allow_origin_regex=origin_rx, allow_methods=["GET", "POST"], allow_headers=["Content-Type"])
 
     @app.middleware("http")
     async def local_only(request: Request, call_next):
-        if not LOCAL_HOST.match(request.headers.get("host", "")):
+        if not host_ok(request.headers.get("host", "")):
             return JSONResponse({"detail": "host not allowed"}, status_code=400)          # DNS rebinding
         origin = request.headers.get("origin")
-        if origin is not None and not re.match(LOCAL_ORIGIN, origin):
+        if origin is not None and not re.match(origin_rx, origin):
             return JSONResponse({"detail": "origin not allowed"}, status_code=403)
         if request.method == "POST" and not request.headers.get("content-type", "").lower().startswith("application/json"):
             return JSONResponse({"detail": "send application/json"}, status_code=415)     # forces a CORS preflight
@@ -86,6 +106,36 @@ def create_app(svc):
     @app.get("/rp/health")
     def health():
         return {"ok": True, "sites": SITES, "templates": len(svc.templates)}
+
+    @app.get("/rp/config")
+    def config():
+        llm = getattr(svc, "llm", None)
+        return {"sites": SITES, "model": getattr(llm, "model", ""), "replica": "endpoint" if getattr(svc.db, "endpoint", None) else "direct"}
+
+    @app.post("/rp/chat")
+    def chat(b: Chat):
+        """One dialogue box: the text decides the action (see kg_core.route)."""
+        _site(b.site), _site(b.target_site)
+        eng = SITES[b.site]
+        tgt = b.target_site or b.site
+        teng = SITES[tgt]
+        r = k.route(b.text, same_engine=(tgt == b.site))
+        mode = r["mode"]
+        out = []
+        for item in r["items"][:25]:
+            if mode.endswith("ask"):
+                out.append(dict(svc.assistant.ask(item, engine=eng, site=b.site, params=b.params), kind="ask"))
+            elif mode.endswith("convert"):
+                out.append(dict(svc.assistant.convert(item, eng, teng, b.site, tgt, params=b.target_params, source_params=b.params),
+                                kind="convert"))
+            else:
+                v = svc.db.validate(item, b.site, b.params)
+                out.append({"kind": "validate", "sql": item, "validation": v,
+                            "status": "validated" if v.get("ok") else ("rejected" if v.get("stage") in ("guard", "params") else "failed validation")})
+        summary = {}
+        for x in out:
+            summary[x["status"]] = summary.get(x["status"], 0) + 1
+        return {"mode": mode, "results": out, "summary": summary}
 
     @app.get("/rp/graph")
     def graph(view: str = "versions", key: str = "invlod", limit: int = 40):
@@ -144,4 +194,4 @@ if __name__ == "__main__":
     if sys.platform == "win32":
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     import kg_services
-    uvicorn.run(create_app(kg_services.services()), host="127.0.0.1", port=int(os.environ.get("KG_API_PORT", "8738")))
+    uvicorn.run(create_app(kg_services.services()), host=os.environ.get("KG_API_HOST", "127.0.0.1"), port=int(os.environ.get("KG_API_PORT", "8738")))

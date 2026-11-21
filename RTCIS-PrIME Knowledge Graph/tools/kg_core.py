@@ -83,6 +83,23 @@ def parse_batch(text, kind):
 
 STOP = set("a an the of for to in on by per and or with what which how many much is are show list me all from at as each".split())
 
+SQL_START = re.compile(r"^\s*(?:(?:--[^\n]*\n)|(?:/\*.*?\*/))*\s*(select|with)\b", re.I | re.S)
+LIST_MARK = re.compile(r"^\s*(?:[-*\u2022]|\d+[.)])\s+")
+
+
+def route(text, same_engine):
+    """One dialogue box: SQL -> validate (same engine) or convert; several SQL (--- / GO) -> batch; one question -> ask;
+    several questions (each line a list item or ending with '?') -> batch of questions."""
+    text = (text or "").strip()
+    if SQL_START.match(text):
+        parts = parse_batch(text, "convert")
+        kind = "validate" if same_engine else "convert"
+        return {"mode": ("batch_" + kind) if len(parts) > 1 else kind, "items": parts}
+    lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+    if len(lines) > 1 and all(LIST_MARK.match(ln) or ln.endswith("?") for ln in lines):
+        return {"mode": "batch_ask", "items": [LIST_MARK.sub("", ln) for ln in lines]}
+    return {"mode": "ask", "items": [" ".join(lines)]}
+
 
 def _tokens(s):
     out = set()

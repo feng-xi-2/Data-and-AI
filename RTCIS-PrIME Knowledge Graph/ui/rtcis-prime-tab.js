@@ -3,7 +3,7 @@
    Cosmos DB (Gremlin graph whs_kg/rtcis_prime), asks the GenAI model and validates every SQL on the replica databases.
    Offline: window.RP_VIEWS (assets/rtcis-prime-views.js) holds real views exported from Cosmos; ask/convert need the API. */
 (function () {
-  var API = "http://127.0.0.1:8738";
+  var API = window.RP_API_BASE || (window.localStorage && localStorage.getItem("rp_api")) || "http://127.0.0.1:8738";   // cloud API: set window.RP_API_BASE or localStorage rp_api
   var pane = document.getElementById("kgtab-rp");
   var K = window.__KG;
   if (!pane || !K) return;
@@ -12,7 +12,7 @@
   var COL = {
     "RTCIS table": "#b4690e", "RTCIS column": "#f2b766", "PrIME 2014 table": "#7c3aed", "PrIME 2014 column": "#c4b5fd",
     "PrIME 2022 table": "#2563eb", "PrIME 2022 column": "#93c5fd", "Platform": "#475569", "Query": "#0f766e",
-    "OutputField": "#14b8a6", "ExpertRule": "#c4314b", "Finding": "#db2777", "SDCModule": "#16a34a", "PMCProcess": "#65a30d",
+    "OutputField": "#14b8a6", "SemanticConcept": "#0d9488", "ExternalSource": "#94a3b8", "ExpertRule": "#c4314b", "Finding": "#db2777", "SDCModule": "#16a34a", "PMCProcess": "#65a30d",
     "Domain": "#0891b2", "Learning": "#9333ea", "DataFact": "#d97706", "Concept": "#64748b"
   };
   Object.keys(COL).forEach(function (k) { K.labelColor[k] = COL[k]; });
@@ -20,6 +20,7 @@
                ["PRIME14_XQ", "PrIME 2014 \u00b7 Xiqing", "PrIME2014", "CN74"], ["RTCIS_EUS", "RTCIS \u00b7 Euskirchen", "RTCIS", ""], ["RTCIS_LON", "RTCIS \u00b7 London", "RTCIS", ""]];
   var TEMPLATES = [
     ["versions", "One table across RTCIS \u2192 PrIME 2014 \u2192 PrIME 2022", ["invlod", "locmst", "prtmst", "pckwrk_dtl", "shipment", "rcvlin", "unitld", "itmmst"]],
+    ["semantic", "Semantic layer (Timbr) concept \u2192 tables in RTCIS / PrIME 2014 / PrIME 2022", ["", "location", "inventory", "pallet", "outbound_shipments", "inbound_shipments", "warehouse_movements", "non_performing_inventory", "non_performing_pallet", "doors", "allocation"]],
     ["query", "Query conversion lineage (RTCIS \u2192 PrIME, fields, rules, findings)", ["R01", "R02", "R03", "R04", "R05", "R06", "R07", "R08", "R09", "R10", "R11", "R12", "R13", "R14", "R15", "R16", "R17"]],
     ["sdc", "SDC module / PMC process \u2192 tables in both engines", ["01", "02", "03", "04", "05", "07", "08", "10", "PMC-03.02.01", "PMC-05.02.01", "PMC-02.01.01"]],
     ["domain", "Business domain \u2192 tables in the three engines", ["inventory", "receiving", "picking", "shipment", "location", "counting", "work", "trailer"]],
@@ -64,33 +65,11 @@
     +   '<div id="rp-meta" class="card__desc" style="margin:.4rem 0"></div>'
     +   '<div class="kgf-wrap"><svg id="rp-svg" class="kgf-svg"></svg><div id="rp-legend" class="kgf-legend"></div><div id="rp-panel" class="kgf-panel"></div></div>'
     + "</div>"
-    /* ask + convert */
-    + '<div class="grid grid--2" style="margin-bottom:var(--space-5)">'
-    +   '<div class="card"><div class="section__eyebrow">Ask in natural language &rarr; validated SQL</div>'
-    +     '<p class="card__desc" style="margin:.3rem 0 .5rem">The graph links your words to real tables, columns, validated example queries and expert learnings; the model writes one read-only SELECT; it is dry-run and executed (max 50 rows) on the chosen database, with one automatic repair round.</p>'
-    +     '<div class="kgf-ctrl" style="margin-bottom:.4rem"><select id="rp-ask-site">' + siteOpts("PRIME22_DE08") + "</select>" + wh("rp-ask-site", "PRIME22_DE08") + "</div>"
-    +     '<textarea id="rp-ask-q" ' + BOX + '>How many pallets (loads) are stored per location area?</textarea>'
-    +     '<div class="kgf-ctrl" style="margin-top:.4rem"><button class="btn" id="rp-ask-go">Ask &amp; validate</button></div><div id="rp-ask-out"></div></div>'
-    +   '<div class="card"><div class="section__eyebrow">Convert a query between engines</div>'
-    +     '<p class="card__desc" style="margin:.3rem 0 .5rem">The source runs on its own engine first (output columns = the contract). The graph supplies value-validated column mappings and rules; the result is validated on the target and the column contract compared.</p>'
-    +     '<div class="kgf-ctrl" style="margin-bottom:.4rem"><select id="rp-cv-tpl"><option value="">template: none</option></select></div>'
-    +     '<div class="kgf-ctrl" style="margin-bottom:.4rem">from <select id="rp-cv-src">' + siteOpts("RTCIS_EUS") + "</select>" + wh("rp-cv-src", "RTCIS_EUS") + ' to <select id="rp-cv-dst">' + siteOpts("PRIME22_DE08") + "</select>" + wh("rp-cv-dst", "PRIME22_DE08") + "</div>"
-    +     '<textarea id="rp-cv-sql" ' + BOX + '>SELECT equip, equip_desc FROM [EUSKIRCHEN_simp].live3.equip</textarea>'
-    +     '<div class="kgf-ctrl" style="margin-top:.4rem"><button class="btn" id="rp-cv-go">Convert &amp; validate</button></div><div id="rp-cv-out"></div></div>'
-    + "</div>"
-    /* batch + validate */
-    + '<div class="grid grid--2">'
-    +   '<div class="card"><div class="section__eyebrow">Batch (max 25)</div>'
-    +     '<p class="card__desc" style="margin:.3rem 0 .5rem">Questions: one per line. SQL to convert: separate queries with a line <code>---</code> or <code>GO</code>. Every item is validated on the database; download the results.</p>'
-    +     '<div class="kgf-ctrl" style="margin-bottom:.4rem"><select id="rp-b-kind">' + opt("ask", "questions \u2192 SQL") + opt("convert", "convert SQL") + '</select>'
-    +       '<select id="rp-b-site">' + siteOpts("PRIME22_DE08") + "</select>" + wh("rp-b-site", "PRIME22_DE08") + '<span id="rp-b-to" style="display:none">to <select id="rp-b-dst">' + siteOpts("PRIME22_DE08") + "</select>" + wh("rp-b-dst", "PRIME22_DE08") + "</span></div>"
-    +     '<textarea id="rp-b-text" ' + BOX + '>How many loads are in each location area?\nWhich parts have no footprint detail?\nOpen pick work per wave</textarea>'
-    +     '<div class="kgf-ctrl" style="margin-top:.4rem"><button class="btn" id="rp-b-go">Run batch</button><button class="btn" id="rp-b-dl" disabled>Download JSON</button><button class="btn" id="rp-b-csv" disabled>Download CSV</button></div><div id="rp-b-out"></div></div>'
-    +   '<div class="card"><div class="section__eyebrow">Validate SQL on a real database</div>'
-    +     '<p class="card__desc" style="margin:.3rem 0 .5rem">Read-only guard (sqlglot) &rarr; dry-run (describe_first_result_set) &rarr; capped execution. Columns empty in every row are flagged (rule E1).</p>'
-    +     '<div class="kgf-ctrl" style="margin-bottom:.4rem"><select id="rp-v-site">' + siteOpts("PRIME22_DE08") + "</select>" + wh("rp-v-site", "PRIME22_DE08") + "</div>"
-    +     '<textarea id="rp-v-sql" ' + BOX + ">SELECT TOP 20 LODNUM, STOLOC, WH_ID FROM dbo.invlod WHERE WH_ID = @wh_id</textarea>"
-    +     '<div class="kgf-ctrl" style="margin-top:.4rem"><button class="btn" id="rp-v-go">Validate</button></div><div id="rp-v-out"></div></div>'
+    /* ask / convert / validate moved to the SQL Remediation assistant */
+    + '<div class="card" style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap"><div style="flex:1;min-width:280px">'
+    +   '<div class="section__eyebrow">Ask, convert or validate SQL with this graph</div>'
+    +   '<p class="card__desc" style="margin:.3rem 0 0">The SQL Remediation assistant uses this graph (semantic layer, validated mappings, join paths, expert rules) through a LangGraph Deep Agent and checks every answer on a real replica.</p></div>'
+    +   '<a class="btn btn--primary" href="assistant.html?id=sql-query-convertor">Open SQL Remediation &rarr;</a></div>'
     + "</div>";
 
   function $(id) { return document.getElementById(id); }
@@ -107,9 +86,15 @@
     $("rp-meta").innerHTML = (note || "") + " " + g.nodes.length + " nodes &middot; " + (g.edges || []).length + " edges.";
     $("rp-panel").innerHTML = '<div class="card__desc">Click a node to inspect its properties (validation evidence included).</div>';
   }
+  function fromHash() {   /* knowledge-graph.html#rp:<view>:<key> (evidence links of the SQL Remediation assistant) */
+    var m = /^#rp:([a-z]+):?(.*)$/.exec(location.hash || "");
+    if (!m) return;
+    $("rp-tmpl").value = m[1]; setKeys(); $("rp-free").value = decodeURIComponent(m[2] || "");
+  }
   function load() {
     var view = $("rp-tmpl").value, key = ($("rp-free").value || "").trim() || $("rp-key").value || "";
     if (/^R\d\d$/i.test(key)) view = "query";
+    else if (view === "semantic") view = "semantic";
     else if (/^PMC/i.test(key) || /^\d\d$/.test(key)) view = "sdc";
     var id = view + ":" + key;
     if (!ONLINE) {
@@ -159,62 +144,9 @@
   function need(el) { if (ONLINE) return true; el.innerHTML = '<div class="gl-offline">Needs the API (see the note at the top of this tab).</div>'; return false; }
 
   function bind() {
-    ["rp-ask-site", "rp-cv-src", "rp-cv-dst", "rp-b-site", "rp-b-dst", "rp-v-site"].forEach(function (id) {
-      $(id).addEventListener("change", function () { var b = $(id + "-wh"); if (b) b.value = whOf(this.value); });
-    });
     $("rp-tmpl").onchange = function () { $("rp-free").value = ""; setKeys(); load(); };
     $("rp-key").onchange = function () { $("rp-free").value = ""; load(); };
     $("rp-load").onclick = load;
-    $("rp-ask-go").onclick = function () {
-      var out = $("rp-ask-out"), site = $("rp-ask-site").value, q = $("rp-ask-q").value.trim();
-      if (!need(out) || !q) return;
-      busy(out, "Linking the question to the graph, asking the model, validating on " + esc(site) + "\u2026");
-      api("/rp/ask", { question: q, engine: engineOf(site), site: site, params: params("rp-ask-site") }).then(function (r) { last.ask = r; out.innerHTML = resultHtml(r, "ask"); wire(out, r, "ask", q, site); })
-        .catch(function (e) { out.innerHTML = '<div class="gl-offline">' + esc(e.message) + "</div>"; });
-    };
-    $("rp-cv-go").onclick = function () {
-      var out = $("rp-cv-out"), s = $("rp-cv-src").value, d = $("rp-cv-dst").value;
-      if (!need(out)) return;
-      busy(out, "Running the source on " + esc(s) + ", converting with graph mappings, validating on " + esc(d) + "\u2026");
-      api("/rp/convert", { sql: $("rp-cv-sql").value, source_engine: engineOf(s), target_engine: engineOf(d), source_site: s, target_site: d, params: params("rp-cv-dst"), source_params: params("rp-cv-src") })
-        .then(function (r) { out.innerHTML = resultHtml(r, "convert"); wire(out, r, "convert"); })
-        .catch(function (e) { out.innerHTML = '<div class="gl-offline">' + esc(e.message) + "</div>"; });
-    };
-    $("rp-b-kind").onchange = function () { $("rp-b-to").style.display = this.value === "convert" ? "" : "none"; };
-    $("rp-b-go").onclick = function () {
-      var out = $("rp-b-out"), kind = $("rp-b-kind").value, s = $("rp-b-site").value, d = $("rp-b-dst").value;
-      if (!need(out)) return;
-      busy(out, "Running the batch item by item (each one validated on the database)\u2026");
-      var body = { kind: kind, text: $("rp-b-text").value, engine: engineOf(s), site: s, params: params(kind === "convert" ? "rp-b-dst" : "rp-b-site") };
-      if (kind === "convert") { body.target_engine = engineOf(d); body.target_site = d; }
-      api("/rp/batch", body).then(function (r) {
-        last.batch = r;
-        var sm = Object.keys(r.summary).map(function (k) { return chip(k) + " " + r.summary[k]; }).join(" &nbsp; ");
-        var rows = r.items.map(function (it, i) {
-          var v = it.validation || {};
-          return "<tr><td>" + (i + 1) + "</td><td>" + chip(it.status) + "</td><td>" + esc((it.question || it.source || "").slice(0, 70)) + "</td><td>" + esc(v.ok ? v.row_count : v.error || "") + "</td><td>" + esc((v.empty_fields || []).join(", ")) + "</td></tr>";
-        }).join("");
-        out.innerHTML = '<div style="margin:.4rem 0">' + sm + '</div><div style="overflow:auto;max-height:300px;font-size:.76rem"><table style="width:100%;border-collapse:collapse"><thead><tr><th>#</th><th>status</th><th>item</th><th>rows / error</th><th>empty fields</th></tr></thead><tbody>' + rows + "</tbody></table></div>";
-        $("rp-b-dl").disabled = false; $("rp-b-csv").disabled = false;
-      }).catch(function (e) { out.innerHTML = '<div class="gl-offline">' + esc(e.message) + "</div>"; });
-    };
-    function download(name, text, type) { var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: type })); a.download = name; a.click(); }
-    $("rp-b-dl").onclick = function () { download("rtcis-prime-batch.json", JSON.stringify(last.batch, null, 1), "application/json"); };
-    $("rp-b-csv").onclick = function () {
-      var q = function (s) { return '"' + String(s == null ? "" : s).replace(/"/g, '""') + '"'; };
-      var lines = [["item", "status", "attempts", "rows", "error", "empty_fields", "sql"].join(",")].concat(last.batch.items.map(function (it) {
-        var v = it.validation || {};
-        return [q(it.question || it.source), q(it.status), it.attempts, v.row_count || "", q(v.error || ""), q((v.empty_fields || []).join(" ")), q(it.sql)].join(",");
-      }));
-      download("rtcis-prime-batch.csv", lines.join("\n"), "text/csv");
-    };
-    $("rp-v-go").onclick = function () {
-      var out = $("rp-v-out"), site = $("rp-v-site").value;
-      if (!need(out)) return;
-      busy(out, "Validating on " + esc(site) + "\u2026");
-      api("/rp/validate", { sql: $("rp-v-sql").value, site: site, params: params("rp-v-site") }).then(function (v) { out.innerHTML = validationHtml(v); })
-        .catch(function (e) { out.innerHTML = '<div class="gl-offline">' + esc(e.message) + "</div>"; });
-    };
   }
 
   function kpis(c) {
@@ -225,23 +157,16 @@
   }
 
   function start() {
-    bind(); setKeys(); kpis(VIEWS.counts);
+    bind(); setKeys(); kpis(VIEWS.counts); fromHash();
     api("/rp/health").then(function (h) {
       ONLINE = true;
-      api("/rp/templates").then(function (ts) {
-        $("rp-cv-tpl").innerHTML = '<option value="">template: none</option>' + ts.filter(function (t) { return t.engine === "RTCIS"; })
-          .map(function (t, i) { return opt(t.qid, t.qid + " \u00b7 " + (t.title || "").slice(0, 40)); }).join("");
-        $("rp-cv-tpl").onchange = function () {
-          var q = this.value; ts.forEach(function (t) { if (t.qid === q && t.engine === "RTCIS") $("rp-cv-sql").value = t.sql; });
-        };
-      });
       load();
     }).catch(function () { ONLINE = false; $("rp-offline").style.display = ""; load(); });
   }
 
   window.RP_TAB = { activate: function (tab) { if (tab === "rp" && !built) { built = true; start(); } } };
   function openFromHash() {
-    if (location.hash !== "#rp") return;
+    if (!/^#rp(:|$)/.test(location.hash)) return;
     var b = document.querySelector('.kg-tab[data-tab="rp"]');
     if (b) b.click();
   }

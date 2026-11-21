@@ -109,3 +109,74 @@ def test_approved_pair_is_used_without_restarting(tmp_path):
     c, svc = client(tmp_path)
     c.post("/rp/approve", json={"question": "pallets", "engine": "PrIME2022", "sql": "SELECT 1 AS a", "site": "PRIME22_DE08"})
     assert svc.assistant.approved and svc.assistant.approved[-1]["intent"] == "pallets"
+
+# --- one dialogue box -----------------------------------------------------------------------------------------
+class AS2(AS):
+    def __init__(self):
+        self.calls = []
+        self.approved = []
+
+    def ask(self, question, engine, site, params=None):
+        self.calls.append(("ask", question, engine, site))
+        return {"status": "validated", "question": question}
+
+    def convert(self, sql, source_engine, target_engine, source_site, target_site, params=None, source_params=None):
+        self.calls.append(("convert", sql, source_engine, target_engine))
+        return {"status": "validated", "source": sql}
+
+
+def chat_client(tmp_path):
+    c, svc = client(tmp_path)
+    svc.assistant = AS2()
+    return c, svc
+
+
+def test_chat_question_is_asked_on_the_run_site(tmp_path):
+    c, svc = chat_client(tmp_path)
+    r = c.post("/rp/chat", json={"text": "pallets per area?", "site": "PRIME22_DE08"}).json()
+    assert r["mode"] == "ask" and svc.assistant.calls == [("ask", "pallets per area?", "PrIME2022", "PRIME22_DE08")]
+    assert r["results"][0]["status"] == "validated"
+
+
+def test_chat_sql_with_another_target_is_converted(tmp_path):
+    c, svc = chat_client(tmp_path)
+    r = c.post("/rp/chat", json={"text": "SELECT ulid FROM live3.unitld", "site": "RTCIS_EUS", "target_site": "PRIME22_DE08"}).json()
+    assert r["mode"] == "convert" and svc.assistant.calls[0][2:] == ("RTCIS", "PrIME2022")
+
+
+def test_chat_sql_without_target_is_validated(tmp_path):
+    c, svc = chat_client(tmp_path)
+    r = c.post("/rp/chat", json={"text": "SELECT 1 AS a", "site": "RTCIS_EUS"}).json()
+    assert r["mode"] == "validate" and svc.db.calls == [("SELECT 1 AS a", "RTCIS_EUS", None)]
+
+
+def test_chat_several_questions_run_as_a_batch_with_a_summary(tmp_path):
+    c, svc = chat_client(tmp_path)
+    r = c.post("/rp/chat", json={"text": "a?\nb?", "site": "PRIME22_DE08"}).json()
+    assert r["mode"] == "batch_ask" and len(r["results"]) == 2 and r["summary"] == {"validated": 2}
+
+
+def test_config_tells_the_page_which_sites_and_model_it_uses(tmp_path):
+    c, _ = client(tmp_path)
+    cfg = c.get("/rp/config").json()
+    assert cfg["sites"]["RTCIS_EUS"] == "RTCIS" and "model" in cfg and cfg["replica"] in ("direct", "endpoint")
+
+
+def test_sites_come_from_the_environment_when_set(monkeypatch):
+    import importlib
+    monkeypatch.setenv("KG_SITES_JSON", '{"PRIME22_XX01": "PrIME2022"}')
+    m = importlib.reload(kg_api)
+    try:
+        assert m.SITES == {"PRIME22_XX01": "PrIME2022"}
+    finally:
+        monkeypatch.delenv("KG_SITES_JSON")
+        importlib.reload(kg_api)
+
+
+def test_cloud_host_and_origin_can_be_allowed_by_configuration(tmp_path, monkeypatch):
+    monkeypatch.setenv("KG_ALLOWED_HOSTS", "kg.example.net")
+    monkeypatch.setenv("KG_ALLOWED_ORIGINS", "https://ui.example.net")
+    svc = client(tmp_path)[1]
+    c = TestClient(kg_api.create_app(svc), base_url="https://kg.example.net")
+    assert c.get("/rp/health", headers={"Origin": "https://ui.example.net"}).status_code == 200
+    assert c.get("/rp/health", headers={"Origin": "https://evil.example"}).status_code == 403

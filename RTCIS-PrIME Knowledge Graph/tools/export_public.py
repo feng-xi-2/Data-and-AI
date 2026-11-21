@@ -66,23 +66,37 @@ def tree(src, dst, keep=lambda p: True):
             put(p, os.path.join(dst, os.path.relpath(p, src)))
 
 
+def clear(out):
+    """Remove every old file; a directory held open by a file watcher stays (empty) instead of aborting the export."""
+    for dp, dirs, fs in os.walk(out, topdown=False):
+        for f in fs:
+            os.remove(os.path.join(dp, f))
+        try:
+            os.rmdir(dp)
+        except OSError:
+            pass
+
+
 def main():
+    if len(sys.argv) != 2 or sys.argv[1].startswith("-"):
+        sys.exit(__doc__)
     out = os.path.abspath(sys.argv[1])
     if os.path.isdir(out):
-        shutil.rmtree(out)
-    for d in ("tools", "templates", "docs", "ui", "tests"):
+        clear(out)
+    for d in ("tools", "templates", "docs", "ui", "tests", "agent"):
         tree(os.path.join(KIT, d), os.path.join(out, d))
     put(os.path.join(KIT, "README.md"), os.path.join(out, "README.md"))
     rel = os.path.join(out, "relationships")
     put(os.path.join(KIT, "relationships", "ontology.json"), os.path.join(rel, "ontology.json"))
-    put(os.path.join(KIT, "relationships", "sdc_pmc_layer.json"), os.path.join(rel, "sdc_pmc_layer.json"))
+    for f in ("sdc_pmc_layer.json", "semantic_layer.json"):
+        put(os.path.join(KIT, "relationships", f), os.path.join(rel, f))
     for kind in ("nodes", "edges"):
         items = json.loads(clean_text(json.dumps(graphio.load(kind), ensure_ascii=False)))
         print(kind, len(items), "->", graphio.shard(items, os.path.join(rel, "parts"), kind), "shards")
     b = os.path.join(out, "benchmark")
     for f in ("catalog.json", "gold.json", "predicted.json", "graph_validation.json", "results.json", "RESULTS.md",
               "cosmos_load_rtcis_prime.json", "sdc_pmc_validation.json", "cloud_batch_results.json", "cloud_batch_results_round1.json", "cloud_batch_results_round2.json",
-              "CLOUD_RESULTS.md"):
+                            "cloud_batch_results_deep_agent.json", "sdc_pmc_presence.json", "CLOUD_RESULTS.md"):
         if os.path.exists(os.path.join(KIT, "benchmark", f)):
             put(os.path.join(KIT, "benchmark", f), os.path.join(b, f))
     mv = json.load(open(os.path.join(KIT, "benchmark", "mapping_validation.json"), encoding="utf-8"))

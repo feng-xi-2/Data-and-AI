@@ -55,7 +55,9 @@
   "DataFact": 27,
   "Concept": 52,
   "SDCModule": 9,
-  "PMCProcess": 58
+  "PMCProcess": 58,
+  "SemanticConcept": 37,
+  "ExternalSource": 5
  },
  "edges": {
   "IN_PLATFORM": 1680,
@@ -81,6 +83,9 @@
   "IN_MODULE": 58,
   "CONFIGURES": 183,
   "TRANSFORMS_TO": 21,
+  "INHERITS": 28,
+  "RELATES_TO": 21,
+  "MAPPED_FROM": 117,
   "JOINS_WITH": 91
  }
 }

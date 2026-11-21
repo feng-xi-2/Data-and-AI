@@ -55,3 +55,13 @@ columns, ord.ship_id, car). Loaded as database whs_kg / graph rtcis_prime (30,80
 (SHOWPLAN + describe_first_result_set): PrIME entity F1 1.00/0.98, Text2KGBench F1 0.89, conversion lookup 37/59. Lessons: data model lists
 1,026 PrIME 2022 tables not in the replica; sample-vs-sample value overlap is misleading for keys (use lookup); bare-name mapping rows
 must be limited to mapped table pairs.
+
+## [2026-11-21] tool | Knowledge-graph tab, NL ask / convert / batch, SDC-PMC layer, cloud benchmark
+Third tab 'RTCIS <-> PrIME 2014 <-> 2022' in config-drift-governance/UIUX/knowledge-graph.html (same force graph) backed by
+_kg_cosmos/tools/kg_api.py (Cosmos graph + GenAI GPT-5.2 + replicas). SDC module / PMC layer validated on live catalogs: 430 links pass,
+6 rejected (SDC 03 listed invdtl/invlod/invsub/hold as RTCIS tables; PrIME 'car' does not exist). 91 JOINS_WITH edges mined from the ON
+clauses of the validated queries. Cloud benchmark (3 rounds): NL 9/11 -> 11/11 validated, execution accuracy 3/5 strict (4/5 rolled up);
+conversions 6/8 -> 8/8 identical contract. Lessons: 'it ran' is not 'it is right' - a Xiqing answer joined invlod.stoloc to
+pck_area.pck_arecod and returned 0 rows (reference: 79 areas); giving the model validated join paths fixed it. Xiqing hosts CN66 / CN74 /
+CN88 (default CN74). pyodbc cannot fetch datetimeoffset (AT TIME ZONE) without an output converter. sqlglot reads 'SELECT 1 DELETE FROM t'
+as an alias - the guard must reject unquoted statement keywords. Public repo: PR #3 updated, Config Drift code PR #5 / issue #4.

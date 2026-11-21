@@ -98,6 +98,21 @@
    "name",
    "source_file",
    "documented"
+  ],
+  "SemanticConcept": [
+   "name",
+   "description",
+   "n_properties",
+   "properties",
+   "primary_key",
+   "mappings",
+   "source",
+   "theme"
+  ],
+  "ExternalSource": [
+   "name",
+   "validated",
+   "theme"
   ]
  },
  "edges": {
@@ -302,6 +317,31 @@
    ],
    [
     "Column"
+   ]
+  ],
+  "MAPPED_FROM": [
+   [
+    "SemanticConcept"
+   ],
+   [
+    "Table",
+    "ExternalSource"
+   ]
+  ],
+  "INHERITS": [
+   [
+    "SemanticConcept"
+   ],
+   [
+    "SemanticConcept"
+   ]
+  ],
+  "RELATES_TO": [
+   [
+    "SemanticConcept"
+   ],
+   [
+    "SemanticConcept"
    ]
   ]
  }

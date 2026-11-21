@@ -219,6 +219,31 @@ uvawheu `aca-subnet` to the Cosmos VNet rules and expose it as a route of the ex
 bot then calls it. Keep the Gremlin key in Key Vault (Gremlin has no Entra data-plane RBAC). **Nothing was deployed** — this
 needs your approval and the AIF gates.
 
+## 11. SQL Remediation agent (LangGraph Deep Agent) and the one dialogue box
+
+* **One box**: `POST /rp/chat` decides from the text whether it is a question, a conversion (pasted SQL + target version) or a
+  batch (several queries split by `;`/blank lines), then answers with validated SQL. UI module `ui/sql-remediation-dialog.js`
+  (`SQLRemDialog.mount`) sits on the **SQL Remediation** assistant page; the Knowledge Graph page only shows the graph and links
+  to it (`#rp:view:key` deep links).
+* **Agent**: `tools/kg_deep_agent.py` builds `deepagents.create_deep_agent` with memory `agent/AGENTS.md`, skills
+  `agent/skills/{rtcis-prime-conversion,warehouse-query-writing}` (read-only filesystem backend, writes denied) and six narrow
+  tools: `search_knowledge`, `describe_tables`, `join_paths`, `graph_context`, `find_examples`, `run_sql`. `run_sql` passes the
+  read-only guard first and is capped at 3 executions; the final answer is re-validated in code and falls back to the last
+  successful run. Select with `KG_ASSISTANT=deep` (default) or `pipeline` (the single-shot `kg_assistant.py`).
+* **Model** (probed on the GenAI platform, 2026-11): GPT-6.x deployments call tools only through the Responses API and the gateway
+  rejects multi-turn Responses input, so the agent uses **GPT-56-SOL** on chat completions (`KG_GENAI_MODEL`).
+* **Replica endpoint**: `KG_REPLICA_ENDPOINT` / `KG_REPLICA_TOKEN` switch execution to an HTTP endpoint you host next to the
+  replicas (`HttpReplicaDB`); sites come from `KG_SITES_JSON`. Without them the API uses direct ODBC (`ReplicaDB`).
+* **Benchmark round 4 (Deep Agent)**: questions 11/11 validated, EX 4/5, conversions 7/8 — `benchmark/CLOUD_RESULTS.md`.
+
+## 12. Semantic layer + knowledge graph (one Knowledge page)
+
+`tools/semantic_layer.py` parses the Timbr concept / mapping SQL of all sites into `relationships/semantic_layer.json`
+(37 `SemanticConcept` vertices, 117 `MAPPED_FROM` edges to the validated tables / columns), loaded with the graph. The view
+`semantic` (`CosmosGraph.view("semantic", key)`) shows a concept with its source tables per version; the desktop UI and iDecide
+show one "Semantic Layer & Knowledge Graph" page (tabs: live graph / ontology snapshot). iDecide reaches the API through its
+backend proxy `/sql-remediation/*` (`SQL_REMEDIATION_API_URL`; 503 "not connected" when unset).
+
 ## References
 * Text2KGBench — Mihindukulasooriya et al., ISWC 2023, github.com/cenguix/Text2KGBench (P/R/F1, ontology conformance, subject / relation / object hallucination).
 * Microsoft GraphRAG — github.com/microsoft/graphrag (entity + relationship extraction; local search from entity entry points).
@@ -227,3 +252,4 @@ needs your approval and the AIF gates.
 * DIN-SQL (Pourreza & Rafiei, NeurIPS 2023): schema linking + self-correction.
 * Spider (Yale LILY) and BIRD (bird-bench) text-to-SQL benchmarks: execution accuracy as the acceptance metric.
 * Microsoft Learn, "Secure your account — Azure Cosmos DB for Apache Gremlin" (2026-04): private endpoints, managed identities; points high-scale work to Cosmos DB for NoSQL and OLAP graph to Graph in Microsoft Fabric.
+* LangChain Deep Agents (docs.langchain.com, `deepagents` 0.7): planning, filesystem memory (`AGENTS.md`), skills, permissions on top of LangGraph.

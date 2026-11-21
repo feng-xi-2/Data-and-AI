@@ -79,6 +79,16 @@ class CosmosGraph:
             p14 = self.q("g.V().has('id', within(c)).in('MAPS_TO').has('pk', 'Column:PrIME2014').dedup().limit(12).id()", c=pc) if pc else []
             p14t = self.q("g.V().has('id', within(c)).in('HAS_COLUMN').dedup().id()", c=p14) if p14 else []
             return self._graph(tabs + p14t + rc + pc + p14)
+        if kind == "semantic":
+            if key:
+                cid = f"SemanticConcept:{key}"
+                tabs = self.q("g.V().has('pk', 'SemanticConcept').has('id', c).out('MAPPED_FROM').limit(30).id()", c=cid)
+                rel = self.q("g.V().has('pk', 'SemanticConcept').has('id', c).both('INHERITS', 'RELATES_TO').dedup().limit(12).id()", c=cid)
+                more = self.q("g.V().has('id', within(t)).both('MAPS_TO').hasLabel('Table').dedup().limit(12).id()",
+                              t=[t for t in tabs if t.startswith("Table:")]) if tabs else []
+                return self._graph([cid] + rel + tabs + more)
+            cs = self.q("g.V().has('pk', 'SemanticConcept').limit(lim).id()", lim=min(limit * 2, 80))
+            return self._graph(cs, with_platforms=False)
         if kind == "sdc":
             if key.upper().startswith("PMC"):
                 pmc = [f"PMCProcess:{key.upper()}"]
@@ -258,6 +268,45 @@ def _clean(e):
     return (m[-1] if m else str(e)).strip()[:400]
 
 
+class HttpReplicaDB:
+    """Replica validation through an endpoint you host next to the replicas (e.g. in the AIF / uvawh network).
+    Contract: POST {sql, site, params, max_rows} -> {ok, stage?, error?, columns, rows, row_count?, truncated?}.
+    The read-only guard and the parameter-name check run here, before anything is sent."""
+    MAX_ROWS = 50
+
+    def __init__(self, endpoint, token=None, timeout=150):
+        self.endpoint, self.token, self.timeout = endpoint, token, timeout
+
+    def validate(self, sql, site, params=None):
+        t0 = time.time()
+        try:
+            sql = k.guard_sql(sql)
+        except k.UnsafeSQL as e:
+            return {"ok": False, "stage": "guard", "error": str(e), "columns": [], "rows": [], "site": site}
+        bad = [n for n in (params or {}) if not PARAM_NAME.match(str(n))]
+        if bad:
+            return {"ok": False, "stage": "params", "error": f"invalid parameter name(s): {bad!r}", "columns": [], "rows": [], "site": site}
+        headers = {"Content-Type": "application/json"}
+        if self.token:
+            headers["Authorization"] = "Bearer " + self.token
+        body = json.dumps({"sql": sql, "site": site, "params": params or {}, "max_rows": self.MAX_ROWS}).encode()
+        try:
+            with urllib.request.urlopen(urllib.request.Request(self.endpoint, data=body, headers=headers, method="POST"), timeout=self.timeout) as r:
+                res = json.loads(r.read())
+        except Exception as e:
+            return {"ok": False, "stage": "endpoint", "error": f"replica endpoint: {type(e).__name__}", "columns": [], "rows": [], "site": site}
+        cols, rows = res.get("columns") or [], res.get("rows") or []
+        res.setdefault("stage", "executed" if res.get("ok") else "execute")
+        res.update(site=site, columns=cols, rows=rows, row_count=res.get("row_count", len(rows)),
+                   empty_fields=k.empty_fields(cols, rows) if res.get("ok") else [], seconds=round(time.time() - t0, 2))
+        return res
+
+
+def make_db():
+    ep = os.environ.get("KG_REPLICA_ENDPOINT")
+    return HttpReplicaDB(ep, os.environ.get("KG_REPLICA_TOKEN")) if ep else ReplicaDB()
+
+
 # ================================================================================================= wiring
 def load_index_and_templates():
     import graphio
@@ -285,9 +334,16 @@ def load_index_and_templates():
 
 
 def services():
-    graph, llm, db = CosmosGraph(), GenAiLLM(), ReplicaDB()
+    """KG_ASSISTANT=deep (default): LangGraph Deep Agent (kg_deep_agent); =pipeline: single-shot kg_assistant."""
+    graph, llm, db = CosmosGraph(), GenAiLLM(), make_db()
     index, cat, templates = load_index_and_templates()
     approved_f = os.path.join(KIT, "benchmark", "approved_pairs.jsonl")
     approved = [json.loads(x) for x in open(approved_f, encoding="utf-8")] if os.path.exists(approved_f) else []
-    return SimpleNamespace(graph=graph, llm=llm, db=db, index=index, templates=templates, approved_file=approved_f,
-                           assistant=Assistant(graph=graph, llm=llm, db=db, index=index, columns=cat, templates=templates, approved=approved))
+    if os.environ.get("KG_ASSISTANT", "deep") == "deep":
+        import kg_deep_agent
+        model = kg_deep_agent.genai_model()
+        assistant = kg_deep_agent.DeepAssistant(graph=graph, db=db, index=index, columns=cat, templates=templates, approved=approved, model=model)
+        llm = SimpleNamespace(model=f"{model.model_name} (Deep Agent)")
+    else:
+        assistant = Assistant(graph=graph, llm=llm, db=db, index=index, columns=cat, templates=templates, approved=approved)
+    return SimpleNamespace(graph=graph, llm=llm, db=db, index=index, templates=templates, approved_file=approved_f, assistant=assistant)

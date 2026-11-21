@@ -38,6 +38,8 @@ ONTOLOGY = {
         "ExpertRule": ["code", "text"], "Learning": ["n", "text", "page"], "DataFact": ["n", "text", "consequence"],
         "Concept": ["page", "title", "type"], "Template": ["name", "purpose"], "JoinPath": ["name", "rtcis_join", "reason"],
         "SDCModule": ["number", "name", "description"], "PMCProcess": ["code", "name", "source_file", "documented"],
+        "SemanticConcept": ["name", "description", "n_properties", "properties", "primary_key", "mappings", "source", "theme"],
+        "ExternalSource": ["name", "validated", "theme"],
     },
     "edges": {   # label: (domain, range)
         "IN_PLATFORM": (["Table"], ["Platform"]), "HAS_COLUMN": (["Table"], ["Column"]),
@@ -51,6 +53,8 @@ ONTOLOGY = {
         "RENDERED_WITH": (["Query"], ["Template"]), "JOINS_VIA": (["Table"], ["JoinPath"]),
         "USES_TABLE": (["SDCModule"], ["Table"]), "IN_MODULE": (["PMCProcess"], ["SDCModule"]),
         "CONFIGURES": (["PMCProcess"], ["Table"]), "TRANSFORMS_TO": (["Table"], ["Table"]), "JOINS_WITH": (["Column"], ["Column"]),
+        "MAPPED_FROM": (["SemanticConcept"], ["Table", "ExternalSource"]), "INHERITS": (["SemanticConcept"], ["SemanticConcept"]),
+        "RELATES_TO": (["SemanticConcept"], ["SemanticConcept"]),
     },
 }
 KEYWORDS = set("""select from where join inner left right full outer cross apply on and or not as group by order having union all
@@ -497,6 +501,13 @@ def main():
             g.edge(e["label"], e["src"], e["dst"], **{k: v for k, v in e.items() if k not in ("label", "src", "dst")})
 
     # validated join paths: equi-joins in the ON clauses of the expert-validated query SQL (columns gated by the catalog)
+    sl_f = os.path.join(KIT, "relationships", "semantic_layer.json")
+    if os.path.exists(sl_f):      # semantic layer (Timbr) concepts, gated by the catalog in tools/semantic_layer_run.py
+        sl = json.load(open(sl_f, encoding="utf-8"))
+        for n in sl["nodes"]:
+            g.node(n["label"], n["id"].split(":", 1)[1], **{k: v for k, v in n.items() if k not in ("id", "label")})
+        for e in sl["edges"]:
+            g.edge(e["label"], e["src"], e["dst"], **{k: v for k, v in e.items() if k not in ("label", "src", "dst")})
     from kg_core import join_paths
     for side, sub in (("rtcis", "rtcis_tsql"), ("prime", "prime")):
         folder = os.path.join(WIKI, "queries", sub)

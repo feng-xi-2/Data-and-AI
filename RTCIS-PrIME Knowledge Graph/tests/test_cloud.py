@@ -39,6 +39,19 @@ def test_sdc_view_for_one_pmc_shows_what_it_configures(svc):
     assert {"PMCProcess:PMC-03.02.01", "SDCModule:03", "Table:prime:rcvlin"} <= ids
 
 
+def test_semantic_view_shows_a_concept_with_its_tables_in_the_engines(svc):
+    g = svc.graph.view("semantic", "location")
+    labels = {n["labels"][0] for n in g["nodes"]}
+    assert "SemanticConcept" in labels and {"PrIME 2014 table", "RTCIS table"} & labels
+    assert any(e["type"] == "MAPPED_FROM" for e in g["edges"])
+
+
+def test_semantic_overview_shows_concepts_and_their_relations(svc):
+    g = svc.graph.view("semantic", "")
+    assert sum(1 for n in g["nodes"] if n["labels"][0] == "SemanticConcept") >= 20
+    assert {"INHERITS", "RELATES_TO"} <= {e["type"] for e in g["edges"]}
+
+
 def test_query_view_shows_both_sides_of_a_conversion(svc):
     g = svc.graph.view("query", "R16")
     ids = {n["id"] for n in g["nodes"]}

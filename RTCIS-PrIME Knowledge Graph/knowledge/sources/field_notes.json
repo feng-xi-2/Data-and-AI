@@ -1,0 +1,83 @@
+{
+  "_readme": "Documented reason for every PrIME output field that is empty (rule E1) or disagrees with RTCIS on the same keys (rule E2). Read by tools/field_check.py; a flagged field without a note here fails the build. Format: '<CATEGORY>: <measured reason> (<evidence file>)'. Categories: tools/field_check.py EMPTY_CATEGORIES / DIFF_CATEGORIES.",
+  "R01": {
+    "LOCATN": {"diff": "NAMING: RTCIS CIMAT automated-store bin names (CIM...) do not exist as PrIME locations - 11,142 of the 13,588 differing Euskirchen pallets; the remaining 1,692 are real moves after the DE08 load (TIMING) (results/probe_field_gaps.json 'pallet location')."},
+    "CASQTY": {"diff": "TIMING: 314 of 315 differing pallets were moved/consumed in RTCIS after the DE08 load; mapping agrees on the rest (results/probe_casqty_height.json)."},
+    "ULPALL": {"diff": "NOT_CONFIGURED: every DE08 packaging pallet carries footprint 'NONE'; RTCIS pallet types (C2 ...) were not migrated as footprints."},
+    "ULPAL_ITEM": {"diff": "NOT_CONFIGURED: built from ULPALL, which is 'NONE' on DE08 packaging."},
+    "ZONCOD": {"diff": "CODE_SET: returned as PrIME area code. No PrIME zone column reproduces RTCIS zoncod (best MOV_ZONE_ID purity 0.77 over 202 zones; VELZON/CNT/WRK/PCK zones <0.42) - needs a site decode table if the RTCIS code is required (results/probe_field_gaps.json)."},
+    "BLDING": {"diff": "MORE_PRECISE: RTCIS returns 'not defined' when PIKZON is not X1..X5; PrIME derives the hall from the area prefix and fills it."},
+    "calculated_pal_height": {"empty": "NOT_CONFIGURED: DE08 packaging footprints are 'NONE' with 1x1x1 placeholder dims, so NULL instead of a fake height; Athens (live) fills it on 91% of rows (results/probe_casqty_height.json).", "diff": "NOT_CONFIGURED: same cause as the empty note."},
+    "VNDCOD": {"empty": "SITE_CONVENTION: Euskirchen stores VNDCOD+VNDLOT in invdtl.SUP_LOTNUM (100% same pallet); Athens does not use that field."},
+    "VNDLOT": {"empty": "SITE_CONVENTION: as VNDCOD."}
+  },
+  "R03": {
+    "ACTDAT": {"empty": "TEST_DATA: start/end dates are only shown for running orders (WKOSTS 'I'); DE08 has 6 of 85 test work orders running. Athens fills 96%."},
+    "ENDDAT": {"empty": "TEST_DATA: as ACTDAT; DE08 test orders have no scheduled end date. Athens fills 96%."},
+    "VNDCOD": {"empty": "TEST_DATA: wkodtl.SUP_LOTNUM is set on 5 of 1,057 DE08 work-order lines (results/probe_empty_fields.json)."},
+    "VNDLOT": {"empty": "TEST_DATA: as VNDCOD."},
+    "ULIDs_anhand_Ort": {"empty": "TEST_DATA: joins on VNDCOD/VNDLOT, which are empty on DE08 work orders."},
+    "ULIDs_anhand_Vendor_Lot": {"empty": "TEST_DATA: as ULIDs_anhand_Ort."}
+  },
+  "R05": {
+    "PO": {"empty": "NO_SOURCE: rcvinv.PO_NUM is empty on 0 of 93 DE08 receipts and on Athens; PrIME receipts carry no PO number (results/probe_empty_fields.json)."},
+    "LOCATN": {"empty": "TEST_DATA: the trailer door (trlr.YARD_LOC, location type RSDK) is set only while a trailer is checked in at a door/yard spot - 17 of 50 DE08 and 12 of 578 Athens receipts (2026-10-21 probe). trlr.STOLOC is the trailer's own location (= trailer id), not the door."}
+  },
+  "R06": {
+    "po": {"empty": "NO_SOURCE: as R05 PO."},
+    "locatn": {"empty": "TEST_DATA: as R05 LOCATN."},
+    "agv_lagerbereich": {"empty": "NO_SOURCE: RTCIS blditm put-away zone list per building has no PrIME equivalent - needs the site put-away configuration owner."},
+    "stammdaten": {"empty": "FAITHFUL_TO_ORIGINAL: the original only evaluates packaging items (itmcls 'P' / ROH); other items return NULL in RTCIS too."},
+    "itmgrp": {"empty": "FAITHFUL_TO_ORIGINAL: taken from the packaging master-data block, as in the original; NULL for non-packaging items in RTCIS too."},
+    "grpdsc": {"empty": "FAITHFUL_TO_ORIGINAL: as itmgrp."}
+  },
+  "R07": {
+    "Building": {"diff": "MORE_PRECISE: RTCIS leaves the building empty on 80% of finished-goods pallets; PrIME derives '00'+hall from the area code."},
+    "Location": {"diff": "NAMING: RTCIS CIMAT automated-store bins do not exist as PrIME locations; the rest are moves after the DE08 load (TIMING) (results/probe_field_gaps.json)."},
+    "WHSE Unit": {"diff": "CONFIG_DIFF: RTCIS warehouse unit is IT on 1,568 FERT items whose PrIME receiving level is CS (case of N items); quantity still agrees in cases (99%). Receiving unit is the best PrIME source: 86% FERT / 100% packaging items vs 58% for the stock unit (results/probe_unit_locale.json)."},
+    "Categorie": {"empty": "NO_SOURCE: RTCIS itmnum category (BABYCARE, FABRICCARE ...) - no PrIME column found in 15 prtmst columns.", "diff": "NO_SOURCE: as empty note."}
+  },
+  "R08": {
+    "VENDOR": {"empty": "SITE_CONVENTION: Euskirchen-only SUP_LOTNUM convention; Athens does not use it."},
+    "VENDOR_LOT": {"empty": "SITE_CONVENTION: as VENDOR."}
+  },
+  "R09": {"VENDOR": {"empty": "SITE_CONVENTION: as R08."}, "VENDOR_LOT": {"empty": "SITE_CONVENTION: as R08."}},
+  "R10": {"VENDOR": {"empty": "SITE_CONVENTION: as R08."}, "VENDOR_LOT": {"empty": "SITE_CONVENTION: as R08."}},
+  "R11": {"VENDOR": {"empty": "SITE_CONVENTION: as R08."}, "VENDOR_LOT": {"empty": "SITE_CONVENTION: as R08."}},
+  "R12": {
+    "PROCESS_ORDER": {"empty": "SMALL_SAMPLE: Athens returns 1 line return whose pallet has no pick work linked to a work order; DE08 has no line returns yet."}
+  },
+  "R13": {
+    "itmcls": {"diff": "INFERRED: PrIME has no class per item group; derived from the dominant part type of the family. Families without parts come back empty (CHOOKS, COUTSC); EOTEST parts are UNBW."},
+    "grpdsc": {"diff": "TEXT_VARIANT: 6 of 93 groups are worded differently (e.g. 'ALWAYS PADS (ULTRA+THICK)' vs 'ALWAYS PADS'); DE08 GERMAN dscmst text equals the English (87/92 vs 87/93) (results/probe_unit_locale.json)."},
+    "fifo_window": {"empty": "NO_SOURCE: PrIME FIFWIN is per part and 30 on every DE08 part; RTCIS keeps a window per item group (e.g. 90).", "diff": "NO_SOURCE: as empty note."}
+  },
+  "R14": {
+    "MENGE": {"diff": "CONFIG_DIFF: quantity is in the PrIME receiving unit; where RTCIS warehouse unit differs (IT vs CS on 25 lots) the number differs, the rest are stock changes after the DE08 load [not split per lot]."},
+    "WM_UNIT": {"diff": "CONFIG_DIFF: as R07 WHSE Unit."},
+    "BESTAND_SU": {"empty": "NO_SOURCE: stock value in SU needs an 'SU' unit level and item cost; PrIME has 0 'SU' footprint levels and no cost column.", "diff": "NO_SOURCE: as empty note."},
+    "SPERR_DATUM": {"diff": "DATA_NOT_MIGRATED: RTCIS lot change date; prtlot.LAST_UPD_DT is the DE08 load date and DE08 has no hold history (invhld 0 rows) (results/probe_field_gaps.json)."}
+  },
+  "R15": {
+    "PO Number": {"empty": "NO_SOURCE: as R05 PO."}
+  },
+  "R16": {
+    "Vendor Cod": {"empty": "SITE_CONVENTION: as R01 VNDCOD (Euskirchen-only SUP_LOTNUM convention)."},
+    "Vendor Lot": {"empty": "SITE_CONVENTION: as R01 VNDLOT."},
+    "PO Number": {"empty": "NO_SOURCE: as R05 PO.", "diff": "NO_SOURCE: as R05 PO."}
+  },
+  "R17": {
+    "count_itmcls": {"diff": "INFERRED: RTCIS leaves the class empty on 21% of locations while PrIME always derives one; where RTCIS is set PrIME agrees on 98.8% (CL_LATEST_PRIME2022 rule)."},
+    "CYCDAT": {"empty": "DATA_NOT_MIGRATED: last count date was not migrated; 72 of 40,110 DE08 locations have locmst.CNTDTE and none is a storage (RSTO) location. Athens fills 100%.", "diff": "DATA_NOT_MIGRATED: as empty note."},
+    "last_count_durration_days": {"empty": "DATA_NOT_MIGRATED: computed from CYCDAT.", "diff": "DATA_NOT_MIGRATED: computed from CYCDAT."},
+    "POST_COUNT_OK": {"empty": "NO_SOURCE: PrIME has no pre/post count flags (IRA learnings).", "diff": "NO_SOURCE: as empty note."},
+    "PRE_COUNT_OK": {"empty": "NO_SOURCE: as POST_COUNT_OK.", "diff": "NO_SOURCE: as POST_COUNT_OK."},
+    "serflg": {"diff": "DATA_NOT_MIGRATED: RTCIS service blocks (e.g. 'NEUER RESTE PAL. STELLPLATZ', 'NEUER CP ORT') were not migrated; where PrIME marks a location unusable (USEFLG 0) RTCIS has Y on 81% (results/probe_field_gaps.json)."},
+    "serflg_commnt": {"diff": "DATA_NOT_MIGRATED: RTCIS block remarks were not migrated; locmst.LOKCOD is empty on every DE08 location."},
+    "actdat": {"diff": "DATA_NOT_MIGRATED: PrIME LSTDTE is the last activity since the DE08 load, RTCIS keeps its own history."},
+    "itmcod": {"diff": "NOT_CONFIGURED: RTCIS fixed item per location ('00000000' = none) vs PrIME pick-face config (rplcfg) - only 72 DE08 locations have one."},
+    "caslay": {"diff": "NOT_CONFIGURED: depends on the pick-face item (itmcod)."},
+    "wm_unit": {"diff": "NOT_CONFIGURED: depends on the pick-face item (itmcod)."},
+    "arecod": {"diff": "CODE_SET: PrIME area type; SUBP=CP, PAPA/LEDO=RA, HOFF/MIXE=RO decoded, PSTO/LOAP/FUPA hold both RA and RO and stay as the PrIME type."}
+  }
+}

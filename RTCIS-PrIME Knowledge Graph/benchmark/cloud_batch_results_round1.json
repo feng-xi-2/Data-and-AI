@@ -1,0 +1,348 @@
+{
+ "ask": [
+  {
+   "engine": "PrIME2022",
+   "site": "PRIME22_DE08",
+   "question": "How many pallets (loads) are stored per location area?",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 50,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 16.8,
+   "sql": "WITH loads_by_location AS (\n    SELECT l.STOLOC,\n           COUNT(DISTINCT l.LODNUM) AS load_cnt\n    FROM dbo.invlod l\n    WHERE l.WH_ID = @wh_id\n      AND l.LODNUM IS NOT NULL\n      AND l.STOLOC IS NOT NULL\n    GROUP BY l.STOLOC\n),\nloads_by_area AS (\n    SELECT m.ARECOD,\n           SUM(x.load_cnt) AS load_cnt\n    FROM loads_by_location x\n    JOIN dbo.locmst m\n      ON m.WH_ID = @wh_id\n     AND m.STOLOC = x.STOLOC\n    GROUP BY m.ARECOD\n)\nSELECT a.BLDG_ID      AS building_id,\n       x.ARECOD       AS area_code,\n       x.load_cnt     AS pallets_loads_stored\nFROM loads_by_area x\nJOIN dbo.aremst a\n  ON a.WH_ID = @wh_id\n AND a.ARECOD = x.ARECOD\nORDER BY a.BLDG_ID, x.ARECOD;"
+  },
+  {
+   "engine": "PrIME2022",
+   "site": "PRIME22_DE08",
+   "question": "Which parts have no footprint detail?",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 36,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 6.9,
+   "sql": "SELECT TOP (200)\n    p.PRTNUM,\n    p.WH_ID_TMPL\nFROM dbo.prtmst AS p\nWHERE\n    p.WH_ID_TMPL = @wh_id\n    AND NOT EXISTS (\n        SELECT 1\n        FROM dbo.prtftp_dtl AS f\n        WHERE\n            f.WH_ID = @wh_id\n            AND f.PRTNUM = p.PRTNUM\n    )\nORDER BY\n    p.PRTNUM;"
+  },
+  {
+   "engine": "PrIME2022",
+   "site": "PRIME22_DE08",
+   "question": "Count open pick work per wave / pick batch",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 0,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [
+    "Executed but returned 0 rows - check filters / parameter values before trusting it."
+   ],
+   "seconds": 11.9,
+   "sql": "/* Count open pick work per wave / pick batch -> PrIME 2022\n   Param: @wh_id\n   NOTE: With the provided table list there is no wave/pick-batch key available (e.g., wave, batch, list_id, assign_num).\n         The closest available grouping is pick work reference (pick_buffer.wrkref), treated here as the \u201cbatch/wave handle\u201d. */\nSELECT TOP 200\n       pb.wrkref,\n       COUNT(*) AS open_pick_work_cnt,\n       SUM(CASE WHEN pb.valid_status IS NULL OR pb.valid_status NOT IN ('VALID', 'VALIDATED') THEN 1 ELSE 0 END) AS not_validated_cnt,\n       SUM(CASE WHEN pb.buffer_status IS NULL OR pb.buffer_status NOT IN ('CLOSED', 'COMPLETE') THEN 1 ELSE 0 END) AS not_closed_cnt,\n       MIN(pb.ins_dt) AS first_created_dt,\n       MAX(pb.last_upd_dt) AS last_updated_dt\nFROM dbo.pick_buffer pb\nWHERE pb.wh_id = @wh_id\n  AND ISNULL(pb.is_purged, 0) = 0\n  AND (pb.pick_result IS NULL OR pb.pick_result NOT IN ('COMPLETE', 'COMPLETED', 'CANCELLED', 'CANCELED'))\nGROUP BY pb.wrkref\nORDER BY open_pick_work_cnt DESC, pb.wrkref;"
+  },
+  {
+   "engine": "PrIME2022",
+   "site": "PRIME22_DE08",
+   "question": "List the 20 most recent inventory movements with part, quantity and from / to location",
+   "status": "validated",
+   "attempts": 2,
+   "rows": 20,
+   "error": null,
+   "empty_fields": [
+    "OPRCOD"
+   ],
+   "warnings": [
+    "Empty in every returned row: OPRCOD"
+   ],
+   "seconds": 18.5,
+   "sql": "WITH mv AS (\n    SELECT TOP (20)\n           d.TRNDTE,\n           d.DLYTRN_ID,\n           d.OPRCOD,\n           d.ACTCOD,\n           d.PRTNUM,\n           d.PRT_CLIENT_ID,\n           p.DSP_PRTNUM,\n           d.TRNQTY,\n           d.FR_ARECOD,\n           d.FRSTOL,\n           d.TO_ARECOD,\n           d.TOSTOL\n    FROM dbo.dlytrn d\n    LEFT JOIN dbo.prtmst p\n           ON p.PRTNUM = d.PRTNUM\n          AND p.PRT_CLIENT_ID = d.PRT_CLIENT_ID\n          AND p.WH_ID_TMPL = @wh_id\n    WHERE d.WH_ID = @wh_id\n      AND d.FRSTOL IS NOT NULL\n      AND d.TOSTOL IS NOT NULL\n    ORDER BY d.TRNDTE DESC, d.DLYTRN_ID DESC\n)\nSELECT mv.TRNDTE,\n       mv.DLYTRN_ID,\n       mv.ACTCOD,\n       mv.OPRCOD,\n       mv.PRT_CLIENT_ID,\n       mv.PRTNUM,\n       mv.DSP_PRTNUM,\n       mv.TRNQTY     AS qty,\n       mv.FR_ARECOD  AS from_area,\n       mv.FRSTOL     AS from_location,\n       mv.TO_ARECOD  AS to_area,\n       mv.TOSTOL     AS to_location\nFROM mv\nORDER BY mv.TRNDTE DESC, mv.DLYTRN_ID DESC;"
+  },
+  {
+   "engine": "PrIME2022",
+   "site": "PRIME22_DE08",
+   "question": "How many locations exist per area, and how many of them are empty?",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 50,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 9.9,
+   "sql": "SELECT m.ARECOD AS arecod,\n       COUNT(*) AS location_cnt,\n       SUM(CASE WHEN ISNULL(m.CURQVL, 0) = 0 AND ISNULL(m.PNDQVL, 0) = 0 THEN 1 ELSE 0 END) AS empty_location_cnt\nFROM dbo.locmst m\nJOIN dbo.aremst a\n  ON a.ARECOD = m.ARECOD\n AND a.WH_ID  = m.WH_ID\nWHERE m.WH_ID = @wh_id\nGROUP BY m.ARECOD\nORDER BY m.ARECOD;"
+  },
+  {
+   "engine": "PrIME2022",
+   "site": "PRIME22_DE08",
+   "question": "Inventory quantity per part and inventory status",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 50,
+   "error": null,
+   "empty_fields": [
+    "pakqty"
+   ],
+   "warnings": [
+    "Empty in every returned row: pakqty"
+   ],
+   "seconds": 15.1,
+   "sql": "/* Inventory quantity per part and inventory status -> PrIME 2022 (no pckwrk_view)\n   Params: @wh_id */\nSELECT i.PRTNUM,\n       i.PRT_CLIENT_ID,\n       i.INVSTS,\n       SUM(CAST(ISNULL(i.UNTQTY, 0) AS bigint)) AS untqty,\n       SUM(CAST(ISNULL(i.UNTQTY, 0) AS decimal(19,3)) / NULLIF(CAST(ISNULL(u.UNTQTY, 0) AS decimal(19,3)), 0)) AS casqty,\n       SUM(CAST(ISNULL(i.UNTQTY, 0) AS decimal(19,3)) / NULLIF(CAST(ISNULL(pu.UNTQTY, 0) AS decimal(19,3)), 0)) AS pakqty\nFROM dbo.inventory_view i\nJOIN dbo.prtmst p\n  ON p.PRTNUM = i.PRTNUM\n AND p.PRT_CLIENT_ID = i.PRT_CLIENT_ID\n AND p.WH_ID_TMPL = @wh_id\nOUTER APPLY (\n    SELECT TOP 1 f.UNTQTY\n    FROM dbo.prtftp_dtl f\n    WHERE f.PRTNUM = i.PRTNUM\n      AND f.PRT_CLIENT_ID = i.PRT_CLIENT_ID\n      AND f.WH_ID = @wh_id\n      AND f.CAS_FLG = 1\n    ORDER BY f.UOMLVL\n) u\nOUTER APPLY (\n    SELECT TOP 1 f.UNTQTY\n    FROM dbo.prtftp_dtl f\n    WHERE f.PRTNUM = i.PRTNUM\n      AND f.PRT_CLIENT_ID = i.PRT_CLIENT_ID\n      AND f.WH_ID = @wh_id\n      AND f.PAK_FLG = 1\n    ORDER BY f.UOMLVL\n) pu\nWHERE i.WH_ID = @wh_id\nGROUP BY i.PRTNUM, i.PRT_CLIENT_ID, i.INVSTS\nORDER BY i.PRTNUM, i.PRT_CLIENT_ID, i.INVSTS;"
+  },
+  {
+   "engine": "PrIME2022",
+   "site": "PRIME22_WMD1",
+   "question": "How many pallets (loads) are stored per location area?",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 32,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 14.5,
+   "sql": "WITH loads_per_location AS (\n    SELECT l.wh_id,\n           l.stoloc,\n           COUNT(DISTINCT l.lodnum) AS loads_in_location\n    FROM dbo.invlod l\n    WHERE l.wh_id = @wh_id\n      AND l.stoloc IS NOT NULL\n      AND l.lodnum IS NOT NULL\n    GROUP BY l.wh_id, l.stoloc\n)\nSELECT m.arecod                                   AS location_area,\n       COUNT(DISTINCT x.stoloc)                   AS locations_with_loads,\n       SUM(x.loads_in_location)                   AS loads_stored\nFROM loads_per_location x\nJOIN dbo.locmst m\n  ON m.wh_id  = x.wh_id\n AND m.stoloc = x.stoloc\nJOIN dbo.aremst a\n  ON a.wh_id  = m.wh_id\n AND a.arecod = m.arecod\nWHERE m.wh_id = @wh_id\nGROUP BY m.arecod\nORDER BY loads_stored DESC, m.arecod;"
+  },
+  {
+   "engine": "PrIME2014",
+   "site": "PRIME14_XQ",
+   "question": "How many pallets (loads) are stored per location area?",
+   "status": "validated",
+   "attempts": 2,
+   "rows": 0,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [
+    "Executed but returned 0 rows - check filters / parameter values before trusting it."
+   ],
+   "seconds": 20.1,
+   "sql": "SELECT TOP 200\n       il.wh_id,\n       il.stoloc AS location_area,\n       COUNT(DISTINCT il.lodnum) AS pallets_stored_cnt\nFROM prodwms.invlod AS il\nWHERE il.wh_id = CAST(SESSION_CONTEXT(N'wh_id') AS nvarchar(50))\n  AND il.stoloc IS NOT NULL\n  AND LTRIM(RTRIM(il.stoloc)) <> ''\nGROUP BY\n       il.wh_id,\n       il.stoloc\nORDER BY\n       pallets_stored_cnt DESC,\n       il.stoloc;"
+  },
+  {
+   "engine": "PrIME2014",
+   "site": "PRIME14_XQ",
+   "question": "Top 20 parts by number of pallets in stock",
+   "status": "failed validation",
+   "attempts": 2,
+   "rows": null,
+   "error": "Must declare the scalar variable \"@wh_id\".",
+   "empty_fields": null,
+   "warnings": [],
+   "seconds": 20.0,
+   "sql": "WITH wh AS (\n    SELECT TOP 1 CAST(@wh_id AS nvarchar(50)) AS wh_id\n),\npallets_by_part AS (\n    SELECT\n        d.prtnum,\n        d.prt_client_id,\n        COUNT(DISTINCT l.lodnum) AS pallet_cnt\n    FROM prodwms.invdtl d\n    CROSS JOIN wh\n    JOIN prodwms.invlod l\n        ON l.lodnum = d.subnum\n       AND l.wh_id  = wh.wh_id\n    WHERE d.untqty > 0\n    GROUP BY\n        d.prtnum,\n        d.prt_client_id\n)\nSELECT TOP 20\n    p.prtnum,\n    p.prt_client_id,\n    pm.dsp_prtnum,\n    p.pallet_cnt\nFROM pallets_by_part p\nCROSS JOIN wh\nLEFT JOIN prodwms.prtmst pm\n    ON pm.prtnum = p.prtnum\n   AND pm.prt_client_id = p.prt_client_id\n   AND pm.wh_id_tmpl = wh.wh_id  -- WHT guard to avoid dual-row ('----') duplication\nORDER BY\n    p.pallet_cnt DESC,\n    p.prtnum,\n    p.prt_client_id;"
+  },
+  {
+   "engine": "RTCIS",
+   "site": "RTCIS_EUS",
+   "question": "How many unit loads are in each location zone?",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 50,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 19.1,
+   "sql": "SELECT\n    l.subsit,\n    l.zoncod AS location_zone,\n    COUNT(DISTINCT d.ulid) AS unit_loads\nFROM [EUSKIRCHEN_simp].live3.locatn l\nJOIN [EUSKIRCHEN_simp].live3.sysdtl d\n    ON d.subsit = l.subsit\n   AND d.locatn = l.locatn\nWHERE l.subsit IN ('0','1')\n  AND d.ulid IS NOT NULL\nGROUP BY\n    l.subsit,\n    l.zoncod\nORDER BY\n    l.subsit,\n    l.zoncod;"
+  },
+  {
+   "engine": "RTCIS",
+   "site": "RTCIS_EUS",
+   "question": "Top 20 items by number of unit loads in stock",
+   "status": "failed validation",
+   "attempts": 2,
+   "rows": null,
+   "error": "Invalid column name 'ulid20'.",
+   "empty_fields": null,
+   "warnings": [],
+   "seconds": 16.8,
+   "sql": "WITH ul_by_item AS (\n    SELECT u.itmcls,\n           u.itmcod,\n           COUNT(DISTINCT u.ulid20) AS unit_loads_in_stock\n    FROM [EUSKIRCHEN_simp].live3.untdtl u\n    WHERE u.casqty > 0\n    GROUP BY u.itmcls, u.itmcod\n)\nSELECT TOP 200\n       u.itmcls,\n       u.itmcod,\n       it.itmdsc,\n       it.itmgrp,\n       ig.grpdsc AS itmgrp_description,\n       u.unit_loads_in_stock\nFROM ul_by_item u\nJOIN [EUSKIRCHEN_simp].live3.itmmst it\n  ON it.itmcls = u.itmcls\n AND it.itmcod = u.itmcod\nLEFT JOIN [EUSKIRCHEN_simp].live3.itmgrp ig\n  ON ig.itmcls = it.itmcls\n AND ig.itmgrp = it.itmgrp\nORDER BY u.unit_loads_in_stock DESC, u.itmcls, u.itmcod;"
+  }
+ ],
+ "convert": [
+  {
+   "qid": "R01",
+   "title": "CBO_P_CLASS_INVENTORY_DE07_VIEW",
+   "status": "validated, contract differs",
+   "attempts": 2,
+   "source_ok": false,
+   "rows": 50,
+   "error": null,
+   "contract_identical": false,
+   "missing": [],
+   "extra": [
+    "LOCATN",
+    "ITMCOD",
+    "ITMGRP",
+    "ULID20",
+    "CASQTY",
+    "QASTAT",
+    "FIFODT",
+    "CTLGRP",
+    "ULPALL",
+    "ZONCOD",
+    "last_update",
+    "BLDING",
+    "MATTYP",
+    "calculated_pal_height",
+    "UOM",
+    "VNDCOD",
+    "VNDLOT",
+    "ULPAL_ITEM"
+   ],
+   "empty_fields": [
+    "VNDCOD",
+    "VNDLOT"
+   ],
+   "seconds": 44.9,
+   "sql": "WITH s1 AS\n(\n    SELECT DISTINCT\n        iv.stoloc AS LOCATN,\n        iv.prtnum AS ITMCOD,\n        prt.prtfam AS ITMGRP,\n        iv.lodnum AS ULID20,\n        iv.untqty AS CASQTY,\n        iv.invsts AS QASTAT,\n        iv.fifdte AS FIFODT,\n        iv.lotnum AS CTLGRP,\n        iv.ftpcod AS ULPALL,\n        lo.arecod AS ZONCOD,\n        CASE\n            WHEN lo.arecod = 'X1' THEN CONVERT(varchar(12), 'Halle 1')\n            WHEN lo.arecod = 'X2' THEN CONVERT(varchar(12), 'Halle 2')\n            WHEN lo.arecod = 'X3' THEN CONVERT(varchar(12), 'Halle 3')\n            WHEN lo.arecod = 'X4' THEN CONVERT(varchar(12), 'Halle 4')\n            WHEN lo.arecod = 'X5' THEN CONVERT(varchar(12), 'Halle 5')\n            WHEN lo.arecod = 'XC' THEN CONVERT(varchar(12), 'Modul')\n            ELSE CONVERT(varchar(10), 'not defined')\n        END AS BLDING,\n        CASE\n            WHEN SUBSTRING(prt.prtfam, 1, 1) = 'W' OR prt.prtfam = 'PAPPWP' THEN CONVERT(varchar(12), 'Wipes')\n            WHEN SUBSTRING(prt.prtfam, 1, 1) = 'R' THEN CONVERT(varchar(12), 'Rawmaterial')\n            WHEN SUBSTRING(prt.prtfam, 1, 1) = 'P' THEN CONVERT(varchar(12), 'Packmaterial')\n            ELSE CONVERT(varchar(12), 'not defined')\n        END AS MATTYP\n    FROM dbo.inventory_view AS iv\n    INNER JOIN dbo.locmst AS lo\n        ON lo.wh_id = iv.wh_id\n       AND lo.stoloc = iv.stoloc\n    INNER JOIN dbo.prtmst AS prt\n        ON prt.prtnum = iv.prtnum\n       AND prt.wh_id_tmpl = @wh_id\n    WHERE iv.wh_id = @wh_id\n      AND iv.prmflg = 1\n),\ns2 AS\n(\n    SELECT\n        pftv.prtnum AS ITMCOD,\n        pftd.uomcod AS UOM,\n        pftv.untlay AS ITMCNF_CASLAY,\n        (pftv.untlay * pftv.untpal) AS ITMMST_QTY,\n        pftv.ftpcod AS ULPALL,\n        pftd.hgt AS U_HEIGHT,\n        CASE WHEN pftd.pal_flg = 1 THEN 'Y' ELSE 'N' END AS PALFLG\n    FROM dbo.prtftp_view AS pftv\n    OUTER APPLY\n    (\n        SELECT TOP (1)\n            d.uomcod,\n            d.hgt,\n            d.pal_flg\n        FROM dbo.prtftp_dtl AS d\n        WHERE d.prtnum = pftv.prtnum\n          AND d.prt_client_id = pftv.prt_client_id\n          AND d.wh_id = pftv.wh_id\n          AND d.ftpcod = pftv.ftpcod\n          AND d.stk_flg = 1\n        ORDER BY d.uomlvl\n    ) AS pftd\n    WHERE pftv.wh_id = @wh_id\n)\nSELECT TOP (200)\n    s1.LOCATN,\n    s1.ITMCOD,\n    s1.ITMGRP,\n    s1.ULID20,\n    s1.CASQTY,\n    s1.QASTAT,\n    s1.FIFODT,\n    s1.CTLGRP,\n    s1.ULPALL,\n    s1.ZONCOD,\n    CONVERT(datetime, GETDATE()) AS last_update,\n    s1.BLDING,\n    s1.MATTYP,\n    (CASE WHEN s2.PALFLG = 'Y' THEN CONVERT(int, s2.U_HEIGHT + 15) ELSE CONVERT(int, s2.U_HEIGHT) END) AS calculated_pal_height,\n    s2.UOM,\n    iv.vc_vndnum AS VNDCOD,\n    iv.sup_lotnum AS VNDLOT,\n    CONCAT(s1.ULPALL, s1.ITMCOD) AS ULPAL_ITEM\nFROM s1\nINNER JOIN s2\n    ON s2.ITMCOD = s1.ITMCOD\n   AND s2.ULPALL = s1.ULPALL\nINNER JOIN dbo.inventory_view AS iv\n    ON iv.wh_id = @wh_id\n   AND iv.stoloc = s1.LOCATN\n   AND iv.prtnum = s1.ITMCOD\n   AND iv.lodnum = s1.ULID20;"
+  },
+  {
+   "qid": "R03",
+   "title": "Direct_LINE_BEVO_PRIORITIES",
+   "status": "validated",
+   "attempts": 2,
+   "source_ok": true,
+   "rows": 50,
+   "error": null,
+   "contract_identical": true,
+   "missing": [],
+   "extra": [],
+   "empty_fields": [
+    "ACTDAT",
+    "ENDDAT",
+    "CTLGRP",
+    "VNDCOD",
+    "VNDLOT",
+    "ULIDs_anhand_Ort",
+    "ULIDs_anhand_Vendor_Lot"
+   ],
+   "seconds": 30.6,
+   "sql": "WITH rl AS (\n    SELECT\n        il.lodnum         AS ULID,\n        il.stoloc         AS locatn,\n        id.prtnum         AS itmcod,\n        id.lotnum         AS ctlgrp,\n        id.sup_lotnum     AS vndlot,\n        id.supnum         AS vndcod\n    FROM dbo.invlod il\n    JOIN dbo.invsub isb\n        ON isb.lodnum = il.lodnum\n    JOIN dbo.invdtl id\n        ON id.subnum = isb.subnum\n       AND id.dtlnum = isb.subnum\n    WHERE il.wh_id = @wh_id\n      AND il.stoloc NOT LIKE '%RWZ%'\n      -- OBS7(dropped): ud.itmcls = 'P' (no item class available in allowed PrIME tables/columns)\n      -- OBS7(dropped): ct.qastat = 'RL' (no QA status available in allowed PrIME tables/columns)\n),\nB AS (\n    SELECT\n        COUNT(ULID) AS ULIDs,\n        locatn,\n        itmcod,\n        vndlot,\n        vndcod\n    FROM rl\n    GROUP BY locatn, itmcod, vndlot, vndcod\n),\nD_lot AS (\n    SELECT\n        COUNT(ULID) AS ULIDs,\n        vndcod,\n        vndlot\n    FROM rl\n    GROUP BY vndcod, vndlot\n),\nE AS (\n    SELECT\n        h.wkonum                                         AS PRDORD,\n        h.sch_begdte                                     AS ACTDAT,\n        h.sch_enddte                                     AS ENDDAT,\n        wd.prtnum                                        AS SPCCD1,\n        SUM(wd.linqty - ISNULL(wd.tot_dlvqty, 0))        AS Offener_Bedarf_IN_WM_Unit,\n        h.prdlin                                         AS LINIE,\n        h.prtnum                                         AS ITMCOD\n    FROM dbo.wkohdr h\n    JOIN dbo.wkodtl wd\n        ON wd.wkonum = h.wkonum\n       AND wd.client_id = h.client_id\n       AND wd.wkorev = h.wkorev\n       AND wd.wh_id = h.wh_id\n    WHERE h.wh_id = @wh_id\n      -- OBS7(dropped): R.SPCCD1_ITMCLS = 'P' (no item class available in allowed PrIME tables/columns)\n      -- OBS7(dropped): Q.COMPLETE_FLAG = 'A' (no completion flag available in allowed PrIME tables/columns)\n      -- OBS7(dropped): L.SUBSIT = '0' (no subsite column available in allowed PrIME tables/columns)\n      AND (wd.linqty - ISNULL(wd.tot_dlvqty, 0)) > 0\n    GROUP BY\n        h.wkonum, h.sch_begdte, h.sch_enddte, wd.prtnum, h.prdlin, h.prtnum\n)\nSELECT TOP (200)\n    h.prdlin                                 AS PLNUMB,\n    h.wkonum                                 AS PRDORD,\n    E.ACTDAT                                 AS ACTDAT,\n    E.ENDDAT                                 AS ENDDAT,\n    wd.prtnum                                AS ITMCOD,\n    wd.prtnum                                AS SPCCOD,\n    wd.seqnum                                AS LINSEQ,\n    wd.prcloc                                AS LOCATN,\n    wd.lotnum                                AS CTLGRP,\n    wd.supnum                                AS VNDCOD,\n    wd.sup_lotnum                            AS VNDLOT,\n    B.ULIDs                                  AS ULIDs_anhand_Ort,\n    D_lot.ULIDs                              AS ULIDs_anhand_Vendor_Lot,\n    FORMAT(MAX(t.trndte), 'dd.MM.yyyy HH:mm') AS Last_Update\nFROM dbo.wkohdr h\nJOIN dbo.wkodtl wd\n    ON wd.wkonum = h.wkonum\n   AND wd.client_id = h.client_id\n   AND wd.wkorev = h.wkorev\n   AND wd.wh_id = h.wh_id\nLEFT JOIN B\n    ON wd.prtnum = B.itmcod\n   AND wd.prcloc = B.locatn\n   AND wd.sup_lotnum = B.vndlot\n   AND wd.supnum = B.vndcod\nLEFT JOIN D_lot\n    ON wd.supnum = D_lot.vndcod\n   AND wd.sup_lotnum = D_lot.vndlot\nLEFT JOIN E\n    ON wd.prtnum = E.ITMCOD\n   AND wd.prtnum = E.SPCCD1\n   AND h.wkonum = E.PRDORD\nCROSS JOIN dbo.dlytrn t\nWHERE h.wh_id = @wh_id\nGROUP BY\n    h.prdlin, h.wkonum, E.ACTDAT, E.ENDDAT, wd.prtnum, wd.seqnum, wd.prcloc, wd.lotnum, wd.supnum, wd.sup_lotnum,\n    B.ULIDs, D_lot.ULIDs\nORDER BY\n    h.prdlin, h.wkonum, wd.seqnum;"
+  },
+  {
+   "qid": "R04",
+   "title": "equip",
+   "status": "validated",
+   "attempts": 1,
+   "source_ok": true,
+   "rows": 31,
+   "error": null,
+   "contract_identical": true,
+   "missing": [],
+   "extra": [],
+   "empty_fields": [],
+   "seconds": 15.7,
+   "sql": "SELECT TOP (200)\n       v.vehtyp_id AS equip,\n       COALESCE(d.short_dsc, d.lngdsc) AS equip_desc\nFROM dbo.vehtyp AS v\nOUTER APPLY (\n    SELECT TOP (1)\n           d1.short_dsc,\n           d1.lngdsc\n    FROM dbo.dscmst AS d1\n    WHERE d1.colnam = N'vehtyp_id'\n      AND d1.colval = v.vehtyp_id\n      AND ISNULL(d1.is_purged, 0) = 0\n    ORDER BY\n        CASE WHEN d1.short_dsc IS NOT NULL THEN 0 ELSE 1 END,\n        CASE WHEN d1.lngdsc  IS NOT NULL THEN 0 ELSE 1 END\n) AS d\nWHERE ISNULL(v.is_purged, 0) = 0\nORDER BY v.vehtyp_id;"
+  },
+  {
+   "qid": "R08",
+   "title": "IMP_LINE_DELIVERY_HISTORY_FROM_DAS",
+   "status": "validated",
+   "attempts": 1,
+   "source_ok": true,
+   "rows": 0,
+   "error": null,
+   "contract_identical": true,
+   "missing": [],
+   "extra": [],
+   "empty_fields": [],
+   "seconds": 27.8,
+   "sql": "WITH base_p1 AS (\n    SELECT\n        CASE d.frstol WHEN 'SILOB' THEN 'ULINA4' WHEN 'SILOA' THEN 'ULINA3' ELSE d.frstol END AS LOCATN,\n        d.trndte AS SYSDAT,\n        d.prtnum AS ITMCOD,\n        LEFT(pd.lngdsc, 15) AS ITMDSC,\n        d.lotnum AS CTLGRP,\n        LEFT(i.supnum, 4) AS VNDCOD,\n        i.sup_lotnum AS VNDLOT,\n        d.trnqty AS TRNQTY,\n        pfd.uomcod AS UOM,\n        SUBSTRING(d.movref, 4, 9) AS PRDORD,\n        LEFT(d.lodnum, 20) AS ULID\n    FROM dbo.dlytrn d\n    JOIN dbo.invdtl i\n        ON i.dtlnum = d.dtlnum\n       AND i.subnum = d.subnum\n    JOIN dbo.prtmst pm\n        ON pm.prtnum = d.prtnum\n       AND pm.prt_client_id = d.prt_client_id\n       AND pm.wh_id_tmpl = @wh_id\n    OUTER APPLY (\n        SELECT TOP (1) pd1.lngdsc\n        FROM dbo.prtdsc pd1\n        WHERE pd1.colnam = 'prtmst.prtnum'\n          AND pd1.colval = pm.prtnum\n          AND pd1.is_purged = 0\n        ORDER BY pd1.locale_id\n    ) pd\n    OUTER APPLY (\n        SELECT TOP (1) pfd1.uomcod\n        FROM dbo.prtftp_dtl pfd1\n        WHERE pfd1.prtnum = d.prtnum\n          AND pfd1.prt_client_id = d.prt_client_id\n          AND pfd1.wh_id = @wh_id\n          AND pfd1.is_purged = 0\n        ORDER BY pfd1.uomlvl\n    ) pfd\n    WHERE d.trndte > DATEADD(day, -3, GETDATE())\n      AND d.frstol LIKE 'ULIN%'\n      AND d.actcod IN ('DEPSUL', 'LINUSE')          -- tag: CODESET_DIFFERS from RTCIS TRNTYP\n      AND d.wh_id = @wh_id\n),\nsq1 AS (\n    SELECT\n        CASE d.frstol WHEN 'SILOB' THEN 'ULINA4' WHEN 'SILOA' THEN 'ULINA3' ELSE d.frstol END AS LOCATN,\n        d.dlytrn_id\n    FROM dbo.dlytrn d\n    WHERE d.trndte > DATEADD(day, -3, GETDATE())\n      AND d.frstol LIKE 'ULIN%'\n      AND d.oprcod = 'T'                           -- tag: CODESET_DIFFERS from RTCIS DTLTYP\n      AND d.movref IS NOT NULL                     -- movref used as PRDORD source\n      AND d.wh_id = @wh_id\n),\nbase_p2 AS (\n    SELECT\n        sq1.LOCATN,\n        d.trndte AS SYSDAT,\n        d.prtnum AS ITMCOD,\n        LEFT(pd.lngdsc, 15) AS ITMDSC,\n        d.lotnum AS CTLGRP,\n        LEFT(i.supnum, 4) AS VNDCOD,\n        i.sup_lotnum AS VNDLOT,\n        d.trnqty AS TRNQTY,\n        pfd.uomcod AS UOM,\n        SUBSTRING(d.movref, 4, 9) AS PRDORD,\n        LEFT(d.lodnum, 20) AS ULID\n    FROM dbo.dlytrn d\n    JOIN sq1\n        ON sq1.dlytrn_id = d.dlytrn_id\n    JOIN dbo.invdtl i\n        ON i.dtlnum = d.dtlnum\n       AND i.subnum = d.subnum\n    JOIN dbo.prtmst pm\n        ON pm.prtnum = d.prtnum\n       AND pm.prt_client_id = d.prt_client_id\n       AND pm.wh_id_tmpl = @wh_id\n    OUTER APPLY (\n        SELECT TOP (1) pd1.lngdsc\n        FROM dbo.prtdsc pd1\n        WHERE pd1.colnam = 'prtmst.prtnum'\n          AND pd1.colval = pm.prtnum\n          AND pd1.is_purged = 0\n        ORDER BY pd1.locale_id\n    ) pd\n    OUTER APPLY (\n        SELECT TOP (1) pfd1.uomcod\n        FROM dbo.prtftp_dtl pfd1\n        WHERE pfd1.prtnum = d.prtnum\n          AND pfd1.prt_client_id = d.prt_client_id\n          AND pfd1.wh_id = @wh_id\n          AND pfd1.is_purged = 0\n        ORDER BY pfd1.uomlvl\n    ) pfd\n    WHERE d.trndte > DATEADD(day, -3, GETDATE())\n      AND d.oprcod = 'F'                           -- tag: CODESET_DIFFERS from RTCIS DTLTYP\n      AND d.actcod = 'CASXFR'                      -- tag: CODESET_DIFFERS from RTCIS TRNTYP\n      AND d.movref IS NOT NULL\n      AND d.wh_id = @wh_id\n)\nSELECT TOP (200)\n    LOCATN AS LINE,\n    FORMAT(SYSDAT, 'yyyy-MM-dd HH:mm:ss') AS DELIVERY_DATE,\n    ITMCOD,\n    ITMDSC AS DESCRIPTION,\n    CTLGRP,\n    VNDCOD AS VENDOR,\n    VNDLOT AS VENDOR_LOT,\n    TRNQTY AS QTY,\n    UOM AS WM_UNIT,\n    PRDORD AS PROCESS_ORDER,\n    ULID,\n    CONCAT(ULID, FORMAT(SYSDAT, 'yyyy.MM.dd HH:mm:ss')) AS ID_NR\nFROM base_p1\nUNION\nSELECT TOP (200)\n    LOCATN,\n    FORMAT(SYSDAT, 'yyyy-MM-dd HH:mm:ss'),\n    ITMCOD,\n    ITMDSC,\n    CTLGRP,\n    VNDCOD,\n    VNDLOT,\n    TRNQTY,\n    UOM,\n    PRDORD,\n    ULID,\n    CONCAT(ULID, FORMAT(SYSDAT, 'yyyy.MM.dd HH:mm:ss'))\nFROM base_p2;"
+  },
+  {
+   "qid": "R09",
+   "title": "IMP_LINE_DELIVERY_HISTORY_FROM_RTCIS",
+   "status": "validated",
+   "attempts": 1,
+   "source_ok": true,
+   "rows": 0,
+   "error": null,
+   "contract_identical": true,
+   "missing": [],
+   "extra": [],
+   "empty_fields": [],
+   "seconds": 19.6,
+   "sql": "WITH p1 AS (\n    SELECT\n        CASE d.tostol WHEN 'SILOB' THEN 'ULINA4' WHEN 'SILOA' THEN 'ULINA3' ELSE d.tostol END AS LOCATN,\n        d.trndte AS SYSDAT,\n        d.prtnum AS ITMCOD,\n        LEFT(pd.lngdsc, 15) AS ITMDSC,\n        d.lotnum AS CTLGRP,\n        LEFT(id.supnum, 4) AS VNDCOD,\n        id.sup_lotnum AS VNDLOT,\n        d.trnqty AS TRNQTY,\n        u.uomcod AS UOM,\n        SUBSTRING(d.movref, 4, 9) AS PRDORD,\n        LEFT(d.lodnum, 20) AS ULID\n    FROM dbo.dlytrn d\n    LEFT JOIN dbo.invdtl id\n        ON id.dtlnum = d.dtlnum\n       AND id.subnum = d.subnum\n    LEFT JOIN dbo.prtmst pm\n        ON pm.prtnum = d.prtnum\n       AND pm.wh_id_tmpl = @wh_id\n    OUTER APPLY (\n        SELECT TOP (1)\n            p.lngdsc\n        FROM dbo.prtdsc p\n        WHERE p.colnam = 'prtnum'\n          AND p.colval = d.prtnum\n          AND ISNULL(p.is_purged, 0) = 0\n    ) pd\n    OUTER APPLY (\n        SELECT TOP (1)\n            pfd.uomcod\n        FROM dbo.prtftp_dtl pfd\n        WHERE pfd.prtnum = d.prtnum\n          AND pfd.prt_client_id = d.prt_client_id\n          AND pfd.wh_id = @wh_id\n          AND ISNULL(pfd.is_purged, 0) = 0\n        ORDER BY pfd.uomlvl\n    ) u\n    WHERE d.wh_id = @wh_id\n      AND d.tostol LIKE 'ULIN%'\n      AND d.actcod IN ('DEPSUL', 'LINUSE')\n      AND d.trndte >= DATEADD(minute, -120, GETDATE())\n      AND d.trndte <= GETDATE()\n),\nsq1 AS (\n    SELECT DISTINCT\n        CASE d.tostol WHEN 'SILOB' THEN 'ULINA4' WHEN 'SILOA' THEN 'ULINA3' ELSE d.tostol END AS LOCATN,\n        d.dlytrn_id AS TRNSEQ\n    FROM dbo.dlytrn d\n    WHERE d.wh_id = @wh_id\n      AND d.tostol LIKE 'ULIN%'\n      AND d.oprcod = 'T'\n      AND d.movref IS NOT NULL\n      AND d.trndte >= DATEADD(minute, -120, GETDATE())\n      AND d.trndte <= GETDATE()\n),\np2 AS (\n    SELECT\n        sq1.LOCATN,\n        d.trndte AS SYSDAT,\n        d.prtnum AS ITMCOD,\n        LEFT(pd.lngdsc, 15) AS ITMDSC,\n        d.lotnum AS CTLGRP,\n        LEFT(id.supnum, 4) AS VNDCOD,\n        id.sup_lotnum AS VNDLOT,\n        d.trnqty AS TRNQTY,\n        u.uomcod AS UOM,\n        SUBSTRING(d.movref, 4, 9) AS PRDORD,\n        LEFT(d.lodnum, 20) AS ULID\n    FROM dbo.dlytrn d\n    JOIN sq1\n        ON sq1.TRNSEQ = d.dlytrn_id\n    LEFT JOIN dbo.invdtl id\n        ON id.dtlnum = d.dtlnum\n       AND id.subnum = d.subnum\n    LEFT JOIN dbo.prtmst pm\n        ON pm.prtnum = d.prtnum\n       AND pm.wh_id_tmpl = @wh_id\n    OUTER APPLY (\n        SELECT TOP (1)\n            p.lngdsc\n        FROM dbo.prtdsc p\n        WHERE p.colnam = 'prtnum'\n          AND p.colval = d.prtnum\n          AND ISNULL(p.is_purged, 0) = 0\n    ) pd\n    OUTER APPLY (\n        SELECT TOP (1)\n            pfd.uomcod\n        FROM dbo.prtftp_dtl pfd\n        WHERE pfd.prtnum = d.prtnum\n          AND pfd.prt_client_id = d.prt_client_id\n          AND pfd.wh_id = @wh_id\n          AND ISNULL(pfd.is_purged, 0) = 0\n        ORDER BY pfd.uomlvl\n    ) u\n    WHERE d.wh_id = @wh_id\n      AND d.oprcod = 'F'\n      AND d.actcod = 'CASXFR'\n      AND d.movref IS NOT NULL\n      AND d.trndte >= DATEADD(minute, -120, GETDATE())\n      AND d.trndte <= GETDATE()\n)\nSELECT TOP (200)\n    LOCATN AS LINE,\n    FORMAT(SYSDAT, 'yyyy-MM-dd HH:mm:ss') AS DELIVERY_DATE,\n    ITMCOD,\n    ITMDSC AS DESCRIPTION,\n    CTLGRP,\n    VNDCOD AS VENDOR,\n    VNDLOT AS VENDOR_LOT,\n    TRNQTY AS QTY,\n    UOM AS WM_UNIT,\n    PRDORD AS PROCESS_ORDER,\n    ULID,\n    CONCAT(ULID, FORMAT(SYSDAT, 'yyyy.MM.dd HH:mm:ss')) AS ID_NR\nFROM p1\nUNION\nSELECT\n    LOCATN AS LINE,\n    FORMAT(SYSDAT, 'yyyy-MM-dd HH:mm:ss') AS DELIVERY_DATE,\n    ITMCOD,\n    ITMDSC AS DESCRIPTION,\n    CTLGRP,\n    VNDCOD AS VENDOR,\n    VNDLOT AS VENDOR_LOT,\n    TRNQTY AS QTY,\n    UOM AS WM_UNIT,\n    PRDORD AS PROCESS_ORDER,\n    ULID,\n    CONCAT(ULID, FORMAT(SYSDAT, 'yyyy.MM.dd HH:mm:ss')) AS ID_NR\nFROM p2;"
+  },
+  {
+   "qid": "R10",
+   "title": "IMP_LINE_RETURN_HISTORY_FROM_DAS",
+   "status": "failed validation",
+   "attempts": 2,
+   "source_ok": true,
+   "rows": null,
+   "error": "Invalid column name 'to_stol'.",
+   "contract_identical": false,
+   "missing": [
+    "LINE",
+    "RETURN_DATE",
+    "ITMCOD",
+    "DESCRIPTION",
+    "CTLGRP",
+    "VENDOR",
+    "VENDOR_LOT",
+    "QTY",
+    "WM_UNIT",
+    "PROCESS_ORDER",
+    "ULID",
+    "ID_NR"
+   ],
+   "extra": [],
+   "empty_fields": null,
+   "seconds": 26.2,
+   "sql": "SELECT TOP (200)\n       CASE d.to_stol WHEN 'SILOB' THEN 'ULINA4' WHEN 'SILOA' THEN 'ULINA3' ELSE d.to_stol END AS LINE,\n       FORMAT(d.trndte, 'yyyy-MM-dd HH:mm:ss') AS RETURN_DATE,\n       d.prtnum AS ITMCOD,\n       LEFT(COALESCE(dsc.short_dsc, dsc.lngdsc), 15) AS DESCRIPTION,\n       d.lotnum AS CTLGRP,\n       LEFT(d.sup_lotnum, 4) AS VENDOR,\n       d.sup_lotnum AS VENDOR_LOT,\n       d.trnqty AS QTY,\n       uom.uomcod AS WM_UNIT,\n       SUBSTRING(d.movref, 4, 9) AS PROCESS_ORDER,\n       d.lodnum AS ULID,\n       CONCAT(d.lodnum, FORMAT(d.trndte, 'yyyy.MM.dd HH:mm:ss')) AS ID_NR\nFROM dbo.dlytrn d\nJOIN dbo.prtmst pm\n  ON pm.prtnum = d.prtnum\n AND pm.wh_id_tmpl = @wh_id\nOUTER APPLY (\n    SELECT TOP (1) pd.short_dsc, pd.lngdsc\n    FROM dbo.prtdsc pd\n    WHERE pd.colnam = 'prtnum'\n      AND pd.colval = d.prtnum\n      AND pd.is_purged = 0\n) dsc\nOUTER APPLY (\n    SELECT TOP (1) pfd.uomcod\n    FROM dbo.prtftp_dtl pfd\n    WHERE pfd.prtnum = d.prtnum\n      AND pfd.wh_id = @wh_id\n      AND pfd.is_purged = 0\n    ORDER BY pfd.uomlvl\n) uom\nWHERE d.wh_id = @wh_id\n  AND pm.typcod = 'P'\n  AND d.to_stol LIKE 'ULIN%'\n  AND d.actcod = 'MANLID'\n  AND d.trndte > DATEADD(DAY, -3, GETDATE());"
+  },
+  {
+   "qid": "R11",
+   "title": "IMP_LINE_RETURN_HISTORY_FROM_RTCIS",
+   "status": "validated",
+   "attempts": 1,
+   "source_ok": true,
+   "rows": 0,
+   "error": null,
+   "contract_identical": true,
+   "missing": [],
+   "extra": [],
+   "empty_fields": [],
+   "seconds": 19.0,
+   "sql": "SELECT TOP (200)\n       CASE dly.tostol\n            WHEN 'SILOB' THEN 'ULINA4'\n            WHEN 'SILOA' THEN 'ULINA3'\n            ELSE dly.tostol\n       END AS LINE,\n       FORMAT(dly.trndte, 'yyyy-MM-dd HH:mm:ss') AS RETURN_DATE,\n       dly.prtnum AS ITMCOD,\n       LEFT(COALESCE(prtdsc_oa.lngdsc, prtdsc_oa.short_dsc), 15) AS DESCRIPTION,\n       dly.lotnum AS CTLGRP,\n       LEFT(inv.supnum, 4) AS VENDOR,\n       inv.sup_lotnum AS VENDOR_LOT,\n       dly.trnqty AS QTY,\n       prtftp_dtl_oa.uomcod AS WM_UNIT,\n       SUBSTRING(dly.movref, 4, 9) AS PROCESS_ORDER,\n       dly.lodnum AS ULID,\n       CONCAT(dly.lodnum, FORMAT(dly.trndte, 'yyyy.MM.dd HH:mm:ss')) AS ID_NR\nFROM dbo.dlytrn dly\nJOIN dbo.prtmst prt\n  ON prt.prtnum = dly.prtnum\n AND prt.WH_ID_TMPL = @wh_id\nLEFT JOIN dbo.invdtl inv\n  ON inv.dtlnum = dly.dtlnum\n AND inv.subnum = dly.subnum\nOUTER APPLY (\n    SELECT TOP (1)\n           pd.lngdsc,\n           pd.short_dsc\n    FROM dbo.prtdsc pd\n    WHERE pd.colnam = 'prtnum'\n      AND pd.colval = dly.prtnum\n      AND pd.is_purged = 0\n    ORDER BY pd.locale_id\n) prtdsc_oa\nOUTER APPLY (\n    SELECT TOP (1)\n           pfd.uomcod\n    FROM dbo.prtftp_dtl pfd\n    WHERE pfd.prtnum = dly.prtnum\n      AND pfd.prt_client_id = dly.prt_client_id\n      AND pfd.wh_id = @wh_id\n      AND pfd.is_purged = 0\n    ORDER BY pfd.uomlvl\n) prtftp_dtl_oa\nWHERE dly.wh_id = @wh_id\n  AND prt.typcod = 'P'\n  AND dly.tostol LIKE 'ULIN%'\n  AND dly.actcod = 'MANLID'\n  AND dly.trndte > DATEADD(day, -33, GETDATE())\n  AND dly.trndte <= GETDATE();"
+  },
+  {
+   "qid": "R12",
+   "title": "IMP_LINE_RETURNS_90days_wholeQtyBack",
+   "status": "validated",
+   "attempts": 1,
+   "source_ok": true,
+   "rows": 0,
+   "error": null,
+   "contract_identical": true,
+   "missing": [],
+   "extra": [],
+   "empty_fields": [],
+   "seconds": 20.8,
+   "sql": "WITH deliv AS (\n    SELECT\n        dt.trndte AS DELIVERY_DATE,\n        CASE dt.tostol\n            WHEN 'SILOB' THEN 'ULINA4'\n            WHEN 'SILOA' THEN 'ULINA3'\n            ELSE dt.tostol\n        END AS LINE,\n        dt.movref AS PROCESS_ORDER,\n        dt.prtnum AS ITMCOD,\n        dt.trnqty AS QTY,\n        uom.WHSE_UNIT,\n        LEFT(dt.lodnum, 20) AS ULID\n    FROM dbo.dlytrn dt\n    OUTER APPLY (\n        SELECT TOP (1)\n            pfd.uomcod AS WHSE_UNIT\n        FROM dbo.prtftp_dtl pfd\n        WHERE pfd.prtnum = dt.prtnum\n          AND pfd.wh_id = @wh_id\n          AND pfd.is_purged = 0\n        ORDER BY pfd.uomlvl ASC, pfd.uomcod ASC\n    ) uom\n    WHERE dt.wh_id = @wh_id\n      AND dt.tostol LIKE 'ULIN%'\n      AND dt.actcod IN ('DEPSUL', 'LINUSE')  -- value-mapping unknown; kept literal per source\n),\nret AS (\n    SELECT\n        dt.lodnum AS ULID,\n        dt.trndte AS RETURN_DATE,\n        dt.trnqty AS QTY\n    FROM dbo.dlytrn dt\n    WHERE dt.wh_id = @wh_id\n      AND dt.tostol LIKE 'ULIN%'\n      AND dt.actcod = 'MANLID'  -- value-mapping unknown; kept literal per source\n),\nRankedDeliveries AS (\n    SELECT\n        a.DELIVERY_DATE,\n        a.LINE,\n        a.PROCESS_ORDER,\n        a.ITMCOD,\n        pm.prtfam AS ITMGRP,\n        fam_dsc.grpdsc,\n        a.QTY,\n        a.WHSE_UNIT,\n        a.ULID,\n        ROW_NUMBER() OVER (PARTITION BY a.ULID ORDER BY a.DELIVERY_DATE ASC) AS DeliveryRank\n    FROM deliv a\n    JOIN dbo.prtmst pm\n      ON pm.prtnum = a.ITMCOD\n     AND pm.WH_ID_TMPL = @wh_id\n    OUTER APPLY (\n        SELECT TOP (1)\n            d.lngdsc AS grpdsc\n        FROM dbo.dscmst d\n        WHERE d.colnam = 'prtfam'\n          AND d.colval = pm.prtfam\n          AND d.is_purged = 0\n        ORDER BY d.locale_id\n    ) fam_dsc\n    WHERE a.DELIVERY_DATE > CAST(DATEADD(DAY, -90, GETDATE()) AS date)\n      AND a.DELIVERY_DATE < CAST(GETDATE() AS date)\n      AND a.LINE NOT LIKE 'ULINA%'\n      AND a.LINE NOT LIKE 'ULINC%'\n),\nRankedReturns AS (\n    SELECT\n        b.ULID,\n        b.RETURN_DATE,\n        b.QTY,\n        ROW_NUMBER() OVER (PARTITION BY b.ULID ORDER BY b.RETURN_DATE ASC) AS ReturnRank\n    FROM ret b\n)\nSELECT TOP (200)\n    d.DELIVERY_DATE,\n    d.LINE,\n    d.PROCESS_ORDER,\n    d.ITMCOD,\n    d.ITMGRP,\n    d.grpdsc,\n    d.QTY,\n    d.WHSE_UNIT,\n    d.ULID,\n    r.RETURN_DATE,\n    r.QTY AS RETURN_QTY,\n    DATEDIFF(MINUTE, d.DELIVERY_DATE, r.RETURN_DATE) AS DATE_DIFF\nFROM RankedDeliveries d\nJOIN RankedReturns r\n  ON d.ULID = r.ULID\n AND d.DeliveryRank = r.ReturnRank\nWHERE d.DELIVERY_DATE < r.RETURN_DATE\n  AND DATEDIFF(MINUTE, d.DELIVERY_DATE, r.RETURN_DATE) < 960\n  AND d.QTY = r.QTY\nORDER BY d.ULID, d.DELIVERY_DATE ASC;"
+  }
+ ],
+ "summary": {
+  "ask": {
+   "validated": 9,
+   "failed validation": 2
+  },
+  "convert": {
+   "validated, contract differs": 1,
+   "validated": 6,
+   "failed validation": 1
+  },
+  "ask_by_engine": {
+   "RTCIS": {
+    "validated": 1,
+    "failed validation": 1
+   },
+   "PrIME2014": {
+    "validated": 1,
+    "failed validation": 1
+   },
+   "PrIME2022": {
+    "validated": 7
+   }
+  }
+ }
+}

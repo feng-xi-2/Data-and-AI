@@ -1,0 +1,91 @@
+{
+ "datamodel_vs_catalog": {
+  "datamodel table in_2014 claim, present in catalog: True": 474,
+  "datamodel table in_2014 claim, present in catalog: False": 6,
+  "datamodel table in_2022 claim, present in catalog: True": 585,
+  "datamodel table in_2022 claim, present in catalog: False": 5,
+  "datamodel says in_2014 but table missing from the PrIME2014 catalog": 524,
+  "datamodel says in_2022 but table missing from the PrIME2022 catalog": 1026
+ },
+ "unvalidated_entities": [
+  [
+   "column",
+   "prime",
+   "aremst.prt_client_id"
+  ],
+  [
+   "column",
+   "prime",
+   "aremst.prtnum"
+  ],
+  [
+   "column",
+   "prime",
+   "aremst.stoloc"
+  ],
+  [
+   "column",
+   "rtcis",
+   "systrn.locatn"
+  ],
+  [
+   "column",
+   "rtcis",
+   "systrn.ulid"
+  ]
+ ],
+ "dropped_edges": {
+  "READS_COLUMN": 5,
+  "JOINS_WITH": 45
+ },
+ "nodes": {
+  "Platform": 3,
+  "Domain": 19,
+  "Site": 5,
+  "Table": 1680,
+  "Column": 28585,
+  "Template": 5,
+  "Query": 34,
+  "OutputField": 212,
+  "Finding": 68,
+  "ExpertRule": 12,
+  "Mapping": 38,
+  "JoinPath": 9,
+  "Learning": 57,
+  "DataFact": 27,
+  "Concept": 52,
+  "SDCModule": 9,
+  "PMCProcess": 58,
+  "SemanticConcept": 37,
+  "ExternalSource": 5
+ },
+ "edges": {
+  "IN_PLATFORM": 1680,
+  "EXISTS_AT": 2098,
+  "HAS_COLUMN": 28585,
+  "IN_DOMAIN": 249,
+  "READS": 207,
+  "READS_COLUMN": 926,
+  "RENDERED_WITH": 85,
+  "HAS_FIELD": 424,
+  "DERIVED_FROM": 279,
+  "CONVERTS_TO": 17,
+  "EXPLAINED_BY": 68,
+  "MENTIONS": 586,
+  "APPLIES_RULE": 204,
+  "MAPS_INTO": 52,
+  "MAPS_FROM": 78,
+  "MAPS_TO": 9079,
+  "JOINS_VIA": 18,
+  "LINKS_TO": 163,
+  "DOCUMENTED_IN": 42,
+  "USES_TABLE": 238,
+  "IN_MODULE": 58,
+  "CONFIGURES": 183,
+  "TRANSFORMS_TO": 21,
+  "INHERITS": 28,
+  "RELATES_TO": 21,
+  "MAPPED_FROM": 117,
+  "JOINS_WITH": 91
+ }
+}

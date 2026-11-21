@@ -1,0 +1,734 @@
+{
+"RTCIS|trlmov": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|trlreq": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|trlrio": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|trailer": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|trukio": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|trklin": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|shptrlq": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|trlque": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|trlquedtl": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_trailer": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_trklin": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_trlrio": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_trukio": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"PrIME2022|trlr": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|appt": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|rcvtrk": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|car_move": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|shipment": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|stop": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|poldat": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"RTCIS|wh": {
+"RTCIS_EUS": "absent",
+"RTCIS_LON": "empty"
+},
+"RTCIS|subsit": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|blding": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|poldat": {
+"RTCIS_EUS": "absent",
+"RTCIS_LON": "rows"
+},
+"RTCIS|tsktyp": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|worktype": {
+"RTCIS_EUS": "absent",
+"RTCIS_LON": "rows"
+},
+"RTCIS|wrkzon": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|locatn": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|zoncod": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|mvt_mvttyp": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|mvt_mvtctg": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|mvt_frm_to": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|mvt_arecod": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|mvt_locatn": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|trntyp": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|codmst": {
+"RTCIS_EUS": "absent",
+"RTCIS_LON": "rows"
+},
+"RTCIS|dscmst": {
+"RTCIS_EUS": "absent",
+"RTCIS_LON": "rows"
+},
+"RTCIS|reacod": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|uom_def": {
+"RTCIS_EUS": "absent",
+"RTCIS_LON": "rows"
+},
+"RTCIS|velocity_type": {
+"RTCIS_EUS": "absent",
+"RTCIS_LON": "rows"
+},
+"RTCIS|users": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|les_usr_ath": {
+"RTCIS_EUS": "absent",
+"RTCIS_LON": "rows"
+},
+"RTCIS|les_ath_role": {
+"RTCIS_EUS": "absent",
+"RTCIS_LON": "rows"
+},
+"RTCIS|les_usr_role": {
+"RTCIS_EUS": "absent",
+"RTCIS_LON": "rows"
+},
+"RTCIS|oprgrp": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|pick_method": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|wrksts": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_subsit": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_blding": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|config_view": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|task_man_view": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"PrIME2022|wh": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|locmst": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|aremst": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|sto_zone": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|mov_zone": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|pck_zone": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|pck_mthd": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|wrkopr": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|les_usr_ath": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|wrkque": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"RTCIS|rcphdr": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|rcpdtl": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|rcpexp": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|matreq": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|unitld": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|ulpall": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|ulstat": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|invact": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|cghold": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "empty"
+},
+"RTCIS|itmmst": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|item_uom": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|item_config": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|prtmst": {
+"RTCIS_EUS": "absent",
+"RTCIS_LON": "empty"
+},
+"RTCIS|prtdsc": {
+"RTCIS_EUS": "absent",
+"RTCIS_LON": "empty"
+},
+"RTCIS|alt_prtmst": {
+"RTCIS_EUS": "absent",
+"RTCIS_LON": "empty"
+},
+"RTCIS|blditm": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|audcnt": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "rows"
+},
+"RTCIS|ctlgrp": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|pallet_inventory": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|i_invact": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|damg": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|brokehist": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|as_rtcis_rcphdr": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_rcpdtl": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_itmmst": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_unitld": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_untdtl": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "error: ('HYT00', '[HYT00] [Microsoft][ODBC Driver 18 for SQL Server]Query timeout expired (0) (SQLExecDirectW)')"
+},
+"RTCIS|as_rtcis_ctlgrp": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|agv_inventory_view": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|qa_view": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|item_view": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|item_uom_view": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|invent_view": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"PrIME2022|rcvinv": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|rcvlin": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|invlod": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|invdtl": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|invsub": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|invhld": {
+"PRIME22_DE08": "empty",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|inv_asset": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|prtmst": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|prtdsc": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|prtftp": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|prtftp_dtl": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|alt_prtmst": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|inventory_view": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "rows"
+},
+"PrIME2022|invmov": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|invact": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"RTCIS|loclst": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "empty"
+},
+"RTCIS|loclstdtl": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "empty"
+},
+"RTCIS|locatn_assc": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|replen": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|item_velocity": {
+"RTCIS_EUS": "absent",
+"RTCIS_LON": "empty"
+},
+"RTCIS|bldlst": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "empty"
+},
+"RTCIS|bldlstdtl": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "empty"
+},
+"RTCIS|as_rtcis_locatn": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_zoncod": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_zonlst": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|alps_item_config_view": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"PrIME2022|rplwrk": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|alloc_search_path": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|ptwy_last_loc": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"RTCIS|ordhdr": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|orddtl": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|ordctl": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|custmr": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|wavhdr": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "rows"
+},
+"RTCIS|caspik": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|caspik_dtl": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|pckcube": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|zonctl": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|zondtl": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|wrkque": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "empty"
+},
+"RTCIS|mancas": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|rpkdtl": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|rpkcas": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|crtmst": {
+"RTCIS_EUS": "absent",
+"RTCIS_LON": "empty"
+},
+"RTCIS|crtngrp": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|cart": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|bundle": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|lblfmt": {
+"RTCIS_EUS": "absent",
+"RTCIS_LON": "rows"
+},
+"RTCIS|lbltyp": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|ship_stgloc": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|palgrp": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_ordhdr": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_orddtl": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_casepick": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|order_view": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"PrIME2022|ord": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|ord_line": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|pckbat": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|pckwrk_hdr": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|pckwrk_dtl": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|shipment_line": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"PrIME2022|cstmst": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+},
+"RTCIS|shphdr": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|shpord": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|stop": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|order_shipment": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|ordshp_dtl": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|ordload": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|ordpal": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|trukld": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|ap3_shipment": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|ap3_truckload": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "rows"
+},
+"RTCIS|ap3_caspik": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_shphdr": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_order_shipment": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|ap3_shipment_data": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|prdque": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|prdrls": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "empty"
+},
+"RTCIS|prdlin": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|lindel": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|linwrk": {
+"RTCIS_EUS": "empty",
+"RTCIS_LON": "empty"
+},
+"RTCIS|cmpdtl": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|cmppar": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_prdlin": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|as_rtcis_prdque": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|kit_view": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|prdord_view": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"RTCIS|systrn": {
+"RTCIS_EUS": "rows",
+"RTCIS_LON": "rows"
+},
+"PrIME2022|dlytrn": {
+"PRIME22_DE08": "rows",
+"PRIME22_WMD1": "absent"
+}
+}

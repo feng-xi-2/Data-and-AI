@@ -1,0 +1,1788 @@
+{
+ "run_at": "2026-11-21 09:43",
+ "T1": {
+  "rtcis_tables": {
+   "P": 0.94,
+   "R": 0.79,
+   "F1": 0.859,
+   "tp": 79,
+   "pred": 84,
+   "gold": 100
+  },
+  "rtcis_columns": {
+   "P": 0.875,
+   "R": 0.786,
+   "F1": 0.828,
+   "tp": 335,
+   "pred": 383,
+   "gold": 426
+  },
+  "prime_tables": {
+   "P": 1.0,
+   "R": 1.0,
+   "F1": 1.0,
+   "tp": 123,
+   "pred": 123,
+   "gold": 123
+  },
+  "prime_columns": {
+   "P": 0.991,
+   "R": 0.963,
+   "F1": 0.977,
+   "tp": 543,
+   "pred": 548,
+   "gold": 564
+  }
+ },
+ "T1_per_query": {
+  "R01": {
+   "rtcis_tables": {
+    "P": 0.667,
+    "R": 0.4,
+    "F1": 0.5,
+    "tp": 4,
+    "pred": 6,
+    "gold": 10
+   },
+   "rtcis_columns": {
+    "P": 0.419,
+    "R": 0.333,
+    "F1": 0.371,
+    "tp": 13,
+    "pred": 31,
+    "gold": 39
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 7,
+    "pred": 7,
+    "gold": 7
+   },
+   "prime_columns": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 35,
+    "pred": 35,
+    "gold": 35
+   }
+  },
+  "R02": {
+   "rtcis_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 4,
+    "pred": 4,
+    "gold": 4
+   },
+   "rtcis_columns": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 18,
+    "pred": 18,
+    "gold": 18
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 8,
+    "pred": 8,
+    "gold": 8
+   },
+   "prime_columns": {
+    "P": 1.0,
+    "R": 0.968,
+    "F1": 0.984,
+    "tp": 30,
+    "pred": 30,
+    "gold": 31
+   }
+  },
+  "R03": {
+   "rtcis_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 8,
+    "pred": 8,
+    "gold": 8
+   },
+   "rtcis_columns": {
+    "P": 0.944,
+    "R": 0.919,
+    "F1": 0.932,
+    "tp": 34,
+    "pred": 36,
+    "gold": 37
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 7,
+    "pred": 7,
+    "gold": 7
+   },
+   "prime_columns": {
+    "P": 1.0,
+    "R": 0.838,
+    "F1": 0.912,
+    "tp": 31,
+    "pred": 31,
+    "gold": 37
+   }
+  },
+  "R04": {
+   "rtcis_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 1,
+    "pred": 1,
+    "gold": 1
+   },
+   "rtcis_columns": {
+    "P": 1.0,
+    "R": 0.5,
+    "F1": 0.667,
+    "tp": 1,
+    "pred": 1,
+    "gold": 2
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 2,
+    "pred": 2,
+    "gold": 2
+   },
+   "prime_columns": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 5,
+    "pred": 5,
+    "gold": 5
+   }
+  },
+  "R05": {
+   "rtcis_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 5,
+    "pred": 5,
+    "gold": 5
+   },
+   "rtcis_columns": {
+    "P": 1.0,
+    "R": 0.95,
+    "F1": 0.974,
+    "tp": 19,
+    "pred": 19,
+    "gold": 20
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 5,
+    "pred": 5,
+    "gold": 5
+   },
+   "prime_columns": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 22,
+    "pred": 22,
+    "gold": 22
+   }
+  },
+  "R06": {
+   "rtcis_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 10,
+    "pred": 10,
+    "gold": 10
+   },
+   "rtcis_columns": {
+    "P": 1.0,
+    "R": 0.915,
+    "F1": 0.956,
+    "tp": 43,
+    "pred": 43,
+    "gold": 47
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 9,
+    "pred": 9,
+    "gold": 9
+   },
+   "prime_columns": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 45,
+    "pred": 45,
+    "gold": 45
+   }
+  },
+  "R07": {
+   "rtcis_tables": {
+    "P": 0.833,
+    "R": 0.5,
+    "F1": 0.625,
+    "tp": 5,
+    "pred": 6,
+    "gold": 10
+   },
+   "rtcis_columns": {
+    "P": 0.69,
+    "R": 0.556,
+    "F1": 0.615,
+    "tp": 20,
+    "pred": 29,
+    "gold": 36
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 9,
+    "pred": 9,
+    "gold": 9
+   },
+   "prime_columns": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 41,
+    "pred": 41,
+    "gold": 41
+   }
+  },
+  "R08": {
+   "rtcis_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 5,
+    "pred": 5,
+    "gold": 5
+   },
+   "rtcis_columns": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 24,
+    "pred": 24,
+    "gold": 24
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 8,
+    "pred": 8,
+    "gold": 8
+   },
+   "prime_columns": {
+    "P": 1.0,
+    "R": 0.973,
+    "F1": 0.986,
+    "tp": 36,
+    "pred": 36,
+    "gold": 37
+   }
+  },
+  "R09": {
+   "rtcis_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 5,
+    "pred": 5,
+    "gold": 5
+   },
+   "rtcis_columns": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 24,
+    "pred": 24,
+    "gold": 24
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 8,
+    "pred": 8,
+    "gold": 8
+   },
+   "prime_columns": {
+    "P": 1.0,
+    "R": 0.947,
+    "F1": 0.973,
+    "tp": 36,
+    "pred": 36,
+    "gold": 38
+   }
+  },
+  "R10": {
+   "rtcis_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 5,
+    "pred": 5,
+    "gold": 5
+   },
+   "rtcis_columns": {
+    "P": 1.0,
+    "R": 0.958,
+    "F1": 0.979,
+    "tp": 23,
+    "pred": 23,
+    "gold": 24
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 8,
+    "pred": 8,
+    "gold": 8
+   },
+   "prime_columns": {
+    "P": 1.0,
+    "R": 0.974,
+    "F1": 0.987,
+    "tp": 37,
+    "pred": 37,
+    "gold": 38
+   }
+  },
+  "R11": {
+   "rtcis_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 5,
+    "pred": 5,
+    "gold": 5
+   },
+   "rtcis_columns": {
+    "P": 1.0,
+    "R": 0.958,
+    "F1": 0.979,
+    "tp": 23,
+    "pred": 23,
+    "gold": 24
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 8,
+    "pred": 8,
+    "gold": 8
+   },
+   "prime_columns": {
+    "P": 1.0,
+    "R": 0.974,
+    "F1": 0.987,
+    "tp": 37,
+    "pred": 37,
+    "gold": 38
+   }
+  },
+  "R12": {
+   "rtcis_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 5,
+    "pred": 5,
+    "gold": 5
+   },
+   "rtcis_columns": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 21,
+    "pred": 21,
+    "gold": 21
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 8,
+    "pred": 8,
+    "gold": 8
+   },
+   "prime_columns": {
+    "P": 1.0,
+    "R": 0.75,
+    "F1": 0.857,
+    "tp": 27,
+    "pred": 27,
+    "gold": 36
+   }
+  },
+  "R13": {
+   "rtcis_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 1,
+    "pred": 1,
+    "gold": 1
+   },
+   "rtcis_columns": {
+    "P": 1.0,
+    "R": 0.75,
+    "F1": 0.857,
+    "tp": 3,
+    "pred": 3,
+    "gold": 4
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 3,
+    "pred": 3,
+    "gold": 3
+   },
+   "prime_columns": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 8,
+    "pred": 8,
+    "gold": 8
+   }
+  },
+  "R14": {
+   "rtcis_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 4,
+    "pred": 4,
+    "gold": 4
+   },
+   "rtcis_columns": {
+    "P": 0.944,
+    "R": 0.944,
+    "F1": 0.944,
+    "tp": 17,
+    "pred": 18,
+    "gold": 18
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 7,
+    "pred": 7,
+    "gold": 7
+   },
+   "prime_columns": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 33,
+    "pred": 33,
+    "gold": 33
+   }
+  },
+  "R15": {
+   "rtcis_tables": {
+    "P": 0.8,
+    "R": 0.444,
+    "F1": 0.571,
+    "tp": 4,
+    "pred": 5,
+    "gold": 9
+   },
+   "rtcis_columns": {
+    "P": 0.708,
+    "R": 0.531,
+    "F1": 0.607,
+    "tp": 17,
+    "pred": 24,
+    "gold": 32
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 9,
+    "pred": 9,
+    "gold": 9
+   },
+   "prime_columns": {
+    "P": 0.976,
+    "R": 1.0,
+    "F1": 0.988,
+    "tp": 40,
+    "pred": 41,
+    "gold": 40
+   }
+  },
+  "R16": {
+   "rtcis_tables": {
+    "P": 0.8,
+    "R": 0.444,
+    "F1": 0.571,
+    "tp": 4,
+    "pred": 5,
+    "gold": 9
+   },
+   "rtcis_columns": {
+    "P": 0.63,
+    "R": 0.5,
+    "F1": 0.557,
+    "tp": 17,
+    "pred": 27,
+    "gold": 34
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 9,
+    "pred": 9,
+    "gold": 9
+   },
+   "prime_columns": {
+    "P": 0.977,
+    "R": 1.0,
+    "F1": 0.988,
+    "tp": 42,
+    "pred": 43,
+    "gold": 42
+   }
+  },
+  "R17": {
+   "rtcis_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 4,
+    "pred": 4,
+    "gold": 4
+   },
+   "rtcis_columns": {
+    "P": 0.947,
+    "R": 0.818,
+    "F1": 0.878,
+    "tp": 18,
+    "pred": 19,
+    "gold": 22
+   },
+   "prime_tables": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 8,
+    "pred": 8,
+    "gold": 8
+   },
+   "prime_columns": {
+    "P": 0.927,
+    "R": 1.0,
+    "F1": 0.962,
+    "tp": 38,
+    "pred": 41,
+    "gold": 38
+   }
+  }
+ },
+ "T2": {
+  "extractor": {
+   "READS": {
+    "P": 0.976,
+    "R": 0.906,
+    "F1": 0.94,
+    "tp": 202,
+    "pred": 207,
+    "gold": 223,
+    "OC": 1.0,
+    "SH": 0.0,
+    "RH": 0.0,
+    "OH": 0.0
+   },
+   "READS_COLUMN": {
+    "P": 0.943,
+    "R": 0.887,
+    "F1": 0.914,
+    "tp": 878,
+    "pred": 931,
+    "gold": 990,
+    "OC": 1.0,
+    "SH": 0.0,
+    "RH": 0.0,
+    "OH": 0.005
+   },
+   "DERIVED_FROM": {
+    "P": 0.849,
+    "R": 0.555,
+    "F1": 0.671,
+    "tp": 101,
+    "pred": 119,
+    "gold": 182,
+    "OC": 1.0,
+    "SH": 0.0,
+    "RH": 0.0,
+    "OH": 0.0
+   },
+   "ALL": {
+    "P": 0.94,
+    "R": 0.847,
+    "F1": 0.891,
+    "tp": 1181,
+    "pred": 1257,
+    "gold": 1395,
+    "OC": 1.0,
+    "SH": 0.0,
+    "RH": 0.0,
+    "OH": 0.004
+   }
+  },
+  "graph": {
+   "READS": {
+    "P": 0.976,
+    "R": 0.906,
+    "F1": 0.94,
+    "tp": 202,
+    "pred": 207,
+    "gold": 223,
+    "OC": 1.0,
+    "SH": 0.0,
+    "RH": 0.0,
+    "OH": 0.0
+   },
+   "READS_COLUMN": {
+    "P": 0.948,
+    "R": 0.887,
+    "F1": 0.916,
+    "tp": 878,
+    "pred": 926,
+    "gold": 990,
+    "OC": 1.0,
+    "SH": 0.0,
+    "RH": 0.0,
+    "OH": 0.0
+   },
+   "DERIVED_FROM": {
+    "P": 0.849,
+    "R": 0.555,
+    "F1": 0.671,
+    "tp": 101,
+    "pred": 119,
+    "gold": 182,
+    "OC": 1.0,
+    "SH": 0.0,
+    "RH": 0.0,
+    "OH": 0.0
+   },
+   "ALL": {
+    "P": 0.943,
+    "R": 0.847,
+    "F1": 0.892,
+    "tp": 1181,
+    "pred": 1252,
+    "gold": 1395,
+    "OC": 1.0,
+    "SH": 0.0,
+    "RH": 0.0,
+    "OH": 0.0
+   }
+  }
+ },
+ "T3": {
+  "stats": {
+   "direct MAPS_TO hit": 31,
+   "no knowledge": 20,
+   "knowledge points elsewhere": 2,
+   "learned from other converted queries": 6
+  },
+  "rows": [
+   {
+    "query": "R01",
+    "field": "CTLGRP",
+    "rtcis": "untdtl.ctlgrp",
+    "prime_gold": "invdtl.lotnum",
+    "direct": [
+     "invdtl.lotnum"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R01",
+    "field": "ITMCOD",
+    "rtcis": "untdtl.itmcod",
+    "prime_gold": "invdtl.prtnum",
+    "direct": [
+     "invdtl.prtnum"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R01",
+    "field": "ITMGRP",
+    "rtcis": "itmmst.itmgrp",
+    "prime_gold": "prtmst.prtfam",
+    "direct": [
+     "prtmst.prtfam"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R01",
+    "field": "LOCATN",
+    "rtcis": "unitld.locatn",
+    "prime_gold": "invlod.stoloc",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R01",
+    "field": "UOM",
+    "rtcis": "item_uom.uom",
+    "prime_gold": "prtftp_dtl.uomcod",
+    "direct": [
+     "prtftp_dtl.rcv_flg",
+     "prtftp_dtl.uomcod"
+    ],
+    "learned": [
+     "prtmst.stkuom"
+    ],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R01",
+    "field": "ZONCOD",
+    "rtcis": "locatn.zoncod",
+    "prime_gold": "locmst.arecod",
+    "direct": [
+     "locmst.arecod",
+     "locmst.sto_zone_id"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R02",
+    "field": "locatn",
+    "rtcis": "sysdtl.locatn",
+    "prime_gold": "cnthst.stoloc",
+    "direct": [
+     "dlytrn.frstol",
+     "dlytrn.tostol"
+    ],
+    "learned": [
+     "dlytrn.frstol",
+     "dlytrn.tostol"
+    ],
+    "two_hop": [],
+    "verdict": "knowledge points elsewhere"
+   },
+   {
+    "query": "R04",
+    "field": "equip",
+    "rtcis": "equip.equip",
+    "prime_gold": "vehtyp.vehtyp_id",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R06",
+    "field": "bn",
+    "rtcis": "rcphdr.bolnum",
+    "prime_gold": "rcvinv.waybil",
+    "direct": [
+     "rcvinv.waybil"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R06",
+    "field": "grpdsc",
+    "rtcis": "itmgrp.grpdsc",
+    "prime_gold": "dscmst.lngdsc",
+    "direct": [],
+    "learned": [
+     "dscmst.lngdsc",
+     "invlod.stoloc",
+     "prtmst.prtfam"
+    ],
+    "two_hop": [],
+    "verdict": "learned from other converted queries"
+   },
+   {
+    "query": "R06",
+    "field": "ib",
+    "rtcis": "rcphdr.delvid",
+    "prime_gold": "rcvinv.invnum",
+    "direct": [
+     "rcvinv.invnum"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R06",
+    "field": "it",
+    "rtcis": "rcpexp.itmcod",
+    "prime_gold": "rcvlin.prtnum",
+    "direct": [
+     "rcvlin.prtnum"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R06",
+    "field": "itmdsc",
+    "rtcis": "itmmst.itmdsc",
+    "prime_gold": "prtdsc.lngdsc",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R06",
+    "field": "itmgrp",
+    "rtcis": "itmmst.itmgrp",
+    "prime_gold": "prtmst.prtfam",
+    "direct": [
+     "prtmst.prtfam"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R06",
+    "field": "locatn",
+    "rtcis": "trailer.locatn",
+    "prime_gold": "trlr.yard_loc",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R06",
+    "field": "rectyp",
+    "rtcis": "rcphdr.rectyp",
+    "prime_gold": "rcvinv.invtyp",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R06",
+    "field": "rrnumb",
+    "rtcis": "rcphdr.rrnumb",
+    "prime_gold": "rcvtrk.trknum",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R06",
+    "field": "trknam",
+    "rtcis": "trklin.trknam",
+    "prime_gold": "carhdr.carnam",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R06",
+    "field": "trlnum",
+    "rtcis": "trukio.trlnum",
+    "prime_gold": "trlr.trlr_num",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R06",
+    "field": "vndcod",
+    "rtcis": "rcphdr.vndcod",
+    "prime_gold": "rcvinv.supnum",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R07",
+    "field": "Control Group",
+    "rtcis": "untdtl.ctlgrp",
+    "prime_gold": "invdtl.lotnum",
+    "direct": [
+     "invdtl.lotnum"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R07",
+    "field": "Item Code",
+    "rtcis": "untdtl.itmcod",
+    "prime_gold": "invdtl.prtnum",
+    "direct": [
+     "invdtl.prtnum"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R07",
+    "field": "Item Description",
+    "rtcis": "itmmst.itmdsc",
+    "prime_gold": "prtdsc.lngdsc",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R07",
+    "field": "Item Group Description",
+    "rtcis": "itmgrp.grpdsc",
+    "prime_gold": "dscmst.lngdsc",
+    "direct": [],
+    "learned": [
+     "dscmst.lngdsc",
+     "invlod.stoloc",
+     "prtmst.prtfam"
+    ],
+    "two_hop": [],
+    "verdict": "learned from other converted queries"
+   },
+   {
+    "query": "R07",
+    "field": "Location",
+    "rtcis": "unitld.locatn",
+    "prime_gold": "invlod.stoloc",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R07",
+    "field": "WHSE Unit",
+    "rtcis": "item_uom.uom",
+    "prime_gold": "prtftp_dtl.uomcod",
+    "direct": [
+     "prtftp_dtl.rcv_flg",
+     "prtftp_dtl.uomcod"
+    ],
+    "learned": [
+     "prtmst.stkuom"
+    ],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R10",
+    "field": "CTLGRP",
+    "rtcis": "sysdtl.ctlgrp",
+    "prime_gold": "dlytrn.lotnum",
+    "direct": [
+     "dlytrn.lotnum"
+    ],
+    "learned": [
+     "dlytrn.lotnum"
+    ],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R10",
+    "field": "ITMCOD",
+    "rtcis": "sysdtl.itmcod",
+    "prime_gold": "dlytrn.prtnum",
+    "direct": [
+     "dlytrn.prtnum"
+    ],
+    "learned": [
+     "dlytrn.prtnum"
+    ],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R10",
+    "field": "ULID",
+    "rtcis": "sysdtl.ulid",
+    "prime_gold": "dlytrn.lodnum",
+    "direct": [
+     "dlytrn.lodnum"
+    ],
+    "learned": [
+     "dlytrn.lodnum"
+    ],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R11",
+    "field": "CTLGRP",
+    "rtcis": "sysdtl.ctlgrp",
+    "prime_gold": "dlytrn.lotnum",
+    "direct": [
+     "dlytrn.lotnum"
+    ],
+    "learned": [
+     "dlytrn.lotnum"
+    ],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R11",
+    "field": "ITMCOD",
+    "rtcis": "sysdtl.itmcod",
+    "prime_gold": "dlytrn.prtnum",
+    "direct": [
+     "dlytrn.prtnum"
+    ],
+    "learned": [
+     "dlytrn.prtnum"
+    ],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R11",
+    "field": "ULID",
+    "rtcis": "sysdtl.ulid",
+    "prime_gold": "dlytrn.lodnum",
+    "direct": [
+     "dlytrn.lodnum"
+    ],
+    "learned": [
+     "dlytrn.lodnum"
+    ],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R12",
+    "field": "DELIVERY_DATE",
+    "rtcis": "systrn.sysdat",
+    "prime_gold": "dlytrn.trndte",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R12",
+    "field": "ITMCOD",
+    "rtcis": "sysdtl.itmcod",
+    "prime_gold": "dlytrn.prtnum",
+    "direct": [
+     "dlytrn.prtnum"
+    ],
+    "learned": [
+     "dlytrn.prtnum"
+    ],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R12",
+    "field": "ITMGRP",
+    "rtcis": "itmmst.itmgrp",
+    "prime_gold": "prtmst.prtfam",
+    "direct": [
+     "prtmst.prtfam"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R12",
+    "field": "RETURN_DATE",
+    "rtcis": "systrn.sysdat",
+    "prime_gold": "dlytrn.trndte",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R12",
+    "field": "WHSE_UNIT",
+    "rtcis": "item_uom.uom",
+    "prime_gold": "prtftp_dtl.uomcod",
+    "direct": [
+     "prtftp_dtl.rcv_flg",
+     "prtftp_dtl.uomcod"
+    ],
+    "learned": [
+     "prtmst.stkuom"
+    ],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R12",
+    "field": "grpdsc",
+    "rtcis": "itmgrp.grpdsc",
+    "prime_gold": "dscmst.lngdsc",
+    "direct": [],
+    "learned": [
+     "dscmst.lngdsc",
+     "invlod.stoloc",
+     "prtmst.prtfam"
+    ],
+    "two_hop": [],
+    "verdict": "learned from other converted queries"
+   },
+   {
+    "query": "R13",
+    "field": "itmgrp",
+    "rtcis": "itmgrp.itmgrp",
+    "prime_gold": "prtfam.prtfam",
+    "direct": [],
+    "learned": [
+     "dscmst.lngdsc",
+     "invlod.stoloc",
+     "prtmst.prtfam"
+    ],
+    "two_hop": [],
+    "verdict": "knowledge points elsewhere"
+   },
+   {
+    "query": "R14",
+    "field": "ARTIKEL",
+    "rtcis": "ctlgrp.itmcod",
+    "prime_gold": "invdtl.prtnum",
+    "direct": [
+     "invdtl.prtnum",
+     "prtlot.prtnum"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R14",
+    "field": "BESCHREIBUNG",
+    "rtcis": "itmmst.itmdsc",
+    "prime_gold": "prtdsc.lngdsc",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R14",
+    "field": "LOTNUMMER",
+    "rtcis": "ctlgrp.ctlgrp",
+    "prime_gold": "invdtl.lotnum",
+    "direct": [
+     "invdtl.lotnum"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R14",
+    "field": "QA_STATUS",
+    "rtcis": "ctlgrp.qastat",
+    "prime_gold": "invdtl.invsts",
+    "direct": [],
+    "learned": [
+     "invdtl.invsts"
+    ],
+    "two_hop": [],
+    "verdict": "learned from other converted queries"
+   },
+   {
+    "query": "R15",
+    "field": "Control Group",
+    "rtcis": "untdtl.ctlgrp",
+    "prime_gold": "invdtl.lotnum",
+    "direct": [
+     "invdtl.lotnum"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R15",
+    "field": "First Receipt Date",
+    "rtcis": "ctlgrp.fifodt",
+    "prime_gold": "invdtl.fifdte",
+    "direct": [
+     "invdtl.fifdte"
+    ],
+    "learned": [
+     "invdtl.fifdte"
+    ],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R15",
+    "field": "Item Code",
+    "rtcis": "untdtl.itmcod",
+    "prime_gold": "invdtl.prtnum",
+    "direct": [
+     "invdtl.prtnum"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R15",
+    "field": "Item Description",
+    "rtcis": "itmmst.itmdsc",
+    "prime_gold": "prtdsc.lngdsc",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R15",
+    "field": "Item Group Description",
+    "rtcis": "itmgrp.grpdsc",
+    "prime_gold": "dscmst.lngdsc",
+    "direct": [],
+    "learned": [
+     "dscmst.lngdsc",
+     "invlod.stoloc",
+     "prtmst.prtfam"
+    ],
+    "two_hop": [],
+    "verdict": "learned from other converted queries"
+   },
+   {
+    "query": "R15",
+    "field": "Location",
+    "rtcis": "unitld.locatn",
+    "prime_gold": "invlod.stoloc",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R15",
+    "field": "QA Status",
+    "rtcis": "ctlgrp.qastat",
+    "prime_gold": "invdtl.invsts",
+    "direct": [],
+    "learned": [
+     "invdtl.invsts"
+    ],
+    "two_hop": [],
+    "verdict": "learned from other converted queries"
+   },
+   {
+    "query": "R16",
+    "field": "Control Group",
+    "rtcis": "untdtl.ctlgrp",
+    "prime_gold": "invdtl.lotnum",
+    "direct": [
+     "invdtl.lotnum"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R16",
+    "field": "Item Code",
+    "rtcis": "untdtl.itmcod",
+    "prime_gold": "invdtl.prtnum",
+    "direct": [
+     "invdtl.prtnum"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R16",
+    "field": "Item Description",
+    "rtcis": "itmmst.itmdsc",
+    "prime_gold": "prtdsc.lngdsc",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R16",
+    "field": "Location",
+    "rtcis": "unitld.locatn",
+    "prime_gold": "invlod.stoloc",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R17",
+    "field": "CYCDAT",
+    "rtcis": "locatn.cycdat",
+    "prime_gold": "locmst.cntdte",
+    "direct": [
+     "locmst.cntdte"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R17",
+    "field": "itmcod",
+    "rtcis": "locatn.itmcod",
+    "prime_gold": "rplcfg.prtnum",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R17",
+    "field": "locatn",
+    "rtcis": "locatn.locatn",
+    "prime_gold": "locmst.stoloc",
+    "direct": [
+     "locmst.stoloc"
+    ],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   },
+   {
+    "query": "R17",
+    "field": "serflg_commnt",
+    "rtcis": "locatn.serflg_commnt",
+    "prime_gold": "locmst.lokcod",
+    "direct": [],
+    "learned": [],
+    "two_hop": [],
+    "verdict": "no knowledge"
+   },
+   {
+    "query": "R17",
+    "field": "wm_unit",
+    "rtcis": "item_uom.uom",
+    "prime_gold": "prtftp_dtl.uomcod",
+    "direct": [
+     "prtftp_dtl.rcv_flg",
+     "prtftp_dtl.uomcod"
+    ],
+    "learned": [
+     "prtmst.stkuom"
+    ],
+    "two_hop": [],
+    "verdict": "direct MAPS_TO hit"
+   }
+  ]
+ },
+ "plans": {
+  "R04": {
+   "rtcis_tables": [
+    "equip"
+   ],
+   "proposed_prime_tables": [
+    "dscmst",
+    "vehtyp"
+   ],
+   "gold_prime_tables": [
+    "dscmst",
+    "vehtyp"
+   ],
+   "table_prf": {
+    "P": 1.0,
+    "R": 1.0,
+    "F1": 1.0,
+    "tp": 2,
+    "pred": 2,
+    "gold": 2
+   },
+   "learnings": [],
+   "rules_passed": [
+    "OBS4",
+    "OBS5",
+    "OBS7",
+    "VIEW"
+   ],
+   "findings": []
+  },
+  "R13": {
+   "rtcis_tables": [
+    "itmgrp"
+   ],
+   "proposed_prime_tables": [
+    "dscmst",
+    "prtfam"
+   ],
+   "gold_prime_tables": [
+    "dscmst",
+    "prtfam",
+    "prtmst"
+   ],
+   "table_prf": {
+    "P": 1.0,
+    "R": 0.667,
+    "F1": 0.8,
+    "tp": 2,
+    "pred": 2,
+    "gold": 3
+   },
+   "learnings": [],
+   "rules_passed": [
+    "OBS4",
+    "OBS5",
+    "OBS7",
+    "VIEW",
+    "WHT"
+   ],
+   "findings": [
+    "NO_SOURCE: NO_SOURCE: PrIME FIFWIN is per part and 30 on every DE08 part; RTCIS keeps a window per item group (e.g. 90).",
+    "NO_SOURCE: NO_SOURCE: as empty note.",
+    "INFERRED: INFERRED: PrIME has no class per item group; derived from the dominant part type of the family. Families without parts come back empty (CHOOKS, COUTSC); EOTEST ",
+    "TEXT_VARIANT: TEXT_VARIANT: 6 of 93 groups are worded differently (e.g. 'ALWAYS PADS (ULTRA+THICK)' vs 'ALWAYS PADS'); DE08 GERMAN dscmst text equals the English (87/92 vs 87"
+   ]
+  },
+  "R16": {
+   "rtcis_tables": [
+    "agv_inventory_view",
+    "ctlgrp",
+    "itmgrp",
+    "itmmst",
+    "subsit"
+   ],
+   "proposed_prime_tables": [
+    "aremst",
+    "dscmst",
+    "invdtl",
+    "inventory_view",
+    "invlod",
+    "invsub",
+    "locmst",
+    "prtdsc",
+    "prtfam",
+    "prtlot",
+    "prtmst",
+    "wh"
+   ],
+   "gold_prime_tables": [
+    "aremst",
+    "dscmst",
+    "invdtl",
+    "invlod",
+    "invsub",
+    "locmst",
+    "prtdsc",
+    "prtftp_dtl",
+    "prtmst"
+   ],
+   "table_prf": {
+    "P": 0.667,
+    "R": 0.889,
+    "F1": 0.762,
+    "tp": 8,
+    "pred": 12,
+    "gold": 9
+   },
+   "learnings": [
+    "RTCIS `AGV_INVENTORY_VIEW.ULID20` = PrIME `invlod.LODNUM` (20 chars); raw `ULID` is 19 (no GS1 check digit)",
+    "RTCIS `EUSKIRCHEN.live3` facade is **trimmed** (misses SETTYP, KITID…)",
+    "**`subsit='1'` is a site number, not a constant** — parameterise as warehouse."
+   ],
+   "rules_passed": [
+    "FAN",
+    "LOC",
+    "OBS4",
+    "OBS5",
+    "OBS6",
+    "OBS7",
+    "OBS8",
+    "VIEW",
+    "WHT"
+   ],
+   "findings": [
+    "NO_SOURCE: NO_SOURCE: as R05 PO.",
+    "NO_SOURCE: NO_SOURCE: as R05 PO.",
+    "SITE_CONVENTION: SITE_CONVENTION: as R01 VNDLOT.",
+    "SITE_CONVENTION: SITE_CONVENTION: as R01 VNDCOD (Euskirchen-only SUP_LOTNUM convention)."
+   ]
+  },
+  "R01": {
+   "rtcis_tables": [
+    "agv_inventory_view",
+    "cbo_ctlgrp",
+    "item_config",
+    "item_uom",
+    "itmmst",
+    "locatn"
+   ],
+   "proposed_prime_tables": [
+    "aremst",
+    "invdtl",
+    "inventory_view",
+    "invlod",
+    "invsub",
+    "loc_typ",
+    "locmst",
+    "prtdsc",
+    "prtftp",
+    "prtftp_dtl",
+    "prtftp_view",
+    "prtmst"
+   ],
+   "gold_prime_tables": [
+    "aremst",
+    "invdtl",
+    "invlod",
+    "invsub",
+    "locmst",
+    "prtftp_dtl",
+    "prtmst"
+   ],
+   "table_prf": {
+    "P": 0.583,
+    "R": 1.0,
+    "F1": 0.737,
+    "tp": 7,
+    "pred": 12,
+    "gold": 7
+   },
+   "learnings": [
+    "Of 24,667 same pallets, 11,079 same location; 11,142 differ because the RTCIS CIMAT automated-store bin does not exist as a PrIME location; 1,692 real moves",
+    "Receipt door = `trlr.YARD_LOC` (DE08 DOOR16/17, loc type RSDK; set on 17/50 DE08, 12/578 Athens receipts). `trlr.STOLOC` is the trailer's own location (= trailer id, type DSPCH)",
+    "RTCIS `AGV_INVENTORY_VIEW.ULID20` = PrIME `invlod.LODNUM` (20 chars); raw `ULID` is 19 (no GS1 check digit)",
+    "RTCIS `EUSKIRCHEN.live3` facade is **trimmed** (misses SETTYP, KITID…)",
+    "RTCIS quantities `untdtl.casqty`, `systrn.trnqty`, `item_config.caslay`, `item_uom.u_height` are **numeric(22,0)**; 0 fractional casqty rows of ~100k; metric packaging is truncated (4250.4 → 4250 on 549 pallets, never ro"
+   ],
+   "rules_passed": [
+    "FAN",
+    "OBS4",
+    "OBS5",
+    "OBS6",
+    "OBS7",
+    "OBS8",
+    "VIEW",
+    "WHT"
+   ],
+   "findings": [
+    "NOT_CONFIGURED: NOT_CONFIGURED: same cause as the empty note.",
+    "NOT_CONFIGURED: NOT_CONFIGURED: DE08 packaging footprints are 'NONE' with 1x1x1 placeholder dims, so NULL instead of a fake height; Athens (live) fills it on 91% of rows (resul",
+    "SITE_CONVENTION: SITE_CONVENTION: as VNDCOD.",
+    "SITE_CONVENTION: SITE_CONVENTION: Euskirchen stores VNDCOD+VNDLOT in invdtl.SUP_LOTNUM (100% same pallet); Athens does not use that field.",
+    "NOT_CONFIGURED: NOT_CONFIGURED: built from ULPALL, which is 'NONE' on DE08 packaging.",
+    "CODE_SET: CODE_SET: returned as PrIME area code. No PrIME zone column reproduces RTCIS zoncod (best MOV_ZONE_ID purity 0.77 over 202 zones; VELZON/CNT/WRK/PCK zones <0.42"
+   ]
+  }
+ },
+ "NL": [
+  {
+   "question": "Which PrIME 2022 table holds the pallet (load) number?",
+   "gremlin": "g.V().has('pk', 'Column:PrIME2022').has('name', 'lodnum').in('HAS_COLUMN').has('theme', 'Transactional').values('name')",
+   "answer": [
+    "pckwrk_view",
+    "wrkque",
+    "lmstrn",
+    "pckwrk_hdr",
+    "cnfrm_bck_serv",
+    "wrkhst",
+    "wcs_disc_snap",
+    "pcklst_slot_load",
+    "invlod",
+    "inv_intransit"
+   ],
+   "n": 17,
+   "ms": 386
+  },
+  {
+   "question": "Where does RTCIS untdtl.casqty go in PrIME 2022, and with which evidence?",
+   "gremlin": "g.V('Column:rtcis:untdtl.casqty').has('pk', 'Column:RTCIS').outE('MAPS_TO').project('to', 'evidence', 'verdict').by(inV().values('id')).by(coalesce(values('sources'), values('agreement'), constant(''))).by(coalesce(values('value_verdict'), values('tag'), constant('')))",
+   "answer": [
+    {
+     "to": "Column:prime:invdtl.untqty",
+     "evidence": "94% (85% with `UNTCAS`); R01 92%, R16 100% after FLOOR",
+     "verdict": "MAPPED + DEVIATION from OBS6 — [receiving-uom](../concepts/r"
+    }
+   ],
+   "n": 1,
+   "ms": 399
+  },
+  {
+   "question": "Which PrIME 2014 columns were renamed in PrIME 2022 (data-model transition map, validated)?",
+   "gremlin": "g.V().has('pk', 'Column:PrIME2014').outE('MAPS_TO').has('sources', TextP.containing('H5')).limit(8).project('from', 'to').by(outV().values('id')).by(inV().values('id'))",
+   "answer": [
+    {
+     "from": "Column:prime14:alloc_search_hdr.alloc_search_id",
+     "to": "Column:prime:alloc_search_path.alloc_search_path_id"
+    },
+    {
+     "from": "Column:prime14:alloc_search_hdr.wh_id",
+     "to": "Column:prime:alloc_search_path.wh_id"
+    },
+    {
+     "from": "Column:prime14:sto_area_hdr.ins_user_id",
+     "to": "Column:prime:sto_config_rule.ins_user_id"
+    },
+    {
+     "from": "Column:prime14:sto_area_hdr.dstare",
+     "to": "Column:prime:sto_config_rule.sto_zone_id"
+    },
+    {
+     "from": "Column:prime14:sto_area_hdr.bldg_id",
+     "to": "Column:prime:sto_config_rule.bldg_id"
+    },
+    {
+     "from": "Column:prime14:sto_area_hdr.last_upd_user_id",
+     "to": "Column:prime:sto_config_rule.last_upd_user_id"
+    },
+    {
+     "from": "Column:prime14:sto_area_hdr.min_lvl",
+     "to": "Column:prime:sto_config_rule.min_lvl"
+    },
+    {
+     "from": "Column:prime14:sto_area_hdr.max_lvl",
+     "to": "Column:prime:sto_config_rule.max_lvl"
+    }
+   ],
+   "n": 8,
+   "ms": 1792
+  },
+  {
+   "question": "Which tables exist in PrIME 2014 but not in PrIME 2022 (no validated mapping)?",
+   "gremlin": "g.V().has('pk', 'Table:PrIME2014').not(outE('MAPS_TO')).limit(10).values('name')",
+   "answer": [
+    "statistics_performance_dh",
+    "uc_tech_audit",
+    "usr_mock_putaway_lod",
+    "vc_ctnaud",
+    "all_constraints",
+    "uc_table_policy_maintenance",
+    "all_ind_columns",
+    "usr_mock_putaway_hdr",
+    "all_indexes",
+    "all_tab_columns"
+   ],
+   "n": 10,
+   "ms": 428
+  },
+  {
+   "question": "Which converted queries are templates for 'inventory' questions, with grade and parameters?",
+   "gremlin": "g.V().has('pk', 'Query').has('side', 'PrIME2022').has('intent', TextP.containing('nventory')).project('q', 'grade', 'params').by('qid').by('grade').by('params')",
+   "answer": [
+    {
+     "q": "R02",
+     "grade": "B",
+     "params": "itmcls,strEnd_Date,strStart_Date,subsit,wh_id"
+    }
+   ],
+   "n": 1,
+   "ms": 367
+  },
+  {
+   "question": "What do the experts say about descriptions (prtdsc)?",
+   "gremlin": "g.V('Table:prime:prtdsc').has('pk', 'Table:PrIME2022').in('MENTIONS').hasLabel('Learning', 'ExpertRule', 'DataFact').limit(5).values('text')",
+   "answer": [
+    "`prtmst`/`prtdsc` two-row grain | `TOP 1` without `ORDER BY` is arbitrary | —",
+    "`prtdsc` + `LOCALE_ID` | pinning `'GERMAN'` blanked descriptions | 82,086 / 163,748 (50.1%) at Euskirchen"
+   ],
+   "n": 2,
+   "ms": 384
+  },
+  {
+   "question": "Which PrIME 2022 tables are in the 'inventory' ERD domain and replicated at Euskirchen DE08?",
+   "gremlin": "g.V('Domain:inventory').has('pk', 'Domain').in('IN_DOMAIN').where(out('EXISTS_AT').has('id', 'Site:PRIME22_DE08')).values('name')",
+   "answer": [
+    "wh",
+    "hist",
+    "ord_line",
+    "locmst",
+    "les_ath_role",
+    "invlod_hist",
+    "rcvinv",
+    "invlod",
+    "invdtl_hist",
+    "ord"
+   ],
+   "n": 19,
+   "ms": 402
+  },
+  {
+   "question": "Which mappings are flagged as conflicting (a person must decide)?",
+   "gremlin": "g.V().has('pk', 'Column:RTCIS').outE('MAPS_TO').has('conflict').project('from', 'to', 'alt').by(outV().values('id')).by(inV().values('id')).by('conflict')",
+   "answer": [
+    {
+     "from": "Column:rtcis:sysdtl.locatn",
+     "to": "Column:prime:dlytrn.tostol",
+     "alt": "dlytrn.frstol,dlytrn.tostol"
+    },
+    {
+     "from": "Column:rtcis:sysdtl.locatn",
+     "to": "Column:prime:dlytrn.frstol",
+     "alt": "dlytrn.frstol,dlytrn.tostol"
+    }
+   ],
+   "n": 2,
+   "ms": 727
+  }
+ ]
+}

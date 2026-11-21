@@ -1,0 +1,6395 @@
+{
+ "summary": {
+  "checks": {
+   "module_table PASS": 247,
+   "module_table REJECT": 5,
+   "pmc_table PASS": 183,
+   "transformation PASS": 22,
+   "transformation REJECT": 1
+  },
+  "rejected": [
+   {
+    "kind": "module_table",
+    "subject": "SDCModule:03",
+    "object": "hold",
+    "engine": "RTCIS",
+    "role": "rtcis",
+    "verdict": "REJECT",
+    "detail": "not in the live RTCIS catalog"
+   },
+   {
+    "kind": "module_table",
+    "subject": "SDCModule:03",
+    "object": "invdtl",
+    "engine": "RTCIS",
+    "role": "rtcis",
+    "verdict": "REJECT",
+    "detail": "not in the live RTCIS catalog"
+   },
+   {
+    "kind": "module_table",
+    "subject": "SDCModule:03",
+    "object": "invlod",
+    "engine": "RTCIS",
+    "role": "rtcis",
+    "verdict": "REJECT",
+    "detail": "not in the live RTCIS catalog"
+   },
+   {
+    "kind": "module_table",
+    "subject": "SDCModule:03",
+    "object": "invsub",
+    "engine": "RTCIS",
+    "role": "rtcis",
+    "verdict": "REJECT",
+    "detail": "not in the live RTCIS catalog"
+   },
+   {
+    "kind": "module_table",
+    "subject": "SDCModule:07",
+    "object": "car",
+    "engine": "PrIME2022",
+    "role": "configuration",
+    "verdict": "REJECT",
+    "detail": "not in the live PrIME2022 catalog"
+   },
+   {
+    "kind": "transformation",
+    "subject": "Transformation",
+    "object": "carrier->car",
+    "engine": "RTCIS",
+    "role": "",
+    "verdict": "REJECT",
+    "detail": "missing in live catalog: car"
+   }
+  ],
+  "pass_unpopulated": [
+   "PrIME2022.invhld",
+   "RTCIS.alt_prtmst",
+   "RTCIS.ap3_shipment",
+   "RTCIS.brokehist",
+   "RTCIS.bundle",
+   "RTCIS.cart",
+   "RTCIS.crtmst",
+   "RTCIS.crtngrp",
+   "RTCIS.damg",
+   "RTCIS.i_invact",
+   "RTCIS.item_velocity",
+   "RTCIS.lindel",
+   "RTCIS.linwrk",
+   "RTCIS.mancas",
+   "RTCIS.mvt_mvttyp",
+   "RTCIS.ordload",
+   "RTCIS.ordshp_dtl",
+   "RTCIS.pckcube",
+   "RTCIS.prtdsc",
+   "RTCIS.prtmst",
+   "RTCIS.rpkcas",
+   "RTCIS.rpkdtl",
+   "RTCIS.ship_stgloc",
+   "RTCIS.shpord",
+   "RTCIS.shptrlq",
+   "RTCIS.task_man_view",
+   "RTCIS.trlmov",
+   "RTCIS.wh"
+  ],
+  "presence_errors": {
+   "RTCIS.as_rtcis_untdtl": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "error: ('HYT00', '[HYT00] [Microsoft][ODBC Driver 18 for SQL Server]Query timeout expired (0) (SQLExecDirectW)')"
+   }
+  },
+  "transform_agreement": {
+   "both in catalog; agrees with validated MAPS_TO": 21,
+   "source in catalog; no PrIME table by design": 1,
+   "missing in live catalog: car": 1
+  },
+  "pmc_without_standard_doc": [],
+  "graph": {
+   "nodes": {
+    "SDCModule": 9,
+    "PMCProcess": 58
+   },
+   "edges": {
+    "USES_TABLE": 247,
+    "IN_MODULE": 58,
+    "CONFIGURES": 183,
+    "TRANSFORMS_TO": 21
+   }
+  }
+ },
+ "checks": [
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "trlmov",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "trlreq",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "trlrio",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "trailer",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "trukio",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "trklin",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "shptrlq",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "trlque",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "trlquedtl",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "as_rtcis_trailer",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "as_rtcis_trklin",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "as_rtcis_trlrio",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "as_rtcis_trukio",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "trlr",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "appt",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "rcvtrk",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "car_move",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "shipment",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "stop",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:01",
+   "object": "poldat",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "wh",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "subsit",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "blding",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "poldat",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "tsktyp",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "worktype",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "wrkzon",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "locatn",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "zoncod",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "mvt_mvttyp",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "mvt_mvtctg",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "mvt_frm_to",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "mvt_arecod",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "mvt_locatn",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "trntyp",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "codmst",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "dscmst",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "reacod",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "uom_def",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "velocity_type",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "users",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "les_usr_ath",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "les_ath_role",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "les_usr_role",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "oprgrp",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "pick_method",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "wrksts",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "as_rtcis_subsit",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "as_rtcis_blding",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "config_view",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "task_man_view",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "wh",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "aremst",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "sto_zone",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "mov_zone",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "pck_zone",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "pck_mthd",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "poldat",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "wrkopr",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "les_usr_ath",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "wrkque",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "poldat",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "wh",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:02",
+   "object": "pck_mthd",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "rcphdr",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "rcpdtl",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "rcpexp",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "matreq",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "trailer",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "trlreq",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "trlrio",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "trukio",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "unitld",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "ulpall",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "ulstat",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "invact",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "cghold",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "empty"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "itmmst",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "item_uom",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "item_config",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "prtmst",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "prtdsc",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "alt_prtmst",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "blditm",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "audcnt",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "ctlgrp",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "hold",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "REJECT",
+   "detail": "not in the live RTCIS catalog"
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "pallet_inventory",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "locatn",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "zoncod",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "wrkzon",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "i_invact",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "invdtl",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "REJECT",
+   "detail": "not in the live RTCIS catalog"
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "invlod",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "REJECT",
+   "detail": "not in the live RTCIS catalog"
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "invsub",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "REJECT",
+   "detail": "not in the live RTCIS catalog"
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "damg",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "brokehist",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "as_rtcis_rcphdr",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "as_rtcis_rcpdtl",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "as_rtcis_itmmst",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "as_rtcis_unitld",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "as_rtcis_untdtl",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "error: ('HYT00', '[HYT00] [Microsoft][ODBC Driver 18 for SQL Server]Query timeout expired (0) (SQLExecDirectW)')"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "as_rtcis_ctlgrp",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "agv_inventory_view",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "qa_view",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "item_view",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "item_uom_view",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "invent_view",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "rcvtrk",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "rcvinv",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "rcvlin",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "invsub",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "invhld",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "empty",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "inv_asset",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "prtmst",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "prtdsc",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "prtftp",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "prtftp_dtl",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "alt_prtmst",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "inventory_view",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "invmov",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "invact",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "prtmst",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "prtftp",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "prtftp_dtl",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:03",
+   "object": "poldat",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "locatn",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "zoncod",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "wrkzon",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "loclst",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "empty"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "loclstdtl",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "empty"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "locatn_assc",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "invact",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "i_invact",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "pallet_inventory",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "replen",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "item_velocity",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "velocity_type",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "bldlst",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "empty"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "bldlstdtl",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "empty"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "as_rtcis_locatn",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "as_rtcis_zoncod",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "as_rtcis_zonlst",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "alps_item_config_view",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "invsub",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "invmov",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "inventory_view",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "rplwrk",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "wrkque",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "alloc_search_path",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "ptwy_last_loc",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "poldat",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:04",
+   "object": "alloc_search_path",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "ordhdr",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "orddtl",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "ordctl",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "custmr",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "wavhdr",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "caspik",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "caspik_dtl",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "pick_method",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "pckcube",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "zonctl",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "zondtl",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "wrkque",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "empty"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "mancas",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "rpkdtl",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "rpkcas",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "crtmst",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "crtngrp",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "cart",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "bundle",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "lblfmt",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "absent",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "lbltyp",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "ship_stgloc",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "palgrp",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "replen",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "as_rtcis_ordhdr",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "as_rtcis_orddtl",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "as_rtcis_casepick",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "order_view",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "ord",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "ord_line",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "pckbat",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "pckwrk_hdr",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "pckwrk_dtl",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "shipment",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "shipment_line",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "cstmst",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "rplwrk",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "wrkque",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "pck_mthd",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "pck_zone",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "poldat",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:05",
+   "object": "alloc_search_path",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "shphdr",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "shpord",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "stop",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "order_shipment",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "ordshp_dtl",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "ordload",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "ordpal",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "trukld",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "ap3_shipment",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "ap3_truckload",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "ap3_caspik",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "trlmov",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "trlque",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "as_rtcis_shphdr",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "as_rtcis_order_shipment",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "ap3_shipment_data",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "shipment",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "shipment_line",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "stop",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "car_move",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "trlr",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "invmov",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "poldat",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:07",
+   "object": "car",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "REJECT",
+   "detail": "not in the live PrIME2022 catalog"
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:08",
+   "object": "prdque",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:08",
+   "object": "prdrls",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "empty"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:08",
+   "object": "prdlin",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:08",
+   "object": "lindel",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:08",
+   "object": "linwrk",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:08",
+   "object": "cmpdtl",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:08",
+   "object": "cmppar",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:08",
+   "object": "as_rtcis_prdlin",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:08",
+   "object": "as_rtcis_prdque",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:08",
+   "object": "kit_view",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:08",
+   "object": "prdord_view",
+   "engine": "RTCIS",
+   "role": "rtcis view",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:08",
+   "object": "wrkque",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:08",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:08",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:08",
+   "object": "prtmst",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:08",
+   "object": "poldat",
+   "engine": "PrIME2022",
+   "role": "configuration",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:10",
+   "object": "invact",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:10",
+   "object": "i_invact",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "empty",
+    "RTCIS_LON": "empty"
+   },
+   "populated": false
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:10",
+   "object": "systrn",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "rows"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:10",
+   "object": "wrkque",
+   "engine": "RTCIS",
+   "role": "rtcis",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "RTCIS_EUS": "rows",
+    "RTCIS_LON": "empty"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:10",
+   "object": "dlytrn",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:10",
+   "object": "invmov",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:10",
+   "object": "invact",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "module_table",
+   "subject": "SDCModule:10",
+   "object": "wrkque",
+   "engine": "PrIME2022",
+   "role": "operational",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-01.01.02",
+   "object": "trlr",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-01.01.02",
+   "object": "appt",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-01.01.02",
+   "object": "rcvtrk",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-01.01.03",
+   "object": "trlr",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-01.01.03",
+   "object": "appt",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-01.01.03",
+   "object": "shipment",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-01.01.03",
+   "object": "stop",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-01.01.06",
+   "object": "trlr",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-01.01.06",
+   "object": "car_move",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.01",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.01",
+   "object": "sto_zone",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.01",
+   "object": "mov_zone",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.01",
+   "object": "pck_zone",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.01",
+   "object": "aremst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.02",
+   "object": "alloc_search_path",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.02",
+   "object": "ptwy_last_loc",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.02",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.02",
+   "object": "poldat",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.03",
+   "object": "invmov",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.03",
+   "object": "wrkque",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.03",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.04",
+   "object": "pck_mthd",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.04",
+   "object": "pck_zone",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.04",
+   "object": "alloc_search_path",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.04",
+   "object": "poldat",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.05",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.05",
+   "object": "prtftp",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.05",
+   "object": "poldat",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.06",
+   "object": "wrkque",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.06",
+   "object": "wrkopr",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.06",
+   "object": "mov_zone",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.07",
+   "object": "wh",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.07",
+   "object": "prtmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-02.01.07",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.01",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.01",
+   "object": "inv_asset",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.02",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.02",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.02",
+   "object": "invsub",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.02",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.04",
+   "object": "prtmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.04",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.04",
+   "object": "dlytrn",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.05",
+   "object": "prtmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.05",
+   "object": "prtdsc",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.05",
+   "object": "prtftp",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.05",
+   "object": "prtftp_dtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.05",
+   "object": "alt_prtmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.06",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.06",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.06",
+   "object": "dlytrn",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.07",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.07",
+   "object": "invhld",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "empty",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": false
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.01.07",
+   "object": "dlytrn",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.01",
+   "object": "rcvtrk",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.01",
+   "object": "rcvinv",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.01",
+   "object": "rcvlin",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.01",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.01",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.01",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.03",
+   "object": "rcvtrk",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.03",
+   "object": "rcvlin",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.03",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.04",
+   "object": "rcvtrk",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.04",
+   "object": "rcvlin",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.04",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.04",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.08",
+   "object": "rcvlin",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.08",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.08",
+   "object": "dlytrn",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.09",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.09",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.09",
+   "object": "prtftp",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.11",
+   "object": "rcvtrk",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.11",
+   "object": "rcvlin",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.11",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.11",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.02.11",
+   "object": "invhld",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "empty",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": false
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.03.02",
+   "object": "invhld",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "empty",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": false
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.03.02",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.03.02",
+   "object": "inv_asset",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.03.03",
+   "object": "invhld",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "empty",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": false
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.03.03",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.03.05",
+   "object": "rcvlin",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.03.05",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-03.03.05",
+   "object": "invhld",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "empty",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": false
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.01",
+   "object": "ord",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.01",
+   "object": "ord_line",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.01",
+   "object": "shipment",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.02",
+   "object": "shipment",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.02",
+   "object": "shipment_line",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.02",
+   "object": "pckbat",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.03",
+   "object": "ord",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.03",
+   "object": "ord_line",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.03",
+   "object": "shipment_line",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.04",
+   "object": "invhld",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "empty",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": false
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.04",
+   "object": "ord_line",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.04",
+   "object": "shipment_line",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.05",
+   "object": "pckbat",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.05",
+   "object": "pckwrk_hdr",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.05",
+   "object": "pckwrk_dtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.05",
+   "object": "ord_line",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.06",
+   "object": "shipment",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.01.06",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.01",
+   "object": "pckwrk_hdr",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.01",
+   "object": "pckwrk_dtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.01",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.01",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.02",
+   "object": "pckwrk_hdr",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.02",
+   "object": "pckwrk_dtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.02",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.02",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.03",
+   "object": "pckwrk_hdr",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.03",
+   "object": "pckwrk_dtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.03",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.03",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.04",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.04",
+   "object": "prtftp",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.04",
+   "object": "rplwrk",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.05",
+   "object": "pckwrk_hdr",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.05",
+   "object": "pckwrk_dtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.06",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.06",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.06",
+   "object": "prtftp",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.07",
+   "object": "pckwrk_dtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.07",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.08",
+   "object": "pckwrk_dtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.08",
+   "object": "shipment_line",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.09",
+   "object": "pckwrk_hdr",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.09",
+   "object": "pckwrk_dtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.09",
+   "object": "rplwrk",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.10",
+   "object": "pckwrk_hdr",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-05.02.10",
+   "object": "pckwrk_dtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.01",
+   "object": "shipment",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.01",
+   "object": "stop",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.01",
+   "object": "trlr",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.01",
+   "object": "invmov",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.05",
+   "object": "shipment",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.05",
+   "object": "stop",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.05",
+   "object": "trlr",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.05",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.06",
+   "object": "shipment",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.06",
+   "object": "stop",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.06",
+   "object": "trlr",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.10",
+   "object": "shipment",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.10",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.12",
+   "object": "shipment",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.12",
+   "object": "stop",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.12",
+   "object": "trlr",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.12",
+   "object": "car_move",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.13",
+   "object": "shipment",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.13",
+   "object": "shipment_line",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.13",
+   "object": "ord",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.14",
+   "object": "shipment",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.14",
+   "object": "shipment_line",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.01.14",
+   "object": "invmov",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.02.01",
+   "object": "shipment",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.02.01",
+   "object": "pckwrk_hdr",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.02.01",
+   "object": "pckwrk_dtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-07.02.01",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.01",
+   "object": "wrkque",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.01",
+   "object": "prtmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.01",
+   "object": "ord",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.02",
+   "object": "wrkque",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.02",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.02",
+   "object": "locmst",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.03",
+   "object": "wrkque",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.03",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.03",
+   "object": "dlytrn",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.04",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.04",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.04",
+   "object": "rcvtrk",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.05",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.05",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.06",
+   "object": "invlod",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.06",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.06",
+   "object": "wrkque",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.07",
+   "object": "dlytrn",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.07",
+   "object": "wrkque",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.08",
+   "object": "invdtl",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-08.01.08",
+   "object": "dlytrn",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-10.02.01",
+   "object": "wrkque",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "pmc_table",
+   "subject": "PMCProcess:PMC-10.02.01",
+   "object": "dlytrn",
+   "engine": "PrIME2022",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "in live catalog",
+   "presence": {
+    "PRIME22_DE08": "rows",
+    "PRIME22_WMD1": "absent"
+   },
+   "populated": true
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "itmmst->prtmst",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "itmmst->prtdsc",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "item_uom->prtftp_dtl",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "item_config->prtftp_view",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "blditm->(none)",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "source in catalog; no PrIME table by design"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "zoncod->aremst",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "zoncod->sto_zone",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "zoncod->mov_zone",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "zoncod->pck_zone",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "systrn->dlytrn",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "rcphdr->rcvtrk",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "rcphdr->rcvinv",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "caspik->pckwrk_hdr",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "caspik->pckwrk_dtl",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "caspik->pckbat",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "invact->invmov",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "carrier->car",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "REJECT",
+   "detail": "missing in live catalog: car"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "unitld->invlod",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "ctlgrp->invdtl",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "ordhdr->ord",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "wavhdr->pckbat",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "shphdr->shipment",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  },
+  {
+   "kind": "transformation",
+   "subject": "Transformation",
+   "object": "trukio->trlr",
+   "engine": "RTCIS",
+   "role": "",
+   "verdict": "PASS",
+   "detail": "both in catalog; agrees with validated MAPS_TO"
+  }
+ ]
+}

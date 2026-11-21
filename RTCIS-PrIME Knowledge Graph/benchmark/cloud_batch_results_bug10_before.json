@@ -1,0 +1,87 @@
+{
+ "ask": [
+  {
+   "engine": "RTCIS",
+   "site": "RTCIS_EUS",
+   "theme": "location",
+   "question": "How many unit loads are in each location zone?",
+   "status": "rejected",
+   "attempts": 1,
+   "rows": null,
+   "error": "empty SQL",
+   "empty_fields": null,
+   "warnings": [],
+   "seconds": 61.8,
+   "sql": "",
+   "accuracy": null
+  },
+  {
+   "engine": "RTCIS",
+   "site": "RTCIS_EUS",
+   "theme": "location",
+   "question": "How many unit loads are in each location zone?",
+   "status": "validated",
+   "attempts": 2,
+   "rows": 50,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 62.0,
+   "sql": "SELECT\n    u.subsit,\n    l.zoncod AS location_zone,\n    COUNT(DISTINCT u.ulid) AS unit_load_count\nFROM live3.unitld AS u\nINNER JOIN live3.locatn AS l\n    ON l.subsit = u.subsit\n   AND l.locatn = u.locatn\nGROUP BY\n    u.subsit,\n    l.zoncod\nORDER BY\n    u.subsit,\n    l.zoncod;",
+   "accuracy": {
+    "ex": false,
+    "gold_rows": 144,
+    "model_rows": 149
+   }
+  },
+  {
+   "engine": "RTCIS",
+   "site": "RTCIS_EUS",
+   "theme": "location",
+   "question": "How many unit loads are in each location zone?",
+   "status": "validated",
+   "attempts": 2,
+   "rows": 50,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 118.2,
+   "sql": "SELECT\n    iv.subsit,\n    iv.zoncod,\n    COUNT(DISTINCT iv.ulid20) AS unit_load_count\nFROM live3.agv_inventory_view AS iv\nWHERE iv.locatn IS NOT NULL\nGROUP BY\n    iv.subsit,\n    iv.zoncod\nORDER BY\n    iv.subsit,\n    iv.zoncod;",
+   "accuracy": {
+    "ex": false,
+    "gold_rows": 144,
+    "model_rows": 148
+   }
+  }
+ ],
+ "convert": [],
+ "summary": {
+  "ask": {
+   "rejected": 1,
+   "validated": 2
+  },
+  "convert": {},
+  "ask_by_engine": {
+   "RTCIS": {
+    "rejected": 1,
+    "validated": 2
+   },
+   "PrIME2014": {},
+   "PrIME2022": {}
+  },
+  "by_theme": {
+   "location": {
+    "n": 3,
+    "validated": 2,
+    "ex_true": 0,
+    "ex_scored": 2
+   }
+  },
+  "execution_accuracy": {
+   "RTCIS_EUS | How many unit loads are in each location zone?": [
+    false,
+    false
+   ]
+  }
+ }
+}

@@ -1,0 +1,173 @@
+{
+ "ask": [
+  {
+   "engine": "PrIME2022",
+   "site": "PRIME22_DE08",
+   "theme": "inventory",
+   "question": "List the 20 most recent inventory movements with part, quantity and from / to location",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 20,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 64.5,
+   "sql": "SELECT TOP (20)\n       d.TRNDTE AS movement_date,\n       d.PRTNUM AS part,\n       d.TRNQTY AS quantity,\n       d.FRSTOL AS from_location,\n       d.TOSTOL AS to_location\nFROM dbo.dlytrn AS d\nWHERE d.WH_ID = @wh_id\n  AND d.PRTNUM IS NOT NULL\n  AND d.FRSTOL IS NOT NULL\n  AND d.TOSTOL IS NOT NULL\n  AND d.FRSTOL <> d.TOSTOL\nORDER BY d.TRNDTE DESC, d.DLYTRN_ID DESC;",
+   "accuracy": null
+  },
+  {
+   "engine": "PrIME2022",
+   "site": "PRIME22_DE08",
+   "theme": "location",
+   "question": "How many locations exist per area, and how many of them are empty?",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 50,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 59.8,
+   "sql": "WITH occupied_locations AS (\n    SELECT DISTINCT\n        wh_id,\n        stoloc\n    FROM dbo.invlod\n    WHERE wh_id = @wh_id\n)\nSELECT\n    l.arecod AS area_code,\n    COUNT(*) AS location_count,\n    SUM(CASE WHEN o.stoloc IS NULL THEN 1 ELSE 0 END) AS empty_location_count\nFROM dbo.locmst AS l\nLEFT JOIN occupied_locations AS o\n    ON o.wh_id = l.wh_id\n   AND o.stoloc = l.stoloc\nWHERE l.wh_id = @wh_id\nGROUP BY l.arecod\nORDER BY l.arecod;",
+   "accuracy": null
+  },
+  {
+   "engine": "PrIME2022",
+   "site": "PRIME22_DE08",
+   "theme": "inventory",
+   "question": "Inventory quantity per part and inventory status",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 50,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 67.2,
+   "sql": "SELECT\n    d.prtnum AS part_number,\n    d.prt_client_id AS part_client_id,\n    d.invsts AS inventory_status,\n    SUM(CAST(d.untqty AS bigint)) AS inventory_quantity\nFROM dbo.invdtl AS d\nINNER JOIN dbo.invsub AS s\n    ON s.subnum = d.subnum\nINNER JOIN dbo.invlod AS l\n    ON l.lodnum = s.lodnum\nWHERE l.wh_id = @wh_id\nGROUP BY\n    d.prtnum,\n    d.prt_client_id,\n    d.invsts\nORDER BY\n    d.prtnum,\n    d.prt_client_id,\n    d.invsts;",
+   "accuracy": {
+    "ex": true,
+    "gold_rows": 4546,
+    "model_rows": 4546
+   }
+  },
+  {
+   "engine": "RTCIS",
+   "site": "RTCIS_EUS",
+   "theme": "location",
+   "question": "How many unit loads are in each location zone?",
+   "status": "validated",
+   "attempts": 2,
+   "rows": 50,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 69.6,
+   "sql": "SELECT\n    l.zoncod AS location_zone,\n    COUNT(DISTINCT u.ulid) AS unit_load_count\nFROM live3.unitld AS u\nINNER JOIN live3.locatn AS l\n    ON l.subsit = u.subsit\n   AND l.locatn = u.locatn\nGROUP BY l.zoncod\nORDER BY l.zoncod;",
+   "accuracy": {
+    "ex": true,
+    "gold_rows": 145,
+    "model_rows": 145
+   }
+  },
+  {
+   "engine": "RTCIS",
+   "site": "RTCIS_EUS",
+   "theme": "inventory",
+   "question": "Top 20 items by number of unit loads in stock",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 20,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 45.3,
+   "sql": "SELECT TOP (20)\n       ud.itmcls AS item_class,\n       ud.itmcod AS item_code,\n       COUNT(DISTINCT ul.ulid) AS unit_load_count\nFROM live3.unitld AS ul\nINNER JOIN live3.untdtl AS ud\n    ON ud.ulid = ul.ulid\nGROUP BY\n       ud.itmcls,\n       ud.itmcod\nORDER BY\n       unit_load_count DESC,\n       ud.itmcod ASC,\n       ud.itmcls ASC;",
+   "accuracy": null
+  },
+  {
+   "engine": "PrIME2022",
+   "site": "PRIME22_DE08",
+   "theme": "outbound",
+   "question": "Total picked and shipped quantity per shipment status",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 5,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 45.0,
+   "sql": "SELECT\n    s.shpsts AS shipment_status,\n    SUM(CAST(sl.pckqty AS bigint)) AS total_picked_quantity,\n    SUM(CAST(sl.shpqty AS bigint)) AS total_shipped_quantity\nFROM dbo.shipment AS s\nINNER JOIN dbo.shipment_line AS sl\n    ON sl.ship_id = s.ship_id\n   AND sl.wh_id = s.wh_id\nWHERE s.wh_id = @wh_id\n  AND sl.wh_id = @wh_id\nGROUP BY s.shpsts\nORDER BY s.shpsts;",
+   "accuracy": {
+    "ex": false,
+    "gold_rows": 5,
+    "model_rows": 5
+   }
+  },
+  {
+   "engine": "PrIME2022",
+   "site": "PRIME22_DE08",
+   "theme": "receiving",
+   "question": "Expected versus received quantity per receiving truck status",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 4,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 53.1,
+   "sql": "SELECT\n    COALESCE(t.rcvtrk_stat, '(blank)') AS receiving_truck_status,\n    COUNT(DISTINCT t.trknum) AS truck_count,\n    COALESCE(SUM(CAST(r.expqty AS bigint)), 0) AS expected_quantity,\n    COALESCE(SUM(CAST(r.rcvqty AS bigint)), 0) AS received_quantity,\n    COALESCE(SUM(CAST(r.rcvqty AS bigint)), 0)\n        - COALESCE(SUM(CAST(r.expqty AS bigint)), 0) AS quantity_variance\nFROM dbo.rcvtrk AS t\nLEFT JOIN dbo.rcvlin AS r\n    ON r.trknum = t.trknum\n   AND r.wh_id = t.wh_id\nWHERE t.wh_id = @wh_id\nGROUP BY COALESCE(t.rcvtrk_stat, '(blank)')\nORDER BY receiving_truck_status;",
+   "accuracy": {
+    "ex": true,
+    "gold_rows": 4,
+    "model_rows": 4
+   }
+  }
+ ],
+ "convert": [],
+ "summary": {
+  "ask": {
+   "validated": 7
+  },
+  "convert": {},
+  "ask_by_engine": {
+   "RTCIS": {
+    "validated": 2
+   },
+   "PrIME2014": {},
+   "PrIME2022": {
+    "validated": 5
+   }
+  },
+  "by_theme": {
+   "inventory": {
+    "n": 3,
+    "validated": 3,
+    "ex_true": 1,
+    "ex_scored": 1
+   },
+   "location": {
+    "n": 2,
+    "validated": 2,
+    "ex_true": 1,
+    "ex_scored": 1
+   },
+   "outbound": {
+    "n": 1,
+    "validated": 1,
+    "ex_true": 0,
+    "ex_scored": 1
+   },
+   "receiving": {
+    "n": 1,
+    "validated": 1,
+    "ex_true": 1,
+    "ex_scored": 1
+   }
+  },
+  "execution_accuracy": {
+   "PRIME22_DE08 | Inventory quantity per part and inventory status": true,
+   "RTCIS_EUS | How many unit loads are in each location zone?": true,
+   "PRIME22_DE08 | Total picked and shipped quantity per shipment status": false,
+   "PRIME22_DE08 | Expected versus received quantity per receiving truck status": true
+  }
+ }
+}

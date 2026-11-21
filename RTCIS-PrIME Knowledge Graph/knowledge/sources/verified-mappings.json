@@ -1,0 +1,1012 @@
+{
+  "_metadata": {
+    "version": "1.2.0",
+    "created": "2026-03-25",
+    "last_updated": "2026-04-08",
+    "description": "Structured knowledge base of verified RTCIS->PrIME 2022 schema mappings (Scenario A). Used by translation agent for instant lookups. NOTE: This KB is RTCIS-centric. For PrIME 2014->PrIME 2022 translations (Scenario B), use prime-datamodel.json directly.",
+    "three_systems": {
+      "RTCIS": "Legacy WMS, schema esiliv1, UPPERCASE tables. Source: Pomezia RTCIS DR 2014.xlsx (410 tables). The '2014' in the filename is a date, NOT PrIME 2014.",
+      "PrIME_2014": "Older PrIME version, schema dbo, lowercase +  suffix. Documented in prime-datamodel.json (available_2014, data_type_2014, predecessor columns).",
+      "PrIME_2022": "Target WMS, schema dbo, lowercase +  suffix. Source: POMEZIA_PrIME DR 2022.xlsx (148 tables) + prime-datamodel.json (available_2022, data_type_2022)."
+    },
+    "sources": [
+      "Pomezia RTCIS DR 2014.xlsx (RTCIS schema ->410 tables, 5184 columns)",
+      "POMEZIA_PrIME DR 2022.xlsx (PrIME 2022 schema ->148 tables, 5809 columns)",
+      "_loc_columns_extract.txt (complete column lists for RTCIS + PrIME 2022)",
+      "Prime 2022 Data Model V4 (WIP).xlsx (PrIME 2014 + PrIME 2022 ->1661 tables, 22867 fields, 138 PrIME 2014->022 transition mappings)",
+      "User-verified corrections from /memories/repo/mm-bot-sql-translation-feedback.md"
+    ]
+  },
+  "tables": {
+    "WH": {
+      "prime": "wh",
+      "confidence": "HIGH",
+      "notes": "WH_ID maps to wh_id"
+    },
+    "LOCATN": {
+      "prime": "locmst",
+      "confidence": "HIGH",
+      "notes": "Primary location table, 76->5 columns"
+    },
+    "INVACT": {
+      "prime": "invact",
+      "confidence": "HIGH",
+      "verified": "2026-05-25",
+      "notes": "Inventory activity log (73 cols in PrIME). invmov (14 cols) is a separate minimal movement table."
+    },
+    "I_INVACT": {
+      "prime": "invact",
+      "confidence": "HIGH",
+      "verified": "2026-05-25",
+      "notes": "Same as INVACT (73 cols). invmov is NOT the right target."
+    },
+    "POLDAT": {
+      "prime": "POLDAT",
+      "confidence": "HIGH",
+      "notes": "Case preserved; direct structure match"
+    },
+    "PRTMST": {
+      "prime": "prtmst",
+      "confidence": "HIGH",
+      "notes": "Primary item/part master"
+    },
+    "ITMMST": {
+      "prime": [
+        "prtmst",
+        "prtdsc"
+      ],
+      "confidence": "MED",
+      "notes": "Split across two PrIME tables"
+    },
+    "ZONCOD": {
+      "prime": [
+        "aremst",
+        "pck_zone",
+        "sto_zone",
+        "mov_zone"
+      ],
+      "confidence": "HIGH",
+      "verified": "2026-05-25",
+      "notes": "aremst is area master (parent); pck_zone/sto_zone/mov_zone are specialized splits by zone type in PrIME 2022"
+    },
+    "PWZON": {
+      "prime": [
+        "ptwy_last_loc",
+        "ALLOC_SEARCH_PATH_VIEW"
+      ],
+      "confidence": "MED",
+      "notes": "Check view first"
+    },
+    "WRKZON": {
+      "prime": [
+        "mov_zone",
+        "wrkque"
+      ],
+      "confidence": "MED",
+      "notes": "Work/movement zone"
+    },
+    "TSKTYP": {
+      "prime": [
+        "wkohdr",
+        "wrkque"
+      ],
+      "confidence": "MED",
+      "notes": "Task type master"
+    },
+    "ORDHDR": {
+      "prime": "ord",
+      "confidence": "HIGH",
+      "notes": "Order header"
+    },
+    "ORDDTL": {
+      "prime": "ord_line",
+      "confidence": "HIGH",
+      "verified": "2026-03-25",
+      "notes": "Order line detail"
+    },
+    "RCPHDR": {
+      "prime": [
+        "rcvinv",
+        "rcvtrk"
+      ],
+      "confidence": "MED",
+      "notes": "Split header/trailer in PrIME"
+    },
+    "RCPDTL": {
+      "prime": "rcvlin",
+      "confidence": "HIGH",
+      "notes": "Receipt line detail"
+    },
+    "SHPHDR": {
+      "prime": "shipment",
+      "confidence": "HIGH",
+      "notes": "Shipment header"
+    },
+    "SHPORD": {
+      "prime": "shipment_line",
+      "confidence": "HIGH",
+      "notes": "Shipment/order link"
+    },
+    "TRUKIO": {
+      "prime": "trlr",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Trailer table. APTDAT via appt JOIN (trlr.appt_id=appt.appt_id). No ordnum column — requires 5-hop shipment bridge.",
+      "bridge_tables": [
+        "shipment_line",
+        "shipment"
+      ]
+    },
+    "MVT_MVTTYP": {
+      "prime": "POLDAT",
+      "confidence": "MED",
+      "notes": "polcod='MVT_TYPE'; verify on target"
+    },
+    "REPLEN": {
+      "prime": "wrkque",
+      "confidence": "MED",
+      "notes": "Filter by work type for replenishment"
+    },
+    "PRDLIN": {
+      "prime": null,
+      "confidence": "UNMAPPED",
+      "notes": "No direct equivalent ->T3 site PE config"
+    },
+    "AP3_SHIPMENT": {
+      "prime": "shipment",
+      "confidence": "HIGH",
+      "notes": "6-column subset of shipment"
+    },
+    "AP3_CASPIK": {
+      "prime": [
+        "pckwrk_dtl",
+        "pckwrk_hdr"
+      ],
+      "confidence": "MED",
+      "notes": "Carrier-integrated case picks"
+    },
+    "TRLREQ": {
+      "prime": "rcvtrk",
+      "confidence": "HIGH",
+      "notes": "Trailer assignment requests"
+    },
+    "BLDING": {
+      "prime": "wh",
+      "confidence": "MED",
+      "notes": "Building/facility ->site config or wh"
+    },
+    "CASPIK": {
+      "prime": [
+        "pckwrk_dtl",
+        "pckwrk_hdr",
+        "pckbat"
+      ],
+      "confidence": "MED",
+      "notes": "Case pick work records"
+    },
+    "CARRIER": {
+      "prime": "carhdr",
+      "confidence": "HIGH",
+      "verified": "2026-05-25",
+      "notes": "Carrier master. 'car' does NOT exist in Athens; correct synonym is 'carhdr'."
+    },
+    "PICK_METHOD": {
+      "prime": "pck_mthd",
+      "confidence": "HIGH",
+      "notes": "Pick method definitions"
+    },
+    "WAVHDR": {
+      "prime": "pckbat",
+      "confidence": "HIGH",
+      "notes": "Wave ->Batch in PrIME"
+    },
+    "TRAILER": {
+      "prime": "rcvtrk",
+      "confidence": "HIGH",
+      "notes": "Trailer master"
+    },
+    "TRLMOV": {
+      "prime": "invmov",
+      "confidence": "MED",
+      "notes": "Filter invmov by trailer for movement history"
+    },
+    "EXTSYS": {
+      "prime": null,
+      "confidence": "UNMAPPED",
+      "notes": "External system config ->VERIFY on target"
+    },
+    "CGHOLD": {
+      "prime": "inv_asset",
+      "confidence": "MED",
+      "notes": "QA hold records via hold flag"
+    },
+    "CUSTMR": {
+      "prime": "cstmst",
+      "confidence": "HIGH",
+      "notes": "Customer master"
+    },
+    "SYSTRN": {
+      "prime": "dlytrn",
+      "confidence": "HIGH",
+      "verified": "2026-03-26",
+      "notes": "System Transaction ->Daily Transaction (104 fields). TRNTYP->actcod, TRNSEQ->dlytrn_id. ERD: erd outbound_v1.jpg"
+    },
+    "SYSDTL": {
+      "prime": "dlytrn",
+      "confidence": "HIGH",
+      "verified": "2026-03-26",
+      "notes": "Merged into dlytrn (denormalized SYSTRN+SYSDTL in PrIME)"
+    },
+    "ITEM_UOM": {
+      "prime": "prtftp_dtl",
+      "confidence": "HIGH",
+      "verified": "2026-03-26",
+      "notes": "Item Footprint Detail (29 fields). PK: prtnum+ftpcod+prt_client_id+wh_id+uomcod. WHSFLG->stk_flg (expert confirmed)."
+    },
+    "ITEM_CONFIG": {
+      "prime": [
+        "prtftp_view",
+        "prtmst"
+      ],
+      "confidence": "HIGH",
+      "verified": "2026-05-25",
+      "notes": "caslay/laypul CALCULATED from untcas/untlay/untpal on prtftp_view; other fields (itmcls->typcod) via prtmst. Both targets needed."
+    },
+    "AGV_INVENTORY_VIEW": {
+      "prime": "inventory_view",
+      "confidence": "HIGH",
+      "verified": "2026-03-26",
+      "notes": "Inventory summary view (120+ cols)"
+    },
+    "HOLD": {
+      "prime": "invhld",
+      "confidence": "HIGH",
+      "verified": "2026-03-26",
+      "notes": "Inventory Hold records"
+    },
+    "AS_RTCIS_UNITLD": {
+      "prime": "invlod",
+      "confidence": "HIGH",
+      "verified": "2026-03-27",
+      "notes": "Inventory Load (pallet)"
+    },
+    "AS_RTCIS_UNTDTL": {
+      "prime": "invdtl",
+      "confidence": "HIGH",
+      "verified": "2026-03-27",
+      "notes": "Inventory Detail (items on load)"
+    },
+    "INVDTL": {
+      "prime": "invdtl",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Inventory Detail (PrIME native)"
+    },
+    "INVLOD": {
+      "prime": "invlod",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Inventory Load / pallet (PrIME native)"
+    },
+    "INVSUB": {
+      "prime": "invsub",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Inventory Sub-load (PrIME native)"
+    },
+    "LOCMST": {
+      "prime": "locmst",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Location Master (PrIME native)"
+    },
+    "PRTFTP_DTL": {
+      "prime": "prtftp_dtl",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Footprint Detail / UOM (PrIME native)"
+    },
+    "INVENTORY_VIEW": {
+      "prime": "inventory_view",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Inventory summary view (PrIME native, 120+ cols)"
+    },
+    "PRTFTP": {
+      "prime": "prtftp",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Item Footprint (PrIME native)"
+    },
+    "DLYTRN": {
+      "prime": "dlytrn",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Daily Transaction (PrIME native, 104 cols)"
+    },
+    "INVHLD": {
+      "prime": "invhld",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Inventory Hold (PrIME native)"
+    },
+    "AS_RTCIS_CTLGRP": {
+      "prime": "inventory_view",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Inventory status filter (no separate table)"
+    },
+    "UNITLD": {
+      "prime": "invlod",
+      "confidence": "HIGH",
+      "verified": "2026-04-01",
+      "notes": "Unit Load / pallet. Same as AS_RTCIS_UNITLD->invlod. ULID->lodnum, ULTYPE->asset_typ. ERD: erd inventory_v1.jpg"
+    },
+    "ORDER_SHIPMENT": {
+      "prime": "shipment_line",
+      "confidence": "MED",
+      "verified": "2026-04-01",
+      "notes": "Order-to-Shipment link. ORDER_NUMBER->ordnum, PLN_NUMBER->ship_id, CSTNAM via ord.cstnum->cstmst. May also need shipment table for full header info."
+    },
+    "RTCIS_ITMMST": {
+      "prime": "prtmst",
+      "confidence": "MED",
+      "verified": "2026-04-01",
+      "notes": "Alias/view of ITMMST in RTCIS. Maps to prtmst (item master) and prtdsc (item descriptions). ITMDSC->dsc_value on prtdsc."
+    },
+    "UNTDTL_VIEW": {
+      "prime": "inventory_view",
+      "confidence": "HIGH",
+      "verified": "2026-04-08",
+      "notes": "Inventory Detail View (merged into inventory_view)"
+    },
+    "VUNTDTL_VIEW": {
+      "prime": "inventory_view",
+      "confidence": "HIGH",
+      "verified": "2026-04-08",
+      "notes": "Inventory Detail View variant (multi-batch)"
+    }
+  },
+  "columns": {
+    "ORDDTL.ORDNUM": {
+      "prime": "ord_line.ordnum",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-03-25",
+      "line": 2477
+    },
+    "ORDDTL.ITMCOD": {
+      "prime": "ord_line.prtnum",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-03-25",
+      "line": 2495
+    },
+    "ORDHDR.ORDNUM": {
+      "prime": "ord.ordnum",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "ORDHDR.ORDTYP": {
+      "prime": "ord.ord_typ",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "ORDHDR.SHIPID": {
+      "prime": "ord.ship_id",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "ORDHDR.CSTNUM": {
+      "prime": "ord.cstnum",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "ORDHDR.STATUS": {
+      "prime": "ord.ordsts",
+      "type": "nvarchar",
+      "confidence": "MED",
+      "notes": "Could also map to sts"
+    },
+    "TRUKIO.APTDAT": {
+      "prime": "appt.start_dte",
+      "type": "datetime",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Expert confirmed: APTDAT maps to appt.start_dte (appointment date). Join path: trlr.appt_id = appt.appt_id. Previous mapping to trlract.appt_id was incorrect.",
+      "resolved_by": "Expert PrIME SQL for Q1/Q2 + Learning #41"
+    },
+    "TRUKIO.ORDNUM": {
+      "prime": null,
+      "confidence": "VERIFIED_ABSENT",
+      "verified": "2026-03-30",
+      "notes": "trlr has NO ordnum column. Use 5-hop join path: ord_line->shipment_line->shipment->stop->car_move->trlr"
+    },
+    "LOCATN.LOCATN": {
+      "prime": "locmst.stoloc",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "LOCATN.LOCATN maps to stoloc (storage location). loc_id was incorrect."
+    },
+    "LOCATN.ARECOD": {
+      "prime": "locmst.arecod",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Learning #19: area_id does NOT exist on locmst. Correct column is arecod (confirmed via COLUMN_MAP + expert Q19)."
+    },
+    "LOCATN.ZONCOD": {
+      "prime": "locmst.sto_zone_id",
+      "type": "nvarchar",
+      "confidence": "MED",
+      "notes": "Could also be pck_zone_id depending on context"
+    },
+    "LOCATN.WRKZON": {
+      "prime": "locmst.mov_zone_id",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "LOCATN.LOCTYPE": {
+      "prime": "locmst.loc_typ_id",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Corrected: loc_type -> loc_typ_id (actual column name at Athens)."
+    },
+    "LOCATN.NUMPOS": {
+      "prime": "locmst.max_lod_qty",
+      "type": "int",
+      "confidence": "MED",
+      "notes": "Could also be capacity"
+    },
+    "LOCATN.MAXCASES": {
+      "prime": "locmst.max_case_qty",
+      "type": "int",
+      "confidence": "HIGH"
+    },
+    "LOCATN.PIKZON": {
+      "prime": "locmst.pck_zone_id",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "LOCATN.RPLFLG": {
+      "prime": "locmst.repflg",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Learning #4: replen_flg does NOT exist. Correct column is repflg (confirmed at Athens live)."
+    },
+    "INVACT.MVTCTG_MVTTYP": {
+      "prime": "invmov.mov_type",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "INVACT.ITMCLS": {
+      "prime": "invmov.item_class",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "INVACT.ITMCOD": {
+      "prime": "invmov.prtnum",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "INVACT.ULDAT": {
+      "prime": "invmov.trndte",
+      "type": "datetime",
+      "confidence": "HIGH",
+      "notes": "Or create_date depending on context"
+    },
+    "INVACT.HTQTY": {
+      "prime": "invmov.qty",
+      "type": "numeric",
+      "confidence": "MED",
+      "notes": "Could also be invqty"
+    },
+    "INVACT.TRXCOD": {
+      "prime": "invmov.tran_type",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "INVACT.FRM_SUBSIT": {
+      "prime": "invmov.from_loc_id",
+      "type": "nvarchar",
+      "confidence": "MED",
+      "notes": "Could also be from_site"
+    },
+    "INVACT.TO_SUBSIT": {
+      "prime": "invmov.to_loc_id",
+      "type": "nvarchar",
+      "confidence": "MED",
+      "notes": "Could also be to_site"
+    },
+    "I_INVACT.CASQTY": {
+      "prime": "invmov.case_qty",
+      "type": "numeric",
+      "confidence": "HIGH"
+    },
+    "I_INVACT.EVT_ID": {
+      "prime": "invmov.evt_id",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "POLDAT.POLCOD": {
+      "prime": "POLDAT.polcod",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "POLDAT.POLVAL": {
+      "prime": "POLDAT.polval",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "POLDAT.POLVAR": {
+      "prime": "POLDAT.polvar",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "POLDAT.RTSTR1": {
+      "prime": "POLDAT.rtstr1",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "POLDAT.RTSTR2": {
+      "prime": "POLDAT.rtstr2",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "POLDAT.RTNUM1": {
+      "prime": "POLDAT.rtnum1",
+      "type": "numeric",
+      "confidence": "HIGH"
+    },
+    "POLDAT.RTNUM2": {
+      "prime": "POLDAT.rtnum2",
+      "type": "numeric",
+      "confidence": "HIGH"
+    },
+    "POLDAT.RTFLT1": {
+      "prime": "POLDAT.rtflt1",
+      "type": "float",
+      "confidence": "HIGH"
+    },
+    "POLDAT.SRTSEQ": {
+      "prime": "POLDAT.srtseq",
+      "type": "int",
+      "confidence": "HIGH"
+    },
+    "POLDAT.GRP_NAM": {
+      "prime": "POLDAT.grp_nam",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "PRTMST.PRTNUM": {
+      "prime": "prtmst.prtnum",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "PRTMST.PRTFAM": {
+      "prime": "prtmst.prtfam",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "PRTMST.STKUOM": {
+      "prime": "prtmst.stkuom",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "PRTMST.UNTCAS": {
+      "prime": "prtftp_dtl.untcas",
+      "type": "numeric",
+      "confidence": "HIGH",
+      "notes": "Direct column on prtftp_dtl. ISNULL safety when used as divisor.",
+      "verified": "2026-04-07"
+    },
+    "PRTMST.UNTPAL": {
+      "prime": "prtftp_dtl.untpal",
+      "type": "numeric",
+      "confidence": "HIGH",
+      "notes": "Direct column on prtftp_dtl.",
+      "verified": "2026-04-07"
+    },
+    "PRTMST.UNTINP": {
+      "prime": "prtftp_dtl.untlay",
+      "type": "numeric",
+      "confidence": "HIGH",
+      "notes": "untinp renamed to untlay in PrIME 2022 (rule 12a).",
+      "verified": "2026-04-07"
+    },
+    "PRTMST.ABCCOD": {
+      "prime": "prtmst.abc_cod",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "PRTMST.HAZMAT_FLG": {
+      "prime": "prtmst.hazmat_flg",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "SHPHDR.SHIPID": {
+      "prime": "shipment.ship_id",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "SHPHDR.CARCOD": {
+      "prime": "shipment.car_cod",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "SHPHDR.SHPTYP": {
+      "prime": "shipment.ship_typ",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "WAVHDR.WAVE": {
+      "prime": "pckbat.batch_id",
+      "type": "nvarchar",
+      "confidence": "MED",
+      "notes": "Could also be wav_id"
+    },
+    "WAVHDR.WAVTYP": {
+      "prime": "pckbat.wav_typ",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "WAVHDR.WAVSTS": {
+      "prime": "pckbat.wav_sts",
+      "type": "nvarchar",
+      "confidence": "HIGH"
+    },
+    "SYSTRN.TRNTYP": {
+      "prime": "dlytrn.actcod",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-03-26",
+      "notes": "Transaction Type ->Activity Code. [!] TRNTYP values (CASPIK, CASXFR) may use different codes in PrIME"
+    },
+    "SYSTRN.TRNSEQ": {
+      "prime": "dlytrn.dlytrn_id",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-03-26",
+      "notes": "Transaction Sequence ->Daily Transaction ID (PK)"
+    },
+    "SYSDTL.TRNSEQ": {
+      "prime": "dlytrn.dlytrn_id",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-03-26",
+      "notes": "Same as SYSTRN.TRNSEQ ->denormalized into single table"
+    },
+    "SYSDTL.ITMCOD": {
+      "prime": "dlytrn.prtnum",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-03-26"
+    },
+    "SYSDTL.ITMCLS": {
+      "prime": "prtmst.typcod",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "ITMCLS concept disappears in PrIME. prt_class_name is empty at Athens. Expert: use typcod (FERT=F, ROH, HALB). Requires JOIN to prtmst."
+    },
+    "SYSDTL.DTLTYP": {
+      "prime": "dlytrn.oprcod",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-04-10",
+      "notes": "DTLTYP='F' maps to oprcod='F' (same value, no remapping needed). Do NOT confuse with ITMCLS='F'->typcod='FERT'. Learning #58."
+    },
+    "AS_RTCIS_CTLGRP.QASTAT": {
+      "prime": "inventory_view.invsts",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-04-10",
+      "notes": "QASTAT='RL' (Released) maps to invsts='U' (Unrestricted). Value 'RL' does NOT exist in PrIME. Learning #49, #56."
+    },
+    "SYSDTL.ORDNUM": {
+      "prime": "dlytrn.ordnum",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-03-26"
+    },
+    "SYSDTL.LOCATN": {
+      "prime": "dlytrn.frstol",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-03-26",
+      "notes": "dlytrn has frstol (from) and tostol (to). SYSDTL.LOCATN maps to frstol (confirmed: dlytrn is denormalized SYSTRN+SYSDTL)"
+    },
+    "ITEM_UOM.ITMCOD": {
+      "prime": "prtftp_dtl.prtnum",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-03-26"
+    },
+    "ITEM_UOM.WHSFLG": {
+      "prime": "prtftp_dtl.stk_flg",
+      "type": "int",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Expert confirmed (DBA Q#4): WHSFLG maps to stk_flg (stock flag, 0/1 binary). Previously MEDIUM, now confirmed HIGH."
+    },
+    "ITEM_CONFIG.ITMCOD": {
+      "prime": "prtmst.prtnum",
+      "type": "nvarchar",
+      "confidence": "HIGH",
+      "verified": "2026-03-26"
+    },
+    "ORDDTL.CASPAL": {
+      "prime": null,
+      "confidence": "CALCULATED",
+      "verified": "2026-03-26",
+      "notes": "No direct column. Calculate as COALESCE(NULLIF(untpal,0)/NULLIF(untcas,0), 0) from ord_line",
+      "formula": "COALESCE(NULLIF(d.untpal,0)/NULLIF(d.untcas,0), 0)"
+    },
+    "TRUKIO.APTDAT_ACTUAL": {
+      "prime": "appt.start_dte",
+      "type": "datetime",
+      "confidence": "HIGH",
+      "verified": "2026-03-30",
+      "notes": "Expert confirmed: APTDAT = appt.start_dte. Join: trlr.appt_id = appt.appt_id. Filter: t.appt_id IS NOT NULL."
+    }
+  },
+  "join_paths": {
+    "ORDDTL->TRUKIO": {
+      "rtcis_join": "ORDDTL.ORDNUM = TRUKIO.ORDNUM",
+      "direct_possible": false,
+      "verified": "2026-03-30",
+      "reason": "Expert confirmed: trlr (NOT trlr). trlr has no ordnum ->requires 5-hop via shipment bridge. APTDAT from appt table (trlr.appt_id = appt.appt_id).",
+      "prime_path": [
+        {
+          "from": "ord_line",
+          "to": "shipment_line",
+          "on": "ordnum + ordlin",
+          "note": "shipment_line PK is ship_line_id; ordnum+ordlin are FK to ord_line"
+        },
+        {
+          "from": "shipment_line",
+          "to": "shipment",
+          "on": "ship_id"
+        },
+        {
+          "from": "shipment",
+          "to": "stop",
+          "on": "stop_id",
+          "note": "shipment has stop_id but NOT trlr_id"
+        },
+        {
+          "from": "stop",
+          "to": "car_move",
+          "on": "car_move_id",
+          "note": "stop has car_move_id (Load ID)"
+        },
+        {
+          "from": "car_move",
+          "to": "trlr",
+          "on": "trlr_id",
+          "note": "Expert: car_move.trlr_id -> trlr (NOT trlr). trlr.appt_id -> appt for APTDAT"
+        }
+      ],
+      "prime_sql": "FROM dbo.ord_line d\nJOIN dbo.shipment_line sl ON d.ordnum = sl.ordnum AND d.ordlin = sl.ordlin AND d.client_id = sl.client_id\nJOIN dbo.shipment s ON sl.ship_id = s.ship_id\nJOIN dbo.stop st ON s.stop_id = st.stop_id\nJOIN dbo.car_move cm ON st.car_move_id = cm.car_move_id\nJOIN dbo.trlr t ON cm.trlr_id = t.trlr_id\nLEFT JOIN dbo.appt ap ON t.appt_id = ap.appt_id",
+      "hops": 5,
+      "verified_via": "prime-datamodel.json (shipment.trlr_id=NOT_FOUND, shipment.stop_id=FOUND, stop.car_move_id=FOUND, car_move.trlr_id=FOUND)"
+    },
+    "ORDDTL->ORDHDR": {
+      "rtcis_join": "ORDDTL.ORDNUM = ORDHDR.ORDNUM",
+      "direct_possible": true,
+      "prime_join": "ord_line.ordnum = ord.ordnum"
+    },
+    "ORDHDR->SHPHDR": {
+      "rtcis_join": "ORDHDR.SHIPID = SHPHDR.SHIPID",
+      "direct_possible": true,
+      "prime_join": "ord.ship_id = shipment.ship_id"
+    },
+    "SHPHDR->SHPORD": {
+      "rtcis_join": "SHPHDR.SHIPID = SHPORD.SHIPID",
+      "direct_possible": true,
+      "prime_join": "shipment.ship_id = shipment_line.ship_id"
+    },
+    "RCPHDR->RCPDTL": {
+      "rtcis_join": "RCPHDR.RCPNUM = RCPDTL.RCPNUM",
+      "direct_possible": true,
+      "prime_join": "rcvinv.trknum = rcvlin.trknum",
+      "notes": "Receipt number ->tracking number in PrIME"
+    },
+    "INVACT->LOCATN": {
+      "rtcis_join": "INVACT.LOCATN = LOCATN.LOCATN",
+      "direct_possible": true,
+      "prime_join": "invmov.dstloc = locmst.stoloc",
+      "notes": "Or from_loc depending on direction"
+    },
+    "SYSTRN->SYSDTL": {
+      "rtcis_join": "SYSTRN.TRNSEQ = SYSDTL.TRNSEQ",
+      "direct_possible": false,
+      "verified": "2026-03-26",
+      "reason": "Both SYSTRN and SYSDTL map to dlytrn (denormalized). The JOIN becomes unnecessary in PrIME.",
+      "prime_join": "N/A ->both tables merge into dlytrn",
+      "prime_sql": "SELECT * FROM dbo.dlytrn",
+      "notes": "[!] SYSTRN (header) + SYSDTL (detail) are flattened into one dlytrn record in PrIME. Verify cardinality matches."
+    },
+    "SYSDTL->LOCATN": {
+      "rtcis_join": "SYSDTL.LOCATN = LOCATN.LOCATN",
+      "direct_possible": true,
+      "verified": "2026-03-26",
+      "prime_join": "dlytrn.frstol = locmst.stoloc AND dlytrn.wh_id = locmst.wh_id",
+      "notes": "[!] dlytrn has frstol (from) and tostol (to). Use frstol as default; verify which matches SYSDTL.LOCATN intent"
+    },
+    "ITEM_CONFIG->ITEM_UOM": {
+      "rtcis_join": "ITEM_CONFIG.ITMCOD = ITEM_UOM.ITMCOD",
+      "direct_possible": true,
+      "verified": "2026-03-26",
+      "prime_join": "prtmst.prtnum = prtftp_dtl.prtnum AND prtmst.prt_client_id = prtftp_dtl.prt_client_id",
+      "notes": "prtftp_dtl may return multiple rows per item (different UOMs/footprints)"
+    }
+  },
+  "absent_columns": {
+    "trlr.ordnum": {
+      "table_columns_total": 33,
+      "verified": "2026-03-30",
+      "evidence": "Expert confirmed: trlr (NOT trlract) has no ordnum column.",
+      "workaround": "Use 5-hop bridge: ord_line ->shipment_line ->shipment ->stop ->car_move ->trlr"
+    }
+  },
+  "ambiguous_mappings": {
+    "TRUKIO.APTDAT": {
+      "status": "RESOLVED",
+      "resolution": "appt.start_dte (via trlr.appt_id = appt.appt_id). Expert-validated: use t.appt_id IS NOT NULL in the 5-hop join WHERE clause.",
+      "resolved_by": "Expert PrIME SQL for Q1/Q2 + Learning #41 (2026-03-30)",
+      "resolved_date": "2026-03-30"
+    },
+    "LOCATN.ZONCOD": {
+      "candidates": [
+        {
+          "prime": "locmst.sto_zone_id",
+          "if": "Storage zone context"
+        },
+        {
+          "prime": "locmst.pck_zone_id",
+          "if": "Pick zone context"
+        }
+      ],
+      "status": "CONTEXT_DEPENDENT"
+    },
+    "INVACT.HTQTY": {
+      "candidates": [
+        {
+          "prime": "invmov.qty",
+          "if": "General quantity"
+        },
+        {
+          "prime": "invmov.invqty",
+          "if": "Inventory-specific quantity"
+        }
+      ],
+      "status": "CONTEXT_DEPENDENT"
+    }
+  },
+  "naming_conventions": {
+    "rtcis": {
+      "schema": "esiliv1",
+      "table_case": "UPPERCASE",
+      "column_case": "UPPERCASE",
+      "example": "esiliv1.LOCATN"
+    },
+    "prime": {
+      "schema": "dbo",
+      "table_suffix": "",
+      "table_case": "lowercase (mostly, some UPPERCASE like POLDAT)",
+      "column_case": "lowercase",
+      "example": "dbo.locmst"
+    }
+  },
+  "value_mappings": {
+    "_description": "RTCIS filter constant values that must be remapped when column is remapped. Added 2026-04-10.",
+    "QASTAT": {
+      "RL": {
+        "prime_column": "invsts",
+        "prime_value": "U",
+        "confidence": "HIGH",
+        "meaning": "Released -> Unrestricted",
+        "evidence": "Learning #49, #56. Verified at Athens: no rows with invsts='RL'. Fixed in Q28/Q29."
+      }
+    },
+    "ITMCLS": {
+      "F": {
+        "prime_column": "typcod",
+        "prime_value": "FERT",
+        "confidence": "HIGH",
+        "meaning": "Finished Goods -> SAP FERT",
+        "evidence": "Learning #44. Expert-verified at Athens."
+      }
+    },
+    "DTLTYP": {
+      "F": {
+        "prime_column": "oprcod",
+        "prime_value": "F",
+        "confidence": "HIGH",
+        "meaning": "Operation type (same value, no remapping)",
+        "evidence": "Learning #58. NOT ITMCLS — do not confuse."
+      }
+    },
+    "TRNTYP": {
+      "CASPIK": { "prime_column": "actcod", "prime_value": "CASPCKMOV", "confidence": "MED" },
+      "CASXFR": { "prime_column": "actcod", "prime_value": "FL_XFR", "confidence": "MED" },
+      "STKCNT": { "prime_column": "actcod", "prime_value": "CNTBCKD", "confidence": "MED" },
+      "STKCOR": { "prime_column": "actcod", "prime_value": "INVSTSCHG", "confidence": "MED" },
+      "STKMIS": { "prime_column": "actcod", "prime_value": "INVDEL", "confidence": "MED" },
+      "CLSRCP": { "prime_column": "actcod", "prime_value": "MSTR_RCP_CL", "confidence": "MED" },
+      "SHPCMP": { "prime_column": "actcod", "prime_value": "SCMPL", "confidence": "MED" },
+      "PICKUL": { "prime_column": "actcod", "prime_value": "LSTPCK", "confidence": "MED" },
+      "DEPSUL": { "prime_column": "actcod", "prime_value": "GENMOV", "confidence": "MED" },
+      "EDITUL": { "prime_column": "actcod", "prime_value": "RELABEL", "confidence": "MED" }
+    }
+  },
+  "expert_table_mappings": {
+    "_NOTE": "Table/column mappings derived from expert SQL templates, confirmed on Athens Replica 2026-04-10. Learnings #63–#67.",
+    "prtdsc": {
+      "purpose": "Product description lookup",
+      "join_key": "concat(prtnum,'|',prt_client_id,'|',wh_id) = prtdsc.colval AND locale_id = 'US_ENGLISH'",
+      "output_col": "lngdsc",
+      "confirmed_cols": 6,
+      "learning": "#63"
+    },
+    "alt_prtmst": {
+      "purpose": "GTIN barcode lookup",
+      "join_key": "prtnum + prt_client_id, WHERE alt_prt_typ='GTIN' AND uomcod='CS'",
+      "output_col": "alt_prtnum AS CSGTIN",
+      "confirmed_cols": 14,
+      "learning": "#65"
+    },
+    "vc_hazmat": {
+      "purpose": "Dangerous goods / hazmat flag",
+      "join_key": "prtnum + prt_client_id",
+      "output_col": "vc_unnum → CASE WHEN NULL THEN 0 ELSE 1 END = PITTOGRAMMA",
+      "confirmed_cols": 15,
+      "learning": "#66"
+    },
+    "adrmst": {
+      "purpose": "Customer/address data (replaces cstmst for shipping context)",
+      "join_path": "shipment_line.ship_id → shipment.ship_id → shipment.rt_adr_id → adrmst.adr_id",
+      "key_cols": {
+        "adrnam": "Customer name (CSTNAM)",
+        "adrcty": "City",
+        "adrstc": "State/Province",
+        "adrln1": "Address line 1",
+        "adrpsz": "Postal code",
+        "ctry_name": "Country"
+      },
+      "confirmed_cols": 52,
+      "learning": "#64, #67"
+    }
+  },
+  "databases": {
+    "_IMPORTANT_RULE": "PrIME output queries MUST target SITENAME_REPLICA databases (e.g. ATHENS_REPLICA, POMEZIA_REPLICA), NEVER SITENAME_RTDS. inventory_view and other key views only exist in _REPLICA. Learning #61.",
+    "athens_prime_replica": {
+      "server": "<replica-host>",
+      "database": "ATHENS_REPLICA",
+      "schema": "dbo",
+      "wh_id": "WMD1",
+      "purpose": "PrIME 2022 validation (target schema) — MUST use _REPLICA, not _RTDS",
+      "auth": "ActiveDirectoryInteractive"
+    },
+    "pomezia_rtcis_prod": {
+      "server": "<replica-host>",
+      "database": "POMEZIA",
+      "schema": "esiliv1 / live3",
+      "purpose": "RTCIS source data cross-validation",
+      "auth": "ActiveDirectoryInteractive",
+      "added": "2026-04-10"
+    },
+    "pomezia_rtcis_nonprod": {
+      "server": "<replica-host>",
+      "database": "POMEZIA",
+      "schema": "esiliv1 / live3",
+      "purpose": "RTCIS source data non-production testing",
+      "auth": "ActiveDirectoryInteractive",
+      "added": "2026-04-10"
+    }
+  }
+}

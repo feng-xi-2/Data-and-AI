@@ -1,0 +1,13 @@
+{
+ "PrIME2014->PrIME2022 column loaded": 8297,
+ "PrIME2014->PrIME2022 column rejected": 1,
+ "PrIME2014->PrIME2022 table loaded": 431,
+ "RTCIS->PrIME2014 column loaded": 40,
+ "RTCIS->PrIME2014 column rejected": 4,
+ "RTCIS->PrIME2014 table loaded": 107,
+ "RTCIS->PrIME2014 table rejected": 7,
+ "RTCIS->PrIME2022 column loaded": 44,
+ "RTCIS->PrIME2022 column rejected": 28,
+ "RTCIS->PrIME2022 table loaded": 114,
+ "RTCIS->PrIME2022 table rejected": 14
+}

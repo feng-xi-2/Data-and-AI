@@ -1,0 +1,36 @@
+name: RTCIS-PrIME knowledge graph publish check
+
+# Blocks a merge when the public knowledge-graph folder could expose a secret, a token, user access information or an
+# internal host, when its Python tools do not compile, or when the graph violates its own ontology.
+on:
+  pull_request:
+    paths:
+      - "RTCIS-PrIME Knowledge Graph/**"
+      - ".github/workflows/rtcis-prime-kg-publish-check.yml"
+  push:
+    branches: [main]
+    paths:
+      - "RTCIS-PrIME Knowledge Graph/**"
+
+permissions:
+  contents: read
+
+jobs:
+  publish-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: No secret, token, user access info or internal host
+        run: python "RTCIS-PrIME Knowledge Graph/tools/check_publish.py" "RTCIS-PrIME Knowledge Graph"
+      - name: Python tools compile
+        run: python -m compileall -q "RTCIS-PrIME Knowledge Graph/tools"
+      - name: Graph shards are valid JSON and conform to the ontology
+        run: python "RTCIS-PrIME Knowledge Graph/tools/check_ontology.py" "RTCIS-PrIME Knowledge Graph/relationships"
+      - name: Unit tests (no cloud - fakes for Cosmos, model and databases)
+        working-directory: "RTCIS-PrIME Knowledge Graph"
+        run: |
+          pip install sqlglot fastapi httpx pytest "deepagents==0.7.41" "langchain-core==1.8.4" "langgraph==1.2.24" "langchain-openai==1.6.0"
+          python -m pytest tests -m "not cloud" -q -p no:cacheprovider

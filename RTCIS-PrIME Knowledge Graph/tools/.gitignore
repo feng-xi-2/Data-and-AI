@@ -1,0 +1,5 @@
+sites.local.json
+env.local.ps1
+.access_token.json
+.msal_cache.json
+__pycache__/

@@ -1,0 +1,348 @@
+{
+ "vertices": {
+  "Platform": [
+   "name"
+  ],
+  "Site": [
+   "name",
+   "engine"
+  ],
+  "Domain": [
+   "name"
+  ],
+  "Table": [
+   "name",
+   "platform",
+   "kind",
+   "n_columns",
+   "description",
+   "theme",
+   "query_occurrences",
+   "validated"
+  ],
+  "Column": [
+   "name",
+   "table",
+   "platform",
+   "data_type",
+   "description",
+   "primary_key"
+  ],
+  "Query": [
+   "qid",
+   "side",
+   "title",
+   "file",
+   "intent",
+   "grade",
+   "open_points",
+   "params",
+   "validated_runs"
+  ],
+  "OutputField": [
+   "qid",
+   "name",
+   "status",
+   "fill_rtcis",
+   "fill_de08",
+   "fill_athens",
+   "agreement_pct"
+  ],
+  "Mapping": [
+   "rtcis",
+   "prime",
+   "agreement",
+   "tag",
+   "source"
+  ],
+  "Finding": [
+   "category",
+   "kind",
+   "text"
+  ],
+  "ExpertRule": [
+   "code",
+   "text"
+  ],
+  "Learning": [
+   "n",
+   "text",
+   "page"
+  ],
+  "DataFact": [
+   "n",
+   "text",
+   "consequence"
+  ],
+  "Concept": [
+   "page",
+   "title",
+   "type"
+  ],
+  "Template": [
+   "name",
+   "purpose"
+  ],
+  "JoinPath": [
+   "name",
+   "rtcis_join",
+   "reason"
+  ],
+  "SDCModule": [
+   "number",
+   "name",
+   "description"
+  ],
+  "PMCProcess": [
+   "code",
+   "name",
+   "source_file",
+   "documented"
+  ],
+  "SemanticConcept": [
+   "name",
+   "description",
+   "n_properties",
+   "properties",
+   "primary_key",
+   "mappings",
+   "source",
+   "theme"
+  ],
+  "ExternalSource": [
+   "name",
+   "validated",
+   "theme"
+  ]
+ },
+ "edges": {
+  "IN_PLATFORM": [
+   [
+    "Table"
+   ],
+   [
+    "Platform"
+   ]
+  ],
+  "HAS_COLUMN": [
+   [
+    "Table"
+   ],
+   [
+    "Column"
+   ]
+  ],
+  "EXISTS_AT": [
+   [
+    "Table"
+   ],
+   [
+    "Site"
+   ]
+  ],
+  "IN_DOMAIN": [
+   [
+    "Table"
+   ],
+   [
+    "Domain"
+   ]
+  ],
+  "READS": [
+   [
+    "Query"
+   ],
+   [
+    "Table"
+   ]
+  ],
+  "READS_COLUMN": [
+   [
+    "Query"
+   ],
+   [
+    "Column"
+   ]
+  ],
+  "HAS_FIELD": [
+   [
+    "Query"
+   ],
+   [
+    "OutputField"
+   ]
+  ],
+  "DERIVED_FROM": [
+   [
+    "OutputField"
+   ],
+   [
+    "Column"
+   ]
+  ],
+  "CONVERTS_TO": [
+   [
+    "Query"
+   ],
+   [
+    "Query"
+   ]
+  ],
+  "MAPS_TO": [
+   [
+    "Column",
+    "Table"
+   ],
+   [
+    "Column",
+    "Table"
+   ]
+  ],
+  "MAPS_FROM": [
+   [
+    "Mapping"
+   ],
+   [
+    "Column",
+    "Table"
+   ]
+  ],
+  "MAPS_INTO": [
+   [
+    "Mapping"
+   ],
+   [
+    "Column",
+    "Table"
+   ]
+  ],
+  "EXPLAINED_BY": [
+   [
+    "OutputField"
+   ],
+   [
+    "Finding"
+   ]
+  ],
+  "APPLIES_RULE": [
+   [
+    "Query"
+   ],
+   [
+    "ExpertRule"
+   ]
+  ],
+  "MENTIONS": [
+   [
+    "Learning",
+    "DataFact",
+    "Finding",
+    "ExpertRule",
+    "Concept",
+    "Mapping"
+   ],
+   [
+    "Table",
+    "Column"
+   ]
+  ],
+  "DOCUMENTED_IN": [
+   [
+    "Query",
+    "ExpertRule"
+   ],
+   [
+    "Concept"
+   ]
+  ],
+  "LINKS_TO": [
+   [
+    "Concept"
+   ],
+   [
+    "Concept"
+   ]
+  ],
+  "RENDERED_WITH": [
+   [
+    "Query"
+   ],
+   [
+    "Template"
+   ]
+  ],
+  "JOINS_VIA": [
+   [
+    "Table"
+   ],
+   [
+    "JoinPath"
+   ]
+  ],
+  "USES_TABLE": [
+   [
+    "SDCModule"
+   ],
+   [
+    "Table"
+   ]
+  ],
+  "IN_MODULE": [
+   [
+    "PMCProcess"
+   ],
+   [
+    "SDCModule"
+   ]
+  ],
+  "CONFIGURES": [
+   [
+    "PMCProcess"
+   ],
+   [
+    "Table"
+   ]
+  ],
+  "TRANSFORMS_TO": [
+   [
+    "Table"
+   ],
+   [
+    "Table"
+   ]
+  ],
+  "JOINS_WITH": [
+   [
+    "Column"
+   ],
+   [
+    "Column"
+   ]
+  ],
+  "MAPPED_FROM": [
+   [
+    "SemanticConcept"
+   ],
+   [
+    "Table",
+    "ExternalSource"
+   ]
+  ],
+  "INHERITS": [
+   [
+    "SemanticConcept"
+   ],
+   [
+    "SemanticConcept"
+   ]
+  ],
+  "RELATES_TO": [
+   [
+    "SemanticConcept"
+   ],
+   [
+    "SemanticConcept"
+   ]
+  ]
+ }
+}

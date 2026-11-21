@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WHS GenAI Platform Technical Design</title>
+  <link rel="stylesheet" href="../assets/design-system.css" />
+  <style>
+    body { padding-top: 0; background: #f7f9fc; }
+    .doc-shell { max-width: 1280px; margin: 0 auto; padding: 32px; }
+    .doc-hero { background: linear-gradient(135deg, #fff, #eaf1fb); border: 1px solid var(--color-border); border-radius: 20px; padding: 32px; box-shadow: var(--shadow-sm); }
+    .doc-hero h1 { font-size: 36px; line-height: 1.08; letter-spacing: -0.03em; }
+    .doc-hero p { color: var(--color-text-soft); max-width: 900px; margin-top: 12px; }
+    .doc-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    .doc-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 20px; }
+    .doc-kpi { background: #fff; border: 1px solid var(--color-border); border-radius: 14px; padding: 16px; }
+    .doc-kpi strong { display: block; font-size: 22px; color: var(--color-primary); }
+    .doc-section { margin-top: 26px; }
+    .doc-section h2 { font-size: 24px; letter-spacing: -0.02em; margin-bottom: 12px; }
+    .doc-card { background: #fff; border: 1px solid var(--color-border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow-sm); }
+    .flowline { display: grid; grid-template-columns: repeat(6, minmax(120px, 1fr)); gap: 10px; align-items: stretch; }
+    .flowbox { border: 1px solid var(--color-border); border-radius: 12px; padding: 12px; background: #fff; font-size: 13px; font-weight: 600; text-align: center; }
+    .flowbox.primary { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-softer); }
+    .parallel { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .status { display: inline-flex; align-items: center; border-radius: 999px; padding: 3px 9px; font-size: 11px; font-weight: 700; }
+    .status.existing { background: #e4f2e9; color: #1b873f; }
+    .status.poc { background: #fbf0e0; color: #b4690e; }
+    .status.design { background: #e6ecf6; color: #003da5; }
+    .status.build { background: #f8e5e1; color: #c0341d; }
+    .matrix { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .matrix th, .matrix td { border-bottom: 1px solid var(--color-border); padding: 10px 12px; text-align: left; vertical-align: top; }
+    .matrix th { background: var(--color-bg-alt); color: var(--color-text-soft); text-transform: uppercase; font-size: 11px; letter-spacing: .04em; }
+    .two-col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .three-col { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .area-list { display: grid; gap: 14px; }
+    .area-card h3 { font-size: 16px; margin-bottom: 8px; }
+    .area-card p, .area-card li { font-size: 13px; color: var(--color-text-soft); }
+    .area-card ul { margin: 8px 0 0 18px; padding: 0; }
+    .source-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .source-list a { display: block; border: 1px solid var(--color-border); border-radius: 12px; padding: 12px; background: #fff; color: var(--color-primary); font-size: 13px; font-weight: 600; }
+    @media (max-width: 980px) { .doc-grid, .flowline, .two-col, .three-col, .source-list { grid-template-columns: 1fr; } .parallel { grid-template-columns: 1fr; } .doc-shell { padding: 18px; } }
+  </style>
+</head>
+<body>
+  <main class="doc-shell">
+    <section class="doc-hero">
+      <div class="section__eyebrow">Developer and product technical design</div>
+      <h1>WHS GenAI Platform Technical Design</h1>
+      <p>Unified platform design for Warehouse Natural Language Query, SQL remediation, process discovery, Knowledge Graph, Skill Builder, EU NPI, iDecide TACO, MEGA, and the MEGA Automation KPI Assistant (coming soon). This page separates what exists in the M&M folder, what is POC, what is design, and what must be built next.</p>
+      <div class="doc-actions">
+        <a class="btn btn--primary" href="./WHS_GenAI_Platform_Technical_Design.md">Open markdown source</a>
+        <a class="btn btn--outline" href="../data-knowledge.html#design">Back to Design Documents</a>
+      </div>
+      <div class="doc-grid">
+        <div class="doc-kpi"><strong>8</strong><span>Design areas</span></div>
+        <div class="doc-kpi"><strong>4</strong><span>Reusable agents</span></div>
+        <div class="doc-kpi"><strong>2</strong><span>Parallel resolver paths</span></div>
+        <div class="doc-kpi"><strong>1</strong><span>Skill Platform governance model</span></div>
+      </div>
+    </section>
+
+    <section class="doc-section doc-card">
+      <h2>How every answer is resolved</h2>
+      <div class="flowline">
+        <div class="flowbox">User question</div>
+        <div class="flowbox">Warehouse Knowledge</div>
+        <div class="flowbox">Warehouse Data</div>
+        <div class="flowbox primary">timbr Semantic Layer</div>
+        <div class="flowbox primary">Knowledge Graph</div>
+        <div class="flowbox">Query, result, explanation, report</div>
+      </div>
+      <p class="text-soft" style="margin-top:12px">timbr and Knowledge Graph are parallel resolution paths. Feedback is saved to personal skill first and then reviewed for shared Skill Platform publication.</p>
+    </section>
+
+    <section class="doc-section">
+      <h2>Current vs target platform</h2>
+      <div class="two-col">
+        <div class="doc-card">
+          <h3>Current evidence</h3>
+          <ul>
+            <li>Static UIUX shell with assistants, agents, skills, data/knowledge, Knowledge Graph, answer page, and bot widget.</li>
+            <li>SQL remediation reports, IRA reports, M&M transfer pack, Neo4j exports, replica registry, NPI design HTML.</li>
+            <li>Architecture KB for Azure Launchpad, AI Factory, Copilot Studio, Bot Framework Skills, CI/CD, monitoring.</li>
+          </ul>
+        </div>
+        <div class="doc-card">
+          <h3>Target state</h3>
+          <ul>
+            <li>Production registry APIs for assistants, skills, data sources, semantic objects, graph objects, and workflows.</li>
+            <li>One PD Semantic Layer with graph lineage and governed source onboarding.</li>
+            <li>Skill Platform with personal skills, steward review, shared publication, monitoring, and retirement.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section doc-card">
+      <h2>Use-case status</h2>
+      <table class="matrix">
+        <thead><tr><th>Use case</th><th>Status</th><th>Evidence</th><th>Next build</th></tr></thead>
+        <tbody>
+          <tr><td>SQL remediation</td><td><span class="status existing">Existing</span></td><td>Remediation reports, guides, scripts, validation outputs.</td><td>Productionize governed skill with CI tests.</td></tr>
+          <tr><td>Warehouse Natural Language Query</td><td><span class="status poc">POC</span></td><td>UIUX dialog, IRA report, replica/semantic/graph source cards.</td><td>Real backend execution, query trace, result cache, golden tests.</td></tr>
+          <tr><td>Process discovery</td><td><span class="status poc">POC</span></td><td>M&M transfer pack, 438 Q&A, Neo4j graph, query templates.</td><td>Package as assistant workflow and Skill Platform package.</td></tr>
+          <tr><td>iDecide TACO</td><td><span class="status poc">POC</span></td><td>Portfolio TACO design and UIUX assistant status.</td><td>Dedicated TACO HTML design, optimizer contract, rollback gate.</td></tr>
+          <tr><td>EU NPI</td><td><span class="status design">Design</span></td><td>Detailed EU NPI agentic flow HTML.</td><td>Build backlog and pilot implementation.</td></tr>
+          <tr><td>MEGA</td><td><span class="status design">Design</span></td><td>UIUX design-stage assistant entry.</td><td>Define source artifacts, data model, R&R, and MVP.</td></tr>
+          <tr><td>MEGA Automation KPI</td><td><span class="status design">Coming soon</span></td><td>UIUX assistant entry — MEGA KPI natural language query (WCS replica via Databricks, timbr + graph fall-back).</td><td>WCS/WMS KPI store, Databricks query path, timbr + graph validation.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="doc-section">
+      <h2>Eight design areas</h2>
+      <div class="area-list">
+        <div class="doc-card area-card">
+          <h3>1. Data Pipeline</h3>
+          <p>Approved access to WH Data Replicas, PSDH, WCS/WMS, SAP-approved views, NPI sources, and KPI stores. Critical process steps: source onboarding, semantic mapping, query validation, report publication, incident RCA.</p>
+          <p><strong>Data sources:</strong> (1) WCS replica, (2) WMS replica, (3) CDL. <strong>Access:</strong> follows the standard access management of each data source — agent access does not grant data access. A logged-in user with access to an agent but not to a data source must also apply for that data source's access.</p>
+          <ul><li>Existing: replica registry, SQL reports, M&M transfer pack.</li><li>To build: source onboarding UI, freshness checks, query result cache, access trace.</li></ul>
+        </div>
+        <div class="doc-card area-card">
+          <h3>2. Semantic Layer</h3>
+          <p>timbr business-term resolution for metrics, dimensions, joins, filters, and access policy. Semantic Layer should sit before raw database and knowledge navigation.</p>
+          <ul><li>Existing/design: Data Strategy and NPI ontology.</li><li>To build: semantic object registry, golden queries, Timbr deployment pipeline.</li></ul>
+        </div>
+        <div class="doc-card area-card">
+          <h3>3. Knowledge Graph</h3>
+          <p>Graph lineage for RTCIS, PrIME, SDC, PMC, WI, transformations, values, reports, and lessons learned. Complements timbr, not a fallback.</p>
+          <ul><li>Existing: Neo4j export, graph summary, M&M graph.</li><li>To build: production graph store, graph tests, graph trace UI.</li></ul>
+        </div>
+        <div class="doc-card area-card">
+          <h3>4. Agents, Tools, Skills, Workflows</h3>
+          <p>Supervisor, Data, Knowledge, and Algorithm Agents coordinate tools and skills through governed workflows.</p>
+          <ul><li>Existing: UIUX registry and many Python/SQL tools.</li><li>To build: tool manifests, skill manifests, workflow logs, approval UI.</li></ul>
+        </div>
+        <div class="doc-card area-card">
+          <h3>5. Citizen developer integration</h3>
+          <p>Personal KB, personal skill, low-code agent extension, connector templates, and UI contribution must be governed but accessible.</p>
+          <ul><li>FY26: prototype and personal skill POC.</li><li>FY27: production Skill Platform, templates, monitoring, regional scale.</li></ul>
+        </div>
+        <div class="doc-card area-card">
+          <h3>6. Skill Platform</h3>
+          <p>Draft, personal, candidate, approved, published, monitored, retired. Nothing changes other users' answers until approved.</p>
+          <ul><li>Existing: active SKILL.md files.</li><li>To build: skill store, steward queue, versioning, rollback, retirement registry.</li></ul>
+        </div>
+        <div class="doc-card area-card">
+          <h3>7. Unified UIUX</h3>
+          <p>Home, Warehouse Natural Language Query, assistants, agents, skills, data/knowledge, Design Documents, Knowledge Graph, answer trace, bot widget, Skill Builder, admin views.</p>
+          <ul><li>Existing: static HTML prototype.</li><li>To build: production APIs, saved sessions, source intake, skill approval, trace dashboards.</li></ul>
+        </div>
+        <div class="doc-card area-card">
+          <h3>8. Use-case delivery</h3>
+          <p>Use cases share the same foundation but add specific logic: Warehouse Natural Language Query, SQL remediation, process discovery, TACO, NPI, MEGA, MEGA Automation KPI, automation troubleshooting.</p>
+          <ul><li>Existing/POC: SQL remediation, Process Discovery, Warehouse Natural Language Query, TACO POC.</li><li>Design: EU NPI, MEGA. Coming soon: MEGA Automation KPI Assistant.</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section">
+      <h2>NPI and TACO design packages</h2>
+      <div class="two-col">
+        <div class="doc-card">
+          <h3>EU NPI in design</h3>
+          <p class="text-soft">Build around site configuration, PSDH/ScrApp/PrIME/RTCIS/SAP sources, NPI semantic ontology, five-phase workflow, four-agent loop, human approval, and audit/report outputs.</p>
+          <a class="btn btn--outline btn--sm" href="../../EU_NPI_Agentic_Flow_Design/EU_NPI_Agentic_Flow_Design.html">Open NPI design HTML</a>
+        </div>
+        <div class="doc-card">
+          <h3>iDecide TACO POC</h3>
+          <p class="text-soft">Build around current performance, operational context, TACO parameter state, scheduling knowledge, candidate narrowing, optimizer evaluation, safety rollback, and human checkpoint.</p>
+          <a class="btn btn--outline btn--sm" href="../../Presentations/WHS_GenAI_Portfolio.html">Open portfolio HTML with TACO design</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section doc-card">
+      <h2>Governance and quality</h2>
+      <div class="three-col">
+        <div><h3>Answer quality</h3><p class="text-soft">Accuracy, completeness, traceability, consistency, freshness, business usability, and policy alignment.</p></div>
+        <div><h3>Golden tests</h3><p class="text-soft">Standard questions, expected answer, trusted source, tolerance, access policy, and product-owner sign-off.</p></div>
+        <div><h3>Operational RCA</h3><p class="text-soft">Track tool calls, fallback events, semantic/graph disagreement, failed queries, and affected assistants.</p></div>
+      </div>
+    </section>
+
+    <section class="doc-section doc-card">
+      <h2>Platform runtime: MCP and Skill capability module</h2>
+      <p class="text-soft">Source: <a href="../../docs/ARCHITECTURE.en.md">ARCHITECTURE.en.md</a>. This is the runtime that hosts the agents, tools, and skills above. It adds three sub-modules on top of the Ultimate Platform (pyrogai, pygentic, LangGraph, IPA on AKS).</p>
+      <div class="three-col" style="margin-top:14px">
+        <div class="doc-card area-card">
+          <h3>MCP Server <span class="status build">To build</span></h3>
+          <p>Inbound. Exposes enabled, RBAC-filtered platform flows as MCP tools to Claude Desktop, Copilot Studio, and IDEs. Thin wrapper to FlowController; reuses the existing OAuth callback.</p>
+        </div>
+        <div class="doc-card area-card">
+          <h3>svc-mcp service <span class="status build">To build</span></h3>
+          <p>Outbound. A tenant service (BUILDER kind) that lets platform flows consume external MCP tools, injected via attached_services with two-stage tenant auth and an allowlist.</p>
+        </div>
+        <div class="doc-card area-card">
+          <h3>skills_core <span class="status design">Design</span></h3>
+          <p>Skill SDK implementing the SkillFactory protocol. The MCP Skill wraps external tools as a supervisor-routable skill, registered alongside existing skills.</p>
+        </div>
+      </div>
+      <p class="text-soft" style="margin-top:12px">Key locks: fastmcp pinned to 2.x because langchain-timbr requires uvicorn~=0.34 (ADR-001); Streamable-HTTP transport, no stdio (ADR-002); MCP OAuth reuses /v1/auth/callback (ADR-006); the MCP Server is mounted on the IPA FastAPI app, not deployed standalone (ADR-007).</p>
+    </section>
+
+    <section class="doc-section doc-card">
+      <h2>Source artifacts</h2>
+      <div class="source-list">
+        <a href="../../docs/Data Strategy.docx">Data Strategy.docx</a>
+        <a href="../../SQL_Translations/_data_strategy_extract.txt">Extracted Data Strategy text</a>
+        <a href="../../.github/agents/ARCHITECTURE-KB.md">Architecture KB</a>
+        <a href="../../kb/WH_Data_Replica_Servers.md">WH Data Replica Servers</a>
+        <a href="../../SQL_Translations/_neo4j_graph_summary.md">Neo4j Knowledge Graph Summary</a>
+        <a href="../../SQL_Translations/_mm_audit/_MM_TRANSFER_PACK/README.md">M&M Transfer Pack</a>
+        <a href="../../Presentations/WHS_GenAI_Portfolio.html">Portfolio HTML</a>
+        <a href="../../EU_NPI_Agentic_Flow_Design/EU_NPI_Agentic_Flow_Design.html">EU NPI Design HTML</a>
+        <a href="../../docs/ARCHITECTURE.en.md">Platform MCP and Skill Architecture</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

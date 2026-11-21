@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  WHS GenAI — Page Starter (app-shell + bot)
+  ------------------------------------------------------------
+  1. Copy & rename, e.g.  my-screen.html
+  2. Set  <body data-active="...">  to a sidebar id:
+       home | assistants | agents | skills | data | graph
+     (optionally data-active-id="<entity id>")
+  3. Update <title> and the .content__topbar <h1>.
+  4. Put your screen in .content__body.
+  Scripts: data.js (model) → your page script → shell.js → bot.js
+  ============================================================
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WHS GenAI — [Screen Name]</title>
+  <link rel="stylesheet" href="./assets/design-system.css" />
+</head>
+<body class="app-body" data-active="">
+  <div class="app">
+    <aside class="sidebar" id="app-sidebar"></aside>
+
+    <main class="content">
+      <div class="content__topbar">
+        <h1>Screen title</h1>
+        <span class="crumb">· short description</span>
+      </div>
+      <div class="content__body">
+        <!-- Reuse: .kpi / .list / .list-row / .card / .grid /
+             .subtabs+.subpanel / .dk-table / .prompt-box / .chip / .btn -->
+        <div class="grid grid--2">
+          <div class="card"><div class="card__title">Card</div><p class="card__desc">Body</p></div>
+          <div class="card"><div class="card__title">Card</div><p class="card__desc">Body</p></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="./assets/data.js"></script>
+  <script src="./assets/shell.js"></script>
+  <script src="./assets/bot.js"></script>
+</body>
+</html>

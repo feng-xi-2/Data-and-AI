@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WHS GenAI — Assistant</title>
+  <link rel="stylesheet" href="./assets/design-system.css" />
+</head>
+<body class="app-body" data-active="assistants" data-active-id="">
+  <div class="app">
+    <aside class="sidebar" id="app-sidebar"></aside>
+    <main class="content">
+      <div class="content__topbar">
+        <a href="assistants.html" class="crumb">Assistants</a>
+        <span class="crumb">/</span>
+        <h1 id="d-title">Assistant</h1>
+      </div>
+      <div class="content__body" id="d-body"></div>
+    </main>
+  </div>
+
+  <script src="./assets/data.js"></script>
+  <script>
+    (function () {
+      var id = new URLSearchParams(location.search).get("id");
+      var a = window.WHS.get("assistant", id) || window.WHS.assistants[0];
+      document.body.setAttribute("data-active-id", a.id);
+      document.getElementById("d-title").textContent = a.name;
+      document.title = "WHS GenAI — " + a.name;
+
+      var statusChip = { live: "chip--success", poc: "chip--warning", design: "chip" }[a.status] || "chip--neutral";
+
+      function chips(ids, kind, page) {
+        return ids.map(function (x) {
+          var item = window.WHS.get(kind, x);
+          var label = item ? (item.icon ? item.icon + " " : "") + item.name : x;
+          return '<a class="chip chip--neutral" href="' + page + "?id=" + x + '" style="text-decoration:none">' + label + "</a>";
+        }).join(" ");
+      }
+
+      /* P2 · Agentic flow canvas — orchestrated nodes, not flat pills.
+         Each step node is tagged with the agent that drives it (cycled
+         from the assistant's own agent list), with the Supervisor
+         opening and verifying the run. */
+      function flowCanvas(a) {
+        var ags = a.agents.map(function (id) { return window.WHS.get("agent", id); }).filter(Boolean);
+        function agentFor(i, n) {
+          if (!ags.length) return null;
+          if (i === 0 || i === n - 1) return ags[0];            // Supervisor opens & verifies
+          return ags[((i - 1) % Math.max(1, ags.length - 1)) + 1] || ags[0];
+        }
+        var legend = ags.map(function (g) {
+          return '<a class="flow-legend__item" href="agent.html?id=' + g.id + '">' + g.icon + "<span>" + g.name + "</span></a>";
+        }).join("");
+
+        var nodes = a.steps.map(function (s, i) {
+          var g = agentFor(i, a.steps.length);
+          var tag = g ? '<a class="flow-node__agent" href="agent.html?id=' + g.id + '">' + g.icon + g.name.replace(" Agent", "") + "</a>" : "";
+          return (i ? '<div class="flow-conn"></div>' : "")
+            + '<div class="flow-node">'
+            + '<span class="flow-node__n">' + (i + 1) + "</span>"
+            + '<span class="flow-node__label">' + s + "</span>" + tag + "</div>";
+        }).join("");
+
+        return '<div class="flow">'
+          + '<div class="flow__legend"><span class="flow__legend-label">Agents in this flow</span>' + legend + "</div>"
+          + '<div class="flow__track">' + nodes + "</div>"
+          + '<div class="flow__skills"><span class="flow__legend-label">Skills invoked</span>'
+          + '<div class="flex flex-wrap gap-2">' + chips(a.skills, "skill", "skill.html") + "</div></div>"
+          + "</div>";
+      }
+
+      /* ---- Special UI: dialog-box assistant (e.g. WHS NL Query) ---- */
+      if (a.dialog) { renderDialog(a, statusChip); return; }
+
+      document.getElementById("d-body").innerHTML =
+        '<div class="detail-head">'
+        + '<div class="detail-head__icon">' + a.icon + "</div>"
+        + '<div><div class="detail-head__title">' + a.name
+        + ' <span class="chip ' + statusChip + '" style="vertical-align:middle">' + a.statusLabel + "</span></div>"
+        + '<div class="detail-head__sub">' + a.tagline + "</div></div>"
+        + (a.output
+          ? '<a class="btn btn--primary" style="margin-left:auto" href="' + a.output.href + '">Open ' + a.output.name + " &#8594;</a>"
+          : '<button class="btn btn--primary" style="margin-left:auto">Launch</button>') + "</div>"
+
+        + '<p class="text-soft" style="max-width:760px;margin-bottom:var(--space-6)">' + a.desc + "</p>"
+
+        + '<div class="section__eyebrow">Agentic flow</div>'
+        + '<div style="margin:var(--space-3) 0 var(--space-6)">' + flowCanvas(a) + "</div>"
+
+        + '<div class="grid grid--2">'
+        + '<div class="card"><div class="section__eyebrow">Agents used</div><div class="flex flex-wrap gap-2 mt-4">' + chips(a.agents, "agent", "agent.html") + "</div></div>"
+        + '<div class="card"><div class="section__eyebrow">Skills used</div><div class="flex flex-wrap gap-2 mt-4">' + chips(a.skills, "skill", "skill.html") + "</div></div>"
+        + "</div>";
+
+      /* ---- Dialog-box renderer (NL Query) ---------------------------- */
+      function renderDialog(a, statusChip) {
+        var d = a.dialog;
+
+        var msgs = d.sample.map(function (m) {
+          var viaLabel = m.via === "timbr" ? "timbr Semantic Layer"
+            : m.via === "graph" ? "Knowledge Graph"
+            : m.via === "parallel" ? "timbr Semantic Layer + Knowledge Graph"
+            : m.via;
+          var via = m.via
+            ? '<span class="dlg-via dlg-via--' + m.via + '">via ' + viaLabel + "</span>"
+            : "";
+          return '<div class="dlg-msg dlg-msg--' + m.role + '">' + md(m.text) + via + "</div>";
+        }).join("");
+
+        var sites = d.sites.map(function (s) {
+          var cls = s.status === "live" ? "chip--success" : "chip--warning";
+          return '<span class="chip ' + cls + '"><span class="dot dot--' + (s.status === "live" ? "live" : "warning") + '"></span>' + s.name + "</span>";
+        }).join(" ");
+
+        var engines = d.engines.map(function (e, i) {
+          return '<div class="eng-card">'
+            + '<div class="eng-card__head">' + e.icon
+            + '<span class="eng-card__name">' + e.name + "</span>"
+            + '<span class="chip chip--success">' + e.role + "</span></div>"
+            + '<p class="eng-card__desc">' + e.desc + "</p></div>";
+        }).join("");
+
+        var answerSections = (d.answerSections || []).map(function (s) {
+          return '<div class="answer-card">'
+            + '<div class="answer-card__title">' + s.title + "</div>"
+            + '<p class="answer-card__text">' + md(s.text) + "</p></div>";
+        }).join("");
+
+        var fed = d.feedback.central.map(function (s, i) {
+          return '<div class="fed-step">'
+            + '<div class="fed-step__n">' + (i + 1) + "</div>"
+            + '<div><div class="fed-step__t">' + s.step + "</div>"
+            + '<div class="fed-step__d">' + s.desc + "</div></div></div>";
+        }).join("");
+
+        document.getElementById("d-body").innerHTML =
+          '<div class="detail-head">'
+          + '<div class="detail-head__icon">' + a.icon + "</div>"
+          + '<div><div class="detail-head__title">' + a.name
+          + ' <span class="chip ' + statusChip + '" style="vertical-align:middle">' + a.statusLabel + "</span></div>"
+          + '<div class="detail-head__sub">' + a.tagline + "</div></div></div>"
+
+          /* Chat dialog box */
+          + '<div class="dlg">'
+          + '<div class="dlg-head"><span class="dlg-dot"></span> WHS Assistant &middot; '
+          + '<span class="text-mute" style="font-weight:var(--fw-medium)">registered sites answered live</span></div>'
+          + '<div class="dlg-msgs">' + msgs + "</div>"
+          + '<div class="dlg-input"><input placeholder="Ask a warehouse question in plain language\u2026" />'
+          + '<button class="prompt-send" title="Send">'
+          + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>'
+          + "</button></div></div>"
+
+          /* Sites registered */
+          + '<div class="section__eyebrow" style="margin-top:var(--space-6)">Sites registered</div>'
+          + '<div class="flex flex-wrap gap-2" style="margin:var(--space-3) 0 var(--space-2)">' + sites + "</div>"
+          + '<p class="text-mute" style="font-size:var(--fs-xs);margin-bottom:var(--space-6)">Registered sites are validated against their own WH Data Replica and answered live.</p>'
+
+          /* How it resolves */
+          + '<div class="grid grid--2" style="margin-bottom:var(--space-6)">'
+          + '<div class="card"><div class="section__eyebrow">How a question is resolved</div>'
+          + '<div class="resolver-mini mt-4"><div class="resolver-mini__base">Warehouse Knowledge + Warehouse Data</div>'
+          + '<div class="resolver-mini__split">parallel resolution</div>'
+          + '<div class="eng-flow eng-flow--parallel">' + engines + "</div></div></div>"
+
+          /* Feedback model */
+          + '<div class="card"><div class="section__eyebrow">Your feedback \u00b7 federated learning</div>'
+          + '<p class="fed-personal mt-4">' + md(d.feedback.personal) + "</p>"
+          + '<div class="fed-steps">' + fed + "</div></div>"
+          + "</div>"
+
+          + (answerSections ? '<div class="card" style="margin-bottom:var(--space-6)"><div class="section__eyebrow">Warehouse Natural Language Query output example</div><div class="answer-grid mt-4">' + answerSections + "</div></div>" : "")
+
+          + '<div class="grid grid--2">'
+          + '<div class="card"><div class="section__eyebrow">Agents used</div><div class="flex flex-wrap gap-2 mt-4">' + chips(a.agents, "agent", "agent.html") + "</div></div>"
+          + '<div class="card"><div class="section__eyebrow">Skills used</div><div class="flex flex-wrap gap-2 mt-4">' + chips(a.skills, "skill", "skill.html") + "</div></div>"
+          + "</div>";
+      }
+
+      function md(t) { return (t || "").replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>"); }
+    })();
+  </script>
+  <script src="./assets/shell.js"></script>
+  <script src="./assets/bot.js"></script>
+</body>
+</html>

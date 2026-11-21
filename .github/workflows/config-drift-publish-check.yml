@@ -1,0 +1,35 @@
+name: Config Drift Governance publish check
+
+# Blocks a merge when the public Config Drift folder could expose a secret, a token, user access information, an internal
+# host or generated site data, or when its Python code does not compile.
+on:
+  pull_request:
+    paths:
+      - "Config Drift Governance/**"
+      - ".github/workflows/config-drift-publish-check.yml"
+  push:
+    branches: [main]
+    paths:
+      - "Config Drift Governance/**"
+
+permissions:
+  contents: read
+
+jobs:
+  publish-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - name: No secret, token, user access info or internal host
+        run: python "Config Drift Governance/tools/check_publish.py" "Config Drift Governance"
+      - name: No generated site data assets
+        run: |
+          for f in data.js change-capture.js config-meanings.js discovered-cfg.js exception-ledger.js potential-exceptions.js \
+                   site-exception-report.js cross-site.js graph-snapshot.js drift-actions.js; do
+            if [ -e "Config Drift Governance/UIUX/assets/$f" ]; then echo "generated data asset $f must not be published"; exit 1; fi
+          done
+      - name: Python code compiles
+        run: python -m compileall -q "Config Drift Governance/backend" "Config Drift Governance/build.py"

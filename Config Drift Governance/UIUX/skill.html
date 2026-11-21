@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WHS GenAI — Skill</title>
+  <link rel="stylesheet" href="./assets/design-system.css" />
+</head>
+<body class="app-body" data-active="skills">
+  <div class="app">
+    <aside class="sidebar" id="app-sidebar"></aside>
+    <main class="content">
+      <div class="content__topbar">
+        <a href="skills.html" class="crumb">Skills</a>
+        <span class="crumb">/</span>
+        <h1 id="d-title">Skill</h1>
+      </div>
+      <div class="content__body" id="d-body"></div>
+    </main>
+  </div>
+
+  <script src="./assets/data.js"></script>
+  <script>
+    (function () {
+      var id = new URLSearchParams(location.search).get("id");
+      var s = window.WHS.get("skill", id) || window.WHS.skills[0];
+      document.getElementById("d-title").textContent = s.name;
+      document.title = "WHS GenAI — " + s.name;
+
+      var kindChip = { knowledge: "chip", flow: "", tool: "chip--success" };
+      var files = s.files.map(function (f) {
+        var isDir = f.charAt(f.length - 1) === "/";
+        return '<li class="' + (isDir ? "dir" : "") + '">' + f + "</li>";
+      }).join("");
+
+      function links(ids, kind, page) {
+        if (!ids || !ids.length) return '<span class="text-mute">—</span>';
+        return ids.map(function (x) {
+          var item = window.WHS.get(kind, x);
+          var label = item ? (item.icon ? item.icon + " " : "") + item.name : x;
+          return '<a class="chip chip--neutral" href="' + page + "?id=" + x + '" style="text-decoration:none">' + label + "</a>";
+        }).join(" ");
+      }
+
+      var typeIcon = {
+        html: '<svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="6.5" cy="6" r="0.6"/><circle cx="9" cy="6" r="0.6"/></svg>',
+        md:   '<svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg>',
+        sql:  '<svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/></svg>',
+        json: '<svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3a3 3 0 0 0-3 3v3a3 3 0 0 1-3 3 3 3 0 0 1 3 3v3a3 3 0 0 0 3 3M16 3a3 3 0 0 1 3 3v3a3 3 0 0 0 3 3 3 3 0 0 0-3 3v3a3 3 0 0 1-3 3"/></svg>',
+        py:   '<svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 7 4 4-4 4M14 17h4"/></svg>',
+        ipynb:'<svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>',
+        xlsx: '<svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 8l8 8M16 8l-8 8"/></svg>',
+        csv:  '<svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M4 12h16M4 19h16"/></svg>'
+      };
+
+      function artifactCard() {
+        if (!s.artifacts || !s.artifacts.length) return "";
+        var primary = s.artifacts.filter(function (a) { return a.primary; })[0];
+        var rows = s.artifacts.map(function (a) {
+          var ico = typeIcon[a.type] || typeIcon.md;
+          var star = a.primary ? '<span class="chip chip--success" style="margin-left:auto">primary report</span>' : '<span class="chip chip--neutral mono" style="margin-left:auto">' + a.type + "</span>";
+          return '<a class="artifact-row" href="' + encodeURI(a.path) + '" target="_blank" rel="noopener">'
+            + '<span class="artifact-ico">' + ico + "</span>"
+            + '<span class="artifact-name">' + a.name + "</span>" + star
+            + '<span class="artifact-open">Open &#8599;</span></a>';
+        }).join("");
+        return '<div class="card" style="margin-top:var(--space-5);padding:0">'
+          + '<div class="section__eyebrow" style="padding:var(--space-5) var(--space-5) var(--space-3)">Output of this skill</div>'
+          + '<div class="artifact-list">' + rows + "</div>"
+          + (primary ? '<div class="text-mute" style="font-size:var(--fs-xs);padding:var(--space-3) var(--space-5) var(--space-5)">Opens the actual file produced in this M&amp;M workspace. Reports open in the browser; data files download.</div>' : "")
+          + "</div>";
+      }
+
+      var SKEY = "whs-skillmd-" + s.id;
+      var mdText = localStorage.getItem(SKEY) || s.skillmd;
+      function esc(t) { return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+      function skillCard() {
+        var openLink = s.mdPath
+          ? '<a class="chip chip--neutral" href="' + encodeURI(s.mdPath) + '" target="_blank" rel="noopener" style="text-decoration:none">Open full SKILL.md &#8599;</a>'
+          : "";
+        return '<div class="card" id="skillmd-card">'
+          + '<div class="flex items-center gap-2" style="justify-content:space-between">'
+          + '<div class="section__eyebrow">SKILL.md</div>'
+          + '<div class="flex gap-2 items-center">' + openLink
+          + '<button class="btn btn--outline btn--sm" id="skillmd-edit">Edit</button>'
+          + '<button class="btn btn--primary btn--sm" id="skillmd-save" style="display:none">Save</button>'
+          + '<button class="btn btn--ghost btn--sm" id="skillmd-cancel" style="display:none">Cancel</button>'
+          + '</div></div>'
+          + '<pre class="skillmd-view mt-4" id="skillmd-view">' + esc(mdText) + '</pre>'
+          + '<textarea class="skillmd-area mt-4" id="skillmd-area" spellcheck="false" style="display:none">' + esc(mdText) + '</textarea>'
+          + '<div class="text-mute mt-4" style="font-size:var(--fs-xs)" id="skillmd-hint">Loaded progressively by an agent when the description matches the task. Click Edit to refine this SKILL.md.</div>'
+          + '<div class="text-mute mt-4" style="font-size:var(--fs-xs);display:none" id="skillmd-saved"></div></div>';
+      }
+
+      document.getElementById("d-body").innerHTML =
+        '<div class="detail-head">'
+        + '<div class="detail-head__icon">' + s.icon + "</div>"
+        + '<div><div class="detail-head__title">' + s.name
+        + ' <span class="chip ' + (kindChip[s.kind] || "chip--neutral") + '">' + s.kindLabel + "</span></div>"
+        + '<div class="detail-head__sub">' + s.desc + "</div></div>"
+        + '<button class="btn btn--primary" style="margin-left:auto">Use this skill</button></div>'
+
+        + '<div class="grid grid--2">'
+        + skillCard()
+
+        + '<div class="card" style="padding:0"><div class="section__eyebrow" style="padding:var(--space-5) var(--space-5) var(--space-3)">Package contents</div>'
+        + '<ul class="filelist">' + files + "</ul></div>"
+        + "</div>"
+
+        + artifactCard()
+
+        + '<div class="card" style="margin-top:var(--space-5)"><div class="section__eyebrow">Used by assistants</div>'
+        + '<div class="flex flex-wrap gap-2 mt-4">' + links(s.usedBy, "assistant", "assistant.html") + "</div></div>";
+
+      (function wireEditor() {
+        var view = document.getElementById("skillmd-view");
+        var area = document.getElementById("skillmd-area");
+        var bEdit = document.getElementById("skillmd-edit");
+        var bSave = document.getElementById("skillmd-save");
+        var bCancel = document.getElementById("skillmd-cancel");
+        var saved = document.getElementById("skillmd-saved");
+        if (!view || !area) return;
+        function setMode(edit) {
+          view.style.display = edit ? "none" : "";
+          area.style.display = edit ? "" : "none";
+          bEdit.style.display = edit ? "none" : "";
+          bSave.style.display = edit ? "" : "none";
+          bCancel.style.display = edit ? "" : "none";
+        }
+        bEdit.addEventListener("click", function () { area.value = view.textContent; setMode(true); area.focus(); });
+        bCancel.addEventListener("click", function () { setMode(false); });
+        bSave.addEventListener("click", function () {
+          view.textContent = area.value;
+          localStorage.setItem(SKEY, area.value);
+          setMode(false);
+          saved.textContent = "Saved to this browser \u00b7 " + new Date().toLocaleString();
+          saved.style.display = "";
+        });
+        if (localStorage.getItem(SKEY)) { saved.textContent = "Edited locally in this browser."; saved.style.display = ""; }
+      })();
+    })();
+  </script>
+  <script src="./assets/shell.js"></script>
+  <script src="./assets/bot.js"></script>
+</body>
+</html>

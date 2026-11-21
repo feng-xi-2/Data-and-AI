@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WHS GenAI — Answer</title>
+  <link rel="stylesheet" href="./assets/design-system.css" />
+</head>
+<body class="app-body" data-active="home">
+  <div class="app">
+    <aside class="sidebar" id="app-sidebar"></aside>
+    <main class="content">
+      <div class="content__topbar">
+        <a href="index.html" class="crumb">Home</a>
+        <span class="crumb">/</span>
+        <h1 id="d-title">Answer</h1>
+      </div>
+      <div class="content__body" id="d-body" style="max-width:1180px"></div>
+    </main>
+  </div>
+
+  <script src="./assets/data.js"></script>
+  <script>
+    (function () {
+      var W = window.WHS;
+      var q = new URLSearchParams(location.search).get("q") || "How does RTCIS to PrIME remediation work?";
+      document.getElementById("d-title").textContent = "Answer";
+      document.title = "WHS GenAI — " + q;
+
+      function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+      function fmt(s) {
+        // light markdown + inline [n] citations -> superscript links
+        s = esc(s)
+          .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+          .replace(/`([^`]+)`/g, '<code class="mono">$1</code>')
+          .replace(/\[(\d+)\]/g, '<a class="cite" href="#src-$1" title="Jump to source $1">$1</a>');
+        return s;
+      }
+      var ENGINE = {
+        timbr: { label: "timbr semantic layer", cls: "via--timbr" },
+        graph: { label: "knowledge graph", cls: "via--graph" },
+        kb:    { label: "knowledge base", cls: "via--kb" }
+      };
+      function viaChip(via) {
+        var e = ENGINE[via] || ENGINE.kb;
+        return '<span class="ans-via ' + e.cls + '"><span class="ans-via__dot"></span>via ' + e.label + "</span>";
+      }
+      function confClass(c) { return c >= 90 ? "ok" : c >= 75 ? "mid" : "low"; }
+
+      function render(question) {
+        var r = W.answerRich(question);
+
+        var sources = (r.sources || []).map(function (s) {
+          var internal = s.href.indexOf(".html") !== -1 && s.href.indexOf("../") === -1;
+          var tgt = internal ? "" : ' target="_blank" rel="noopener"';
+          return '<a class="src-card" id="src-' + s.n + '" href="' + encodeURI(s.href) + '"' + tgt + '>'
+            + '<span class="src-card__n">' + s.n + "</span>"
+            + '<span class="src-card__body"><span class="src-card__title">' + esc(s.title) + "</span>"
+            + '<span class="src-card__ref mono">' + esc(s.ref) + "</span></span>"
+            + '<span class="src-card__open">&#8599;</span></a>';
+        }).join("");
+
+        var trace = (r.trace || []).map(function (t) {
+          var e = ENGINE[t.via] || ENGINE.kb;
+          return '<div class="trace-step">'
+            + '<span class="trace-step__dot ' + e.cls + '"></span>'
+            + '<div><div class="trace-step__t">' + esc(t.step) + ' <span class="trace-step__via">' + e.label + "</span></div>"
+            + '<div class="trace-step__d">' + esc(t.detail) + "</div></div></div>";
+        }).join("");
+
+        var follow = (r.follow || []).map(function (f) {
+          return '<a class="follow-chip" href="answer.html?q=' + encodeURIComponent(f) + '">'
+            + '<svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>'
+            + esc(f) + "</a>";
+        }).join("");
+
+        var cc = confClass(r.confidence);
+
+        document.getElementById("d-body").innerHTML =
+          /* ask box */
+          '<div class="ans-ask">'
+          + '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>'
+          + '<input id="ans-input" placeholder="Ask a follow-up\u2026" value="' + esc(question).replace(/"/g, "&quot;") + '" />'
+          + '<button class="prompt-send" id="ans-send" title="Ask"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></button>'
+          + "</div>"
+
+          + '<h2 class="ans-q">' + esc(question) + "</h2>"
+
+          + '<div class="ans-layout">'
+          /* main answer column */
+          + '<div class="ans-main">'
+          + '<div class="ans-card">'
+          + '<div class="ans-card__head"><span class="section__eyebrow" style="margin:0">Answer</span>' + viaChip(r.via) + "</div>"
+          + '<p class="ans-text">' + fmt(r.a) + "</p>"
+
+          /* P5 trust row */
+          + '<div class="trust-row">'
+          + '<span class="trust-badge trust-badge--' + cc + '"><span class="trust-badge__dot"></span>Confidence ' + r.confidence + "%</span>"
+          + (r.review
+              ? '<span class="trust-badge trust-badge--review"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>Needs human review</span>'
+              : '<span class="trust-badge trust-badge--auto"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Auto-verified</span>')
+          + '<span class="trust-meta">Grounded in ' + (r.sources ? r.sources.length : 0) + ' source' + ((r.sources && r.sources.length === 1) ? "" : "s") + "</span>"
+          + "</div>"
+          + "</div>"
+
+          /* P3 trace panel (collapsible) */
+          + '<details class="trace" open>'
+          + '<summary class="trace__summary"><svg class="ic trace__chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg> How it was resolved</summary>'
+          + '<div class="trace__body">' + trace + "</div>"
+          + "</details>"
+
+          /* follow-ups */
+          + (follow ? '<div class="section__eyebrow" style="margin-top:var(--space-6)">Related</div><div class="follow-row">' + follow + "</div>" : "")
+          + "</div>"
+
+          /* P1 sources rail */
+          + '<aside class="ans-rail">'
+          + '<div class="section__eyebrow">Sources</div>'
+          + '<div class="src-list">' + sources + "</div>"
+          + '<div class="rail-note">Every answer cites the real workspace file or page it was grounded on. Click a number in the answer to jump here.</div>'
+          + "</aside>"
+          + "</div>";
+
+        var input = document.getElementById("ans-input");
+        function go() { var v = input.value.trim(); if (v) location.href = "answer.html?q=" + encodeURIComponent(v); }
+        document.getElementById("ans-send").onclick = go;
+        input.addEventListener("keydown", function (e) { if (e.key === "Enter") go(); });
+        input.focus(); input.setSelectionRange(input.value.length, input.value.length);
+      }
+
+      render(q);
+    })();
+  </script>
+  <script src="./assets/shell.js"></script>
+  <script src="./assets/bot.js"></script>
+</body>
+</html>

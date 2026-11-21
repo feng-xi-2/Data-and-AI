@@ -1,0 +1,6 @@
+# PrIME Config Drift alert — dependencies
+# Excel source (default, no credentials needed):
+openpyxl>=3.1
+requests>=2.31
+# Live Power BI source (--source pbi):
+msal>=1.28

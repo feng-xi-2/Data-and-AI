@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WHS GenAI — Home</title>
+  <link rel="stylesheet" href="./assets/design-system.css" />
+  <style>
+    /* ===== Deviation Explainability — guided flow dialog ===== */
+    /* Pattern: WAI-ARIA modal dialog + progressive-disclosure stepper
+       (Stripe Radar review · Datadog Watchdog · GitHub code-scanning alert). */
+    .dx-wrap{position:fixed;inset:0;z-index:5000;display:none;place-items:center;padding:2vh 2vw;
+             background:rgba(15,23,42,.45);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+    .dx-wrap.is-open{display:grid}
+    .dx{position:relative;z-index:1;border:none;border-radius:16px;padding:0;width:min(920px,94vw);max-height:92vh;overflow:hidden;background:#fff;
+        box-shadow:0 24px 64px rgba(15,23,42,.28);color:#0f172a;display:flex;flex-direction:column}
+    .dx-wrap.is-open .dx{animation:dxin .18s ease}
+    @keyframes dxin{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:none}}
+    .dx__head{display:flex;align-items:flex-start;gap:1rem;padding:1.1rem 1.3rem .9rem;border-bottom:1px solid var(--border,#e3e6ea)}
+    .dx__eyebrow{font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#2563eb}
+    .dx__title{margin:.15rem 0 0;font-size:1.25rem;font-weight:800}
+    .dx__sub{margin:.2rem 0 0;font-size:.8rem;color:#64748b;max-width:70ch}
+    .dx__x{margin-left:auto;border:1px solid var(--border,#e3e6ea);background:#fff;border-radius:9px;width:34px;height:34px;font-size:1rem;cursor:pointer;color:#475569;flex:none}
+    .dx__x:hover{background:#f1f5f9}
+    .dx__steps{display:flex;gap:.4rem;list-style:none;margin:0;padding:.8rem 1.3rem;border-bottom:1px solid var(--border,#e3e6ea);background:#f8fafc}
+    .dx__steps li{display:flex;align-items:center;gap:.45rem;font-size:.8rem;font-weight:700;color:#94a3b8;padding:.25rem .6rem;border-radius:999px}
+    .dx__steps li span{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#e2e8f0;color:#64748b;font-size:.72rem}
+    .dx__steps li.is-active{color:#1d4ed8;background:#e0ecff}
+    .dx__steps li.is-active span{background:#2563eb;color:#fff}
+    .dx__steps li.is-done span{background:#16a34a;color:#fff}
+    .dx__steps li::after{content:"";width:14px;height:1px;background:#cbd5e1;margin-left:.2rem}
+    .dx__steps li:last-child::after{display:none}
+    .dx__body{padding:1.1rem 1.3rem;overflow:auto}
+    .dx__pane{display:none}.dx__pane.is-active{display:block;animation:dxfade .18s ease}
+    @keyframes dxfade{from{opacity:0}to{opacity:1}}
+    .dx-search{width:100%;padding:.55rem .8rem;border:1px solid var(--border,#e3e6ea);border-radius:10px;font-size:.86rem;margin-bottom:.8rem}
+    /* pickable rows */
+    .dx-row{display:flex;align-items:center;gap:.8rem;width:100%;text-align:left;border:1px solid var(--border,#e3e6ea);background:#fff;border-radius:12px;padding:.7rem .85rem;margin-bottom:.5rem;cursor:pointer;transition:.14s}
+    .dx-row:hover{border-color:#93c5fd;box-shadow:0 2px 10px rgba(37,99,235,.08)}
+    .dx-row.is-sel{border-color:#2563eb;background:#f5f9ff}
+    .dx-row__main{min-width:0}
+    .dx-row__title{font-weight:700;font-size:.9rem}
+    .dx-row__meta{font-size:.74rem;color:#64748b;margin-top:.12rem}
+    .dx-row__count{margin-left:auto;text-align:right;flex:none}
+    .dx-row__count b{font-size:1.05rem;font-weight:800}
+    .dx-row__count small{display:block;font-size:.66rem;color:#94a3b8}
+    .dx-chev{flex:none;color:#94a3b8}
+    /* priority pills */
+    .dx-pill{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;letter-spacing:.03em;flex:none}
+    .dx-pill--P1{background:#fee2e2;color:#991b1b}.dx-pill--P2{background:#fef3c7;color:#92400e}.dx-pill--P3{background:#eaecff;color:#3B49B5}
+    .dx-pill--MONITOR{background:#dcfce7;color:#166534}.dx-pill--IGNORE{background:#f1f5f9;color:#64748b}
+    .dx-pill--EXC{background:#ede9fe;color:#6d28d9}
+    /* potential-exception surfaces */
+    .dx-pxc-tag{display:inline-flex;align-items:center;gap:.3rem;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:#ede9fe;color:#6d28d9;letter-spacing:.02em}
+    .dx-strength{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px}
+    .dx-strength--STRONG{background:#dcfce7;color:#166534}.dx-strength--MODERATE{background:#fef3c7;color:#92400e}.dx-strength--EMERGING{background:#f1f5f9;color:#475569}
+    .dx-peers{background:#faf5ff;border:1px solid #e9d5ff;border-radius:12px;padding:.7rem .85rem;margin-bottom:.8rem;font-size:.8rem;color:#4c1d95;line-height:1.55}
+    .dx-peers b{color:#5b21b6}
+    /* mini priority bar */
+    .dx-bar{display:flex;height:7px;border-radius:4px;overflow:hidden;background:#f1f5f9;margin-top:.4rem;max-width:260px}
+    .dx-bar i{display:block;height:100%}
+    .dx-bar .p1{background:#dc2626}.dx-bar .p2{background:#f59e0b}.dx-bar .p3{background:#6366f1}.dx-bar .mon{background:#16a34a}.dx-bar .ign{background:#cbd5e1}
+    /* step-3 explanation */
+    .dx-why__head{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.6rem}
+    .dx-why__key{font-family:ui-monospace,monospace;font-size:.82rem;font-weight:800}
+    .dx-rec{display:flex;gap:.7rem;align-items:flex-start;background:#eef4ff;border:1px solid #cfe0ff;border-radius:12px;padding:.75rem .9rem;margin-bottom:.8rem}
+    .dx-rec__t{font-weight:800;font-size:.9rem}
+    .dx-rec__d{font-size:.8rem;color:#475569;margin-top:.15rem}
+    .dx-diff{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.8rem}
+    .dx-diff__cell{border:1px solid var(--border,#e3e6ea);border-radius:12px;padding:.6rem .75rem}
+    .dx-diff__lab{font-size:.66rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#94a3b8}
+    .dx-diff__val{font-family:ui-monospace,monospace;font-size:.95rem;font-weight:700;margin-top:.15rem;word-break:break-word}
+    .dx-diff__cell--a{background:#fff5f5;border-color:#fecaca}.dx-diff__cell--a .dx-diff__val{color:#b91c1c}
+    .dx-diff__cell--r{background:#f0fdf4;border-color:#bbf7d0}.dx-diff__cell--r .dx-diff__val{color:#15803d}
+    .dx-block{margin-bottom:.8rem}
+    .dx-block__lab{font-size:.7rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#64748b;margin-bottom:.3rem}
+    .dx-explain{font-size:.84rem;line-height:1.6;color:#334155}
+    .dx-cites{font-size:.76rem;line-height:1.7;color:#475569}
+    .dx-cites .tag{font-weight:800;color:#0f172a}
+    .dx-legend{display:flex;flex-wrap:wrap;gap:.6rem;font-size:.7rem;color:#64748b;margin-top:.5rem}
+    .dx-legend b{color:#0f172a}
+    .dx__foot{display:flex;align-items:center;gap:.8rem;padding:.9rem 1.3rem;border-top:1px solid var(--border,#e3e6ea);background:#f8fafc}
+    .dx__crumb{font-size:.76rem;color:#64748b;margin:0 auto 0 0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .dx-empty{font-size:.85rem;color:#64748b;padding:1rem 0}
+    /* hero launcher card */
+    .dx-launch{display:flex;align-items:center;gap:.9rem;width:100%;text-align:left;border:1px solid var(--border,#e3e6ea);background:linear-gradient(135deg,#ffffff,#f5f9ff);border-radius:14px;padding:.85rem 1rem;cursor:pointer;transition:.15s}
+    .dx-launch:hover{border-color:#93c5fd;box-shadow:0 4px 16px rgba(37,99,235,.1)}
+    .dx-launch__ic{display:grid;place-items:center;width:40px;height:40px;border-radius:11px;background:#e0ecff;color:#2563eb;flex:none}
+    .dx-launch__t{font-weight:800;font-size:.95rem}
+    .dx-launch__d{font-size:.76rem;color:#64748b;margin-top:.1rem}
+    .dx-launch__go{margin-left:auto;color:#2563eb;font-weight:800;font-size:.82rem;flex:none}
+    @media(max-width:640px){.dx-diff{grid-template-columns:1fr}}
+  </style>
+</head>
+<body class="app-body" data-active="home">
+  <div class="app">
+    <aside class="sidebar" id="app-sidebar"></aside>
+
+    <main class="content">
+      <section class="home-hero">
+        <div class="home-hero__top">
+          <h1 class="home-hero__title"><span class="home-hero__user">feng.xi.2</span> How can I help you <span class="accent">today?</span></h1>
+          <p class="home-hero__subtitle">
+            One platform for OSS warehousing GenAI — ask a question, or launch an Assistant
+            backed by Warehouse Knowledge, Warehouse Data, Semantic Layer, Knowledge Graph,
+            Agents and Skill Builder.
+          </p>
+
+          <div class="prompt-box">
+            <textarea id="home-q" rows="2" placeholder="Ask about warehouse data, flows, or run a use case…"></textarea>
+            <div class="prompt-box__row">
+              <div class="prompt-box__tools">
+                <a class="prompt-pill" href="assistants.html">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/></svg>
+                  Assistant
+                </a>
+                <a class="prompt-pill" href="data-knowledge.html">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/></svg>
+                  Data source
+                </a>
+                <a class="prompt-pill" href="knowledge-graph.html">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.2"/><circle cx="18" cy="7" r="2.2"/><circle cx="12" cy="17" r="2.2"/><path d="M8 7.2 10.5 15M16 8.6 13.5 15M8 6.4 16 6.8"/></svg>
+                  Knowledge Graph
+                </a>
+                <button type="button" class="prompt-pill" id="dx-open-pill">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+                  Deviation explainability
+                </button>
+              </div>
+              <button class="prompt-send" id="home-send" title="Send">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick-launch assistants (data-driven) -->
+        <div class="quick-row" id="home-quick"></div>
+
+        <!-- Deviation explainability — guided flow launcher -->
+        <button type="button" class="dx-launch" id="dx-launch" style="margin-top:var(--space-5)">
+          <span class="dx-launch__ic">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+          </span>
+          <span>
+            <span class="dx-launch__t">Why is this a deviation?</span>
+            <span class="dx-launch__d">Guided Config-Drift explainability — pick a site, a finding, and see the grounded reason &amp; recommended action.</span>
+          </span>
+          <span class="dx-launch__go">Explain &#8594;</span>
+        </button>
+
+        <!-- P4 · Dual-engine resolver — the platform's signature pattern -->
+        <div class="resolver" id="home-resolver"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ===== Deviation Explainability dialog (guided 3-step flow) ===== -->
+  <div id="dx-wrap" class="dx-wrap" role="presentation">
+  <div id="dx" class="dx" role="dialog" aria-modal="true" aria-labelledby="dx-title">
+    <div class="dx__head">
+      <div>
+        <div class="dx__eyebrow">Config Drift &middot; Explainability</div>
+        <h2 class="dx__title" id="dx-title">Why is this a deviation?</h2>
+        <p class="dx__sub">A transparent, grounded walk-through — no black box. Every answer cites the data model, the drift rule, the register and the classifier.</p>
+      </div>
+      <button type="button" class="dx__x" id="dx-close" aria-label="Close">&#10005;</button>
+    </div>
+    <ol class="dx__steps" id="dx-steps">
+      <li data-step="1" class="is-active"><span>1</span> Site</li>
+      <li data-step="2"><span>2</span> Finding</li>
+      <li data-step="3"><span>3</span> Why</li>
+    </ol>
+    <div class="dx__body">
+      <section class="dx__pane is-active" data-pane="1">
+        <input class="dx-search" id="dx-site-search" placeholder="Search a site…" />
+        <div id="dx-sites"></div>
+      </section>
+      <section class="dx__pane" data-pane="2">
+        <input class="dx-search" id="dx-find-search" placeholder="Filter findings…" />
+        <div id="dx-finds"></div>
+      </section>
+      <section class="dx__pane" data-pane="3">
+        <div id="dx-why"></div>
+      </section>
+    </div>
+    <div class="dx__foot">
+      <button type="button" id="dx-back" class="btn btn--outline btn--sm">&#8592; Back</button>
+      <div class="dx__crumb" id="dx-crumb"></div>
+      <a id="dx-graph" class="btn btn--outline btn--sm" href="knowledge-graph.html#kgtab-cfg" style="display:none">Open in graph</a>
+      <button type="button" id="dx-next" class="btn btn--primary btn--sm" disabled>Next &#8594;</button>
+    </div>
+  </div>
+  </div>
+
+  <script src="./assets/build-status.js"></script>
+  <script src="./assets/data.js"></script>
+  <script>
+    (function () {
+      /* Route the home prompt to the Perplexity-style answer page */
+      var ta = document.getElementById("home-q");
+      function go() { var v = (ta.value || "").trim(); if (v) location.href = "answer.html?q=" + encodeURIComponent(v); }
+      document.getElementById("home-send").onclick = go;
+      ta.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); go(); }
+      });
+
+      /* Quick-launch assistants */
+      var q = document.getElementById("home-quick");
+      window.WHS.assistants.forEach(function (a) {
+        var el = document.createElement("a");
+        el.className = "prompt-pill";
+        el.href = "assistant.html?id=" + a.id;
+        el.innerHTML = a.icon + " " + a.name;
+        q.appendChild(el);
+      });
+
+      /* P4 · Parallel resolver visual: Warehouse Knowledge + Data → timbr + Graph → HITL Skill Builder */
+      var IC = {
+        layers: '<svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 3 8l9 5 9-5z"/><path d="m3 13 9 5 9-5M3 18l9 5 9-5"/></svg>',
+        graph:  '<svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.2"/><circle cx="18" cy="7" r="2.2"/><circle cx="12" cy="17" r="2.2"/><path d="M8 7.2 10.5 15M16 8.6 13.5 15M8 6.4 16 6.8"/></svg>',
+        data:   '<svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path d="M4 12c0 1.66 3.58 3 8 3s8-1.34 8-3"/></svg>',
+        book:   '<svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z"/><path d="M4 19a2 2 0 0 1 2-2h12"/></svg>',
+        skill:  '<svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4h4a1 1 0 0 1 1 1v2a2 2 0 1 0 4 0V5"/><path d="M20 9v6a1 1 0 0 1-1 1h-2a2 2 0 1 0 0 4h2"/><path d="M4 15V9a1 1 0 0 1 1-1h2a2 2 0 1 0 0-4H5"/></svg>'
+      };
+      document.getElementById("home-resolver").innerHTML =
+        '<div class="resolver__label">How every answer is resolved</div>'
+        + '<div class="resolver__flow">'
+        + '<div class="resolver__node">'
+        + '<svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/></svg>'
+        + '<span>Your question</span></div>'
+        + '<div class="resolver__arrow">→</div>'
+        + '<div class="resolver__stack">'
+        + '<div class="resolver__node resolver__node--kb">' + IC.book + '<span>Warehouse Knowledge</span></div>'
+        + '<div class="resolver__node resolver__node--data">' + IC.data + '<span>Warehouse Data</span></div>'
+        + '</div>'
+        + '<div class="resolver__arrow">→</div>'
+        + '<div class="resolver__parallel">'
+        + '<div class="resolver__engine resolver__engine--semantic">' + IC.layers
+        + '<div><div class="resolver__engine-name">timbr Semantic Layer</div>'
+        + '<div class="resolver__engine-role">Parallel semantic path · governed terms + SQL metrics</div></div>'
+        + '<span class="chip chip--success">Semantic</span></div>'
+        + '<a class="resolver__engine resolver__engine--graph" href="knowledge-graph.html">' + IC.graph
+        + '<div><div class="resolver__engine-name">Knowledge Graph</div>'
+        + '<div class="resolver__engine-role">Parallel graph path · lineage, mappings, validation evidence</div></div>'
+        + '<span class="chip chip--neutral">Graph</span></a>'
+        + '</div>'
+        + '<div class="resolver__arrow">→</div>'
+        + '<div class="resolver__node resolver__node--out">'
+        + '<svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
+        + '<span>Query + database result + explanation + real report</span></div>'
+        + '<div class="resolver__arrow">→</div>'
+        + '<div class="resolver__node resolver__node--skill">' + IC.skill
+        + '<span>Human-in-the-loop: personal skill → review → Skill Platform</span></div>'
+        + "</div>"
+        + '<a class="resolver__cta" href="assistant.html?id=whs-nl-query">Open Warehouse Natural Language Query &#8594;</a>';
+    })();
+  </script>
+  <script src="./assets/drift-actions.js"></script>
+  <script src="./assets/potential-exceptions.js"></script>
+  <script src="./assets/config-meanings.js"></script>
+  <script src="./assets/exception-ledger.js"></script>
+  <script>
+    /* ===== Deviation Explainability — guided flow controller =====
+       Progressive disclosure over window.WHS_DRIFT (drift-actions.js):
+       Step 1 pick a site → Step 2 pick a finding + specific deviation →
+       Step 3 grounded "why" with recommended action, A/R diff and citations.
+       Enriched with window.WHS_MEAN (config-meanings.js) for inline value meanings and
+       window.WHS_LEDGER (exception-ledger.js) for the cross-site accepted-value ledger. */
+    (function () {
+      var dlg = document.getElementById("dx");
+      var wrap = document.getElementById("dx-wrap");
+      if (!dlg || !wrap) return;
+      var DATA = window.WHS_DRIFT || null;
+      var PXC = window.WHS_PXC || null;
+      var MEAN = window.WHS_MEAN || null;
+      var LEDGER = window.WHS_LEDGER || null;
+      var state = { step: 1, siteIdx: -1, actIdx: -1, devIdx: -1 };
+
+      /* ---- value-meaning lookup (config-meanings.js) ----
+         WHS_MEAN.byAttr is keyed by attribute ID; the drift rows carry the GUI label, so we
+         also index by label. Falls back to Blue-Yonder flag convention for on/off flags. */
+      var MEAN_BYLABEL = {};
+      if (MEAN && MEAN.byAttr) {
+        Object.keys(MEAN.byAttr).forEach(function (aid) {
+          var e = MEAN.byAttr[aid]; if (e && e.label) MEAN_BYLABEL[String(e.label).toLowerCase()] = e;
+        });
+      }
+      function meanEntry(labelOrId) {
+        if (!MEAN || !MEAN.byAttr || !labelOrId) return null;
+        return MEAN.byAttr[labelOrId] || MEAN_BYLABEL[String(labelOrId).toLowerCase()] || null;
+      }
+      function valMean(labelOrId, val) {
+        if (val == null || val === "") return "";
+        var e = meanEntry(labelOrId); if (!e) return "";
+        if (e.values && e.values[val]) return e.values[val];
+        if (e.type === "FLAG") {
+          var u = String(val).toUpperCase();
+          if (["1", "Y", "T", "YES", "TRUE"].indexOf(u) >= 0) return "enabled / yes";
+          if (["0", "N", "F", "NO", "FALSE"].indexOf(u) >= 0) return "disabled / no";
+        }
+        return "";
+      }
+      function settingMean(labelOrId) {
+        var e = meanEntry(labelOrId); if (!e) return "";
+        if (e.means) return e.means;
+        if (e.type === "FLAG") return "a Yes/No (on/off) setting";
+        if (e.type === "NUMERIC") return "a numeric setting";
+        if (e.type === "COMMAND") return "an executable command/script";
+        if (e.type === "TEXT") return "a free-text field";
+        return "";
+      }
+
+      /* ---- exception-ledger lookup (exception-ledger.js) ----
+         Index by Section|Element|Type; within a bucket, match the accepted value so an OPEN
+         finding here can show which peers ACCEPT the same value, under which CRFC, and who else
+         still has it open. */
+      var LED_IDX = {};
+      if (LEDGER && LEDGER.rows) {
+        LEDGER.rows.forEach(function (r) {
+          var k = (r.section + "|" + r.element + "|" + r.type).toLowerCase();
+          (LED_IDX[k] = LED_IDX[k] || []).push(r);
+        });
+      }
+      function ledgerFor(sec, el, type, aVal) {
+        var k = (String(sec) + "|" + String(el) + "|" + String(type)).toLowerCase();
+        var bucket = LED_IDX[k]; if (!bucket) return null;
+        var exact = null, any = null;
+        for (var i = 0; i < bucket.length; i++) {
+          if (!any) any = bucket[i];
+          if (aVal != null && String(bucket[i].a) === String(aVal)) { exact = bucket[i]; break; }
+        }
+        return exact || any;
+      }
+
+      /* ---- Potential exceptions: fold peer-governed candidates into each site ----
+         Grounding: a peer site already ACCEPTS the identical deviation (often under a
+         CFG-RFC), so an open finding here is a candidate exception, not a defect. */
+      function baseName(s) {
+        return String(s || "").replace(/\s*-\s*(UAT\d*|SITH?|SIT|PROD|TEST)\b.*$/i, "").trim().toLowerCase();
+      }
+      function pxcForSite(siteName) {
+        if (!PXC || !PXC.bySite) return null;
+        if (PXC.bySite[siteName]) return PXC.bySite[siteName];
+        var b = baseName(siteName), best = null;
+        Object.keys(PXC.bySite).forEach(function (k) { if (baseName(k) === b) best = PXC.bySite[k]; });
+        return best;
+      }
+      function injectPXC() {
+        if (!DATA || !DATA.sites) return;
+        DATA.sites.forEach(function (s) {
+          var blk = pxcForSite(s.site);
+          if (!blk || !blk.items || !blk.items.length) return;
+          if (s.actions && s.actions.length && s.actions[0].id === "POTENTIAL_EXCEPTION") return; /* idempotent */
+          s.pxcCount = blk.count || blk.items.length;
+          s.pxcStrength = blk.strength || {};
+          var samples = blk.items.map(function (it) {
+            return {
+              section: it.section, element: it.element, attr: it.attr, level: "",
+              sev: it.strength, type: it.type, a: it.a, r: it.r, trail: "", cfg: it.cfg,
+              ai: it.action, explain: it.explain, cites: it.cites,
+              _pxc: true, _strength: it.strength, _peers: it.peers, _nAccept: it.nAccept, _nOpen: it.nOpen
+            };
+          });
+          var grp = {
+            id: "POTENTIAL_EXCEPTION", label: "Potential exception \u2014 peer-governed", priority: "EXC",
+            meaning: "Open here, but a peer site already accepts the identical deviation \u2014 likely a governable exception, not a defect.",
+            count: samples.length, samples: samples
+          };
+          s.actions = [grp].concat(s.actions || []);
+        });
+      }
+      injectPXC();
+
+      function esc(s) { return String(s == null ? "" : s).replace(/[&<>]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]; }); }
+      function num(v) { return (v || 0).toLocaleString(); }
+      function tagCites(s) { return esc(s).replace(/\[(MOCA|PRIME|CRFC|PYTHON|GENERAL|DOC|INFERRED)\]/g, '<span class="tag">[$1]</span>'); }
+      function sites() { return (DATA && DATA.sites) || []; }
+      function curSite() { return sites()[state.siteIdx] || null; }
+      function acts() { var s = curSite(); return (s && s.actions) || []; }
+      function curAct() { return acts()[state.actIdx] || null; }
+      function curDev() { var a = curAct(); return a && a.samples ? a.samples[state.devIdx] : null; }
+
+      var steps = dlg.querySelectorAll(".dx__steps li");
+      var panes = dlg.querySelectorAll(".dx__pane");
+      var backBtn = document.getElementById("dx-back");
+      var nextBtn = document.getElementById("dx-next");
+      var graphBtn = document.getElementById("dx-graph");
+      var crumb = document.getElementById("dx-crumb");
+
+      function setStep(n) {
+        state.step = n;
+        steps.forEach(function (li) {
+          var s = +li.getAttribute("data-step");
+          li.classList.toggle("is-active", s === n);
+          li.classList.toggle("is-done", s < n);
+        });
+        panes.forEach(function (p) { p.classList.toggle("is-active", +p.getAttribute("data-pane") === n); });
+        backBtn.style.visibility = n === 1 ? "hidden" : "visible";
+        graphBtn.style.display = n === 3 ? "" : "none";
+        nextBtn.textContent = n === 3 ? "Done" : "Next \u2192";
+        nextBtn.disabled = (n === 1 && state.siteIdx < 0) || (n === 2 && state.devIdx < 0);
+        renderCrumb();
+      }
+      function renderCrumb() {
+        var parts = [];
+        if (curSite()) parts.push(esc(curSite().site));
+        if (state.step >= 2 && curAct()) parts.push(esc(curAct().label));
+        if (state.step >= 3 && curDev()) parts.push(esc(curDev().element || curDev().type));
+        crumb.textContent = parts.join("  \u203a  ");
+      }
+
+      /* ---- Step 1: sites ---- */
+      function priBar(s) {
+        var p = s.priority || {}, tot = (s.total || 0) || 1;
+        function seg(k, cls) { var w = Math.round(100 * (p[k] || 0) / tot); return w > 0 ? '<i class="' + cls + '" style="width:' + w + '%"></i>' : ""; }
+        return '<div class="dx-bar">' + seg("P1", "p1") + seg("P2", "p2") + seg("P3", "p3") + seg("MONITOR", "mon") + seg("IGNORE", "ign") + '</div>';
+      }
+      function renderSites(filter) {
+        var host = document.getElementById("dx-sites");
+        var arr = sites();
+        if (!arr.length) { host.innerHTML = '<div class="dx-empty">No Config-Drift data loaded (assets/drift-actions.js).</div>'; return; }
+        var f = (filter || "").trim().toLowerCase();
+        var ranked = arr.map(function (s, i) { return { s: s, i: i }; })
+          .filter(function (o) { return !f || o.s.site.toLowerCase().indexOf(f) >= 0; })
+          .sort(function (a, b) { return (b.s.open || 0) - (a.s.open || 0); });
+        if (!ranked.length) { host.innerHTML = '<div class="dx-empty">No site matches.</div>'; return; }
+        host.innerHTML = ranked.map(function (o) {
+          var pxcPill = (o.s.pxcCount > 0)
+            ? '<span class="dx-pxc-tag" title="Open findings a peer site already accepts as an exception">'
+              + '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>'
+              + num(o.s.pxcCount) + ' potential exception' + (o.s.pxcCount === 1 ? '' : 's') + '</span>'
+            : '';
+          return '<button type="button" class="dx-row' + (o.i === state.siteIdx ? " is-sel" : "") + '" data-i="' + o.i + '">'
+            + '<div class="dx-row__main"><div class="dx-row__title">' + esc(o.s.site) + '</div>'
+            + '<div class="dx-row__meta">' + num(o.s.open || 0) + ' open &middot; ' + num(o.s.accepted || 0) + ' accepted &middot; ' + num(o.s.total || 0) + ' total</div>'
+            + priBar(o.s) + (pxcPill ? '<div style="margin-top:.45rem">' + pxcPill + '</div>' : '') + '</div>'
+            + '<div class="dx-row__count"><b>' + num(o.s.open || 0) + '</b><small>open</small></div>'
+            + '<svg class="dx-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg></button>';
+        }).join("");
+      }
+
+      /* ---- Step 2: findings (action groups) + specific deviations ---- */
+      function statsStrip(s) {
+        if (!s) return "";
+        var sv = s.severity || {}, tr = s.trail || {};
+        var high = sv.high || 0, med = sv.medium || 0, low = sv.low || 0;
+        var open = s.open || 0, acc = s.accepted || 0, total = s.total || 0;
+        var healthy = tr.HEALTHY || 0, stale = tr.STALE || 0, orphan = tr.ORPHAN || 0, unbacked = tr.UNBACKED || 0;
+        var needCrfc = stale + orphan + unbacked;      /* accepted but no live CRFC → govern */
+        var pxc = s.pxcCount || 0;                       /* open here, a peer already accepts */
+        function cell(n, lab, col) {
+          return '<div style="flex:1 1 0;min-width:74px;padding:.5rem .6rem;border-radius:.55rem;background:#fff;border:1px solid #e5e7eb">'
+            + '<div style="font-size:1.15rem;font-weight:700;color:' + (col || '#111827') + '">' + num(n) + '</div>'
+            + '<div style="font-size:.68rem;color:#6b7280;text-transform:uppercase;letter-spacing:.03em">' + lab + '</div></div>';
+        }
+        return '<div style="margin:0 0 .8rem">'
+          + '<div style="display:flex;gap:.45rem;flex-wrap:wrap;margin-bottom:.5rem">'
+          + cell(total, 'Fields checked', '#111827') + cell(open, 'Open', '#dc2626')
+          + cell(high, 'High', '#b91c1c') + cell(med, 'Medium', '#d97706') + cell(low, 'Low', '#65a30d')
+          + cell(acc, 'Accepted', '#16a34a') + '</div>'
+          + '<div style="display:flex;gap:.45rem;flex-wrap:wrap">'
+          + cell(healthy, 'Trail · governed', '#16a34a')
+          + cell(needCrfc, 'Need CRFC link', '#dc2626')
+          + cell(pxc, 'Potential exception', '#7c3aed') + '</div>'
+          + '<div style="font-size:.72rem;color:#6b7280;margin-top:.5rem;line-height:1.5">'
+          + '<b>' + num(open) + '</b> open of <b>' + num(total) + '</b> checked · <b>' + num(high) + '</b> high-severity. '
+          + 'Of the <b>' + num(acc) + '</b> accepted, <b style="color:#dc2626">' + num(needCrfc) + '</b> need a CRFC link '
+          + '(' + num(unbacked) + ' unbacked · ' + num(orphan) + ' orphan · ' + num(stale) + ' stale). '
+          + '<b style="color:#7c3aed">' + num(pxc) + '</b> open finding' + (pxc === 1 ? '' : 's') + ' a peer already accepts as an exception.'
+          + '</div></div>';
+      }
+      function renderFinds(filter) {
+        var host = document.getElementById("dx-finds");
+        var a = acts();
+        if (!a.length) { host.innerHTML = '<div class="dx-empty">No findings for this site.</div>'; return; }
+        var f = (filter || "").trim().toLowerCase();
+        host.innerHTML = statsStrip(curSite()) + a.map(function (act, ai) {
+          if (f) { var hay = (act.label + " " + act.meaning).toLowerCase(); if (hay.indexOf(f) < 0) return ""; }
+          var open = ai === state.actIdx;
+          var samples = open ? (act.samples || []).map(function (d, di) {
+            return '<button type="button" class="dx-row' + (di === state.devIdx ? " is-sel" : "") + '" data-ai="' + ai + '" data-di="' + di + '" style="margin-left:1rem">'
+              + '<div class="dx-row__main"><div class="dx-row__title">' + esc(d.element || d.type) + (d.attr ? ' \u00b7 ' + esc(d.attr) : '') + '</div>'
+              + '<div class="dx-row__meta">' + esc(d.section) + ' &middot; ' + esc(d.sev) + '</div></div>'
+              + '<svg class="dx-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg></button>';
+          }).join("") : "";
+          return '<button type="button" class="dx-row' + (open ? " is-sel" : "") + '" data-ai="' + ai + '">'
+            + '<span class="dx-pill dx-pill--' + esc(act.priority) + '">' + esc(act.priority) + '</span>'
+            + '<div class="dx-row__main"><div class="dx-row__title">' + esc(act.label) + '</div>'
+            + '<div class="dx-row__meta">' + esc(act.meaning) + '</div></div>'
+            + '<div class="dx-row__count"><b>' + num(act.count) + '</b><small>rows</small></div></button>'
+            + samples;
+        }).join("");
+      }
+
+      /* ---- Step 3: the explanation ---- */
+      function renderWhy() {
+        var host = document.getElementById("dx-why");
+        var d = curDev(), a = curAct(), s = curSite();
+        if (!d) { host.innerHTML = '<div class="dx-empty">Pick a finding first.</div>'; return; }
+        var lblId = d.attr || "";
+        var aMean = valMean(lblId, d.a), rMean = valMean(lblId, d.r), setMean = settingMean(lblId);
+        function valCell(cls, lab, val, mean) {
+          return '<div class="dx-diff__cell ' + cls + '"><div class="dx-diff__lab">' + lab + '</div>'
+            + '<div class="dx-diff__val">' + esc(val || "\u2205") + '</div>'
+            + (mean ? '<div style="font-size:.72rem;color:#6b7280;margin-top:.2rem">= ' + esc(mean) + '</div>' : '') + '</div>';
+        }
+        var diff = (d.a || d.r)
+          ? (setMean ? '<div style="font-size:.75rem;color:#4b5563;margin:.1rem 0 .4rem"><b>' + esc(d.attr || d.element) + '</b> — ' + esc(setMean) + '.</div>' : '')
+            + '<div class="dx-diff">'
+            + valCell("dx-diff__cell--a", "A &middot; " + esc(s.site) + " (site value)", d.a, aMean)
+            + valCell("dx-diff__cell--r", "R &middot; reference standard", d.r, rMean)
+            + '</div>'
+          : '';
+
+        /* exception ledger — who else accepts this value, under which CRFC, who still has it open */
+        var led = ledgerFor(d.section, d.element, d.type, d.a);
+        var ledgerBlock = "";
+        if (led && (led.nAcc || led.nOpen)) {
+          var stMap = {
+            GOVERNED: ["#16a34a", "governed by a live CFG-RFC"],
+            STALE: ["#d97706", "cited CFG-RFC is superseded"],
+            ORPHAN: ["#d97706", "cited CFG-RFC not in the register"],
+            UNBACKED_PEER: ["#7c3aed", "no CFG-RFC here — peers govern it under one"],
+            UNBACKED: ["#dc2626", "accepted with no CFG-RFC anywhere"]
+          };
+          var st = stMap[led.state] || ["#6b7280", led.state];
+          var crfc = (led.citedLive && led.citedLive.length) ? led.citedLive
+            : (led.potential && led.potential.length) ? led.potential : [];
+          var crfcTxt = crfc.length
+            ? (led.citedLive && led.citedLive.length ? "under <b>" : "potential linkage <b>") + esc(crfc.join(", ")) + "</b>"
+            : "with <b>no CFG-RFC</b>";
+          ledgerBlock = '<div class="dx-block"><div class="dx-block__lab">Exception ledger &middot; this value across sites</div>'
+            + '<div style="font-size:.82rem;line-height:1.6">'
+            + '<span class="dx-strength" style="background:' + st[0] + '22;color:' + st[0] + '">' + esc(led.state) + '</span> '
+            + esc(String(led.a || "(value)")) + ' is accepted at <b>' + num(led.nAcc) + '</b> site' + (led.nAcc === 1 ? '' : 's') + ' ' + crfcTxt + '.'
+            + (led.accSites && led.accSites.length ? '<br><span style="color:#16a34a">Accepts: ' + esc(led.accSites.join(", ")) + '</span>' : '')
+            + (led.nOpen ? '<br><span style="color:#dc2626">Same value still OPEN at ' + num(led.nOpen) + ' site' + (led.nOpen === 1 ? '' : 's') + ' (should adopt the CRFC): ' + esc((led.openSites || []).join(", ")) + '</span>' : '')
+            + (led.grounds && led.grounds.length ? '<div style="margin-top:.4rem;color:#4b5563;font-size:.76rem"><b>Sites\u2019 own words:</b> ' + esc(led.grounds.join("  |  ")) + '</div>' : '')
+            + '</div></div>';
+        }
+        var peers = d._pxc
+          ? '<div class="dx-peers"><b>Peer precedent &middot; </b>'
+            + '<span class="dx-strength dx-strength--' + esc(d._strength) + '">' + esc(d._strength) + ' grounding</span> '
+            + esc(d._nAccept) + ' peer site' + (d._nAccept === 1 ? '' : 's') + ' already accept this identical deviation'
+            + (d.cfg ? ' under <b>' + esc(d.cfg) + '</b>' : ' (no CFG-RFC recorded yet)') + '.'
+            + (d._peers ? '<br><span style="color:#6b21a8">' + esc(d._peers) + '</span>' : '') + '</div>'
+          : '';
+        host.innerHTML =
+          '<div class="dx-why__head"><span class="dx-pill dx-pill--' + esc(a.priority) + '">' + esc(a.priority) + '</span>'
+          + '<span class="dx-why__key">' + esc(d.section) + ' \u00b7 ' + esc(d.element) + (d.attr ? ' \u00b7 ' + esc(d.attr) : '') + '</span>'
+          + '<span class="chip chip--neutral">' + esc(d.type) + '</span>'
+          + (d._pxc ? '<span class="dx-strength dx-strength--' + esc(d._strength) + '">' + esc(d._strength) + '</span>' : '<span class="chip chip--neutral">' + esc(d.sev) + '</span>')
+          + (d.cfg ? '<span class="chip chip--success">' + esc(d.cfg) + '</span>' : '')
+          + (d.trail ? '<span class="chip chip--warning">' + esc(d.trail) + '</span>' : '') + '</div>'
+          + '<div class="dx-rec"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.5 1 3h6c0-1.5.5-2.5 1-3a7 7 0 0 0-4-12z"/></svg>'
+          + '<div><div class="dx-rec__t">' + (d._pxc ? 'Suggested action &middot; ' : 'Recommended action &middot; ') + esc(a.label) + '</div>'
+          + '<div class="dx-rec__d">' + esc(d.ai || a.meaning) + '</div></div></div>'
+          + peers
+          + diff
+          + ledgerBlock
+          + (d.explain ? '<div class="dx-block"><div class="dx-block__lab">Why this is flagged</div><div class="dx-explain">' + esc(d.explain) + '</div></div>' : '')
+          + (d.cites ? '<div class="dx-block"><div class="dx-block__lab">Grounded citations</div><div class="dx-cites">' + tagCites(d.cites) + '</div></div>' : '')
+          + '<div class="dx-legend"><span><b>Grounding tags:</b></span><span><b>[MOCA]</b> data model</span><span><b>[PRIME]</b> drift behaviour</span><span><b>[CRFC]</b> register</span><span><b>[PYTHON]</b> classifier</span><span><b>[GENERAL]</b> domain</span></div>';
+      }
+
+      /* ---- interactions ---- */
+      document.getElementById("dx-sites").addEventListener("click", function (e) {
+        var row = e.target.closest(".dx-row"); if (!row) return;
+        state.siteIdx = +row.getAttribute("data-i"); state.actIdx = -1; state.devIdx = -1;
+        renderSites(document.getElementById("dx-site-search").value);
+        renderFinds(""); setStep(2);
+      });
+      document.getElementById("dx-finds").addEventListener("click", function (e) {
+        var row = e.target.closest(".dx-row"); if (!row) return;
+        if (row.hasAttribute("data-di")) {
+          state.actIdx = +row.getAttribute("data-ai"); state.devIdx = +row.getAttribute("data-di");
+          renderWhy(); setStep(3); return;
+        }
+        var ai = +row.getAttribute("data-ai");
+        state.actIdx = (state.actIdx === ai ? -1 : ai); state.devIdx = -1;
+        renderFinds(document.getElementById("dx-find-search").value);
+        nextBtn.disabled = true; renderCrumb();
+      });
+      document.getElementById("dx-site-search").addEventListener("input", function () { renderSites(this.value); });
+      document.getElementById("dx-find-search").addEventListener("input", function () { renderFinds(this.value); });
+
+      backBtn.addEventListener("click", function () { if (state.step > 1) setStep(state.step - 1); });
+      nextBtn.addEventListener("click", function () {
+        if (state.step === 1 && state.siteIdx >= 0) setStep(2);
+        else if (state.step === 2 && state.devIdx >= 0) { renderWhy(); setStep(3); }
+        else if (state.step === 3) close();
+      });
+
+      function open() {
+        renderSites(""); setStep(state.siteIdx >= 0 ? state.step : 1);
+        wrap.classList.add("is-open"); document.body.style.overflow = "hidden";
+      }
+      function close() { wrap.classList.remove("is-open"); document.body.style.overflow = ""; }
+      document.getElementById("dx-close").addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); close(); });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape" && wrap.classList.contains("is-open")) close(); });
+      wrap.addEventListener("click", function (e) { if (e.target === wrap) close(); }); /* backdrop click */
+
+      var pill = document.getElementById("dx-open-pill"), card = document.getElementById("dx-launch");
+      if (pill) pill.addEventListener("click", open);
+      if (card) card.addEventListener("click", open);
+      if (location.hash === "#explain") open();
+    })();
+  </script>
+  <script src="./assets/shell.js"></script>
+  <script src="./assets/bot.js"></script>
+</body>
+</html>

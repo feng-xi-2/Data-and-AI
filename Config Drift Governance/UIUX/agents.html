@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WHS GenAI — Agents</title>
+  <link rel="stylesheet" href="./assets/design-system.css" />
+</head>
+<body class="app-body" data-active="agents">
+  <div class="app">
+    <aside class="sidebar" id="app-sidebar"></aside>
+
+    <main class="content">
+      <div class="content__topbar">
+        <h1>Agents</h1>
+        <span class="crumb">· Specialist reasoning units that power every Assistant</span>
+      </div>
+
+      <div class="content__body" style="max-width:1100px">
+        <p class="text-soft" style="margin-bottom:var(--space-5)">
+          The <strong>Supervisor</strong> orchestrates the <strong>Data</strong>, <strong>Knowledge</strong>
+          and <strong>Algorithm</strong> agents using a ReAct loop with a quality gate and reflection.
+          Click an agent to see its pattern, skills and the assistants it powers.
+        </p>
+
+        <div class="card agent-chart-card">
+          <div class="section__eyebrow">Clip chart · agent orchestration</div>
+          <div id="agent-chart"></div>
+        </div>
+
+        <div class="grid grid--2" id="grid"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="./assets/data.js"></script>
+  <script>
+    (function () {
+      function agentNode(id, label) {
+        var a = window.WHS.get("agent", id);
+        return '<a class="agent-clip-node" href="agent.html?id=' + id + '">'
+          + '<span class="agent-clip-node__icon">' + a.icon + '</span>'
+          + '<span class="agent-clip-node__label">' + label + '</span>'
+          + '<span class="agent-clip-node__role">' + a.role + '</span></a>';
+      }
+
+      document.getElementById("agent-chart").innerHTML =
+        '<div class="agent-clip-chart">'
+        + agentNode("supervisor", "Supervisor")
+        + '<span class="agent-clip-arrow">orchestrates</span>'
+        + '<div class="agent-clip-group">'
+        + agentNode("data", "Data")
+        + agentNode("knowledge", "Knowledge")
+        + agentNode("algorithm", "Algorithm")
+        + '</div>'
+        + '<span class="agent-clip-arrow">quality gate</span>'
+        + '<div class="agent-clip-node agent-clip-node--review">'
+        + '<span class="agent-clip-node__icon"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/><path d="M12 3v4M12 17v4"/></svg></span>'
+        + '<span class="agent-clip-node__label">Verified answer</span>'
+        + '<span class="agent-clip-node__role">Cited · reviewable</span></div>'
+        + '</div>';
+
+      document.getElementById("grid").innerHTML = window.WHS.agents.map(function (a) {
+        var skills = a.skills.slice(0, 4).map(function (s) { return '<span class="chip chip--neutral">' + s + "</span>"; }).join(" ");
+        return '<a class="card card--link" href="agent.html?id=' + a.id + '" style="text-decoration:none;color:inherit">'
+          + '<div class="card__icon">' + a.icon + "</div>"
+          + '<div class="card__title">' + a.name + ' <span class="chip">' + a.role + "</span></div>"
+          + '<p class="card__desc">' + a.desc + "</p>"
+          + '<div class="mt-4 flex flex-wrap gap-2">' + skills + "</div></a>";
+      }).join("");
+    })();
+  </script>
+  <script src="./assets/shell.js"></script>
+  <script src="./assets/bot.js"></script>
+</body>
+</html>

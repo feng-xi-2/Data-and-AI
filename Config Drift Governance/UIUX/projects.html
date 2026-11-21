@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WHS GenAI — Projects</title>
+  <link rel="stylesheet" href="./assets/design-system.css" />
+  <style>
+    .wb-status{margin-left:auto;display:flex;align-items:center;gap:.6rem}
+    .pj-layout{display:grid;grid-template-columns:240px 1fr;gap:var(--space-4)}
+    @media(max-width:900px){.pj-layout{grid-template-columns:1fr}}
+    .pj-list{border:1px solid var(--color-border);border-radius:.7rem;overflow:hidden;align-self:start}
+    .pj-list__head{display:flex;align-items:center;gap:.4rem;padding:.6rem .8rem;border-bottom:1px solid var(--color-border);background:var(--color-bg-alt)}
+    .pj-item{padding:.55rem .8rem;border-bottom:1px solid var(--color-border);cursor:pointer;font-size:.85rem}
+    .pj-item:hover{background:var(--color-bg-alt)}
+    .pj-item.is-active{background:#eff6ff;border-left:3px solid var(--color-primary)}
+    .pj-item b{display:block}.pj-item small{color:var(--color-text-mute);font-size:.7rem}
+    .pj-sect{border:1px solid var(--color-border);border-radius:.7rem;padding:var(--space-4);margin-bottom:var(--space-4)}
+    .pj-sect h3{margin:0 0 .5rem;font-size:.85rem;text-transform:uppercase;letter-spacing:.04em;color:var(--color-text-mute)}
+    .pj-pick{display:flex;flex-wrap:wrap;gap:.4rem}
+    .pj-opt{border:1px solid var(--color-border);background:#fff;border-radius:999px;padding:.3rem .7rem;font-size:.76rem;cursor:pointer;user-select:none}
+    .pj-opt.is-on{background:var(--color-primary);color:#fff;border-color:var(--color-primary)}
+    .pj-opt.k-app.is-on{background:#0891b2;border-color:#0891b2}
+    .pj-opt.k-expert.is-on{background:#7c3aed;border-color:#7c3aed}
+    .pj-opt.k-data.is-on{background:#059669;border-color:#059669}
+    .pj-bar{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:var(--space-3)}
+    .pj-bar input{padding:.5rem .8rem;border:1px solid var(--color-border);border-radius:.55rem;font-size:.95rem;min-width:260px}
+    .wb-offline{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:.8rem 1rem;border-radius:.6rem;font-size:.85rem;margin-bottom:var(--space-4)}
+    .wb-offline code{background:#1e293b;color:#fbbf24;padding:.1rem .4rem;border-radius:.3rem}
+    .pj-count{font-size:.72rem;color:var(--color-text-mute)}
+  </style>
+</head>
+<body class="app-body" data-active="projects">
+  <div class="app">
+    <aside class="sidebar" id="app-sidebar"></aside>
+
+    <main class="content">
+      <div class="content__topbar">
+        <h1>Projects</h1>
+        <span class="crumb">· a space that bundles Skills + Apps + Experts + Data for team reuse</span>
+        <div class="wb-status"><span class="chip" id="wb-conn"><span class="dot"></span> connecting…</span></div>
+      </div>
+
+      <div class="content__body" style="max-width:1150px">
+        <div id="wb-offline" class="wb-offline" style="display:none">
+          <b>Live bridge not reachable.</b> Projects persist through the local bridge. Start
+          <code>python graph_api.py --port 8737</code> and reload.
+        </div>
+
+        <p class="text-soft" style="margin-bottom:var(--space-3)">
+          A <strong>Project</strong> is a shared space: pick the installed
+          <strong>Skills</strong>, published <strong>Apps</strong>, <strong>Experts</strong> and
+          <strong>Data sources</strong> a team needs, and reuse them together. Configure once, reuse across the team.
+        </p>
+
+        <div class="pj-layout">
+          <div class="pj-list">
+            <div class="pj-list__head"><strong style="font-size:.82rem;flex:1">Projects</strong>
+              <button class="btn btn--primary btn--sm" id="pj-new">+ New</button></div>
+            <div id="pj-items"></div>
+          </div>
+
+          <div id="pj-editor" style="display:none">
+            <div class="pj-bar">
+              <input id="pj-name" placeholder="Project name" />
+              <button class="btn btn--primary btn--sm" id="pj-save">Save</button>
+              <button class="btn btn--ghost btn--sm" id="pj-delete" style="color:var(--color-danger)">Delete</button>
+            </div>
+
+            <div class="pj-sect">
+              <h3>Skills <span class="pj-count" id="pj-c-skills"></span></h3>
+              <div class="pj-pick" id="pj-skills"></div>
+            </div>
+            <div class="pj-sect">
+              <h3>Apps <span class="pj-count" id="pj-c-apps"></span></h3>
+              <div class="pj-pick" id="pj-apps"></div>
+            </div>
+            <div class="pj-sect">
+              <h3>Experts <span class="pj-count" id="pj-c-experts"></span></h3>
+              <div class="pj-pick" id="pj-experts"></div>
+            </div>
+            <div class="pj-sect">
+              <h3>Data sources</h3>
+              <div class="pj-pick" id="pj-data"></div>
+            </div>
+          </div>
+          <div id="pj-empty" class="card"><p class="card__desc">Select a project or create a new one.</p></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="./assets/data.js"></script>
+  <script src="./assets/shell.js"></script>
+  <script>
+  (function(){
+    var BRIDGE="http://127.0.0.1:8737";
+    var CUR=null,CATALOG={skills:[],apps:[],experts:[],data:[]};
+    function api(path,opts){return fetch(BRIDGE+path,opts).then(function(r){if(!r.ok)return r.json().then(function(j){throw new Error(j.error||("HTTP "+r.status));});return r.json();});}
+    function post(path,body){return api(path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});}
+    function esc(s){return String(s==null?"":s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+    function setConn(ok){var c=document.getElementById("wb-conn");if(ok){c.className="chip chip--success";c.innerHTML='<span class="dot dot--live"></span> Bridge live';}else{c.className="chip chip--danger";c.innerHTML='<span class="dot"></span> Bridge offline';}document.getElementById("wb-offline").style.display=ok?"none":"block";}
+
+    function loadCatalog(){
+      var W=window.WHS||{};
+      CATALOG.data=(W.datasets||[]).map(function(d){return {id:d.id||d.name,name:d.name||d.id};});
+      return Promise.all([
+        api("/sp/skills").then(function(s){CATALOG.skills=(s.skills||[]).filter(function(x){return x.installed;});}).catch(function(){}),
+        api("/sp/apps").then(function(a){CATALOG.apps=a.apps||[];}).catch(function(){}),
+        api("/sp/experts").then(function(e){CATALOG.experts=e.experts||[];}).catch(function(){})
+      ]);
+    }
+
+    function renderList(projects){
+      var el=document.getElementById("pj-items");
+      if(!projects.length){el.innerHTML='<div class="pj-item"><small>No projects — click + New</small></div>';return;}
+      el.innerHTML=projects.map(function(p){
+        var n=(p.skills||[]).length+(p.apps||[]).length+(p.experts||[]).length;
+        return '<div class="pj-item'+(CUR&&CUR.id===p.id?' is-active':'')+'" data-id="'+esc(p.id)+'"><b>'+esc(p.name)+'</b><small>'+n+' items</small></div>';
+      }).join("");
+    }
+    function refreshList(){return api("/sp/projects").then(function(r){setConn(true);renderList(r.projects||[]);return r.projects||[];}).catch(function(){setConn(false);return [];});}
+
+    function pills(containerId, items, kindClass, selected, labelFn){
+      var sel=selected||[];
+      document.getElementById(containerId).innerHTML=items.map(function(it){
+        var id=it.id;var on=sel.indexOf(id)>=0;
+        return '<span class="pj-opt '+kindClass+(on?' is-on':'')+'" data-id="'+esc(id)+'">'+esc(labelFn(it))+'</span>';
+      }).join("")||'<span class="pj-count">none available</span>';
+    }
+    function renderEditor(){
+      document.getElementById("pj-editor").style.display=CUR?"":"none";
+      document.getElementById("pj-empty").style.display=CUR?"none":"";
+      if(!CUR)return;
+      document.getElementById("pj-name").value=CUR.name||"";
+      pills("pj-skills",CATALOG.skills,"k-skill",CUR.skills,function(s){return s.name;});
+      pills("pj-apps",CATALOG.apps,"k-app",CUR.apps,function(a){return a.name+(a.published?" ●":"");});
+      pills("pj-experts",CATALOG.experts,"k-expert",CUR.experts,function(e){return (e.type==="team"?"👥 ":"👤 ")+e.name;});
+      pills("pj-data",CATALOG.data,"k-data",CUR.dataSources,function(d){return d.name;});
+      document.getElementById("pj-c-skills").textContent="("+CATALOG.skills.length+" installed)";
+      document.getElementById("pj-c-apps").textContent="("+CATALOG.apps.length+")";
+      document.getElementById("pj-c-experts").textContent="("+CATALOG.experts.length+")";
+      document.getElementById("pj-delete").style.display=CUR.id?"":"none";
+    }
+
+    function toggleSel(field,id){var a=CUR[field]||(CUR[field]=[]);var i=a.indexOf(id);if(i>=0)a.splice(i,1);else a.push(id);renderEditor();}
+    ["pj-skills:skills","pj-apps:apps","pj-experts:experts","pj-data:dataSources"].forEach(function(pair){
+      var parts=pair.split(":");
+      document.getElementById(parts[0]).addEventListener("click",function(e){var o=e.target.closest(".pj-opt");if(o)toggleSel(parts[1],o.getAttribute("data-id"));});
+    });
+
+    document.getElementById("pj-items").addEventListener("click",function(e){var it=e.target.closest(".pj-item");if(it&&it.getAttribute("data-id"))open(it.getAttribute("data-id"));});
+    function open(id){api("/sp/projects").then(function(r){CUR=(r.projects||[]).filter(function(p){return p.id===id;})[0]||null;if(CUR){CUR.skills=CUR.skills||[];CUR.apps=CUR.apps||[];CUR.experts=CUR.experts||[];CUR.dataSources=CUR.dataSources||[];}renderEditor();refreshList();});}
+    document.getElementById("pj-new").addEventListener("click",function(){CUR={id:null,name:"New project",skills:[],apps:[],experts:[],dataSources:[]};renderEditor();});
+    document.getElementById("pj-save").addEventListener("click",function(){
+      CUR.name=document.getElementById("pj-name").value.trim()||"Untitled project";
+      post("/sp/project/save",{project:CUR}).then(function(r){CUR.id=r.id;refreshList();});
+    });
+    document.getElementById("pj-delete").addEventListener("click",function(){
+      if(!CUR||!CUR.id)return;if(!confirm("Delete this project?"))return;
+      post("/sp/project/delete",{id:CUR.id}).then(function(){CUR=null;renderEditor();refreshList();});
+    });
+
+    api("/health").then(function(){setConn(true);return loadCatalog();}).then(refreshList).catch(function(){setConn(false);});
+  })();
+  </script>
+</body>
+</html>

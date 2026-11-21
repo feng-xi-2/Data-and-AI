@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WHS GenAI — Skills</title>
+  <link rel="stylesheet" href="./assets/design-system.css" />
+  <style>
+    .wb-status{margin-left:auto;display:flex;align-items:center;gap:.6rem}
+    .wb-kpis{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:var(--space-4)}
+    .wb-kpi{background:var(--color-bg-alt);border:1px solid var(--color-border);border-radius:.6rem;padding:.5rem .9rem;min-width:96px}
+    .wb-kpi b{display:block;font-size:1.3rem;line-height:1.1}
+    .wb-kpi span{font-size:.7rem;color:var(--color-text-mute);text-transform:uppercase;letter-spacing:.04em}
+    .wb-toolbar{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin:.4rem 0 var(--space-4)}
+    .wb-toolbar input[type=search]{flex:1;min-width:220px;padding:.5rem .8rem;border:1px solid var(--color-border);border-radius:.55rem;font-size:.9rem}
+    .wb-filters{display:flex;gap:.35rem;flex-wrap:wrap}
+    .wb-fil{border:1px solid var(--color-border);background:#fff;border-radius:999px;padding:.32rem .8rem;font-size:.78rem;font-weight:600;color:var(--color-text-soft);cursor:pointer}
+    .wb-fil.is-active{background:var(--color-primary);color:#fff;border-color:var(--color-primary)}
+    .wb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:var(--space-4)}
+    .wb-card{border:1px solid var(--color-border);border-radius:.7rem;padding:var(--space-4);display:flex;flex-direction:column;gap:.5rem;background:#fff}
+    .wb-card.is-installed{border-color:#bfdbfe;box-shadow:0 0 0 1px #dbeafe inset}
+    .wb-card__top{display:flex;align-items:flex-start;gap:.5rem}
+    .wb-card__name{font-weight:700;font-size:.95rem;flex:1}
+    .wb-kind{font-size:.66rem;font-weight:700;padding:.1rem .45rem;border-radius:.4rem;text-transform:uppercase;letter-spacing:.03em}
+    .k-knowledge{background:#eef2ff;color:#3730a3}
+    .k-flow{background:#ecfeff;color:#155e75}
+    .k-tool{background:#ecfdf5;color:#065f46}
+    .k-workflow{background:#fef3c7;color:#92400e}
+    .wb-summary{font-size:.82rem;color:var(--color-text-soft);line-height:1.5;flex:1}
+    .wb-trig{display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.15rem}
+    .wb-trig span{font-size:.66rem;background:var(--color-bg-alt);border:1px solid var(--color-border);border-radius:.35rem;padding:.05rem .35rem;color:var(--color-text-mute)}
+    .wb-card__foot{display:flex;align-items:center;gap:.5rem;margin-top:.35rem;flex-wrap:wrap}
+    .wb-sw{display:inline-flex;align-items:center;gap:.4rem;font-size:.76rem;color:var(--color-text-soft);cursor:pointer}
+    .wb-sw input{appearance:none;width:34px;height:18px;border-radius:999px;background:#cbd5e1;position:relative;cursor:pointer;transition:.15s}
+    .wb-sw input:checked{background:#22c55e}
+    .wb-sw input::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:.15s}
+    .wb-sw input:checked::after{left:18px}
+    .wb-link{margin-left:auto;font-size:.74rem;color:var(--color-primary);cursor:pointer;background:none;border:none}
+    .wb-offline{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:.8rem 1rem;border-radius:.6rem;font-size:.85rem;margin-bottom:var(--space-4)}
+    .wb-offline code{background:#1e293b;color:#fbbf24;padding:.1rem .4rem;border-radius:.3rem;font-size:.78rem}
+    .wb-modal{position:fixed;inset:0;background:rgba(15,23,42,.5);display:none;align-items:center;justify-content:center;z-index:50;padding:2rem}
+    .wb-modal.is-open{display:flex}
+    .wb-modal__box{background:#fff;border-radius:.8rem;max-width:760px;width:100%;max-height:85vh;overflow:auto;padding:var(--space-5)}
+    .wb-md{white-space:pre-wrap;font-family:var(--mono,ui-monospace,monospace);font-size:.8rem;background:#0f172a;color:#e2e8f0;padding:1rem;border-radius:.5rem;line-height:1.5}
+    .wb-form{display:grid;gap:.6rem;max-width:640px}
+    .wb-form input,.wb-form textarea{padding:.55rem .8rem;border:1px solid var(--color-border);border-radius:.55rem;font-size:.88rem;font-family:inherit}
+    .wb-form textarea{min-height:120px;resize:vertical}
+  </style>
+</head>
+<body class="app-body" data-active="skills">
+  <div class="app">
+    <aside class="sidebar" id="app-sidebar"></aside>
+
+    <main class="content">
+      <div class="content__topbar">
+        <h1>Skills</h1>
+        <span class="crumb">· SkillHub-style registry · real SKILL.md catalogue · install · enable · create</span>
+        <div class="wb-status"><span class="chip" id="wb-conn"><span class="dot"></span> connecting…</span></div>
+      </div>
+
+      <div class="content__body" style="max-width:1150px">
+        <div id="wb-offline" class="wb-offline" style="display:none">
+          <b>Showing the bundled catalogue (read-only).</b> Browse and open every skill's SKILL.md offline — no server needed.
+          To also <em>install / enable / create</em> skills, start the optional local bridge:<br/><br/>
+          <code>cd backend</code> &nbsp;·&nbsp;
+          <code>python graph_api.py --port 8737</code><br/>then reload.
+        </div>
+
+        <p class="text-soft" style="margin-bottom:var(--space-3)">
+          A <strong>Skill</strong> is a self-contained capability package — a folder with a
+          <code class="mono">SKILL.md</code> (name + description + instructions) plus optional scripts and resources.
+          Following the open <strong>Agent Skills</strong> model, an agent discovers a skill by its description and
+          <strong>loads it progressively</strong> only when relevant. Install what you need, enable only the active ones.
+        </p>
+
+        <div class="wb-kpis" id="wb-kpis"></div>
+
+        <div class="subtabs">
+          <button class="subtab is-active" data-tab="registry">Registry</button>
+          <button class="subtab" data-tab="create">Create a Skill</button>
+        </div>
+
+        <!-- REGISTRY -->
+        <div id="panel-registry">
+          <div class="wb-toolbar">
+            <input type="search" id="wb-q" placeholder="Search skills by name, description or trigger phrase…" />
+            <div class="wb-filters" id="wb-filters">
+              <button class="wb-fil is-active" data-f="all">All</button>
+              <button class="wb-fil" data-f="installed">Installed</button>
+              <button class="wb-fil" data-f="knowledge">Knowledge</button>
+              <button class="wb-fil" data-f="flow">Flow</button>
+              <button class="wb-fil" data-f="tool">Tool</button>
+              <button class="wb-fil" data-f="workflow">Workflow</button>
+            </div>
+          </div>
+          <div class="wb-grid" id="wb-grid"></div>
+        </div>
+
+        <!-- CREATE -->
+        <div id="panel-create" style="display:none">
+          <div class="card" style="background:var(--color-bg-alt)">
+            <div class="section__eyebrow">Create a Skill</div>
+            <p class="card__desc" style="margin-bottom:var(--space-4)">
+              Describe a new capability. This scaffolds a real
+              <code class="mono">SKILL.md</code> package in your custom skills folder and installs it immediately.
+            </p>
+            <div class="wb-form">
+              <input id="wb-new-name" placeholder="Skill name — e.g. Site Config Drift Explainer" />
+              <input id="wb-new-desc" placeholder="Description / USE WHEN — one line the agent matches on" />
+              <textarea id="wb-new-body" placeholder="Instructions (Markdown). Steps the skill should follow…"></textarea>
+              <div><button class="btn btn--primary" id="wb-new-go">Create &amp; install skill</button>
+                <span id="wb-new-msg" class="text-soft" style="margin-left:.6rem;font-size:.82rem"></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- SKILL.md viewer -->
+  <div class="wb-modal" id="wb-modal">
+    <div class="wb-modal__box">
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.6rem">
+        <h2 style="margin:0;font-size:1.05rem" id="wb-modal-title">SKILL.md</h2>
+        <button class="btn btn--ghost btn--sm" style="margin-left:auto" id="wb-modal-close">Close</button>
+      </div>
+      <div class="text-soft" id="wb-modal-path" style="font-size:.74rem;margin-bottom:.5rem"></div>
+      <div class="wb-md" id="wb-modal-body"></div>
+    </div>
+  </div>
+
+  <script src="./assets/data.js"></script>
+  <script src="./assets/shell.js"></script>
+  <script>
+  (function(){
+    var BRIDGE="http://127.0.0.1:8737";
+    var STATE={skills:[],filter:"all",q:"",static:false};
+    function api(path,opts){return fetch(BRIDGE+path,opts).then(function(r){if(!r.ok)return r.json().then(function(j){throw new Error(j.error||("HTTP "+r.status));});return r.json();});}
+    function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+    function setConn(ok){var c=document.getElementById("wb-conn");STATE.static=false;c.className="chip chip--success";c.innerHTML='<span class="dot dot--live"></span> Bridge live';document.getElementById("wb-offline").style.display="none";}
+    function loadStatic(){
+      STATE.static=true;
+      var c=document.getElementById("wb-conn");c.className="chip chip--neutral";c.innerHTML='<span class="dot"></span> Bundled catalogue';
+      document.getElementById("wb-offline").style.display="block";
+      var src=(window.WHS&&window.WHS.skills)||[];
+      STATE.skills=src.map(function(sk){
+        return {id:sk.id,name:sk.name,kind:sk.kind||"knowledge",kindLabel:sk.kindLabel||"Knowledge",
+          desc:sk.desc||"",summary:sk.summary||(sk.desc||"").slice(0,180),triggers:sk.triggers||[],
+          installed:true,enabled:true,custom:false,skillmd:sk.skillmd||sk.desc||"",mdPath:sk.mdPath||""};
+      });
+      var byKind={};STATE.skills.forEach(function(s){byKind[s.kind]=(byKind[s.kind]||0)+1;});
+      renderKpis({count:STATE.skills.length,installed:STATE.skills.length,enabled:STATE.skills.length,byKind:byKind});
+      render();
+    }
+
+    function renderKpis(s){
+      document.getElementById("wb-kpis").innerHTML=
+        kpi(s.count,"Catalogue")+kpi(s.installed,"Installed")+kpi(s.enabled,"Enabled")+
+        kpi((s.byKind&&s.byKind.knowledge)||0,"Knowledge")+kpi((s.byKind&&s.byKind.flow)||0,"Flow")+
+        kpi(((s.byKind&&s.byKind.tool)||0),"Tool")+kpi(((s.byKind&&s.byKind.workflow)||0),"Workflow");
+    }
+    function kpi(v,l){return '<div class="wb-kpi"><b>'+v+'</b><span>'+l+'</span></div>';}
+
+    function matches(sk){
+      if(STATE.filter==="installed"&&!sk.installed) return false;
+      if(["knowledge","flow","tool","workflow"].indexOf(STATE.filter)>=0 && sk.kind!==STATE.filter) return false;
+      if(STATE.q){var h=(sk.name+" "+sk.desc+" "+(sk.triggers||[]).join(" ")).toLowerCase();if(h.indexOf(STATE.q)<0)return false;}
+      return true;
+    }
+    function render(){
+      var list=STATE.skills.filter(matches);
+      var g=document.getElementById("wb-grid");
+      if(!list.length){g.innerHTML='<p class="card__desc">No skills match.</p>';return;}
+      g.innerHTML=list.map(function(sk){
+        var trig=(sk.triggers||[]).slice(0,5).map(function(t){return '<span>'+esc(t)+'</span>';}).join("");
+        return '<div class="wb-card'+(sk.installed?' is-installed':'')+'" data-id="'+esc(sk.id)+'">'+
+          '<div class="wb-card__top"><div class="wb-card__name">'+esc(sk.name)+'</div>'+
+          '<span class="wb-kind k-'+esc(sk.kind)+'">'+esc(sk.kindLabel)+'</span></div>'+
+          '<div class="wb-summary">'+esc(sk.summary||sk.desc.slice(0,180))+'</div>'+
+          (trig?'<div class="wb-trig">'+trig+'</div>':'')+
+          '<div class="wb-card__foot">'+
+            (sk.installed
+              ? '<button class="btn btn--outline btn--sm" data-act="uninstall">Uninstall</button>'+
+                '<label class="wb-sw"><input type="checkbox" data-act="toggle" '+(sk.enabled?'checked':'')+'/> '+(sk.enabled?'Enabled':'Disabled')+'</label>'
+              : '<button class="btn btn--primary btn--sm" data-act="install">Install</button>')+
+            (sk.custom?'<span class="chip chip--warning" style="font-size:.66rem">custom</span>':'')+
+            '<button class="wb-link" data-act="view">View SKILL.md ›</button>'+
+          '</div></div>';
+      }).join("");
+    }
+
+    function refresh(){
+      return api("/sp/skills").then(function(s){setConn(true);STATE.skills=s.skills||[];renderKpis(s);render();})
+        .catch(function(){loadStatic();});
+    }
+
+    // event delegation
+    document.getElementById("wb-grid").addEventListener("click",function(e){
+      var card=e.target.closest(".wb-card");if(!card)return;var id=card.getAttribute("data-id");
+      var act=e.target.getAttribute("data-act");if(!act)return;
+      if(act==="install"){post("/sp/skills/install",{id:id});}
+      else if(act==="uninstall"){post("/sp/skills/uninstall",{id:id});}
+      else if(act==="view"){viewMd(id);}
+    });
+    document.getElementById("wb-grid").addEventListener("change",function(e){
+      if(e.target.getAttribute("data-act")!=="toggle")return;
+      var card=e.target.closest(".wb-card");var id=card.getAttribute("data-id");
+      post("/sp/skills/toggle",{id:id,enabled:e.target.checked});
+    });
+    function post(path,body){
+      if(STATE.static){alert("This action needs the local bridge (install / enable / create).\nYou are viewing the bundled read-only catalogue.\n\nStart it:  cd backend  ·  python graph_api.py --port 8737");return;}
+      api(path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})
+        .then(refresh).catch(function(err){alert(err.message);});
+    }
+    function viewMd(id){
+      if(STATE.static){
+        var sk=STATE.skills.filter(function(s){return s.id===id;})[0];if(!sk)return;
+        document.getElementById("wb-modal-title").textContent=sk.name;
+        document.getElementById("wb-modal-path").textContent=sk.mdPath||"(bundled catalogue)";
+        document.getElementById("wb-modal-body").textContent="---\nname: "+sk.id+"\ndescription: "+sk.desc+"\n---\n\n"+(sk.skillmd||"Open the SKILL.md file directly for the full instructions.");
+        document.getElementById("wb-modal").classList.add("is-open");
+        return;
+      }
+      api("/sp/skill?id="+encodeURIComponent(id)).then(function(r){
+        if(!r.available){alert(r.error);return;}
+        document.getElementById("wb-modal-title").textContent=r.name;
+        document.getElementById("wb-modal-path").textContent=r.mdPath;
+        document.getElementById("wb-modal-body").textContent="---\nname: "+r.id+"\ndescription: "+r.desc+"\n---\n\n"+r.body;
+        document.getElementById("wb-modal").classList.add("is-open");
+      });
+    }
+    document.getElementById("wb-modal-close").addEventListener("click",function(){document.getElementById("wb-modal").classList.remove("is-open");});
+    document.getElementById("wb-modal").addEventListener("click",function(e){if(e.target.id==="wb-modal")e.target.classList.remove("is-open");});
+
+    // filters + search + tabs
+    document.getElementById("wb-filters").addEventListener("click",function(e){
+      var b=e.target.closest(".wb-fil");if(!b)return;
+      document.querySelectorAll(".wb-fil").forEach(function(x){x.classList.remove("is-active");});
+      b.classList.add("is-active");STATE.filter=b.getAttribute("data-f");render();
+    });
+    var qT;document.getElementById("wb-q").addEventListener("input",function(e){clearTimeout(qT);qT=setTimeout(function(){STATE.q=e.target.value.trim().toLowerCase();render();},150);});
+    document.querySelectorAll(".subtab").forEach(function(t){t.addEventListener("click",function(){
+      document.querySelectorAll(".subtab").forEach(function(x){x.classList.remove("is-active");});t.classList.add("is-active");
+      var tab=t.getAttribute("data-tab");
+      document.getElementById("panel-registry").style.display=tab==="registry"?"":"none";
+      document.getElementById("panel-create").style.display=tab==="create"?"":"none";
+    });});
+
+    // create
+    document.getElementById("wb-new-go").addEventListener("click",function(){
+      var name=document.getElementById("wb-new-name").value.trim();
+      var desc=document.getElementById("wb-new-desc").value.trim();
+      var body=document.getElementById("wb-new-body").value;
+      var msg=document.getElementById("wb-new-msg");
+      if(!name){msg.textContent="Name is required.";return;}
+      msg.textContent="Creating…";
+      post("/sp/skills/create",{name:name,description:desc,instructions:body});
+      setTimeout(function(){msg.textContent="Created and installed. See the Registry tab.";
+        document.getElementById("wb-new-name").value="";document.getElementById("wb-new-desc").value="";document.getElementById("wb-new-body").value="";},400);
+    });
+
+    api("/health").then(function(){setConn(true);return refresh();}).catch(function(){loadStatic();});
+  })();
+  </script>
+</body>
+</html>

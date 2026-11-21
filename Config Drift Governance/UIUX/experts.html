@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WHS GenAI — Experts</title>
+  <link rel="stylesheet" href="./assets/design-system.css" />
+  <style>
+    .wb-status{margin-left:auto;display:flex;align-items:center;gap:.6rem}
+    .ex-explain{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3);margin-bottom:var(--space-5)}
+    @media(max-width:800px){.ex-explain{grid-template-columns:1fr}}
+    .ex-explain .card{padding:var(--space-4)}
+    .ex-explain b{color:var(--color-primary)}
+    .ex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--space-4)}
+    .ex-card{border:1px solid var(--color-border);border-radius:.7rem;padding:var(--space-4);background:#fff;display:flex;flex-direction:column;gap:.4rem}
+    .ex-card.is-team{border-color:#ddd6fe;background:linear-gradient(180deg,#faf5ff,#fff)}
+    .ex-head{display:flex;align-items:center;gap:.5rem}
+    .ex-av{width:34px;height:34px;border-radius:8px;background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem}
+    .ex-card.is-team .ex-av{background:#7c3aed}
+    .ex-name{font-weight:700;font-size:.92rem;flex:1}
+    .ex-type{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;padding:.1rem .4rem;border-radius:.35rem;background:#eef2ff;color:#3730a3}
+    .ex-card.is-team .ex-type{background:#ede9fe;color:#5b21b6}
+    .ex-desc{font-size:.8rem;color:var(--color-text-soft);line-height:1.45;flex:1}
+    .ex-chips{display:flex;flex-wrap:wrap;gap:.25rem}
+    .ex-chips span{font-size:.66rem;background:var(--color-bg-alt);border:1px solid var(--color-border);border-radius:.35rem;padding:.05rem .4rem}
+    .ex-foot{display:flex;gap:.4rem;margin-top:.3rem}
+    .wb-offline{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:.8rem 1rem;border-radius:.6rem;font-size:.85rem;margin-bottom:var(--space-4)}
+    .wb-offline code{background:#1e293b;color:#fbbf24;padding:.1rem .4rem;border-radius:.3rem}
+    .ex-modal{position:fixed;inset:0;background:rgba(15,23,42,.5);display:none;align-items:center;justify-content:center;z-index:50;padding:2rem}
+    .ex-modal.is-open{display:flex}
+    .ex-modal__box{background:#fff;border-radius:.8rem;max-width:560px;width:100%;padding:var(--space-5);display:grid;gap:.6rem}
+    .ex-modal__box input,.ex-modal__box textarea,.ex-modal__box select{padding:.5rem .8rem;border:1px solid var(--color-border);border-radius:.5rem;font-size:.88rem;font-family:inherit}
+    .ex-modal__box textarea{min-height:80px;resize:vertical}
+  </style>
+</head>
+<body class="app-body" data-active="experts">
+  <div class="app">
+    <aside class="sidebar" id="app-sidebar"></aside>
+
+    <main class="content">
+      <div class="content__topbar">
+        <h1>Experts</h1>
+        <span class="crumb">· single-role Experts &amp; multi-agent Expert Teams</span>
+        <div class="wb-status"><span class="chip" id="wb-conn"><span class="dot"></span> connecting…</span></div>
+      </div>
+
+      <div class="content__body" style="max-width:1150px">
+        <div id="wb-offline" class="wb-offline" style="display:none">
+          <b>Live bridge not reachable.</b> Experts are persisted through the local bridge. Start
+          <code>python graph_api.py --port 8737</code> and reload.
+        </div>
+
+        <div class="ex-explain">
+          <div class="card"><div class="section__eyebrow">Skill</div><p class="card__desc"><b>Capability</b> — lets the AI <em>do</em> something (run SQL, search standards, publish an app). Managed in the Skills registry.</p></div>
+          <div class="card"><div class="section__eyebrow">Expert</div><p class="card__desc"><b>Capability + experience</b> — a role = persona + methodology + toolchain. Best for one clear single-point problem.</p></div>
+          <div class="card"><div class="section__eyebrow">Expert Team</div><p class="card__desc"><b>Experts + workflow</b> — a leader auto-decomposes, runs members in parallel, integrates the deliverable. For complex, multi-role tasks.</p></div>
+        </div>
+
+        <div class="flex items-center gap-2" style="margin-bottom:.6rem">
+          <div class="section__eyebrow" style="flex:1">Experts &amp; Teams</div>
+          <button class="btn btn--outline btn--sm" id="ex-new-expert">+ Expert</button>
+          <button class="btn btn--primary btn--sm" id="ex-new-team">+ Expert Team</button>
+        </div>
+        <div class="ex-grid" id="ex-grid"></div>
+      </div>
+    </main>
+  </div>
+
+  <div class="ex-modal" id="ex-modal">
+    <div class="ex-modal__box">
+      <h2 style="margin:0;font-size:1.05rem" id="ex-modal-title">Expert</h2>
+      <input id="ex-f-name" placeholder="Name" />
+      <select id="ex-f-type"><option value="expert">Expert (single role)</option><option value="team">Expert Team (multi-agent)</option></select>
+      <input id="ex-f-persona" placeholder="Persona / role — e.g. WMS remediation specialist" />
+      <textarea id="ex-f-method" placeholder="Methodology — how this expert works"></textarea>
+      <input id="ex-f-skills" placeholder="Skills (comma-separated skill ids)" />
+      <input id="ex-f-members" placeholder="Team members (comma-separated expert ids) — teams only" />
+      <div class="flex gap-2">
+        <button class="btn btn--primary btn--sm" id="ex-save">Save</button>
+        <button class="btn btn--ghost btn--sm" id="ex-cancel">Cancel</button>
+        <button class="btn btn--ghost btn--sm" id="ex-delete" style="margin-left:auto;color:var(--color-danger)">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./assets/data.js"></script>
+  <script src="./assets/shell.js"></script>
+  <script>
+  (function(){
+    var BRIDGE="http://127.0.0.1:8737";var EDIT=null;
+    function api(path,opts){return fetch(BRIDGE+path,opts).then(function(r){if(!r.ok)return r.json().then(function(j){throw new Error(j.error||("HTTP "+r.status));});return r.json();});}
+    function post(path,body){return api(path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});}
+    function esc(s){return String(s==null?"":s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+    function setConn(ok){var c=document.getElementById("wb-conn");if(ok){c.className="chip chip--success";c.innerHTML='<span class="dot dot--live"></span> Bridge live';}else{c.className="chip chip--danger";c.innerHTML='<span class="dot"></span> Bridge offline';}document.getElementById("wb-offline").style.display=ok?"none":"block";}
+    function initials(n){return (n||"?").split(/\s+/).slice(0,2).map(function(w){return w[0];}).join("").toUpperCase();}
+
+    function seedPayload(){
+      var W=window.WHS||{};var seed=[];
+      (W.agents||[]).forEach(function(a){seed.push({id:a.id,name:a.name,persona:a.role||a.tagline||"",methodology:a.pattern||a.desc||"",skills:a.tools||a.skills||[]});});
+      (W.assistants||[]).forEach(function(a){seed.push({id:a.id,name:a.name,persona:a.tagline||"",methodology:a.desc||"",skills:a.skills||[],members:a.agents||[]});});
+      return seed;
+    }
+
+    function render(list){
+      var g=document.getElementById("ex-grid");
+      if(!list.length){g.innerHTML='<p class="card__desc">No experts yet.</p>';return;}
+      var experts=list.filter(function(e){return e.type!=="team";});
+      var teams=list.filter(function(e){return e.type==="team";});
+      g.innerHTML=experts.map(card).join("")+teams.map(card).join("");
+    }
+    function card(e){
+      var team=e.type==="team";
+      var chips=(e.skills||[]).slice(0,6).map(function(s){return '<span>'+esc(s)+'</span>';}).join("");
+      var members=team&&e.members&&e.members.length?'<div class="ex-chips" style="margin-top:.2rem">'+e.members.map(function(m){return '<span>👤 '+esc(m)+'</span>';}).join("")+'</div>':"";
+      return '<div class="ex-card'+(team?' is-team':'')+'" data-id="'+esc(e.id)+'">'+
+        '<div class="ex-head"><div class="ex-av">'+esc(initials(e.name))+'</div>'+
+        '<div class="ex-name">'+esc(e.name)+'</div><span class="ex-type">'+(team?'Team':'Expert')+'</span></div>'+
+        '<div class="ex-desc">'+esc(e.persona||e.methodology||"")+'</div>'+
+        (chips?'<div class="ex-chips">'+chips+'</div>':"")+members+
+        '<div class="ex-foot"><button class="btn btn--outline btn--sm" data-act="edit">Edit</button></div></div>';
+    }
+
+    function refresh(){
+      return api("/sp/experts").then(function(r){
+        setConn(true);
+        if((r.count||0)===0){return post("/sp/experts/seed",{seed:seedPayload()}).then(function(){return api("/sp/experts");});}
+        return r;
+      }).then(function(r){render(r.experts||[]);}).catch(function(){setConn(false);});
+    }
+
+    document.getElementById("ex-grid").addEventListener("click",function(e){
+      var card=e.target.closest(".ex-card");if(!card)return;
+      if(e.target.getAttribute("data-act")==="edit")openModal(card.getAttribute("data-id"));
+    });
+    function openModal(id){
+      api("/sp/experts").then(function(r){
+        EDIT=(r.experts||[]).filter(function(x){return x.id===id;})[0]||{type:"expert"};
+        fill(EDIT);document.getElementById("ex-modal").classList.add("is-open");
+      });
+    }
+    function newExpert(type){EDIT={type:type,skills:[],members:[]};fill(EDIT);document.getElementById("ex-modal").classList.add("is-open");}
+    function fill(e){
+      document.getElementById("ex-modal-title").textContent=e.id?("Edit "+(e.name||"")):(e.type==="team"?"New Expert Team":"New Expert");
+      document.getElementById("ex-f-name").value=e.name||"";
+      document.getElementById("ex-f-type").value=e.type||"expert";
+      document.getElementById("ex-f-persona").value=e.persona||"";
+      document.getElementById("ex-f-method").value=e.methodology||"";
+      document.getElementById("ex-f-skills").value=(e.skills||[]).join(", ");
+      document.getElementById("ex-f-members").value=(e.members||[]).join(", ");
+      document.getElementById("ex-delete").style.display=e.id?"":"none";
+    }
+    function closeModal(){document.getElementById("ex-modal").classList.remove("is-open");}
+    document.getElementById("ex-cancel").addEventListener("click",closeModal);
+    document.getElementById("ex-modal").addEventListener("click",function(e){if(e.target.id==="ex-modal")closeModal();});
+    document.getElementById("ex-new-expert").addEventListener("click",function(){newExpert("expert");});
+    document.getElementById("ex-new-team").addEventListener("click",function(){newExpert("team");});
+    function csv(v){return (v||"").split(",").map(function(x){return x.trim();}).filter(Boolean);}
+    document.getElementById("ex-save").addEventListener("click",function(){
+      var exp={id:EDIT&&EDIT.id,name:document.getElementById("ex-f-name").value.trim(),
+        type:document.getElementById("ex-f-type").value,
+        persona:document.getElementById("ex-f-persona").value.trim(),
+        methodology:document.getElementById("ex-f-method").value.trim(),
+        skills:csv(document.getElementById("ex-f-skills").value),
+        members:csv(document.getElementById("ex-f-members").value)};
+      if(!exp.name){alert("Name required");return;}
+      post("/sp/expert/save",{expert:exp}).then(function(){closeModal();refresh();});
+    });
+    document.getElementById("ex-delete").addEventListener("click",function(){
+      if(!EDIT||!EDIT.id)return;if(!confirm("Delete this expert?"))return;
+      post("/sp/expert/delete",{id:EDIT.id}).then(function(){closeModal();refresh();});
+    });
+
+    api("/health").then(function(){setConn(true);return refresh();}).catch(function(){setConn(false);});
+  })();
+  </script>
+</body>
+</html>

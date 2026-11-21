@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WHS GenAI — Data &amp; Knowledge</title>
+  <link rel="stylesheet" href="./assets/design-system.css" />
+</head>
+<body class="app-body" data-active="data">
+  <div class="app">
+    <aside class="sidebar" id="app-sidebar"></aside>
+
+    <main class="content">
+      <div class="content__topbar">
+        <h1>Warehouse Data &amp; Knowledge</h1>
+        <div style="margin-left:auto" class="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="source-search" placeholder="Search SharePoint knowledge…" />
+        </div>
+      </div>
+
+      <div class="content__body dk-compact" style="max-width:1100px">
+
+        <div class="kpi-row" id="dk-kpis" style="margin-bottom:var(--space-6)"></div>
+
+        <div class="subtabs">
+          <button class="subtab is-active" data-tab="knowledge">Knowledge</button>
+          <button class="subtab" data-tab="portfolio">Portfolio &amp; Footprint</button>
+          <button class="subtab" data-tab="configuration">Knowledge Configuration</button>
+          <span class="subtab-sep" aria-hidden="true"></span>
+          <button class="subtab" data-tab="warehouse-data">Warehouse Data</button>
+          <button class="subtab" data-tab="data-configuration">Data Configuration</button>
+          <span class="subtab-sep" aria-hidden="true"></span>
+          <button class="subtab" data-tab="updates">Project Updates</button>
+        </div>
+
+        <!-- Knowledge pillar · Portfolio & Footprint -->
+        <div class="subpanel" data-panel="portfolio">
+          <section class="catalog-source catalog-source--plain" id="powerbi-catalog">
+            <div class="pbi-assets" id="pbi-assets"></div>
+          </section>
+          <div class="empty-state" id="portfolio-empty" style="display:none;margin-top:var(--space-4)">No Portfolio &amp; Footprint item matches this search.</div>
+        </div>
+
+        <!-- Knowledge pillar · Knowledge (SharePoint) -->
+        <div class="subpanel is-active" data-panel="knowledge">
+          <section class="catalog-source catalog-source--plain" id="sharepoint-catalog">
+            <div class="knowledge-tree" id="knowledge-tree"></div>
+          </section>
+          <div class="empty-state" id="knowledge-empty" style="display:none;margin-top:var(--space-4)">No SharePoint knowledge area matches this search.</div>
+        </div>
+
+        <!-- 2b · Warehouse Data (mirrors Knowledge) -->
+        <div class="subpanel" data-panel="warehouse-data">
+          <section class="catalog-source catalog-source--plain" id="warehouse-data-catalog">
+            <div class="knowledge-tree" id="warehouse-data-tree"></div>
+          </section>
+          <div class="empty-state" id="warehouse-data-empty" style="display:none;margin-top:var(--space-4)">No warehouse data area matches this search.</div>
+        </div>
+
+        <!-- Updates pillar · Project Updates (delivery systems + report sources) -->
+        <div class="subpanel" data-panel="updates">
+          <h3 class="panel-subhead">Project update reports</h3>
+          <div class="project-source-grid" id="project-source-grid"></div>
+          <h3 class="panel-subhead">Delivery &amp; quality systems</h3>
+          <div class="delivery-tool-grid" id="delivery-tool-grid"></div>
+          <div class="empty-state" id="updates-empty" style="display:none;margin-top:var(--space-4)">No project update item matches this search.</div>
+        </div>
+
+        <!-- Knowledge Configuration · per-scenario knowledge actions -->
+        <div class="subpanel" data-panel="configuration">
+          <div class="config-table-wrap" id="knowledge-config"></div>
+        </div>
+
+        <!-- Placeholder for warehouse data source, endpoint and refresh settings -->
+        <div class="subpanel" data-panel="data-configuration">
+          <div class="configuration-placeholder">
+            <div class="configuration-placeholder__icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>
+            </div>
+            <h2>Data Configuration</h2>
+            <p>Coming soon</p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="./assets/data.js"></script>
+  <script>
+    (function () {
+      var W = window.WHS;
+      var catalog = W.connectedKnowledge || {};
+      var sharepoint = catalog.sharepoint || { hierarchy: [], changeCapture: { steps: [] } };
+      var powerbi = catalog.powerbi || { assets: [] };
+      var delivery = catalog.deliveryTools || { tools: [] };
+      var updates = catalog.projectUpdates || { sources: [] };
+      var warehouse = catalog.warehouseData || { hierarchy: [] };
+      var kconfig = catalog.knowledgeConfig || { actions: [], scenarios: [] };
+      var knowledgeCount = sharepoint.hierarchy.reduce(function (n, group) { return n + group.items.length; }, 0);
+      document.getElementById("dk-kpis").innerHTML =
+        '<div class="kpi"><div class="kpi__value">' + powerbi.assets.length + '</div><div class="kpi__label">Portfolio &amp; Footprint views</div></div>'
+        + '<div class="kpi"><div class="kpi__value">' + knowledgeCount + '</div><div class="kpi__label">SharePoint knowledge areas</div></div>'
+        + '<div class="kpi"><div class="kpi__value">' + warehouse.hierarchy.length + '</div><div class="kpi__label">Warehouse data sources</div></div>'
+        + '<div class="kpi"><div class="kpi__value">' + delivery.tools.length + '</div><div class="kpi__label">Delivery &amp; quality tools</div></div>'
+        + '<div class="kpi"><div class="kpi__value">' + updates.sources.length + '</div><div class="kpi__label">Project update sources</div></div>';
+
+      document.getElementById("pbi-assets").innerHTML = powerbi.assets.map(function (asset) {
+        var searchable = ("Power BI PBI " + asset.name + " " + asset.dimensions.join(" ")).toLowerCase();
+        return '<article class="pbi-asset" data-search="' + searchable.replace(/"/g, "&quot;") + '"><div class="pbi-asset__visual">'
+          + '<span class="pbi-bars"><i></i><i></i><i></i></span><span>Power BI</span></div>'
+          + '<div class="pbi-asset__body"><div class="flex items-center justify-between gap-3"><h3>' + asset.name + '</h3><span class="chip chip--powerbi">Catalog view</span></div>'
+          + '<div class="pbi-dimensions">' + asset.dimensions.map(function (x) { return '<span>' + x + '</span>'; }).join("") + '</div></div></article>';
+      }).join("");
+
+      function renderKnowledgeTree() {
+        return sharepoint.hierarchy.map(function (group, index) {
+          var searchable = ("SharePoint knowledge " + group.name + " " + group.description + " " + group.items.join(" ")).toLowerCase();
+          return '<details class="knowledge-group" data-search="' + searchable.replace(/"/g, "&quot;") + '"' + (index === 0 ? ' open' : '') + '>'
+            + '<summary><span class="knowledge-group__chev">›</span><span><strong>' + group.name + '</strong><small>' + group.description + '</small></span><span class="chip chip--neutral">' + group.items.length + ' areas</span></summary>'
+            + (group.items.length ? '<div class="knowledge-items">' + group.items.map(function (item) {
+                return '<div class="knowledge-item" data-search="' + ("SharePoint knowledge " + group.name + " " + item).toLowerCase().replace(/"/g, "&quot;") + '"><span class="knowledge-item__icon">' + W.get("dataset", "sharepoint-knowledge-catalog").icon + '</span><span>' + item + '</span><span class="knowledge-item__source">SharePoint</span></div>';
+              }).join("") + '</div>' : '<div class="knowledge-group__empty">Top-level knowledge area — child libraries/folders will appear after connection.</div>')
+            + '</details>';
+        }).join("");
+      }
+      document.getElementById("knowledge-tree").innerHTML = renderKnowledgeTree();
+
+      var whDbIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>';
+      document.getElementById("warehouse-data-tree").innerHTML = warehouse.hierarchy.map(function (group, index) {
+        var searchable = ("Warehouse data " + group.name + " " + group.description + " " + group.items.join(" ")).toLowerCase();
+        return '<details class="knowledge-group" data-search="' + searchable.replace(/"/g, "&quot;") + '"' + (index === 0 ? ' open' : '') + '>'
+          + '<summary><span class="knowledge-group__chev">›</span><span><strong>' + group.name + '</strong><small>' + group.description + '</small></span><span class="chip chip--neutral">' + group.items.length + ' items</span></summary>'
+          + (group.items.length ? '<div class="knowledge-items">' + group.items.map(function (item) {
+              return '<div class="knowledge-item" data-search="' + ("Warehouse data " + group.name + " " + item).toLowerCase().replace(/"/g, "&quot;") + '"><span class="knowledge-item__icon">' + whDbIcon + '</span><span>' + item + '</span><span class="knowledge-item__source">' + group.name + '</span></div>';
+            }).join("") + '</div>' : '<div class="knowledge-group__empty">Data source — tables and views will appear after connection.</div>')
+          + '</details>';
+      }).join("");
+
+      document.getElementById("delivery-tool-grid").innerHTML = delivery.tools.map(function (tool) {
+        var searchable = (tool.name + " " + tool.category + " " + tool.role + " " + tool.supports.join(" ") + " " + tool.projectSignal).toLowerCase();
+        return '<article class="delivery-tool-card" data-search="' + searchable.replace(/"/g, "&quot;") + '">'
+          + '<div class="delivery-tool-card__head"><span class="tool-logo" style="background:' + tool.color + '">' + tool.short + '</span>'
+          + '<div><h3>' + tool.name + '</h3><span>' + tool.category + '</span></div></div>'
+          + '<div class="tool-supports">' + tool.supports.map(function (x) { return '<span>' + x + '</span>'; }).join("") + '</div>'
+          + '<div class="delivery-tool-card__signal"><span>Project-update signal</span><strong>' + tool.projectSignal + '</strong></div></article>';
+      }).join("");
+
+      var knowledgeConfigEl = document.getElementById("knowledge-config");
+      if (knowledgeConfigEl) {
+        var actionsCell = function () {
+          return kconfig.actions.map(function (a) { return '<a class="config-action" href="#">' + a + '</a>'; }).join('<span class="config-sep">|</span>');
+        };
+        var sn = 0;
+        var rows = sharepoint.hierarchy.map(function (group) {
+          var head = '<tr class="config-group-row"><td colspan="3">' + group.name + '</td></tr>';
+          var body = group.items.length
+            ? group.items.map(function (item) {
+                sn++;
+                return '<tr><td class="config-sn">' + sn + '</td><td><strong>' + item + '</strong></td><td class="config-actions">' + actionsCell() + '</td></tr>';
+              }).join("")
+            : '<tr><td class="config-sn"></td><td class="config-empty" colspan="2">No knowledge area yet</td></tr>';
+          return head + body;
+        }).join("");
+        knowledgeConfigEl.innerHTML = '<table class="config-table"><thead><tr><th class="config-sn">SN</th><th>Scenario Name</th><th>Action</th></tr></thead><tbody>' + rows + '</tbody></table>';
+      }
+
+      document.getElementById("project-source-grid").innerHTML = updates.sources.map(function (source) {
+        var searchable = (source.name + " " + source.source).toLowerCase();
+        var textColor = source.source === "Power BI" ? "#3b3300" : "#fff";
+        return '<article class="project-source-card" data-search="' + searchable.replace(/"/g, "&quot;") + '">'
+          + '<span class="project-source-card__logo" style="background:' + source.color + ';color:' + textColor + '">' + source.short + '</span>'
+          + '<span><strong>' + source.name + '</strong><small>' + source.source + '</small></span></article>';
+      }).join("");
+
+      document.querySelectorAll('.subtab').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.subtab').forEach(function (b) { b.classList.remove('is-active'); });
+          document.querySelectorAll('.subpanel').forEach(function (p) { p.classList.remove('is-active'); });
+          btn.classList.add('is-active');
+          var panel = document.querySelector('.subpanel[data-panel="' + btn.dataset.tab + '"]');
+          if (panel) panel.classList.add('is-active');
+          search.value = "";
+          search.parentElement.style.display = (btn.dataset.tab === "configuration" || btn.dataset.tab === "data-configuration") ? "none" : "";
+          search.placeholder = searchPlaceholders[btn.dataset.tab] || "Search…";
+          filterActivePanel();
+        });
+      });
+
+      function activate(tab) {
+        var btn = document.querySelector('.subtab[data-tab="' + tab + '"]');
+        if (btn) btn.click();
+      }
+
+      var search = document.getElementById("source-search");
+      var searchPlaceholders = {
+        portfolio: "Search portfolio and footprint…",
+        knowledge: "Search SharePoint knowledge…",
+        "warehouse-data": "Search warehouse data…",
+        updates: "Search delivery systems and reports…",
+        configuration: "Knowledge configuration coming soon",
+        "data-configuration": "Data configuration coming soon"
+      };
+      var emptyStates = {
+        portfolio: document.getElementById("portfolio-empty"),
+        knowledge: document.getElementById("knowledge-empty"),
+        "warehouse-data": document.getElementById("warehouse-data-empty"),
+        updates: document.getElementById("updates-empty")
+      };
+
+      function filterActivePanel() {
+        var q = search.value.trim().toLowerCase();
+        var activePanel = document.querySelector('.subpanel.is-active');
+        var tab = activePanel ? activePanel.getAttribute("data-panel") : "portfolio";
+        var visible = 0;
+
+        if (tab === "knowledge" || tab === "warehouse-data") {
+          activePanel.querySelectorAll(".knowledge-group").forEach(function (group) {
+            var matchingItems = 0;
+            group.querySelectorAll(".knowledge-item").forEach(function (item) {
+              var showItem = !q || item.getAttribute("data-search").indexOf(q) !== -1;
+              item.style.display = showItem ? "" : "none";
+              if (showItem) matchingItems++;
+            });
+            var groupMatch = !q || group.getAttribute("data-search").indexOf(q) !== -1;
+            var showGroup = groupMatch || matchingItems > 0;
+            group.style.display = showGroup ? "" : "none";
+            if (q && showGroup) group.open = true;
+            if (showGroup) visible++;
+          });
+        } else {
+          activePanel.querySelectorAll("[data-search]").forEach(function (item) {
+            var show = !q || item.getAttribute("data-search").indexOf(q) !== -1;
+            item.style.display = show ? "" : "none";
+            if (show) visible++;
+          });
+        }
+
+        Object.keys(emptyStates).forEach(function (key) {
+          emptyStates[key].style.display = key === tab && visible === 0 ? "" : "none";
+        });
+      }
+
+      search.addEventListener("input", filterActivePanel);
+
+      if (location.hash === "#knowledge" || location.hash === "#sharepoint-catalog") activate("knowledge");
+      if (location.hash === "#warehouse-data") activate("warehouse-data");
+      if (location.hash === "#updates" || location.hash === "#tools") activate("updates");
+      if (location.hash === "#configuration") activate("configuration");
+      if (location.hash === "#data-configuration") activate("data-configuration");
+      if (location.hash === "#portfolio" || location.hash === "#powerbi-catalog" || location.hash === "#catalog") activate("portfolio");
+    })();
+  </script>
+  <script src="./assets/shell.js"></script>
+  <script src="./assets/bot.js"></script>
+</body>
+</html>

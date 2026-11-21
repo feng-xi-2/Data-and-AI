@@ -1,0 +1,5 @@
+.env
+.cache/
+Config report/
+__pycache__/
+*.jsonl

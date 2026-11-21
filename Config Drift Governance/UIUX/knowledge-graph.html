@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WHS GenAI — Knowledge Graph</title>
+  <link rel="stylesheet" href="./assets/design-system.css" />
+  <style>
+    /* offline banner + generic controls */
+    .gl-offline{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:.8rem 1rem;border-radius:.6rem;font-size:.85rem}
+    .gl-offline code{background:#1e293b;color:#fbbf24;padding:.1rem .4rem;border-radius:.3rem;font-size:.78rem}
+    .gl-ctrl{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:.6rem 0}
+    .gl-ctrl select,.gl-ctrl input{padding:.45rem .7rem;border:1px solid var(--border,#e3e6ea);border-radius:.5rem;font-size:.85rem;background:#fff;min-width:200px}
+    /* ---- tabs ---- */
+    .kg-tabs{display:flex;gap:.4rem;margin:0 0 var(--space-5)}
+    .kg-tab{border:1px solid var(--border,#e3e6ea);background:#f7f8fa;border-radius:.6rem;padding:.55rem .95rem;font-size:.85rem;font-weight:700;color:#475569;cursor:pointer;transition:.15s;text-align:left}
+    .kg-tab small{display:block;font-weight:500;font-size:.7rem;color:#94a3b8;margin-top:.1rem}
+    .kg-tab.is-active{background:#2563eb;color:#fff;border-color:#2563eb}
+    .kg-tab.is-active small{color:#dbeafe}
+    .kg-pane{display:none}.kg-pane.is-active{display:block}
+    #kg-new:has(#kgtab-rp.is-active) #kg-offline{display:none!important}
+    /* ---- real force-directed graph (Neo4j style) ---- */
+    .kgf-ctrl{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+    .kgf-ctrl select{min-width:180px;padding:.4rem .6rem;border:1px solid var(--border,#e3e6ea);border-radius:.5rem;background:#fff;font-size:.85rem}
+    .kgf-ctrl input{width:74px;padding:.4rem .5rem;border:1px solid var(--border,#e3e6ea);border-radius:.5rem;background:#fff;font-size:.85rem}
+    .kgf-ctrl .btn{border:1px solid var(--border,#e3e6ea);background:#fff;border-radius:.5rem;padding:.42rem .8rem;font-size:.82rem;font-weight:700;cursor:pointer}
+    .kgf-wrap{position:relative;margin-top:.8rem;border:1px solid var(--border,#e3e6ea);border-radius:.7rem;overflow:hidden;background:radial-gradient(circle at 50% 40%,#f8fafc,#eef1f5)}
+    .kgf-svg{width:100%;height:460px;display:block;cursor:grab;touch-action:none}
+    .kgf-edge{stroke:#b6c0cc;stroke-width:1.4}
+    .kgf-edge-label{font-size:8px;fill:#7688a0;paint-order:stroke;stroke:#eef1f5;stroke-width:2px}
+    .kgf-node{cursor:pointer}
+    .kgf-node circle{stroke:#fff;stroke-width:2}
+    .kgf-node:hover circle{stroke:#0f172a}
+    .kgf-cap{font-size:10px;fill:#0f172a;font-weight:600;paint-order:stroke;stroke:#f8fafc;stroke-width:3px}
+    .kgf-legend{position:absolute;top:.5rem;left:.6rem;display:flex;flex-wrap:wrap;gap:.5rem;max-width:66%;font-size:.7rem;color:#475569;background:rgba(255,255,255,.82);padding:.35rem .55rem;border-radius:.5rem;backdrop-filter:blur(2px)}
+    .kgf-legend .dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:.25rem;vertical-align:middle}
+    .kgf-panel{position:absolute;right:.6rem;top:.5rem;width:252px;max-height:428px;overflow:auto;background:rgba(255,255,255,.96);border:1px solid var(--border,#e3e6ea);border-radius:.6rem;padding:.6rem .7rem;font-size:.78rem}
+    .kgf-panel__h{font-weight:700;margin-bottom:.4rem;font-size:.82rem}
+    .kgf-prow{display:flex;justify-content:space-between;gap:.6rem;padding:.2rem 0;border-bottom:1px solid #f0f2f5}
+    .kgf-prow b{color:#475569;font-weight:600}.kgf-prow span{font-family:ui-monospace,monospace;color:#0f172a;text-align:right;word-break:break-word}
+  </style>
+</head>
+<body class="app-body" data-active="graph">
+  <div class="app">
+    <aside class="sidebar" id="app-sidebar"></aside>
+
+    <main class="content">
+      <div class="content__topbar">
+        <h1>Semantic Layer &amp; Knowledge Graph</h1>
+        <span class="crumb">· Cosmos DB graph (Gremlin) &middot; Timbr concepts &middot; deviation samples</span>
+        <div style="margin-left:auto" class="flex items-center gap-3">
+          <span class="chip" id="kg-conn"><span class="dot"></span> connecting…</span>
+        </div>
+      </div>
+
+      <div class="content__body" style="max-width:1150px">
+
+        <!-- live knowledge graph + deviation samples (rendered by inline script at end of file) -->
+        <div id="kg-new"></div>
+
+        <!-- legacy schema/governance view retired — kept hidden for reference -->
+        <div id="kg-legacy" hidden>
+        <!-- ============ CATEGORY SWITCHER ============ -->
+        <div class="gcat-tabs" role="tablist" style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:var(--space-6)">
+          <button class="gcat-tab btn btn--primary" data-cat="cat-rel" role="tab" aria-selected="true">
+            1 · PrIME ↔ RTCIS ↔ SDC Relationship
+          </button>
+          <button class="gcat-tab btn btn--outline" data-cat="cat-config" role="tab" aria-selected="false">
+            2 · PrIME 2014 → 2022 Configuration → CRFC
+          </button>
+        </div>
+        <style>
+          .gcat[hidden]{display:none}
+          .gcat-tab{cursor:pointer}
+          .obj-card{border-left:4px solid var(--accent,#2563eb)}
+          .obj-card--2{border-left-color:#1B873F}
+          .gov-gate{display:flex;gap:.6rem;padding:.55rem .1rem;border-bottom:1px solid var(--border,#eee)}
+          .gov-gate b{min-width:190px;display:inline-block}
+        </style>
+
+        <!-- ================================================================= -->
+        <!-- CATEGORY 1 — PrIME ↔ RTCIS ↔ SDC relationship (validated ontology) -->
+        <!-- ================================================================= -->
+        <section id="cat-rel" class="gcat" role="tabpanel">
+
+        <div class="section__eyebrow" style="margin-bottom:var(--space-3)">
+          Category 1 · How RTCIS, PrIME (2014/2022) and SDC standards relate — used to translate &amp; validate queries
+        </div>
+
+        <div class="kpi-row" style="margin-bottom:var(--space-6)" id="kpis"></div>
+
+        <!-- Ontology schema (node + rel types) -->
+        <div class="grid grid--2" style="margin-bottom:var(--space-6)">
+          <div class="card"><div class="section__eyebrow">Ontology · Node types</div>
+            <div class="flex flex-wrap gap-2 mt-4" id="nodetypes"></div></div>
+          <div class="card"><div class="section__eyebrow">Ontology · Relationship types</div>
+            <div class="flex flex-wrap gap-2 mt-4" id="reltypes"></div></div>
+        </div>
+
+        <!-- Cypher bar -->
+        <div class="prompt-box" style="max-width:none;margin-top:0;margin-bottom:var(--space-5)">
+          <input class="prompt-input mono" value="MATCH (r:RTCISTable)-[:MAPS_TO]->(p:PrIMETable)&lt;-[:COVERS_TABLE]-(s:SDCDocument) RETURN r,p,s LIMIT 50" />
+          <div class="prompt-box__row">
+            <div class="prompt-box__tools">
+              <button class="prompt-pill">Saved queries</button>
+              <button class="prompt-pill">Schema</button>
+            </div>
+            <button class="prompt-send" title="Run Cypher">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="section__eyebrow" style="margin-bottom:var(--space-3)">
+          Validated Knowledge Graph schema &middot; RTCIS &harr; PrIME &harr; SDC (node types &amp; real relationships)
+        </div>
+
+        <!-- Real ontology schema (data-driven, clickable node types) -->
+        <div class="onto-canvas" id="canvas"></div>
+
+        <!-- Selected node detail + relationships -->
+        <div class="grid grid--2 mt-6">
+          <div class="card" id="node-detail">
+            <div class="section__eyebrow">Selected node type</div>
+            <p class="card__desc mt-4">Click a node type in the schema above to see its real count and relationships.</p>
+          </div>
+          <div class="card">
+            <div class="section__eyebrow">Relationships</div>
+            <table class="dk-table mt-4" id="rel-table">
+              <thead><tr><th>From</th><th>Relationship</th><th>To</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <p class="text-mute mt-4" style="font-size:var(--fs-xs)">
+          <span id="onto-foot">Schema view of the live Neo4j ontology.</span>
+          Production embeds the live graph (neovis.js / Bloom) with Cypher against the WHS ontology.
+          Dashed blue edges are the cross-system RTCIS&nbsp;&rarr;&nbsp;PrIME mappings. Click a node type to inspect it.
+        </p>
+
+        <!-- Why mappings are not 1:1 -->
+        <div class="section__eyebrow" style="margin:var(--space-7) 0 var(--space-3)">Why a RTCIS column is not a 1:1 PrIME match</div>
+        <p class="text-soft" style="font-size:var(--fs-small);margin-bottom:var(--space-4);max-width:760px">
+          Most columns do not map one-to-one. The graph captures how each RTCIS column is actually resolved — through a
+          <strong>value transformation</strong> (different codebook) or a <strong>join</strong> across the restructured PrIME 2022 model.
+        </p>
+        <div id="mapping-example"></div>
+
+        </section>
+        <!-- /CATEGORY 1 -->
+
+        <!-- ================================================================= -->
+        <!-- CATEGORY 2 — PrIME 2014 → 2022 configuration → CRFC governance     -->
+        <!-- ================================================================= -->
+        <section id="cat-config" class="gcat" role="tabpanel" hidden>
+
+        <div class="card" id="cfg2-source" style="margin-bottom:var(--space-5)"></div>
+
+        <!-- The two operating objectives -->
+        <div class="grid grid--2" style="margin-bottom:var(--space-6)">
+          <div class="card obj-card">
+            <div class="section__eyebrow">Objective 1 · Running Config Drift — what is a deviation?</div>
+            <div id="obj1-drift" class="mt-4"></div>
+          </div>
+          <div class="card obj-card obj-card--2">
+            <div class="section__eyebrow">Objective 2 · New site config — does it meet the standard? what impact?</div>
+            <div id="obj2-newconfig" class="mt-4"></div>
+          </div>
+        </div>
+
+        <!-- Deviation types × severities (the drift decision grid) -->
+        <div class="grid grid--2" style="margin-bottom:var(--space-6)">
+          <div class="card">
+            <div class="section__eyebrow">Deviation types</div>
+            <div id="drift-types" class="mt-4"></div>
+          </div>
+          <div class="card">
+            <div class="section__eyebrow">Severity &amp; scoring</div>
+            <table class="dk-table mt-4" id="drift-sev">
+              <thead><tr><th>Severity</th><th>Meaning</th><th>Scoring</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Governance gates for new config -->
+        <div class="card" style="margin-bottom:var(--space-6)">
+          <div class="section__eyebrow">Governance gates — how a new site config is checked &amp; approved</div>
+          <div id="cfg-gates" class="mt-4"></div>
+        </div>
+
+        <!-- Deployment + migration -->
+        <div class="grid grid--2" style="margin-bottom:var(--space-6)">
+          <div class="card">
+            <div class="section__eyebrow">Deployment path (2014 vs 2022)</div>
+            <div id="cfg-deploy" class="mt-4"></div>
+          </div>
+          <div class="card">
+            <div class="section__eyebrow">Migration Readiness 2014 → 2022 · categories</div>
+            <div id="cfg-migration" class="mt-4"></div>
+          </div>
+        </div>
+
+        <!-- ============ REAL SharePoint config catalogue: 2014 → 2022 ============ -->
+        <div class="section__eyebrow" style="margin:var(--space-7) 0 var(--space-3)">
+          Config Catalogue &middot; live SharePoint source &middot; 2014 &rarr; 2022 change capture
+        </div>
+        <div class="card" id="cfg-source" style="margin-bottom:var(--space-5)"></div>
+
+        <div class="kpi-row" id="cfg-kpis" style="margin-bottom:var(--space-6)"></div>
+
+        <!-- config evolution schema canvas (data-driven) -->
+        <div class="onto-canvas" id="cfg-canvas"></div>
+
+        <div class="grid grid--2 mt-6">
+          <div class="card">
+            <div class="section__eyebrow">Section renames (2014 &rarr; 2022)</div>
+            <table class="dk-table mt-4" id="cfg-renames">
+              <thead><tr><th>2014 name</th><th>2022 name</th><th>match</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="section__eyebrow">Column-level change examples</div>
+            <div id="cfg-colchanges" class="mt-4"></div>
+          </div>
+        </div>
+
+        <p class="text-mute mt-4" style="font-size:var(--fs-xs)" id="cfg-foot"></p>
+
+        <!-- CRFC · Configuration Change Process (CFG-RFC) -->
+        <div class="section__eyebrow" style="margin-top:var(--space-8);margin-bottom:var(--space-3)">
+          Configuration Change Process (CFG-RFC) &middot; from SharePoint &rarr; graph &rarr; bridges to the config catalogue
+        </div>
+        <div class="card" id="crfc-source" style="margin-bottom:var(--space-4)"></div>
+        <div class="card" style="margin-bottom:var(--space-4)">
+          <div class="section__eyebrow">Lifecycle (ordered stages)</div>
+          <div id="crfc-stages" class="flex flex-wrap items-center gap-2 mt-4"></div>
+          <div id="crfc-terminal" class="flex flex-wrap gap-2 mt-3"></div>
+        </div>
+        <div class="grid grid--2">
+          <div class="card">
+            <div class="section__eyebrow">Decision outcomes</div>
+            <div id="crfc-decisions" class="mt-4"></div>
+          </div>
+          <div class="card">
+            <div class="section__eyebrow">Outputs &rarr; bridges to config versions</div>
+            <div id="crfc-outputs" class="mt-4"></div>
+          </div>
+        </div>
+        <div class="grid grid--2 mt-4">
+          <div class="card">
+            <div class="section__eyebrow">Triggers (who raises a CFG-RFC)</div>
+            <div id="crfc-triggers" class="mt-4"></div>
+          </div>
+          <div class="card">
+            <div class="section__eyebrow">Roles &amp; systems</div>
+            <div id="crfc-roles" class="flex flex-wrap gap-2 mt-4"></div>
+            <div id="crfc-tools" class="flex flex-wrap gap-2 mt-3"></div>
+            <div id="crfc-deploy" class="flex flex-wrap gap-2 mt-3"></div>
+          </div>
+        </div>
+
+        </section>
+        <!-- /CATEGORY 2 -->
+        </div><!-- /#kg-legacy -->
+
+      </div>
+    </main>
+  </div>
+  <script src="./assets/data.js"></script>
+  <script src="./assets/graph-snapshot.js"></script>
+  <script src="./assets/rtcis-prime-views.js"></script>
+  <script src="./assets/cross-site.js"></script>
+  <script src="./assets/exception-ledger.js"></script>
+  <script src="./assets/change-capture.js"></script>
+  <script>
+    (function () {
+      return; /* legacy schema/governance view retired — replaced by the live graph + samples below */
+      var BRIDGE = "http://127.0.0.1:8737";
+      var o = window.WHS.ontology;
+
+      function renderKpis(nodes, rels, mapped, types, live) {
+        var tag = live ? ' <span class="chip chip--success" style="vertical-align:middle"><span class="dot dot--live"></span> live</span>' : '';
+        document.getElementById("kpis").innerHTML =
+          '<div class="kpi"><div class="kpi__value">' + nodes.toLocaleString() + tag + '</div><div class="kpi__label">Nodes</div></div>'
+          + '<div class="kpi"><div class="kpi__value">' + rels.toLocaleString() + '</div><div class="kpi__label">Relationships</div></div>'
+          + '<div class="kpi"><div class="kpi__value">' + mapped + '</div><div class="kpi__label">Mapped tables</div></div>'
+          + '<div class="kpi"><div class="kpi__value">' + types + '</div><div class="kpi__label">Node types</div></div>';
+      }
+      // Static render first (offline fallback); the live overlay below overrides it when the bridge is up.
+      renderKpis(o.nodes, o.relationships, o.mappedTables, o.nodeTypes.length, false);
+      document.getElementById("nodetypes").innerHTML = o.nodeTypes.map(function (t) { return '<span class="chip chip--neutral mono">' + t + "</span>"; }).join(" ");
+      document.getElementById("reltypes").innerHTML = o.relTypes.map(function (t) { return '<span class="chip mono">:' + t + "</span>"; }).join(" ");
+
+      /* ---- Render the real ontology schema ---- */
+      var s = o.schema;
+      var laneColor = {};
+      s.lanes.forEach(function (l) { laneColor[l.id] = l.color; });
+      var nodeById = {};
+      s.nodes.forEach(function (n) { nodeById[n.id] = n; });
+
+      var canvas = document.getElementById("canvas");
+
+      // edges as SVG (percentage coords, non-scaling stroke)
+      var lines = s.edges.map(function (e) {
+        var a = nodeById[e.from], b = nodeById[e.to];
+        return '<line class="onto-edge' + (e.key ? " onto-edge--key" : "") + '" '
+          + 'x1="' + a.x + '" y1="' + a.y + '" x2="' + b.x + '" y2="' + b.y + '" vector-effect="non-scaling-stroke"/>';
+      }).join("");
+      var svg = '<svg class="onto-svg" viewBox="0 0 100 100" preserveAspectRatio="none">' + lines + "</svg>";
+
+      // edge labels as positioned HTML (avoids SVG text distortion)
+      var elabels = s.edges.map(function (e) {
+        var a = nodeById[e.from], b = nodeById[e.to];
+        var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+        return '<div class="onto-elabel" style="left:' + mx + '%;top:' + my + '%">:' + e.label + "</div>";
+      }).join("");
+
+      // node-type boxes (clickable)
+      var nodes = s.nodes.map(function (n) {
+        var c = laneColor[n.lane];
+        return '<div class="onto-node" data-id="' + n.id + '" style="left:' + n.x + '%;top:' + n.y + '%;border-color:' + c + ';color:' + c + '">'
+          + '<span class="onto-node__name">' + n.label + "</span>"
+          + '<span class="onto-node__count">' + n.count.toLocaleString() + " nodes</span></div>";
+      }).join("");
+
+      var legend = '<div class="onto-lane-legend">' + s.lanes.map(function (l) {
+        return '<span><span class="dot" style="background:' + l.color + '"></span>' + l.label + "</span>";
+      }).join("") + "</div>";
+
+      canvas.innerHTML = svg + elabels + nodes + legend;
+
+      function select(id) {
+        var n = nodeById[id];
+        canvas.querySelectorAll(".onto-node").forEach(function (el) {
+          el.classList.toggle("is-sel", el.getAttribute("data-id") === id);
+        });
+        var c = laneColor[n.lane];
+        var laneLabel = s.lanes.filter(function (l) { return l.id === n.lane; })[0].label;
+        document.getElementById("node-detail").innerHTML =
+          '<div class="section__eyebrow">Selected node type</div>'
+          + '<div class="card__title mt-4" style="color:' + c + '">' + n.label
+          + ' <span class="chip chip--neutral">' + laneLabel + "</span></div>"
+          + '<p class="card__desc mt-4"><strong>' + n.count.toLocaleString() + "</strong> nodes of type <span class=\"mono\">" + n.id + "</span> in the validated graph.</p>";
+
+        var rels = s.edges.filter(function (e) { return e.from === id || e.to === id; });
+        document.querySelector("#rel-table tbody").innerHTML = rels.map(function (e) {
+          return "<tr><td class=\"mono\">" + e.from + "</td><td>:" + e.label + "</td><td class=\"mono\">" + e.to + "</td></tr>";
+        }).join("") || '<tr><td colspan="3" class="text-mute">No direct relationships.</td></tr>';
+      }
+
+      canvas.querySelectorAll(".onto-node").forEach(function (el) {
+        el.addEventListener("click", function () { select(el.getAttribute("data-id")); });
+      });
+      select("RTCISTable");
+
+      /* ---- LIVE overlay: replace the hardcoded headline counts with the real Neo4j
+         totals from the bridge (/schema). Static numbers above are only the offline
+         fallback. This is what fixes the "node number seems not right" mismatch. ---- */
+      fetch(BRIDGE + "/schema").then(function (r) { if (!r.ok) throw new Error("schema " + r.status); return r.json(); }).then(function (live) {
+        var labels = live.labels || [], relsL = live.relationships || [], byLabel = {};
+        labels.forEach(function (l) { byLabel[l.label] = l.count; });
+        renderKpis(live.totals.nodes, live.totals.relationships, o.mappedTables, labels.length, true);
+        var foot = document.getElementById("onto-foot");
+        if (foot) foot.textContent = "Live Neo4j ontology — " + live.totals.nodes.toLocaleString()
+          + " nodes · " + live.totals.relationships.toLocaleString() + " relationships · " + labels.length + " node types (read live from the bridge).";
+        // Real node-type inventory straight from the live graph (with per-label counts).
+        document.getElementById("nodetypes").innerHTML = labels.map(function (l) {
+          return '<span class="chip chip--neutral mono">' + l.label + ' <span style="opacity:.55">' + l.count.toLocaleString() + '</span></span>';
+        }).join(" ");
+        document.getElementById("reltypes").innerHTML = relsL.map(function (l) {
+          return '<span class="chip mono">:' + l.type + ' <span style="opacity:.55">' + l.count.toLocaleString() + '</span></span>';
+        }).join(" ");
+        // Patch the conceptual schema-diagram counts wherever a node id matches a live label.
+        canvas.querySelectorAll(".onto-node").forEach(function (el) {
+          var id = el.getAttribute("data-id");
+          if (byLabel[id] != null) {
+            if (nodeById[id]) nodeById[id].count = byLabel[id];
+            var c = el.querySelector(".onto-node__count");
+            if (c) c.textContent = byLabel[id].toLocaleString() + " nodes";
+          }
+        });
+      }).catch(function () { /* bridge offline: keep the static fallback numbers */ });
+
+      /* ---- Render the "not 1:1" mapping example ---- */
+      var me = o.mappingExample;
+      if (me) {
+        document.getElementById("mapping-example").innerHTML = me.cases.map(function (c) {
+          var relCls = c.kind === "transform" ? "map-rel--transform" : "map-rel--join";
+          return '<div class="map-case">'
+            + '<div class="map-node map-node--rtcis">'
+            + '<span class="map-node__tag">RTCIS</span>'
+            + '<span class="map-node__col mono">' + c.rtcis.table + '.' + c.rtcis.col + '</span>'
+            + '<span class="map-node__note">' + c.rtcis.note + '</span></div>'
+            + '<div class="map-rel ' + relCls + '">'
+            + '<span class="map-rel__x">&#10006; not 1:1</span>'
+            + '<span class="map-rel__label mono">:' + c.rel + '</span>'
+            + '<span class="map-rel__via">' + c.via + '</span></div>'
+            + '<div class="map-node map-node--prime">'
+            + '<span class="map-node__tag">PrIME</span>'
+            + '<span class="map-node__col mono">' + c.prime.table + '.' + c.prime.col + '</span>'
+            + '<span class="map-node__note">' + c.prime.note + '</span></div>'
+            + '<div class="map-detail">' + c.detail + '</div>'
+            + '</div>';
+        }).join("");
+      }
+
+      /* ---- Render the REAL SharePoint config catalogue (2014 -> 2022) ---- */
+      var cc = window.WHS.configCatalogue;
+      if (cc) {
+        var src = cc.source, ct = cc.counts, chg = cc.change;
+
+        document.getElementById("cfg-source").innerHTML =
+          '<div class="flex items-center gap-3" style="flex-wrap:wrap">'
+          + '<span class="chip chip--success"><span class="dot dot--live"></span> Live SharePoint</span>'
+          + '<span class="card__title" style="margin:0">' + src.system + '</span></div>'
+          + '<p class="card__desc mt-3">Catalogued under '
+          + '<a href="data-knowledge.html#knowledge">Warehouse Knowledge → PrIME Configuration Catalogue</a> '
+          + '(WMS PrIME Service SitePages, live cache) and '
+          + '<a href="data-knowledge.html#warehouse-data">Warehouse Data → Config Drift (Azure Blob Storage)</a>. '
+          + 'Parsed at full granularity into Neo4j.</p>'
+          + '<p class="text-soft mt-2" style="font-size:var(--fs-small)">' + chg.headline + '</p>'
+          + '<div class="flex gap-2 mt-3" style="flex-wrap:wrap">'
+          + '<span class="chip chip--neutral">' + src.accuracy + '</span>'
+          + '<a class="chip mono" href="' + src.site + '" target="_blank" rel="noopener">' + src.site.replace('https://','') + '</a>'
+          + '</div>';
+
+        document.getElementById("cfg-kpis").innerHTML =
+          '<div class="kpi"><div class="kpi__value">' + ct.nodes.toLocaleString() + '</div><div class="kpi__label">Config nodes</div></div>'
+          + '<div class="kpi"><div class="kpi__value">' + (ct.sections2014 + ct.sections2022) + '</div><div class="kpi__label">Sections (2014+2022)</div></div>'
+          + '<div class="kpi"><div class="kpi__value">' + (ct.columns2014 + ct.columns2022).toLocaleString() + '</div><div class="kpi__label">Columns</div></div>'
+          + '<div class="kpi"><div class="kpi__value">' + (ct.exceptions2014 + ct.exceptions2022).toLocaleString() + '</div><div class="kpi__label">Exceptions</div></div>'
+          + '<div class="kpi"><div class="kpi__value" style="color:#C4314B">' + chg.renamed + '</div><div class="kpi__label">Renamed</div></div>'
+          + '<div class="kpi"><div class="kpi__value" style="color:#1B873F">+' + chg.added + '</div><div class="kpi__label">Added in 2022</div></div>'
+          + '<div class="kpi"><div class="kpi__value" style="color:#B4690E">-' + chg.removed + '</div><div class="kpi__label">Removed</div></div>';
+
+        // config evolution canvas (reuse the same schema renderer)
+        var cs = cc.schema, cCanvas = document.getElementById("cfg-canvas");
+        var cLane = {}; cs.lanes.forEach(function (l) { cLane[l.id] = l.color; });
+        var cById = {}; cs.nodes.forEach(function (n) { cById[n.id] = n; });
+        var cLines = cs.edges.map(function (e) {
+          var a = cById[e.from], b = cById[e.to];
+          return '<line class="onto-edge' + (e.key ? " onto-edge--key" : "") + '" x1="' + a.x + '" y1="' + a.y + '" x2="' + b.x + '" y2="' + b.y + '" vector-effect="non-scaling-stroke"/>';
+        }).join("");
+        var cLabels = cs.edges.map(function (e) {
+          var a = cById[e.from], b = cById[e.to];
+          return '<div class="onto-elabel" style="left:' + ((a.x + b.x) / 2) + '%;top:' + ((a.y + b.y) / 2) + '%">:' + e.label + "</div>";
+        }).join("");
+        var cNodes = cs.nodes.map(function (n) {
+          var c = cLane[n.lane];
+          return '<div class="onto-node" style="left:' + n.x + '%;top:' + n.y + '%;border-color:' + c + ';color:' + c + '">'
+            + '<span class="onto-node__name">' + n.label + "</span>"
+            + '<span class="onto-node__count">' + n.count.toLocaleString() + " nodes</span></div>";
+        }).join("");
+        var cLegend = '<div class="onto-lane-legend">' + cs.lanes.map(function (l) {
+          return '<span><span class="dot" style="background:' + l.color + '"></span>' + l.label + "</span>";
+        }).join("") + "</div>";
+        cCanvas.innerHTML = '<svg class="onto-svg" viewBox="0 0 100 100" preserveAspectRatio="none">' + cLines + "</svg>" + cLabels + cNodes + cLegend;
+
+        document.querySelector("#cfg-renames tbody").innerHTML = chg.renameExamples.map(function (r) {
+          return '<tr><td class="mono">' + r.from + '</td><td class="mono">' + r.to + '</td><td><span class="chip chip--neutral">' + Math.round(r.sim * 100) + '%</span></td></tr>';
+        }).join("");
+
+        document.getElementById("cfg-colchanges").innerHTML = chg.columnExamples.map(function (c) {
+          return '<div class="map-detail" style="margin-bottom:var(--space-2)"><strong class="mono">' + c.section + '</strong>'
+            + (c.added ? ' <span style="color:#1B873F">+ ' + c.added + '</span>' : '')
+            + (c.removed ? ' <span style="color:#C4314B">&minus; ' + c.removed + '</span>' : '')
+            + '<br><span class="text-mute">' + c.note + '</span></div>';
+        }).join("");
+
+        document.getElementById("cfg-foot").innerHTML =
+          'Config graph loaded into Neo4j alongside the RTCIS&harr;PrIME graph. '
+          + 'Node types: Section, Column, Field, Exception, Change, Version. '
+          + 'Change edges: EVOLVES_TO, RENAMED_TO, ADDED_IN_2022, REMOVED_IN_2022, CHANGE_FROM/TO. '
+          + 'Source: config_graph_full.py (full granularity) + sharepoint_reader.py (live pull).';
+      }
+
+      // ---- CRFC · Configuration Change Process ----
+      var crfc = window.WHS.crfc;
+      if (crfc) {
+        document.getElementById("crfc-source").innerHTML =
+          '<div class="section__eyebrow">Source</div>'
+          + '<p class="card__desc mt-3"><a href="' + crfc.source.url + '" target="_blank" rel="noopener">'
+          + crfc.source.title + '</a> — SharePoint SitePage, modeled into '
+          + '<strong>' + crfc.source.counts.nodes + ' nodes / ' + crfc.source.counts.edges + ' edges</strong> '
+          + 'and bridged to the config catalogue via <strong>' + crfc.source.counts.bridgeEdges + '</strong> '
+          + 'Output&rarr;Version edges. Built by ' + crfc.source.builtBy + '.</p>';
+
+        var flow = crfc.stages.filter(function (s) { return !s.terminal; })
+          .sort(function (a, b) { return a.order - b.order; });
+        document.getElementById("crfc-stages").innerHTML = flow.map(function (s, i) {
+          return '<span class="chip chip--neutral">' + (i + 1) + '. ' + s.label + '</span>'
+            + (i < flow.length - 1 ? '<span style="color:var(--accent,#2563eb);font-weight:700">&rarr;</span>' : '');
+        }).join("");
+        document.getElementById("crfc-terminal").innerHTML =
+          '<span class="text-mute" style="font-size:var(--fs-xs)">Off-ramps:</span> '
+          + crfc.stages.filter(function (s) { return s.terminal; }).map(function (s) {
+            return '<span class="chip chip--danger">' + s.label + '</span>';
+          }).join("");
+
+        document.getElementById("crfc-decisions").innerHTML = crfc.decisions.map(function (d) {
+          return '<div class="map-detail" style="margin-bottom:var(--space-2)"><strong>' + d.label + '</strong>'
+            + '<br><span class="text-mute">' + d.note + '</span></div>';
+        }).join("");
+
+        document.getElementById("crfc-outputs").innerHTML = crfc.outputs.map(function (o) {
+          return '<div class="map-detail" style="margin-bottom:var(--space-2)"><strong>' + o.label + '</strong>'
+            + '<br><span style="color:#1B873F;font-size:var(--fs-xs)">' + o.bridges + '</span></div>';
+        }).join("");
+
+        document.getElementById("crfc-triggers").innerHTML = crfc.triggers.map(function (t) {
+          return '<div class="map-detail" style="margin-bottom:var(--space-2)"><strong>' + t.label + '</strong>'
+            + ' <span class="text-mute">— raised by ' + t.by + '</span></div>';
+        }).join("");
+
+        document.getElementById("crfc-roles").innerHTML = crfc.roles.map(function (r) {
+          return '<span class="chip chip--neutral">' + r + '</span>';
+        }).join("");
+        document.getElementById("crfc-tools").innerHTML =
+          '<span class="text-mute" style="font-size:var(--fs-xs)">Systems:</span> '
+          + crfc.tools.map(function (t) { return '<span class="chip">' + t + '</span>'; }).join("");
+        document.getElementById("crfc-deploy").innerHTML =
+          '<span class="text-mute" style="font-size:var(--fs-xs)">Deploy via:</span> '
+          + crfc.deployments.map(function (d) { return '<span class="chip chip--success">' + d + '</span>'; }).join("");
+      }
+
+      // ---- Category 2 · Configuration governance model (the two objectives) ----
+      var cm = window.WHS.configModel;
+      if (cm) {
+        var esc2 = function (s) { return String(s == null ? "" : s); };
+
+        document.getElementById("cfg2-source").innerHTML =
+          '<div class="section__eyebrow">Source · PrIME Configuration tab</div>'
+          + '<p class="card__desc mt-3">Owned by <strong>' + cm.source.owner + '</strong>. Captured from '
+          + '<strong>' + cm.source.pagesCaptured + '</strong> configuration pages on '
+          + '<a href="' + cm.source.url + '" target="_blank" rel="noopener">' + cm.source.tab + '</a>. '
+          + 'This category answers two operating questions — running Config Drift (what is a deviation) and '
+          + 'assessing a new site configuration (does it meet the standard, what impact).</p>';
+
+        // Objective 1 summary
+        var d = cm.drift;
+        document.getElementById("obj1-drift").innerHTML =
+          '<p class="card__desc"><strong>' + d.tool + '</strong> · ' + d.version + '. ' + d.cadence + '.</p>'
+          + '<ul class="mt-3" style="font-size:var(--fs-small);line-height:1.7">'
+          + '<li><strong>Reference:</strong> ' + d.reference + '</li>'
+          + '<li><strong>Scope:</strong> ' + d.auditScope + '</li>'
+          + '<li><strong>Scores:</strong> ' + d.scores.map(function (s) { return s.name; }).join(" + ") + ' (split in v3.0)</li>'
+          + '<li><strong>Element ID:</strong> <span class="mono">' + esc2(d.elementIdentifier.example) + '</span></li>'
+          + '<li><strong>Rules:</strong> ' + d.rulesUpdatedBy + '</li>'
+          + '<li><strong>Resolve:</strong> ' + d.resolution + '</li>'
+          + '</ul>';
+
+        // Objective 2 summary
+        var nc = cm.newConfig;
+        document.getElementById("obj2-newconfig").innerHTML =
+          '<p class="card__desc">' + nc.question + '</p>'
+          + '<div class="mt-3"><strong style="font-size:var(--fs-small)">Two config buckets:</strong>'
+          + nc.buckets.map(function (b) {
+            return '<div class="map-detail" style="margin-top:var(--space-2)"><strong>' + b.name + '</strong> '
+              + '<span class="text-mute">— ' + b.owner + '</span><br><span class="text-mute">' + b.rule + '</span></div>';
+          }).join("") + '</div>'
+          + '<p class="mt-3" style="font-size:var(--fs-small);color:#9b1c1c"><strong>Impact if non-standard:</strong> ' + nc.impactIfNonStandard + '</p>';
+
+        // deviation types
+        document.getElementById("drift-types").innerHTML = d.deviationTypes.map(function (t) {
+          return '<div class="map-detail" style="margin-bottom:var(--space-2)"><strong>' + t.type + '</strong>'
+            + '<br><span class="text-mute">' + t.def + '</span></div>';
+        }).join("");
+
+        // severities table
+        var sevColor = { High: "#C4314B", Medium: "#B4690E", Low: "#1B873F", Accepted: "#6b7280" };
+        document.querySelector("#drift-sev tbody").innerHTML = d.severities.map(function (s) {
+          var col = sevColor[s.sev] || "#003DA5";
+          return '<tr><td><span class="chip" style="color:' + col + ';border-color:' + col + '">' + s.sev + '</span></td>'
+            + '<td style="font-size:var(--fs-xs)">' + s.impact + '</td>'
+            + '<td style="font-size:var(--fs-xs)">' + s.scoring + '</td></tr>';
+        }).join("");
+
+        // governance gates
+        document.getElementById("cfg-gates").innerHTML = nc.gates.map(function (g) {
+          var extra = g.checks || g.shows || g.status || g.rule || g.role || "";
+          var act = g.action || g.outcome || g.flags || "";
+          return '<div class="gov-gate"><b>' + g.gate + '</b>'
+            + '<span style="font-size:var(--fs-xs)">' + esc2(extra)
+            + (act ? ' <span style="color:#1B873F">→ ' + esc2(act) + '</span>' : '') + '</span></div>';
+        }).join("");
+
+        // deployment 2014 vs 2022
+        var dep = cm.deployment;
+        document.getElementById("cfg-deploy").innerHTML =
+          '<div class="map-detail" style="margin-bottom:var(--space-3)"><strong>PrIME v2014</strong> — process <span class="mono">' + dep.v2014.process + '</span>'
+          + '<br><span class="text-mute">Catalogue: ' + dep.v2014.catalogue + ' · Tracker: ' + dep.v2014.tracker + '</span>'
+          + '<br><span class="text-mute">Sequence: ' + dep.v2014.sequence.join(" → ") + '</span>'
+          + '<br><span class="text-mute">Lead time: ' + dep.v2014.leadTime + '</span></div>'
+          + '<div class="map-detail"><strong>PrIME v2022</strong> — process <span class="mono">' + dep.v2022.process + '</span>'
+          + '<br><span class="text-mute">' + dep.v2022.note + '</span>'
+          + '<br><span class="text-mute">Special: ' + dep.v2022.special + '</span>'
+          + '<br><span class="text-mute">Features: ' + dep.v2022.featureActivation + '</span></div>';
+
+        // migration categories
+        document.getElementById("cfg-migration").innerHTML =
+          '<p class="card__desc" style="margin-bottom:var(--space-2)">' + cm.migration.tool + '</p>'
+          + cm.migration.categories.map(function (c) {
+            return '<div class="map-detail" style="margin-bottom:var(--space-2)"><strong>' + c.cat + '</strong>'
+              + '<br><span class="text-mute">' + c.meaning + '</span></div>';
+          }).join("");
+      }
+
+      // ---- Category switcher ----
+      var gtabs = document.querySelectorAll(".gcat-tab");
+      gtabs.forEach(function (t) {
+        t.addEventListener("click", function () {
+          var cat = t.getAttribute("data-cat");
+          document.querySelectorAll(".gcat").forEach(function (sec) { sec.hidden = (sec.id !== cat); });
+          gtabs.forEach(function (x) {
+            var on = x === t;
+            x.setAttribute("aria-selected", on ? "true" : "false");
+            x.className = "gcat-tab btn " + (on ? "btn--primary" : "btn--outline");
+          });
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      });
+    })();
+  </script>
+  <script>
+    /* =========================================================================
+       Knowledge Graph — combined live view (was graph-live's Config/CRFC/Drift).
+       Two tabs:
+         Ontology         — live force-directed graph of the Cosmos DB graph rtcis_prime
+                             (kg_api /rp/schema + /rp/sample), partitions & edge types.
+         Config, CRFC & Drift — interactive CFG-RFC register graph (pick a change
+                             -> its exception-register subgraph), cross-site
+                             inconsistency sample, deviation explainability, and a
+                             simple skill link.
+       Config tab: bundled snapshot (that theme is not in Cosmos yet; a local graph
+       bridge on 8737 is used only if it runs). window.WHS_KG (assets/graph-snapshot.js)
+       is the static graph JSON fallback so the visuals work offline too.
+       ========================================================================= */
+    (function () {
+      var BRIDGE = "http://127.0.0.1:8737";   /* config-drift graph (local only, optional) */
+      var RP = window.RP_API_BASE || (window.localStorage && localStorage.getItem("rp_api")) || "http://127.0.0.1:8738";   /* Cosmos graph via kg_api, local or cloud */
+      var mount = document.getElementById("kg-new");
+      if (!mount) return;
+      var SNAP = window.WHS_KG || null;
+      var COSMOS_SNAP = (window.RP_VIEWS && window.RP_VIEWS.schema) ? window.RP_VIEWS : null;   /* Cosmos export (export_ui_views.py) */
+
+      function api(path, opts, base) {
+        var o = Object.assign({}, opts || {});
+        if (!o.signal && window.AbortSignal && AbortSignal.timeout) o.signal = AbortSignal.timeout(20000);
+        return fetch((base || BRIDGE) + path, o).then(function (r) {
+          if (!r.ok) return r.json().then(function (j) { throw new Error(j.error || ("HTTP " + r.status)); });
+          return r.json();
+        });
+      }
+      function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+      function num(v) { return (v || 0).toLocaleString(); }
+      function kpi(v, l) { return '<div class="kpi"><div class="kpi__value">' + v + '</div><div class="kpi__label">' + l + '</div></div>'; }
+
+      /* ---- skeleton: two tabs ---- */
+      mount.innerHTML =
+        '<div class="kg-tabs">'
+        + '<button class="kg-tab is-active" data-tab="onto">Ontology<small>PrIME \u2194 RTCIS \u2194 SDC \u00b7 live graph</small></button>'
+        + '<button class="kg-tab" data-tab="cfg">Config, CRFC &amp; Drift<small>register graph \u00b7 exceptions \u00b7 explainability</small></button>'
+        + '<button class="kg-tab" data-tab="rp">Semantic Layer \u00b7 RTCIS \u2194 PrIME 2014 \u2194 2022<small>Timbr concepts \u00b7 validated mappings \u00b7 Cosmos graph</small></button>'
+        + '</div>'
+        + '<div id="kg-offline" class="gl-offline" style="display:none;margin-bottom:var(--space-5)">'
+        +   '<b>Cosmos graph not reachable</b> through the knowledge-graph API at <code>' + esc(RP) + '</code>, so the bundled snapshot is shown. '
+        +   'Local: <code>_kg_cosmos: . .\\env.local.ps1; &amp; $py tools\\kg_api.py</code>. Cloud: set <code>localStorage.rp_api</code> to the deployed API. Then reload.'
+        + '</div>'
+        /* ---- TAB 1: ontology ---- */
+        + '<section id="kgtab-onto" class="kg-pane is-active">'
+        +   '<div class="kpi-row" id="kg-kpis" style="margin-bottom:var(--space-5)"></div>'
+        +   '<div class="card" style="margin-bottom:var(--space-5)">'
+        +     '<div class="flex items-center gap-3" style="justify-content:space-between;flex-wrap:wrap">'
+        +       '<div><div class="section__eyebrow">Live graph &middot; Cosmos DB (Gremlin) &middot; rtcis_prime</div>'
+        +       '<p class="card__desc" style="margin:.3rem 0 0;max-width:70ch">Pick a partition (engine table / column, semantic concept, query …) and explore its neighbourhood. Drag nodes; click a node to inspect its properties. Colours = labels.</p></div>'
+        +       '<div class="kgf-ctrl"><select id="kgf-label"><option value="">connecting\u2026</option></select>'
+        +         '<input id="kgf-limit" type="number" min="6" max="200" value="40" title="max relationships"/>'
+        +         '<button class="btn" id="kgf-reload">Reload</button></div>'
+        +     '</div>'
+        +     '<div class="kgf-wrap"><svg id="kgf-svg" class="kgf-svg"></svg><div id="kgf-legend" class="kgf-legend"></div><div id="kgf-panel" class="kgf-panel"></div></div>'
+        +   '</div>'
+        +   '<div class="grid grid--2">'
+        +     '<div class="card"><div class="section__eyebrow">Node labels</div><div id="kg-labels" class="flex flex-wrap gap-2 mt-4"></div></div>'
+        +     '<div class="card"><div class="section__eyebrow">Relationship types</div><div id="kg-rels" class="flex flex-wrap gap-2 mt-4"></div></div>'
+        +   '</div>'
+        + '</section>'
+        /* ---- TAB 2: config, crfc & drift ---- */
+        + '<section id="kgtab-cfg" class="kg-pane">'
+        +   '<div class="card" style="margin-bottom:var(--space-6)">'
+        +     '<div class="flex items-center gap-3" style="justify-content:space-between;flex-wrap:wrap">'
+        +       '<div><div class="section__eyebrow">Config &amp; CRFC graph &middot; query templates</div>'
+        +       '<p class="card__desc" style="margin:.3rem 0 0;max-width:78ch">Pick a query template. <b>CFG-RFC register</b>: choose a change to see <b>CFG \u2192 CRFC \u2192 EXCEPTION_AT sites</b> plus the <b>DevIdentity</b> it governs. <b>Cross-site inconsistencies</b>: the same deviation <b>accepted at one site</b> (green) but <b>left open / penalised at others</b> (red). Drag nodes; click to inspect.</p></div>'
+        +       '<div class="kgf-ctrl"><select id="kgc-tmpl"><option value="cfg">CFG-RFC register \u00b7 pick a change</option><option value="xsite">Cross-site inconsistencies \u00b7 accepted here, open there</option><option value="change">What changed \u00b7 new deviations, new CRFCs &amp; impact</option><option value="ledger">Exception ledger \u00b7 accept / reject / suggest CRFC</option></select>'
+        +         '<select id="kgc-cfg"><option value="">loading\u2026</option></select></div>'
+        +     '</div>'
+        +     '<div id="kgc-meta" class="card__desc" style="margin:.4rem 0"></div>'
+        +     '<div class="kgf-wrap" id="kgc-graphwrap"><svg id="kgc-svg" class="kgf-svg"></svg><div id="kgc-legend" class="kgf-legend"></div><div id="kgc-panel" class="kgf-panel"></div></div>'
+        +     '<div id="kgc-tableout" style="margin-top:var(--space-4)"></div>'
+        +   '</div>'
+        +   '<div class="card"><div class="section__eyebrow">Config Drift skill</div>'
+        +     '<p class="card__desc" style="margin:.3rem 0 .6rem;max-width:76ch">Deviations are explained and triaged by the Config Drift skill (deterministic Layer-1 + grounded Layer-2), then registered on the graph above. To ask <b>&ldquo;why is this a deviation?&rdquo;</b> for any site, open the guided <a href="index.html#explain">Deviation explainability</a> flow on the home page.</p></div>'
+        + '</section>'
+        /* ---- TAB 3: RTCIS <-> PrIME 2014 <-> 2022 (filled by assets/rtcis-prime-tab.js) ---- */
+        + '<section id="kgtab-rp" class="kg-pane"></section>';
+
+      /* ---- connection chip ---- */
+      var connChip = document.getElementById("kg-conn");
+      function setConn(ok, txt) {
+        if (!connChip) return;
+        connChip.className = "chip " + (ok ? "chip--success" : "chip--danger");
+        connChip.innerHTML = '<span class="dot ' + (ok ? "dot--live" : "") + '"></span> ' + txt;
+      }
+
+      /* ---- colour palette by label ---- */
+      var PALETTE = ["#2563eb", "#16a34a", "#b4690e", "#c4314b", "#7c3aed", "#0891b2", "#db2777", "#059669", "#4f46e5", "#d97706", "#0d9488", "#9333ea", "#dc2626", "#475569"];
+      var labelColor = {}, palIdx = 0;
+      function colorFor(l) { if (!labelColor[l]) labelColor[l] = PALETTE[palIdx++ % PALETTE.length]; return labelColor[l]; }
+
+      /* ================= force-directed graph factory ================= */
+      function labelOf(n) { return (n.labels && n.labels[0]) || "Node"; }
+      function captionOf(n) { var p = n.props || {}; return String(p.label || p.name || p.title || p.id || n.id || labelOf(n)); }
+
+      function makeGraph(svg, legendEl, panelEl) {
+        var S = { nodes: [], links: [], raf: null, alpha: 0, drag: null, W: 800, H: 460 };
+        function build(data) {
+          var W = svg.clientWidth || 800, H = 460; S.W = W; S.H = H;
+          svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+          var byId = {};
+          var nodes = (data.nodes || []).map(function (n) {
+            var id = n.eid || n.id;
+            var o = { id: id, node: n, x: W / 2 + (Math.random() - .5) * W * 0.5, y: H / 2 + (Math.random() - .5) * H * 0.5, vx: 0, vy: 0, _moved: false };
+            byId[id] = o; byId[n.id] = o; return o;
+          });
+          var links = (data.edges || []).map(function (e) { return { s: byId[e.src], t: byId[e.dst], type: e.type }; })
+            .filter(function (l) { return l.s && l.t; });
+          S.nodes = nodes; S.links = links;
+          var ec = links.map(function (l, i) { return '<line class="kgf-edge" id="' + svg.id + 'e' + i + '"/><text class="kgf-edge-label" id="' + svg.id + 't' + i + '">' + esc(l.type) + '</text>'; }).join("");
+          var nc = nodes.map(function (nd, i) {
+            var c = colorFor(labelOf(nd.node));
+            return '<g class="kgf-node" id="' + svg.id + 'n' + i + '"><circle r="11" fill="' + c + '"/><text class="kgf-cap" x="14" y="4">' + esc(captionOf(nd.node).slice(0, 22)) + '</text></g>';
+          }).join("");
+          svg.innerHTML = ec + nc;
+          var seen = {}, leg = [];
+          nodes.forEach(function (nd) { var l = labelOf(nd.node); if (!seen[l]) { seen[l] = 1; leg.push('<span><span class="dot" style="background:' + colorFor(l) + '"></span>' + esc(l) + '</span>'); } });
+          if (legendEl) legendEl.innerHTML = leg.join("");
+          nodes.forEach(function (nd, i) {
+            var g = document.getElementById(svg.id + 'n' + i); nd.el = g;
+            g.addEventListener("pointerdown", function (ev) { startDrag(nd, ev); });
+            g.addEventListener("click", function () { if (nd._moved) { nd._moved = false; return; } showNode(nd); });
+          });
+          links.forEach(function (l, i) { l.line = document.getElementById(svg.id + 'e' + i); l.lbl = document.getElementById(svg.id + 't' + i); });
+          S.alpha = 1; run();
+        }
+        function run() { if (S.raf) cancelAnimationFrame(S.raf); step(); }
+        function step() {
+          var n = S.nodes, links = S.links, W = S.W, H = S.H, a = S.alpha;
+          for (var i = 0; i < n.length; i++) {
+            for (var j = i + 1; j < n.length; j++) {
+              var A = n[i], B = n[j], dx = A.x - B.x, dy = A.y - B.y, d2 = dx * dx + dy * dy || 0.01, d = Math.sqrt(d2);
+              var f = 2600 / d2 * a, fx = dx / d * f, fy = dy / d * f;
+              A.vx += fx; A.vy += fy; B.vx -= fx; B.vy -= fy;
+            }
+          }
+          links.forEach(function (l) {
+            var dx = l.t.x - l.s.x, dy = l.t.y - l.s.y, d = Math.sqrt(dx * dx + dy * dy) || 0.01;
+            var f = (d - 90) / d * 0.06 * a, fx = dx * f, fy = dy * f;
+            l.s.vx += fx; l.s.vy += fy; l.t.vx -= fx; l.t.vy -= fy;
+          });
+          n.forEach(function (o) {
+            o.vx += (W / 2 - o.x) * 0.002 * a; o.vy += (H / 2 - o.y) * 0.002 * a;
+            if (S.drag === o) return;
+            o.vx *= 0.85; o.vy *= 0.85; o.x += o.vx; o.y += o.vy;
+            o.x = Math.max(16, Math.min(W - 16, o.x)); o.y = Math.max(16, Math.min(H - 16, o.y));
+          });
+          renderPos();
+          S.alpha *= 0.985;
+          if (S.alpha > 0.02 || S.drag) S.raf = requestAnimationFrame(step);
+        }
+        function renderPos() {
+          S.links.forEach(function (l) {
+            if (!l.line) return;
+            l.line.setAttribute("x1", l.s.x); l.line.setAttribute("y1", l.s.y);
+            l.line.setAttribute("x2", l.t.x); l.line.setAttribute("y2", l.t.y);
+            l.lbl.setAttribute("x", (l.s.x + l.t.x) / 2); l.lbl.setAttribute("y", (l.s.y + l.t.y) / 2);
+          });
+          S.nodes.forEach(function (o) { if (o.el) o.el.setAttribute("transform", "translate(" + o.x + "," + o.y + ")"); });
+        }
+        function svgPoint(ev) {
+          var pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+          var m = svg.getScreenCTM(); if (!m) return { x: ev.clientX, y: ev.clientY };
+          var p = pt.matrixTransform(m.inverse()); return { x: p.x, y: p.y };
+        }
+        function startDrag(nd, ev) {
+          ev.preventDefault(); S.drag = nd;
+          var move = function (e) { var p = svgPoint(e); nd.x = p.x; nd.y = p.y; nd.vx = 0; nd.vy = 0; nd._moved = true; if (!S.raf) run(); };
+          var up = function () { S.drag = null; window.removeEventListener("pointermove", move); window.removeEventListener("pointerup", up); S.alpha = Math.max(S.alpha, .3); run(); };
+          window.addEventListener("pointermove", move); window.addEventListener("pointerup", up);
+        }
+        function showNode(nd) {
+          var p = nd.node.props || {};
+          var rows = Object.keys(p).map(function (k) { return '<div class="kgf-prow"><b>' + esc(k) + '</b><span>' + esc(String(p[k])) + '</span></div>'; }).join("") || '<div class="card__desc">no properties</div>';
+          var c = colorFor(labelOf(nd.node));
+          panelEl.innerHTML = '<div class="kgf-panel__h"><span class="chip" style="color:' + c + ';border-color:' + c + '">' + esc(labelOf(nd.node)) + '</span> ' + esc(captionOf(nd.node)) + '</div>' + rows;
+        }
+        return { build: build };
+      }
+      var G_ONTO = makeGraph(document.getElementById("kgf-svg"), document.getElementById("kgf-legend"), document.getElementById("kgf-panel"));
+      var G_CFG = makeGraph(document.getElementById("kgc-svg"), document.getElementById("kgc-legend"), document.getElementById("kgc-panel"));
+      window.__KG = { makeGraph: makeGraph, labelColor: labelColor, colorFor: colorFor, esc: esc, kpi: kpi, num: num };
+      var ONLINE = false, CFG_LIVE = false;   /* ONLINE = Cosmos graph (ontology); CFG_LIVE = optional local config-drift bridge */
+
+      /* ---- ontology graph loader ---- */
+      var sampleSeq = 0;
+      function loadGraph(label, limit) {
+        var panel = document.getElementById("kgf-panel"), my = ++sampleSeq;
+        if (!ONLINE) {
+          var g = COSMOS_SNAP && COSMOS_SNAP.samples && COSMOS_SNAP.samples.ontology;
+          if (g && g.nodes) { G_ONTO.build(g); panel.innerHTML = '<div class="card__desc">Cosmos snapshot subgraph (' + g.nodes.length + ' nodes, ' + esc(COSMOS_SNAP.generatedAt) + '). Start the knowledge-graph API for the live graph.</div>'; }
+          else panel.innerHTML = '<div class="card__desc">No Cosmos snapshot exported yet (tools/export_ui_views.py).</div>';
+          return;
+        }
+        if (!label) return;
+        panel.innerHTML = '<div class="card__desc">Loading :' + esc(label) + ' neighbourhood\u2026</div>';
+        api("/rp/sample?label=" + encodeURIComponent(label) + "&limit=" + Math.min(limit || 40, 200), null, RP).then(function (r) {
+          if (my !== sampleSeq) return;
+          var g = r.graph || r;
+          if (!g.nodes || !g.nodes.length) { panel.innerHTML = '<div class="card__desc">No nodes for :' + esc(label) + '.</div>'; return; }
+          G_ONTO.build(g);
+          panel.innerHTML = '<div class="card__desc">' + g.nodes.length + ' nodes &middot; ' + ((g.edges || []).length) + ' relationships. Click a node to inspect.</div>';
+        }).catch(function (e) { if (my === sampleSeq) panel.innerHTML = '<div class="gl-offline">' + esc(e.message) + '</div>'; });
+      }
+
+      /* ---- CFG-RFC register graph (pick a change -> its subgraph) ---- */
+      function cfgLabel(r) { return r.code + (r.devs ? ' (' + r.devs + ' dev' + (r.devs > 1 ? 's' : '') + ')' : ''); }
+      function cfgMeta(code) {
+        var list = (SNAP && SNAP.cfgList) || [], r = null;
+        for (var i = 0; i < list.length; i++) { if (list[i].code === code) { r = list[i]; break; } }
+        var el = document.getElementById("kgc-meta");
+        if (!r) { el.innerHTML = ''; return; }
+        el.innerHTML = '<b>' + esc(r.code) + '</b> ' + (r.title ? ('\u2014 ' + esc(r.title)) : '')
+          + (r.decisionClass ? ' <span class="chip chip--neutral">' + esc(r.decisionClass) + '</span>' : '')
+          + (r.status ? ' <span class="chip chip--success">' + esc(r.status) + '</span>' : '')
+          + (r.site ? ' <span class="card__desc">site: ' + esc(r.site) + '</span>' : '');
+      }
+      function populateCfg(list) {
+        var sel = document.getElementById("kgc-cfg");
+        if (!list || !list.length) { sel.innerHTML = '<option value="">no CFG list</option>'; return; }
+        sel.innerHTML = list.map(function (r) { return '<option value="' + esc(r.code) + '">' + esc(cfgLabel(r)) + '</option>'; }).join("");
+        loadCfg(list[0].code);
+      }
+      function loadCfg(code) {
+        if (!code) return;
+        cfgMeta(code);
+        var panel = document.getElementById("kgc-panel");
+        if (!CFG_LIVE) {
+          var g = SNAP && SNAP.samples && SNAP.samples.cfgCase;
+          if (g && g.nodes) { G_CFG.build(g); panel.innerHTML = '<div class="card__desc">Bundled snapshot case (' + g.nodes.length + ' nodes). The config-drift graph is not in Cosmos yet, so this tab shows the snapshot.</div>'; }
+          else panel.innerHTML = '<div class="card__desc">No snapshot case available.</div>';
+          return;
+        }
+        if (!/^CFG\w+$/.test(code)) { panel.innerHTML = '<div class="gl-offline">bad code</div>'; return; }
+        panel.innerHTML = '<div class="card__desc">Loading ' + esc(code) + ' subgraph\u2026</div>';
+        var cy = "MATCH (cfg:CFG {code:'" + code + "'}) "
+          + "OPTIONAL MATCH (cfg)-[reg:REGISTERED_AS]->(cr:CRFC) "
+          + "OPTIONAL MATCH (cr)-[ex:EXCEPTION_AT]->(ps:PcdSite) "
+          + "OPTIONAL MATCH (cfg)<-[g:GOVERNED_BY]-(d:DevIdentity) "
+          + "OPTIONAL MATCH (sa)-[ra:HAS_DEVIATION]->(d) WHERE ra.severity='accepted' "
+          + "RETURN cfg,reg,cr,ex,ps,g,d,ra,sa LIMIT 80";
+        api("/query", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ cypher: cy }) }).then(function (r) {
+          var g = r.graph || { nodes: [], edges: [] };
+          if (!g.nodes.length) { panel.innerHTML = '<div class="card__desc">No subgraph for ' + esc(code) + '.</div>'; return; }
+          G_CFG.build(g);
+          panel.innerHTML = '<div class="card__desc">' + g.nodes.length + ' nodes &middot; ' + g.edges.length + ' relationships. Click a node to inspect.</div>';
+        }).catch(function (e) { panel.innerHTML = '<div class="gl-offline">' + esc(e.message) + '</div>'; });
+      }
+      document.getElementById("kgc-cfg").addEventListener("change", function () { loadCfg(this.value); });
+
+      /* ---- query template: cross-site inconsistencies (accepted here, open there) ---- */
+      function buildXsiteGraph() {
+        var XS = window.WHS_XSITE || null;
+        var recs = (XS && XS.records) ? XS.records.slice(0, 6) : [];
+        var nodes = [], edges = [];
+        recs.forEach(function (r, i) {
+          var did = "xd" + i, cap = (r.element || r.type) + (r.attr ? " \u00b7 " + r.attr : "");
+          nodes.push({ id: did, eid: did, labels: ["Deviation"], props: { name: cap, section: r.section, type: r.type, A: r.a || "\u2205", R: r.r || "\u2205", cfg: (r.cfg || []).join(", ") || "\u2014" } });
+          (r.accepted || []).slice(0, 3).forEach(function (s, j) {
+            var sid = "xa" + i + "_" + j;
+            nodes.push({ id: sid, eid: sid, labels: ["Accepted site"], props: { name: s } });
+            edges.push({ src: did, dst: sid, type: "ACCEPTED" });
+          });
+          (r.open || []).slice(0, 4).forEach(function (s, j) {
+            var sid = "xo" + i + "_" + j;
+            nodes.push({ id: sid, eid: sid, labels: ["Open / penalised"], props: { name: s } });
+            edges.push({ src: sid, dst: did, type: "OPEN" });
+          });
+        });
+        return { graph: { nodes: nodes, edges: edges }, shown: recs.length, totals: (XS && XS.totals) || {} };
+      }
+      function loadXsiteGraph() {
+        var meta = document.getElementById("kgc-meta"), panel = document.getElementById("kgc-panel");
+        labelColor["Deviation"] = "#2563eb"; labelColor["Accepted site"] = "#16a34a"; labelColor["Open / penalised"] = "#dc2626";
+        var b = buildXsiteGraph();
+        if (!b.graph.nodes.length) { meta.innerHTML = ''; panel.innerHTML = '<div class="card__desc">No cross-site data (assets/cross-site.js).</div>'; return; }
+        G_CFG.build(b.graph);
+        var t = b.totals;
+        meta.innerHTML = '<b>Cross-site inconsistencies</b> \u2014 accepted at one site (<span style="color:#16a34a">green</span>) but open / penalised at others (<span style="color:#dc2626">red</span>). '
+          + (t.identities ? 'Total ' + num(t.identities) + ' inconsistent deviations \u00b7 ' + num(t.withCfg || 0) + ' CFG-backed. Showing top ' + b.shown + '.' : 'Showing top ' + b.shown + '.');
+        panel.innerHTML = '<div class="card__desc">' + b.graph.nodes.length + ' nodes &middot; ' + b.graph.edges.length + ' relationships. Green = accepted, red = open. Click a node to inspect.</div>';
+      }
+
+      /* ---- query template: what changed (new deviations, new CRFCs & impact) ---- */
+      function loadChange() {
+        var C = window.WHS_CHANGE || null;
+        var meta = document.getElementById("kgc-meta");
+        var out = document.getElementById("kgc-tableout");
+        var panel = document.getElementById("kgc-panel");
+        if (!C) { meta.innerHTML = ''; out.innerHTML = '<div class="card__desc">No change data (assets/change-capture.js).</div>'; return; }
+        var t = C.totals || {};
+        meta.innerHTML = '<b>What changed</b> \u2014 scan window <b>' + esc(C.since) + '</b> \u2192 <b>' + esc(C.currentScan) + '</b> (' + esc(C.windowDays) + 'd). '
+          + num(t.new) + ' new deviations \u00b7 ' + num(t.newGap) + ' new <span style="color:#dc2626">gaps</span> \u00b7 '
+          + num(t.newAdoptable) + ' <span style="color:#b4690e">adoptable</span> \u00b7 ' + num((t.byState && t.byState.NEW_GOVERNED) || 0) + ' <span style="color:#16a34a">governed</span> \u00b7 '
+          + num(t.resolved) + ' resolved \u00b7 ' + num(t.newCrfc) + ' new/updated CRFC.';
+        var g = C.graph || { nodes: [], edges: [] };
+        if (g.nodes && g.nodes.length) { G_CFG.build(g); panel.innerHTML = '<div class="card__desc">' + g.nodes.length + ' nodes &middot; ' + (g.edges || []).length + ' relationships. Site \u2192 new finding; new finding \u2192 the CRFC it can adopt. Click a node to inspect.</div>'; }
+        else panel.innerHTML = '<div class="card__desc">No delta subgraph for this window.</div>';
+
+        var crfc = (C.newCrfc || []).slice(0, 12);
+        var crfcTbl = crfc.length
+          ? '<table class="config-table"><thead><tr><th>New / updated CRFC</th><th>Title</th><th>Status</th><th>Date</th><th style="text-align:right">Governs</th></tr></thead><tbody>'
+            + crfc.map(function (c) {
+              return '<tr><td class="mono">' + esc(c.code) + '</td><td>' + esc(c.title || "\u2014") + '</td>'
+                + '<td><span class="chip chip--neutral">' + esc(c.status || "\u2014") + '</span></td>'
+                + '<td class="mono">' + esc(c.date) + '</td>'
+                + '<td style="text-align:right">' + num(c.governs) + ' ident \u00b7 ' + num(c.sites) + ' sites</td></tr>';
+            }).join("") + '</tbody></table>'
+          : '<div class="card__desc">No CRFC dated inside the window.</div>';
+        var rows = (C.rows || []).slice(0, 40);
+        var STC = { NEW_GAP: "danger", NEW_ADOPTABLE: "warning", NEW_ADOPTABLE_PEER: "warning", NEW_GOVERNED: "success" };
+        var rowsTbl = '<table class="config-table"><thead><tr><th>Site</th><th>Section</th><th>Element</th><th>Impact</th><th>Adopt</th><th>First seen</th></tr></thead><tbody>'
+          + rows.map(function (r) {
+            return '<tr><td>' + esc(r.site) + '</td><td>' + esc(r.section) + '</td>'
+              + '<td class="mono" style="max-width:22ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + esc(r.element) + '">' + esc(r.element) + '</td>'
+              + '<td><span class="chip chip--' + (STC[r.state] || "neutral") + '" title="' + esc((C.stateLegend || {})[r.state] || "") + '">' + esc(r.state.replace("NEW_", "")) + '</span></td>'
+              + '<td class="mono">' + esc((r.adopt || []).join(", ") || "\u2014") + '</td>'
+              + '<td class="mono">' + esc(r.firstSeen) + '</td></tr>';
+          }).join("") + '</tbody></table>';
+        out.innerHTML = '<div class="section__eyebrow" style="margin-bottom:.4rem">New / updated CRFCs in the window</div>' + crfcTbl
+          + '<div class="section__eyebrow" style="margin:1rem 0 .4rem">Newest findings &amp; their governance impact</div>' + rowsTbl;
+      }
+
+      /* ---- query template: exception ledger (decision table) ---- */
+      var LED_DKEY = "whs_led_decisions";
+      function ledDecisions() { try { return JSON.parse(localStorage.getItem(LED_DKEY) || "{}"); } catch (e) { return {}; } }
+      function ledSetDecision(k, v) {
+        var d = ledDecisions();
+        if (d[k] === v) delete d[k]; else d[k] = v;
+        try { localStorage.setItem(LED_DKEY, JSON.stringify(d)); } catch (e) { }
+        loadLedgerDecision();
+      }
+      window.__ledSet = ledSetDecision;
+      function loadLedgerDecision() {
+        var L = window.WHS_LEDGER || null;
+        var meta = document.getElementById("kgc-meta");
+        var out = document.getElementById("kgc-tableout");
+        if (!L || !L.rows) { meta.innerHTML = ''; out.innerHTML = '<div class="card__desc">No ledger data (assets/exception-ledger.js).</div>'; return; }
+        var dec = ledDecisions();
+        var nDec = Object.keys(dec).length;
+        var totalSites = L.totalSites || 0;
+        meta.innerHTML = '<b>Exception ledger \u2014 decisions</b> (an accepted deviation <b>is</b> an exception). Each row: a value accepted at some of the ' + num(totalSites) + ' sites, still open at others. '
+          + 'Decide whether the exception should be adopted, re-opened, or needs a new CFG-RFC. '
+          + (nDec ? '<b>' + nDec + '</b> decision' + (nDec > 1 ? 's' : '') + ' recorded (saved in this browser).' : 'No decisions recorded yet.');
+
+        var adoptOnly = !document.getElementById("led2-all") || !document.getElementById("led2-all").checked;
+        var STC = { UNBACKED: "danger", UNBACKED_PEER: "warning", ORPHAN: "warning", STALE: "warning", GOVERNED: "success" };
+        function reco(r) {
+          if (r.state === "GOVERNED") return r.nOpen > 0 ? "Adopt " + (r.citedLive[0] || "the CRFC") + " at the " + r.nOpen + " open peer(s)" : "Fully governed \u2014 monitor";
+          if (r.state === "UNBACKED_PEER") return "Reuse peer " + (r.potential[0] || "CRFC") + " \u2014 attach it here";
+          if (r.state === "STALE") return "Cited " + (r.citedStale[0] || "CFG") + " is superseded \u2014 confirm the current CRFC";
+          if (r.state === "ORPHAN") return "Cited " + (r.citedAbsent[0] || "CFG") + " not in register \u2014 attach the real CRFC";
+          return "No CRFC anywhere \u2014 raise a CFG-RFC or re-open";
+        }
+        function crfcStatus(r) {
+          if ((r.citedLive || []).length) return '<span class="chip chip--success mono">' + esc(r.citedLive[0]) + ' live</span>';
+          if ((r.citedStale || []).length) return '<span class="chip chip--warning mono">' + esc(r.citedStale[0]) + ' stale</span>';
+          if ((r.citedAbsent || []).length) return '<span class="chip chip--danger mono">' + esc(r.citedAbsent[0]) + ' orphan</span>';
+          if ((r.potential || []).length) return '<span class="chip chip--neutral mono">' + esc(r.potential[0]) + ' (peer)</span>';
+          return '<span class="chip chip--danger">no CRFC</span>';
+        }
+        var rows = L.rows.filter(function (r) { return adoptOnly ? (r.nOpen > 0 || r.state === "UNBACKED") : true; }).slice(0, 250);
+        function rowKey(r) { return [r.section, r.element, r.attr, r.a, r.type].join("|"); }
+        function decBtn(k, v, label, cls) {
+          var on = dec[k] === v;
+          return '<button class="btn' + (on ? " btn--primary" : "") + '" style="padding:.15rem .5rem;font-size:var(--fs-xs)" onclick="window.__ledSet(' + JSON.stringify(k).replace(/"/g, "&quot;") + ',\'' + v + '\')">' + (on ? "\u2713 " : "") + label + '</button>';
+        }
+        var body = rows.map(function (r) {
+          var k = rowKey(r);
+          var val = (r.recordLevel || (!r.a && !r.r))
+            ? '<span class="chip chip--neutral" title="whole-record deviation \u2014 A and R are blank because the record is present or absent, not an attribute value. ' + esc(r.detail || "") + '">whole record</span>' + (r.detail ? ' <span class="mono" style="font-size:var(--fs-xs);opacity:.7">' + esc(String(r.detail).slice(0, 40)) + '</span>' : '')
+            : '<span class="mono" title="' + esc(r.a) + '">' + esc(String(r.a).slice(0, 32)) + (String(r.a).length > 32 ? "\u2026" : "") + '</span>';
+          var ssChip = (r.breadth === "SITE_SPECIFIC") ? ' <span class="chip chip--danger" title="accepted at ONE site only \u2014 peers do not share this exception">site-specific</span>' : '';
+          return '<tr>'
+            + '<td><div>' + esc(r.section) + '</div><div class="mono" style="font-size:var(--fs-xs);opacity:.7;max-width:26ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + esc(r.element) + '">' + esc(r.element) + (r.gui ? ' \u00b7 ' + esc(r.gui) : '') + '</div><div>' + val + '</div></td>'
+            + '<td style="text-align:right" title="' + esc((r.accSites || []).slice(0, 15).join(", ")) + '"><span class="chip chip--success">' + num(r.nAcc) + ' / ' + num(r.totalSites || totalSites) + '</span>' + ssChip + '</td>'
+            + '<td style="text-align:right" title="' + esc((r.openSites || []).slice(0, 15).join(", ")) + '">' + (r.nOpen > 0 ? '<span class="chip chip--warning">' + num(r.nOpen) + '</span>' : '<span style="opacity:.4">0</span>') + '</td>'
+            + '<td>' + crfcStatus(r) + '</td>'
+            + '<td><div style="margin-bottom:.3rem">' + esc(reco(r)) + '</div><div class="config-actions">'
+            + decBtn(k, "accept", "Accept", "") + decBtn(k, "reject", "Re-open", "") + decBtn(k, "suggest", "Suggest CRFC", "")
+            + '</div></td>'
+            + '</tr>';
+        }).join("");
+        out.innerHTML = '<div class="kgf-ctrl" style="margin-bottom:.5rem"><label style="display:inline-flex;align-items:center;gap:.35rem;font-size:var(--fs-small)"><input type="checkbox" id="led2-all"' + (adoptOnly ? "" : " checked") + '/> show all (not just adoptable / unbacked)</label></div>'
+          + '<table class="config-table"><thead><tr><th>Field &amp; accepted value</th><th style="text-align:right">Accepted / total</th><th style="text-align:right">Open in</th><th>CRFC status</th><th>Decision</th></tr></thead><tbody>' + body + '</tbody></table>';
+        var allChk = document.getElementById("led2-all");
+        if (allChk) allChk.addEventListener("change", loadLedgerDecision);
+      }
+
+      /* ---- template switcher ---- */
+      var tmplSel = document.getElementById("kgc-tmpl"), cfgSel = document.getElementById("kgc-cfg");
+      function applyTemplate(t) {
+        cfgSel.style.display = (t === "cfg") ? "" : "none";
+        var gw = document.getElementById("kgc-graphwrap");
+        var out = document.getElementById("kgc-tableout");
+        var showGraph = (t !== "ledger");
+        gw.style.display = showGraph ? "" : "none";
+        out.innerHTML = "";
+        if (t === "xsite") loadXsiteGraph();
+        else if (t === "change") loadChange();
+        else if (t === "ledger") loadLedgerDecision();
+        else loadCfg(cfgSel.value);
+      }
+      tmplSel.addEventListener("change", function () { applyTemplate(this.value); });
+
+      /* ---- boot ---- */
+      var labelSel = document.getElementById("kgf-label");
+      document.getElementById("kgf-reload").addEventListener("click", function () { loadGraph(labelSel.value, +document.getElementById("kgf-limit").value || 40); });
+      labelSel.addEventListener("change", function () { loadGraph(labelSel.value, +document.getElementById("kgf-limit").value || 40); });
+
+      function renderChips(labels, rels) {
+        document.getElementById("kg-labels").innerHTML = (labels || []).map(function (l) { return '<span class="chip chip--neutral mono">' + esc(l.label) + ' <span style="opacity:.55">' + num(l.count) + '</span></span>'; }).join(" ");
+        document.getElementById("kg-rels").innerHTML = (rels || []).map(function (l) { return '<span class="chip mono">:' + esc(l.type) + ' <span style="opacity:.55">' + num(l.count) + '</span></span>'; }).join(" ");
+      }
+
+      var cfgProbe = fetch(BRIDGE + "/schema", window.AbortSignal && AbortSignal.timeout ? { signal: AbortSignal.timeout(5000) } : {})
+        .then(function (r) { CFG_LIVE = r.ok; }).catch(function () { CFG_LIVE = false; });
+      cfgProbe.then(function () { populateCfg((SNAP && SNAP.cfgList) || []); });   /* independent of the Cosmos call */
+      api("/rp/schema", null, RP).then(function (sc) {
+        ONLINE = true; setConn(true, "live \u00b7 Cosmos graph " + esc((sc.source || "").replace("cosmos:", "")));
+        var badge = sc.verified ? '<span class="chip chip--success" style="vertical-align:middle"><span class="dot dot--live"></span> live</span>'
+          : '<span class="chip chip--danger" style="vertical-align:middle" title="live totals differ from the load record">check</span>';
+        document.getElementById("kg-kpis").innerHTML =
+          kpi(num(sc.totals.nodes) + ' ' + badge, "Vertices")
+          + kpi(num(sc.totals.relationships), "Edges")
+          + kpi(num((sc.labels || []).length), "Partitions")
+          + kpi(num((sc.relationships || []).length), "Edge types");
+        var labels = sc.labels || [];
+        labels.forEach(function (l) { colorFor(l.label); });
+        renderChips(labels, sc.relationships);
+        labelSel.innerHTML = labels.map(function (l) { return '<option value="' + esc(l.label) + '">' + esc(l.label) + ' (' + num(l.count) + ')</option>'; }).join("");
+        var pref = ["Table:PrIME2022", "Table:RTCIS", "SemanticConcept"], start = labels[0] && labels[0].label;
+        for (var i = 0; i < pref.length; i++) { if (labels.some(function (l) { return l.label === pref[i]; })) { start = pref[i]; break; } }
+        labelSel.value = start; loadGraph(start, 40);
+      }).catch(function () {
+        ONLINE = false; setConn(false, "offline \u00b7 Cosmos snapshot" + (COSMOS_SNAP ? " " + COSMOS_SNAP.generatedAt : ""));
+        document.getElementById("kg-offline").style.display = "";
+        var s = COSMOS_SNAP && COSMOS_SNAP.schema;
+        if (s) {
+          document.getElementById("kg-kpis").innerHTML =
+            kpi(num(s.totals.nodes), "Vertices") + kpi(num(s.totals.relationships), "Edges")
+            + kpi(num((s.labels || []).length), "Partitions") + kpi(num((s.relationships || []).length), "Edge types");
+          (s.labels || []).forEach(function (l) { colorFor(l.label); });
+          renderChips(s.labels, s.relationships);
+          labelSel.innerHTML = (s.labels || []).map(function (l) { return '<option value="' + esc(l.label) + '">' + esc(l.label) + ' (' + num(l.count) + ')</option>'; }).join("");
+        } else {
+          document.getElementById("kg-kpis").innerHTML = kpi("\u2014", "Nodes") + kpi("\u2014", "Relationships") + kpi("\u2014", "Node labels") + kpi("\u2014", "Relationship types");
+          labelSel.innerHTML = '<option value="">snapshot missing</option>';
+        }
+        loadGraph("", 40);
+      });
+
+      /* ---- tab switching ---- */
+      mount.querySelectorAll(".kg-tab").forEach(function (t) {
+        t.addEventListener("click", function () {
+          var tab = t.getAttribute("data-tab");
+          mount.querySelectorAll(".kg-tab").forEach(function (x) { x.classList.toggle("is-active", x === t); });
+          mount.querySelectorAll(".kg-pane").forEach(function (p) { p.classList.toggle("is-active", p.id === "kgtab-" + tab); });
+          if (window.RP_TAB) window.RP_TAB.activate(tab);
+        });
+      });
+    })();
+  </script>
+  <script src="./assets/rtcis-prime-tab.js"></script>
+  <script src="./assets/shell.js"></script>
+  <script src="./assets/bot.js"></script>
+</body>
+</html>

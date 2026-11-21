@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WHS GenAI — Data Source</title>
+  <link rel="stylesheet" href="./assets/design-system.css" />
+</head>
+<body class="app-body" data-active="data">
+  <div class="app">
+    <aside class="sidebar" id="app-sidebar"></aside>
+    <main class="content">
+      <div class="content__topbar">
+        <a href="data-knowledge.html" class="crumb">Warehouse Data &amp; Knowledge</a>
+        <span class="crumb">/</span>
+        <h1 id="d-title">Source</h1>
+      </div>
+      <div class="content__body dk-compact" id="d-body"></div>
+    </main>
+  </div>
+
+  <script src="./assets/data.js"></script>
+  <script>
+    (function () {
+      var id = new URLSearchParams(location.search).get("id");
+      var d = window.WHS.get("dataset", id) || window.WHS.datasets[0];
+      document.getElementById("d-title").textContent = d.name;
+      document.title = "WHS GenAI — " + d.name;
+
+      var kpis = d.stats.map(function (s) {
+        return '<div class="kpi"><div class="kpi__value">' + s[1] + '</div><div class="kpi__label">' + s[0] + "</div></div>";
+      }).join("");
+
+      // Last refresh (from Graph API) — formatted from the stored ISO timestamp
+      var dt = new Date(d.refreshed);
+      var refreshed = dt.toLocaleString("en-GB", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+
+      var isPrivate = d.registry === "private";
+      var isPlatform = d.registry === "platform";
+      var isWorkspace = d.registry === "workspace";
+      var isGovernance = d.registry === "governance";
+      var connectorType = d.connectorType || (d.registry === "powerbi" ? "powerbi" : d.registry === "sharepoint" ? "sharepoint" : d.registry === "blob" ? "blob" : "");
+      var connectorName = connectorType === "powerbi" ? "Power BI" : connectorType === "sharepoint" ? "SharePoint" : connectorType === "blob" ? "Azure Blob storage" : isGovernance ? "Governance & Quality register" : "";
+      var nativeAction = connectorType === "powerbi" ? "Open in Power BI" : connectorType === "blob" ? "Open in Azure" : "Open in SharePoint";
+
+      var meta = isPrivate
+        ? '<div class="src-meta">'
+          + '<span class="src-meta__item src-meta__item--private"><span class="src-meta__dot src-meta__dot--private"></span> Registry: <strong>My KB · registered by feng.xi.2</strong></span>'
+          + '<span class="src-meta__item">Owner: <strong>' + d.owner + "</strong></span>"
+          + '<span class="src-meta__item">Source: <strong>' + d.source + "</strong></span>"
+          + '<span class="src-meta__item">Last updated: <strong>' + refreshed + "</strong></span>"
+          + "</div>"
+        : (isPlatform || isWorkspace)
+        ? '<div class="src-meta">'
+          + '<span class="src-meta__item"><span class="src-meta__dot"></span> Registry: <strong>' + (isPlatform ? "Platform layer" : "Workspace KB") + '</strong></span>'
+          + '<span class="src-meta__item">Owner / steward: <strong>' + d.owner + "</strong></span>"
+          + '<span class="src-meta__item">Source: <strong>' + d.source + "</strong></span>"
+          + '<span class="src-meta__item">Last refresh: <strong>' + refreshed + "</strong></span>"
+          + "</div>"
+        : '<div class="src-meta">'
+          + '<span class="src-meta__item"><span class="src-meta__dot"></span> Registry: <strong>' + (connectorName || "Public · SharePoint / AskPG") + '</strong></span>'
+          + '<span class="src-meta__item">Owner / steward: <strong>' + d.owner + "</strong></span>"
+          + '<span class="src-meta__item">Catalog metadata updated: <strong>' + refreshed + "</strong></span>"
+          + (d.url ? '<span class="src-meta__item"><a href="' + d.url + '" target="_blank" rel="noopener">' + nativeAction + ' &#8599;</a></span>' : "")
+          + "</div>";
+
+      // KB documents (private KB only)
+      var docsCard = "";
+      if (d.docs && d.docs.length) {
+        var rows = d.docs.map(function (x) {
+          return '<a class="artifact-row" href="' + encodeURI(x.path) + '" target="_blank" rel="noopener">'
+            + '<span class="artifact-ico"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></svg></span>'
+            + '<span class="artifact-name">' + x.name + "</span>"
+            + '<span class="chip chip--neutral mono" style="margin-left:auto">' + x.type + "</span>"
+            + '<span class="artifact-open">Open &#8599;</span></a>';
+        }).join("");
+        docsCard = '<div class="card" style="margin-top:var(--space-5);padding:0">'
+          + '<div class="section__eyebrow" style="padding:var(--space-5) var(--space-5) var(--space-3)">KB documents · ' + d.docs.length + ' files</div>'
+          + '<div class="artifact-list">' + rows + "</div></div>";
+      }
+
+      // Coming-next data sources / endpoints
+      var comingCard = "";
+      if (d.comingNext && d.comingNext.length) {
+        comingCard = '<div class="card" style="margin-top:var(--space-5)">'
+          + '<div class="section__eyebrow">Coming next · data sources</div>'
+          + '<div class="flex flex-wrap gap-2 mt-4">'
+          + d.comingNext.map(function (c) { return '<span class="chip chip--warning">' + c + "</span>"; }).join("")
+          + '</div></div>';
+      }
+
+      var governanceCard = isPrivate
+        ? '<div class="card"><div class="section__eyebrow">Governance</div>'
+          + '<p class="text-mute mt-4" style="font-size:var(--fs-small)">This is the <strong>Warehouse Knowledge Base registered by feng.xi.2</strong> — it is <strong>not registered on SharePoint / AskPG</strong> and is not visible to other users. '
+          + 'It stays a personal source until you choose to publish it. If promoted, it would get a SharePoint owner/steward and be re-indexed into the graph like the public sources.</p></div>'
+        : (isPlatform || isWorkspace)
+        ? '<div class="card"><div class="section__eyebrow">Governance</div>'
+          + '<p class="text-mute mt-4" style="font-size:var(--fs-small)">This source is registered inside the M&amp;M workspace as a <strong>' + (isPlatform ? "platform layer" : "workspace knowledge source") + '</strong>. '
+          + 'The owner keeps the source current; updates should be re-indexed and validated before the Semantic Layer, Knowledge Graph or Skill Platform consumes them.</p></div>'
+        : connectorType === "powerbi"
+        ? '<div class="card"><div class="section__eyebrow">Governance</div>'
+          + '<p class="text-mute mt-4" style="font-size:var(--fs-small)">Power BI remains the system of record for Portfolio &amp; Footprint. The catalog reads report, semantic-model, owner and refresh metadata; it does not bypass workspace, report or row-level security. Source IDs must be configured before this prototype can synchronize.</p></div>'
+        : isGovernance
+        ? '<div class="card"><div class="section__eyebrow">Governance</div>'
+          + '<p class="text-mute mt-4" style="font-size:var(--fs-small)">This is the authoritative <strong>CFG-RFC register</strong> — the single source of truth for approved configuration changes and accepted exceptions. Config Drift triage validates every accepted deviation against it: a CFGxxxx that is withdrawn / superseded / rejected here makes the exception <strong>stale</strong>, and a code not present is an <strong>orphan</strong>. The PrIME CoE remains the steward; the register is reloaded into the knowledge graph (:CRFC / :Site) on refresh.</p></div>'
+        : connectorType === "blob"
+        ? '<div class="card"><div class="section__eyebrow">Governance</div>'
+          + '<p class="text-mute mt-4" style="font-size:var(--fs-small)">Row-level Config Drift output and the CFG-RFC export are delivered as CSV in <strong>Azure Blob storage</strong> and consumed read-only by the enricher / explainer. Access follows the storage account\'s standard access management; a storage account, container and managed-identity / SAS must be configured before this prototype can synchronize.</p></div>'
+        : connectorType === "sharepoint"
+        ? '<div class="card"><div class="section__eyebrow">Governance</div>'
+          + '<p class="text-mute mt-4" style="font-size:var(--fs-small)">SharePoint remains the system of record. The intended connection captures file and folder changes through Microsoft Graph delta tracking plus webhook notifications, re-indexes only changed content, preserves source versions and inherits SharePoint permissions. Site and library IDs must be configured before synchronization.</p></div>'
+        : '<div class="card"><div class="section__eyebrow">Governance</div>'
+          + '<p class="text-mute mt-4" style="font-size:var(--fs-small)">This source is a federated view onto <strong>' + d.source + '</strong>. '
+          + 'The <strong>original owner remains the steward</strong> and keeps it current; when the source changes it is re-indexed and the '
+          + 'knowledge graph is re-validated, so answers never drift from the system of record.</p></div>';
+
+      document.getElementById("d-body").innerHTML =
+        '<div class="detail-head">'
+        + '<div class="detail-head__icon" style="background:' + d.color + '1f">' + d.icon + "</div>"
+        + '<div><div class="detail-head__title">' + d.name
+        + ' <span class="chip">' + d.kind + "</span>"
+        + (isPrivate ? ' <span class="chip chip--warning">My KB · feng.xi.2</span>' : isPlatform ? ' <span class="chip chip--success">Platform layer</span>' : isWorkspace ? ' <span class="chip chip--neutral">Workspace KB</span>' : isGovernance ? ' <span class="chip" style="background:#ede9fe;color:#5b21b6">Governance &amp; Quality</span>' : connectorType === "powerbi" ? ' <span class="chip chip--powerbi">Power BI</span>' : connectorType === "blob" ? ' <span class="chip" style="background:#e0f2fe;color:#075985">Azure Blob</span>' : connectorType === "sharepoint" ? ' <span class="chip chip--neutral">SharePoint</span>' : "") + "</div>"
+        + '<div class="detail-head__sub">' + d.desc + "</div></div></div>"
+
+        + meta
+
+        + '<div class="kpi-row" style="margin-bottom:var(--space-6)">' + kpis + "</div>"
+
+        + docsCard
+
+        + comingCard
+
+        /* P7 · Retrieval testing panel */
+        + '<div class="card retr" style="margin-top:var(--space-5)">'
+        + '<div class="section__eyebrow">Test retrieval</div>'
+        + '<p class="text-mute mt-4" style="font-size:var(--fs-xs)">Type a question to see what this source would return — the chunks and graph nodes an agent would ground on, with relevance scores.</p>'
+        + '<div class="retr-bar">'
+        + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>'
+        + '<input id="retr-q" placeholder="e.g. ' + d.name + ' — how is a record resolved?" />'
+        + '<button class="btn btn--primary btn--sm" id="retr-run">Retrieve</button></div>'
+        + '<div id="retr-results"></div>'
+        + "</div>"
+
+        + '<div class="grid grid--2" style="margin-top:var(--space-5)">'
+        + '<div class="card"><div class="section__eyebrow">Preview</div>'
+        + '<p class="text-mute mt-4" style="font-size:var(--fs-small)">Source preview. The production page renders the live table browser / RAG index for this source, '
+        + 'with column-level lineage and confidence.</p></div>'
+        + governanceCard
+        + "</div>";
+
+      /* ---- Retrieval tester ---------------------------------------- */
+      var corpus = (d.docs && d.docs.length)
+        ? d.docs.map(function (x) { return { title: x.name, ref: x.type + " · " + x.path.split("/").pop(), kind: "chunk" }; })
+        : [
+            { title: d.name + " — overview & schema", ref: "index chunk", kind: "chunk" },
+            { title: d.name + " — " + (d.stats[0] ? d.stats[0][0].toLowerCase() + " (" + d.stats[0][1] + ")" : "tables"), ref: "table chunk", kind: "chunk" },
+            { title: d.name + " — graph node type", ref: "Neo4j node", kind: "graph" },
+            { title: d.name + " — relationships to other systems", ref: "Neo4j edges", kind: "graph" },
+            { title: d.name + " — governance & lineage", ref: "metadata chunk", kind: "chunk" }
+          ];
+
+      function score(q, t) {
+        q = q.toLowerCase();
+        var words = q.split(/\s+/).filter(function (w) { return w.length > 2; });
+        var hay = (t.title + " " + t.ref).toLowerCase();
+        var hits = words.reduce(function (n, w) { return n + (hay.indexOf(w) !== -1 ? 1 : 0); }, 0);
+        var base = 62 + (hits * 11);
+        return Math.min(98, base + ((t.title.length % 7)));
+      }
+
+      function runRetrieval() {
+        var q = (document.getElementById("retr-q").value || "").trim();
+        var box = document.getElementById("retr-results");
+        if (!q) { box.innerHTML = ""; return; }
+        var ranked = corpus.map(function (t) { return { t: t, s: score(q, t) }; })
+          .sort(function (a, b) { return b.s - a.s; }).slice(0, 4);
+        var top = ranked[0] ? ranked[0].s : 0;
+        var engine = isPrivate ? "feng.xi.2 My KB index"
+          : d.id === "semantic-layer" ? "timbr Semantic Layer"
+          : d.id === "knowledge-graph-layer" ? "Knowledge Graph + Cypher"
+          : d.id === "warehouse-data" ? "WH Data Replica catalog"
+          : d.id === "warehouse-knowledge" || d.id === "query-remediation-kb" || d.id === "ira-learnings" ? "Warehouse Knowledge + Knowledge Graph"
+          : (d.id === "sdc" || d.id === "wi-pmc") ? "Knowledge Graph + RAG" : "timbr + RAG index";
+        box.innerHTML =
+          '<div class="retr-meta">' + ranked.length + ' chunks retrieved from <strong>' + d.name + '</strong> · resolver: <strong>' + engine + '</strong> · top score ' + top + '%</div>'
+          + ranked.map(function (r) {
+            var w = r.s;
+            var cls = w >= 85 ? "ok" : w >= 72 ? "mid" : "low";
+            return '<div class="retr-hit">'
+              + '<span class="retr-hit__kind retr-hit__kind--' + r.t.kind + '">' + (r.t.kind === "graph" ? "node" : "chunk") + "</span>"
+              + '<div class="retr-hit__body"><div class="retr-hit__title">' + r.t.title + "</div>"
+              + '<div class="retr-hit__ref mono">' + r.t.ref + "</div></div>"
+              + '<div class="retr-hit__score"><span class="retr-bar-fill retr-bar-fill--' + cls + '" style="width:' + w + '%"></span></div>'
+              + '<span class="retr-hit__pct">' + w + "%</span></div>";
+          }).join("");
+      }
+      document.getElementById("retr-run").onclick = runRetrieval;
+      document.getElementById("retr-q").addEventListener("keydown", function (e) { if (e.key === "Enter") runRetrieval(); });
+    })();
+  </script>
+  <script src="./assets/shell.js"></script>
+  <script src="./assets/bot.js"></script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WHS GenAI — App Builder</title>
+  <link rel="stylesheet" href="./assets/design-system.css" />
+  <style>
+    .wb-status{margin-left:auto;display:flex;align-items:center;gap:.6rem}
+    .ab-layout{display:grid;grid-template-columns:260px 1fr;gap:var(--space-4)}
+    @media(max-width:900px){.ab-layout{grid-template-columns:1fr}}
+    .ab-list{border:1px solid var(--color-border);border-radius:.7rem;overflow:hidden;align-self:start}
+    .ab-list__head{display:flex;align-items:center;gap:.4rem;padding:.6rem .8rem;border-bottom:1px solid var(--color-border);background:var(--color-bg-alt)}
+    .ab-item{padding:.55rem .8rem;border-bottom:1px solid var(--color-border);cursor:pointer;font-size:.85rem}
+    .ab-item:hover{background:var(--color-bg-alt)}
+    .ab-item.is-active{background:#eff6ff;border-left:3px solid var(--color-primary)}
+    .ab-item b{display:block}
+    .ab-item small{color:var(--color-text-mute);font-size:.7rem}
+    .ab-tabs{display:flex;gap:.35rem;margin-bottom:.5rem}
+    .ab-tab{border:1px solid var(--color-border);background:#fff;border-radius:.5rem;padding:.4rem .8rem;font-size:.8rem;font-weight:600;color:var(--color-text-soft);cursor:pointer}
+    .ab-tab.is-active{background:var(--color-primary);color:#fff;border-color:var(--color-primary)}
+    .ab-editor{width:100%;min-height:340px;border:1px solid var(--color-border);border-radius:.55rem;padding:.7rem;font-family:var(--mono,ui-monospace,monospace);font-size:.8rem;line-height:1.5;resize:vertical}
+    .ab-bar{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.6rem}
+    .ab-bar input{padding:.5rem .8rem;border:1px solid var(--color-border);border-radius:.55rem;font-size:.9rem}
+    .ab-pub{display:flex;align-items:center;gap:.5rem;font-size:.82rem;margin-left:auto}
+    .ab-url{font-size:.76rem;background:#0f172a;color:#a7f3d0;padding:.3rem .6rem;border-radius:.4rem;font-family:var(--mono,monospace)}
+    .ab-preview{width:100%;height:520px;border:1px solid var(--color-border);border-radius:.6rem;background:#fff}
+    .wb-offline{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:.8rem 1rem;border-radius:.6rem;font-size:.85rem;margin-bottom:var(--space-4)}
+    .wb-offline code{background:#1e293b;color:#fbbf24;padding:.1rem .4rem;border-radius:.3rem}
+  </style>
+</head>
+<body class="app-body" data-active="apps">
+  <div class="app">
+    <aside class="sidebar" id="app-sidebar"></aside>
+
+    <main class="content">
+      <div class="content__topbar">
+        <h1>App Builder</h1>
+        <span class="crumb">· Skill Platform light-apps · HTML view + CSV data · publish a shareable link</span>
+        <div class="wb-status"><span class="chip" id="wb-conn"><span class="dot"></span> connecting…</span></div>
+      </div>
+
+      <div class="content__body" style="max-width:1200px">
+        <div id="wb-offline" class="wb-offline" style="display:none">
+          <b>Live bridge not reachable.</b> The App Builder stores light-apps and serves published links via the local bridge.
+          Start it: <code>python graph_api.py --port 8737</code>, then reload.
+        </div>
+
+        <p class="text-soft" style="margin-bottom:var(--space-3)">
+          A <strong>light app</strong> = an <strong>HTML</strong> page (the view, for people) bound to a
+          <strong>CSV</strong> data layer (for data). The page reads <code class="mono">window.APP_DATA</code>
+          ({header, rows}); update the CSV without touching the page. Publish to get a read-only
+          <code class="mono">/p/&lt;id&gt;</code> link anyone can open — no database required.
+        </p>
+
+        <div class="ab-layout">
+          <!-- app list -->
+          <div class="ab-list">
+            <div class="ab-list__head">
+              <strong style="font-size:.82rem;flex:1">My apps</strong>
+              <button class="btn btn--primary btn--sm" id="ab-new">+ New</button>
+            </div>
+            <div id="ab-items"></div>
+          </div>
+
+          <!-- editor -->
+          <div>
+            <div class="ab-bar">
+              <input id="ab-name" placeholder="App name" style="min-width:240px" />
+              <button class="btn btn--primary btn--sm" id="ab-save">Save</button>
+              <span class="ab-pub">
+                <label class="wb-sw" style="display:inline-flex;align-items:center;gap:.4rem">
+                  <input type="checkbox" id="ab-publish" style="appearance:none;width:34px;height:18px;border-radius:999px;background:#cbd5e1;position:relative;cursor:pointer" /> Publish
+                </label>
+              </span>
+            </div>
+            <div id="ab-urlrow" style="margin-bottom:.6rem;display:none">
+              <span class="ab-url" id="ab-url"></span>
+              <button class="btn btn--ghost btn--sm" id="ab-copy">Copy</button>
+              <button class="btn btn--ghost btn--sm" id="ab-open">Open</button>
+            </div>
+
+            <div class="ab-tabs">
+              <button class="ab-tab is-active" data-e="preview">Preview</button>
+              <button class="ab-tab" data-e="html">HTML (view)</button>
+              <button class="ab-tab" data-e="csv">CSV (data)</button>
+            </div>
+
+            <div id="ab-pane-preview">
+              <iframe class="ab-preview" id="ab-frame" title="preview"></iframe>
+            </div>
+            <div id="ab-pane-html" style="display:none">
+              <textarea class="ab-editor" id="ab-html" spellcheck="false"></textarea>
+            </div>
+            <div id="ab-pane-csv" style="display:none">
+              <textarea class="ab-editor" id="ab-csv" spellcheck="false"></textarea>
+              <p class="text-soft" style="font-size:.76rem;margin-top:.3rem">First row = header. Saved to <code class="mono">data.csv</code>; injected as <code class="mono">window.APP_DATA</code>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="./assets/data.js"></script>
+  <script src="./assets/shell.js"></script>
+  <script>
+  (function(){
+    var BRIDGE="http://127.0.0.1:8737";
+    var CUR=null; // current app manifest {id,name,html,csv,published,publishUrl}
+    function api(path,opts){return fetch(BRIDGE+path,opts).then(function(r){if(!r.ok)return r.json().then(function(j){throw new Error(j.error||("HTTP "+r.status));});return r.json();});}
+    function post(path,body){return api(path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});}
+    function esc(s){return String(s==null?"":s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+    function setConn(ok){var c=document.getElementById("wb-conn");if(ok){c.className="chip chip--success";c.innerHTML='<span class="dot dot--live"></span> Bridge live';}else{c.className="chip chip--danger";c.innerHTML='<span class="dot"></span> Bridge offline';}document.getElementById("wb-offline").style.display=ok?"none":"block";}
+
+    var STARTER_HTML=[
+'<!DOCTYPE html><html><head><meta charset="utf-8"/>',
+'<style>body{font-family:system-ui,Segoe UI,sans-serif;margin:0;background:#f6f8fb;color:#0f172a}',
+'.wrap{max-width:960px;margin:0 auto;padding:24px}h1{font-size:20px}',
+'.kpis{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}',
+'.kpi{background:#fff;border:1px solid #e5e9f0;border-radius:10px;padding:12px 16px;min-width:120px}',
+'.kpi b{display:block;font-size:22px}.kpi span{font-size:12px;color:#64748b}',
+'table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #e5e9f0;border-radius:10px;overflow:hidden}',
+'th,td{padding:8px 10px;border-bottom:1px solid #eef1f5;text-align:left;font-size:13px}',
+'th{background:#f1f5f9}</style></head><body><div class="wrap">',
+'<h1>My Dashboard</h1><div class="kpis" id="kpis"></div><table id="t"></table>',
+'<script>',
+'var D=window.APP_DATA||{header:[],rows:[]};',
+'var h=D.header,rows=D.rows;',
+'document.getElementById("kpis").innerHTML=',
+'  \'<div class="kpi"><b>\'+rows.length+\'</b><span>Rows</span></div>\'+',
+'  \'<div class="kpi"><b>\'+h.length+\'</b><span>Columns</span></div>\';',
+'var html="<tr>"+h.map(function(c){return "<th>"+c+"</th>";}).join("")+"</tr>";',
+'rows.forEach(function(r){html+="<tr>"+h.map(function(c){return "<td>"+(r[c]==null?"":r[c])+"</td>";}).join("")+"</tr>";});',
+'document.getElementById("t").innerHTML=html;',
+'<\/script></div></body></html>'
+].join("\n");
+    var STARTER_CSV="Item,Owner,Status,Value\nInbound receiving,Ana,On track,42\nPutaway,Ben,At risk,17\nPicking,Cara,On track,88\n";
+
+    function renderList(apps){
+      var el=document.getElementById("ab-items");
+      if(!apps.length){el.innerHTML='<div class="ab-item"><small>No apps yet — click + New</small></div>';return;}
+      el.innerHTML=apps.map(function(a){
+        return '<div class="ab-item'+(CUR&&CUR.id===a.id?' is-active':'')+'" data-id="'+esc(a.id)+'">'+
+          '<b>'+esc(a.name)+'</b><small>'+(a.published?'● published':'draft')+(a.hasCsv?' · CSV':'')+'</small></div>';
+      }).join("");
+    }
+    function refreshList(){return api("/sp/apps").then(function(r){setConn(true);renderList(r.apps||[]);}).catch(function(){setConn(false);});}
+
+    function loadApp(id){
+      api("/sp/app?id="+encodeURIComponent(id)).then(function(a){
+        if(!a.available){alert(a.error);return;}
+        CUR=a;
+        document.getElementById("ab-name").value=a.name||"";
+        document.getElementById("ab-html").value=a.html||"";
+        document.getElementById("ab-csv").value=a.csv||"";
+        document.getElementById("ab-publish").checked=!!a.published;
+        showUrl(a);
+        preview();refreshList();
+      });
+    }
+    function showUrl(a){
+      var row=document.getElementById("ab-urlrow");
+      if(a.published&&a.publishUrl){row.style.display="";document.getElementById("ab-url").textContent=a.publishUrl;}
+      else{row.style.display="none";}
+    }
+    function newApp(){
+      CUR={id:null,name:"Untitled app",html:STARTER_HTML,csv:STARTER_CSV,published:false};
+      document.getElementById("ab-name").value=CUR.name;
+      document.getElementById("ab-html").value=CUR.html;
+      document.getElementById("ab-csv").value=CUR.csv;
+      document.getElementById("ab-publish").checked=false;
+      document.getElementById("ab-urlrow").style.display="none";
+      preview();
+    }
+    function collect(){return {id:CUR&&CUR.id,name:document.getElementById("ab-name").value.trim()||"Untitled app",html:document.getElementById("ab-html").value,csv:document.getElementById("ab-csv").value,kind:"dashboard"};}
+    function save(){
+      var body=collect();
+      return post("/sp/app/save",body).then(function(r){
+        if(!CUR)CUR={};CUR.id=r.id;CUR.name=r.name;CUR.published=r.published;CUR.publishUrl=r.publishUrl;
+        return refreshList().then(function(){return r;});
+      });
+    }
+
+    function preview(){
+      var html=document.getElementById("ab-html").value;
+      var csv=document.getElementById("ab-csv").value;
+      // parse CSV -> APP_DATA and inject, so preview mirrors the published behaviour
+      var data=parseCsv(csv);
+      var inject='<script>window.APP_DATA='+JSON.stringify(data)+';<\/script>';
+      var out=html.indexOf("</head>")>=0?html.replace("</head>",inject+"</head>"):inject+html;
+      document.getElementById("ab-frame").srcdoc=out;
+    }
+    function parseCsv(text){
+      var lines=(text||"").replace(/\r/g,"").split("\n").filter(function(l){return l.length;});
+      if(!lines.length)return {header:[],rows:[]};
+      var header=splitCsvLine(lines[0]);
+      var rows=lines.slice(1).map(function(l){var c=splitCsvLine(l);var o={};header.forEach(function(h,i){o[h]=c[i]!=null?c[i]:"";});return o;});
+      return {header:header,rows:rows};
+    }
+    function splitCsvLine(l){
+      var out=[],cur="",q=false;
+      for(var i=0;i<l.length;i++){var ch=l[i];
+        if(q){if(ch=='"'){if(l[i+1]=='"'){cur+='"';i++;}else q=false;}else cur+=ch;}
+        else{if(ch=='"')q=true;else if(ch==',' ){out.push(cur);cur="";}else cur+=ch;}}
+      out.push(cur);return out;
+    }
+
+    // wire
+    document.getElementById("ab-items").addEventListener("click",function(e){var it=e.target.closest(".ab-item");if(it&&it.getAttribute("data-id"))loadApp(it.getAttribute("data-id"));});
+    document.getElementById("ab-new").addEventListener("click",newApp);
+    document.getElementById("ab-save").addEventListener("click",function(){save().then(function(){var m=document.getElementById("ab-name");m.style.transition="none";m.style.background="#dcfce7";setTimeout(function(){m.style.background="";},400);});});
+    document.getElementById("ab-publish").addEventListener("change",function(e){
+      if(!CUR||!CUR.id){save().then(function(){doPublish(e.target.checked);});}else{doPublish(e.target.checked);}
+    });
+    function doPublish(on){post("/sp/app/publish",{id:CUR.id,publish:on}).then(function(r){CUR.published=r.published;CUR.publishUrl=r.publishUrl;showUrl(r);refreshList();});}
+    document.getElementById("ab-copy").addEventListener("click",function(){navigator.clipboard.writeText(document.getElementById("ab-url").textContent);});
+    document.getElementById("ab-open").addEventListener("click",function(){window.open(document.getElementById("ab-url").textContent,"_blank");});
+    document.querySelectorAll(".ab-tab").forEach(function(t){t.addEventListener("click",function(){
+      document.querySelectorAll(".ab-tab").forEach(function(x){x.classList.remove("is-active");});t.classList.add("is-active");
+      var e=t.getAttribute("data-e");
+      document.getElementById("ab-pane-preview").style.display=e==="preview"?"":"none";
+      document.getElementById("ab-pane-html").style.display=e==="html"?"":"none";
+      document.getElementById("ab-pane-csv").style.display=e==="csv"?"":"none";
+      if(e==="preview")preview();
+    });});
+    var pT;function livePreview(){clearTimeout(pT);pT=setTimeout(preview,300);}
+    document.getElementById("ab-html").addEventListener("input",livePreview);
+    document.getElementById("ab-csv").addEventListener("input",livePreview);
+
+    api("/health").then(function(){setConn(true);return refreshList();}).then(function(){newApp();}).catch(function(){setConn(false);newApp();});
+  })();
+  </script>
+</body>
+</html>

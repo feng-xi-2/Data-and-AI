@@ -1,0 +1,16 @@
+# Config Drift Governance — Python dependencies
+# Install:  pip install -r requirements.txt
+#
+# Core build pipeline (regenerates the frontend data from Config report/):
+pandas>=2.0
+openpyxl>=3.1
+
+# Knowledge graph (only needed for build_graph.py / *_graph.py against Neo4j):
+neo4j>=5.14
+
+# Live connectors — OPTIONAL, only for pulling drift straight from the source
+# systems instead of the shipped data.xlsx. Not required to build or view the UI.
+#   Power BI  (pbi_drift_alert.py)      -> msal, requests
+#   SharePoint(sharepoint_reader.py)    -> msal, requests
+msal>=1.28
+requests>=2.31

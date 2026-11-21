@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WHS GenAI — Agent</title>
+  <link rel="stylesheet" href="./assets/design-system.css" />
+</head>
+<body class="app-body" data-active="agents" data-active-id="">
+  <div class="app">
+    <aside class="sidebar" id="app-sidebar"></aside>
+    <main class="content">
+      <div class="content__topbar">
+        <a href="agents.html" class="crumb">Agents</a>
+        <span class="crumb">/</span>
+        <h1 id="d-title">Agent</h1>
+      </div>
+      <div class="content__body" id="d-body"></div>
+    </main>
+  </div>
+
+  <script src="./assets/data.js"></script>
+  <script>
+    (function () {
+      var id = new URLSearchParams(location.search).get("id");
+      var a = window.WHS.get("agent", id) || window.WHS.agents[0];
+      document.body.setAttribute("data-active-id", a.id);
+      document.getElementById("d-title").textContent = a.name;
+      document.title = "WHS GenAI — " + a.name;
+
+      function tags(arr) { return arr.map(function (s) { return '<span class="chip chip--neutral">' + s + "</span>"; }).join(" "); }
+      function links(ids, kind, page) {
+        if (!ids || !ids.length) return '<span class="text-mute">—</span>';
+        return ids.map(function (x) {
+          var item = window.WHS.get(kind, x);
+          var label = item ? (item.icon ? item.icon + " " : "") + item.name : x;
+          return '<a class="chip chip--neutral" href="' + page + "?id=" + x + '" style="text-decoration:none">' + label + "</a>";
+        }).join(" ");
+      }
+
+      document.getElementById("d-body").innerHTML =
+        '<div class="detail-head">'
+        + '<div class="detail-head__icon">' + a.icon + "</div>"
+        + '<div><div class="detail-head__title">' + a.name
+        + ' <span class="chip">' + a.role + "</span></div>"
+        + '<div class="detail-head__sub">' + a.tagline + "</div></div></div>"
+
+        + '<p class="text-soft" style="max-width:760px;margin-bottom:var(--space-6)">' + a.desc + "</p>"
+
+        + '<div class="grid grid--2">'
+        + '<div class="card"><div class="section__eyebrow">Pattern</div><p class="mt-4">' + a.pattern + "</p></div>"
+        + '<div class="card"><div class="section__eyebrow">Skills &amp; tools</div><div class="flex flex-wrap gap-2 mt-4">' + tags(a.skills) + "</div></div>"
+        + '<div class="card"><div class="section__eyebrow">Tool skills attached</div><div class="flex flex-wrap gap-2 mt-4">' + links(a.tools, "skill", "skill.html") + "</div></div>"
+        + '<div class="card"><div class="section__eyebrow">Powers these assistants</div><div class="flex flex-wrap gap-2 mt-4">' + links(a.usedBy, "assistant", "assistant.html") + "</div></div>"
+        + "</div>";
+    })();
+  </script>
+  <script src="./assets/shell.js"></script>
+  <script src="./assets/bot.js"></script>
+</body>
+</html>

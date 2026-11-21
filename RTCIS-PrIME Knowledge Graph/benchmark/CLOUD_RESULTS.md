@@ -67,6 +67,39 @@ and the gateway rejects the multi-turn Responses input (assistant `phase` items,
 items). GPT-5.6 Sol is the newest model that does tool calls on Chat Completions; it is the Deep Agent default
 (`KG_AGENT_MODEL`). The single-shot pipeline stays available (`KG_ASSISTANT=pipeline`).
 
+## Round 5 — concept-first routing (themes + Timbr concepts), before / after on a theme set
+
+Change: a `concept_context` tool the agent calls first. It finds the question's business theme (graph `Domain`) and Timbr
+concept, and lists their **directly linked** tables in the request engine, checked against the live catalog. Table
+descriptions now include the official PrIME descriptions and their theme and concept words. The agent sees no column
+hints and no benchmark tables. Benchmark: 7 theme questions were added (shipment, outbound, receiving ×2, trailer,
+counting, automation), each with a reference SQL run on DE08 before use. Total: 18 questions (12 with references) and
+8 conversions, same model (GPT-5.6 Sol).
+Raw: `cloud_batch_results_theme_{before,after,after2,stability,v3_changed,v3_zone}.json`.
+
+| | Before | After (final code) |
+|---|---|---|
+| Questions validated | 18 / 18 | 18 / 18 |
+| Execution accuracy (12 scored) | 10 / 12 | **11 / 12** |
+| Conversions validated, identical contract | 7 / 8 (R09 returned no SQL) | **8 / 8** (two runs) |
+| SQL runs for the 18 questions / time | 23 / 802 s | 23 / 841 s |
+
+Every item that changed, with all runs:
+
+| Question | Before | After runs | Cause |
+|---|---|---|---|
+| Configured WCS ids (automation) | 0/1: used `wcs_evt_map` / `wcs_inv_rec_config`, 1 row | **5/5**: `wcsmst`, 8 rows | the theme lists `wcsmst`, and its PrIME description ("The main Warehouse Control System table") is now searchable |
+| Picked + shipped quantity per shipment status | 0/1 | 3/6 (one run returned no SQL) | **the reference was wrong**: it used `pckqty` (still to pick: 0 on completed shipments) instead of `picked_qty` (picked: 64,268,802 ≈ shipped 64,268,880 on completed). The reference was fixed and all stored SQL re-scored. The agent still varies between the two columns. |
+| RTCIS unit loads per zone | 1/1 | 1/8 | the known finer-grain issue (BUG-10: sub-site × zone, also open in rounds 3–4). Version 1 offered RTCIS tables inferred through two mapping hops (`agv_inventory_view`), and the agent used one. Fixed: only tables linked directly to the theme or concept are offered, and themes with no table in the engine are not shown. Still unstable at n=3 (1/3). |
+
+Fixed on the way (tests first):
+- `CosmosGraph.context` failed the whole Gremlin query when a `MAPS_TO` target lacked `table`, and the request returned 500. Every projection is now `coalesce`d, and graph tools report a failure to the model instead of raising.
+- Theme descriptions made of the Domain name alone could not route ("shipments" did not reach `outbound`). Generic tables found in every theme (`wh`) are left out.
+
+Limits: one run per item for **before**, and n=2–8 per changed item for **after**. The 12 references cover 9 of the 10
+themes (master data and picking have none). Next: references for the 6 unscored questions, more questions per theme
+(BIRD-style held-out set), n ≥ 3 for every item, and RTCIS zone grain as a rule in the query-writing skill (BUG-10).
+
 ## Round 3 detail
 
 Open: the inventory difference above; references for the 6 unscored questions; a larger held-out question set (BIRD-style) before

@@ -96,7 +96,9 @@ def main():
     b = os.path.join(out, "benchmark")
     for f in ("catalog.json", "gold.json", "predicted.json", "graph_validation.json", "results.json", "RESULTS.md",
               "cosmos_load_rtcis_prime.json", "sdc_pmc_validation.json", "cloud_batch_results.json", "cloud_batch_results_round1.json", "cloud_batch_results_round2.json",
-                            "cloud_batch_results_deep_agent.json", "sdc_pmc_presence.json", "CLOUD_RESULTS.md"):
+                            "cloud_batch_results_deep_agent.json", "sdc_pmc_presence.json", "CLOUD_RESULTS.md",
+              "cloud_batch_results_theme_before.json", "cloud_batch_results_theme_after.json", "cloud_batch_results_theme_after2.json",
+              "cloud_batch_results_theme_stability.json", "cloud_batch_results_theme_v3_changed.json", "cloud_batch_results_theme_v3_zone.json"):
         if os.path.exists(os.path.join(KIT, "benchmark", f)):
             put(os.path.join(KIT, "benchmark", f), os.path.join(b, f))
     mv = json.load(open(os.path.join(KIT, "benchmark", "mapping_validation.json"), encoding="utf-8"))

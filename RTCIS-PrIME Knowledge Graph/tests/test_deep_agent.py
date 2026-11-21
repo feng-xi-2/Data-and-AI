@@ -113,3 +113,65 @@ def test_final_answer_without_sql_falls_back_to_the_last_successful_run(tmp_path
     r = a.ask("pallets", engine="PrIME2022", site="PRIME22_DE08")
     assert r["sql"] == SQL and r["status"] == "validated"
     assert any("last successful" in w for w in r["warnings"])
+
+
+def test_concept_context_routes_a_question_through_its_theme_to_catalog_checked_tables(tmp_path):
+    theme = {"id": "Domain:inventory", "label": "Theme", "engine": None, "name": "inventory", "description": "inventory pallet stock",
+             "tables": {"PrIME2022": ["invlod", "inventory_view"], "RTCIS": ["unitld"]}}
+    db = FakeDB([OK])
+    agent_dir = tmp_path / "agent"
+    shutil.copytree(D.AGENT_DIR, agent_dir)
+    model = ScriptedModel(messages=iter([call("concept_context", {"text": "pallet stock per area"}, 1), final(SQL)]))
+    model.seen = []
+    a = D.DeepAssistant(graph=FakeGraph(), db=db, index=INDEX + [theme], columns=COLUMNS, templates=TEMPLATES, model=model,
+                        agent_dir=str(agent_dir))
+    a.ask("pallet stock per area", engine="PrIME2022", site="PRIME22_DE08", params={"wh_id": "DE08"})
+    out = " ".join(str(m.content) for m in model.seen[-1] if m.type == "tool")
+    assert "theme inventory" in out and "invlod" in out
+    assert "inventory_view (not in the PrIME2022 catalog)" in out      # never offered as a usable table
+    assert "RTCIS: unitld" in out                                       # counterpart in the other engine, for conversions
+
+
+class BrokenGraph(FakeGraph):
+    def context(self, table_ids):
+        raise RuntimeError("Gremlin: The provided traverser of key \"tt\" maps to nothing.")
+
+
+def test_a_failing_graph_lookup_is_reported_to_the_model_and_the_answer_still_completes(tmp_path):
+    db = FakeDB([OK, OK])
+    a, model, _ = make([call("graph_context", {"tables": ["invlod"]}, 1), call("run_sql", {"sql": SQL}, 2), final(SQL)], db, tmp_path,
+                       graph=BrokenGraph())
+    r = a.ask("pallets per location", engine="PrIME2022", site="PRIME22_DE08", params={"wh_id": "DE08"})
+    assert r["status"] == "validated"
+    assert "graph lookup failed" in " ".join(str(m.content) for m in model.seen[-1] if m.type == "tool")
+
+
+def test_concept_context_offers_only_directly_linked_tables_of_the_request_engine(tmp_path):
+    theme = {"id": "Domain:location", "label": "Theme", "engine": None, "name": "location", "description": "location zone",
+             "tables": {"RTCIS": ["agv_inventory_view", "unitld"], "PrIME2022": ["locmst"]},
+             "direct": {"PrIME2022": ["locmst"]}}          # the RTCIS tables were only reached through mappings
+    db = FakeDB([OK])
+    agent_dir = tmp_path / "agent"
+    shutil.copytree(D.AGENT_DIR, agent_dir)
+    model = ScriptedModel(messages=iter([call("concept_context", {"text": "unit loads per location zone"}, 1), final("SELECT 1 AS a")]))
+    model.seen = []
+    a = D.DeepAssistant(graph=FakeGraph(), db=db, index=INDEX + [theme], columns=COLUMNS, templates=TEMPLATES, model=model,
+                        agent_dir=str(agent_dir))
+    a.ask("unit loads per location zone", engine="RTCIS", site="RTCIS_EUS")
+    out = " ".join(str(m.content) for m in model.seen[-1] if m.type == "tool")
+    assert "agv_inventory_view" not in out and "no theme or concept with RTCIS tables" in out
+
+
+def test_concept_context_is_silent_about_themes_without_tables_in_the_request_engine(tmp_path):
+    prime_only = {"id": "Domain:location", "label": "Theme", "engine": None, "name": "location", "description": "location zone",
+                  "tables": {"PrIME2022": ["locmst"]}, "direct": {"PrIME2022": ["locmst"]}}
+    db = FakeDB([OK])
+    agent_dir = tmp_path / "agent"
+    shutil.copytree(D.AGENT_DIR, agent_dir)
+    model = ScriptedModel(messages=iter([call("concept_context", {"text": "unit loads per location zone"}, 1), final("SELECT 1 AS a")]))
+    model.seen = []
+    a = D.DeepAssistant(graph=FakeGraph(), db=db, index=INDEX + [prime_only], columns=COLUMNS, templates=TEMPLATES, model=model,
+                        agent_dir=str(agent_dir))
+    a.ask("unit loads per location zone", engine="RTCIS", site="RTCIS_EUS")
+    out = " ".join(str(m.content) for m in model.seen[-1] if m.type == "tool")
+    assert "no theme or concept with RTCIS tables" in out and "locmst" not in out

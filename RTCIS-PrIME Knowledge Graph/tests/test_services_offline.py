@@ -88,6 +88,45 @@ def test_query_view_passes_the_key_only_as_a_binding():
     assert seen and not any(evil in s or "drop()" in s for s in seen)
 
 
+def test_schema_breaks_down_the_load_record_and_confirms_its_totals_live_then_caches(tmp_path):
+    rec = tmp_path / "cosmos_load_rtcis_prime.json"
+    rec.write_text('{"loaded_at": "2026-11-21 15:18", "vertices": {"Table:RTCIS": 3, "Column:RTCIS": 10, "SemanticConcept": 2},'
+                   ' "edge_types": {"HAS_COLUMN": 10, "MAPS_TO": 4}}')
+    g = S.CosmosGraph.__new__(S.CosmosGraph)
+    g.graph, g.load_record = "rtcis_prime", str(rec)
+    seen = []
+    g.q = lambda gremlin, **b: (seen.append(gremlin), [15] if "g.V()" in gremlin else [14])[1]
+    s = g.schema()
+    assert s["totals"] == {"nodes": 15, "relationships": 14} and s["verified"] is True
+    assert s["labels"][0] == {"label": "Column:RTCIS", "count": 10} and len(s["relationships"]) == 2
+    assert s["source"] == "cosmos:rtcis_prime" and s["loaded_at"] == "2026-11-21 15:18"
+    assert all("groupCount" not in q for q in seen)   # a full groupCount costs ~1,100 RU and is throttled (429)
+    g.schema()
+    assert len(seen) == 2
+
+
+def test_schema_says_when_the_live_graph_differs_from_the_load_record(tmp_path):
+    rec = tmp_path / "rec.json"
+    rec.write_text('{"vertices": {"Table:RTCIS": 3}, "edge_types": {"MAPS_TO": 4}}')
+    g = S.CosmosGraph.__new__(S.CosmosGraph)
+    g.graph, g.load_record = "rtcis_prime", str(rec)
+    g.q = lambda gremlin, **b: [99]
+    s = g.schema()
+    assert s["verified"] is False and s["totals"] == {"nodes": 99, "relationships": 99}
+
+
+def test_sample_reads_one_partition_by_binding_and_refuses_an_unknown_label():
+    g = S.CosmosGraph.__new__(S.CosmosGraph)
+    seen = []
+    g._schema = (1e18, {"labels": [{"label": "Table:RTCIS", "count": 1}]})
+    g.q = lambda gremlin, **b: (seen.append((gremlin, b)), [])[1]
+    g._graph = lambda ids, with_platforms=True: {"nodes": [{"id": i} for i in ids], "edges": []}
+    g.sample("Table:RTCIS", 500)
+    pick = [b for s, b in seen if "has('pk', p)" in s]
+    assert pick and pick[0]["p"] == "Table:RTCIS" and pick[0]["lim"] <= 60
+    assert g.sample("x').drop()", 10) == {"nodes": [], "edges": []}
+
+
 # --- replica endpoint you host: the guard runs here first, the endpoint only receives read-only SQL ---------------
 def test_http_replica_sends_only_guarded_sql(monkeypatch):
     sent = []
@@ -118,3 +157,24 @@ def test_http_replica_sends_only_guarded_sql(monkeypatch):
     assert sent[0][2]["Authorization"] == "Bearer t0k"
     assert r["ok"] is True and r["empty_fields"] == ["a"] and r["stage"] == "executed"
     assert db.validate("SELECT 1 AS a", "RTCIS_EUS", {"x int --": 1})["stage"] == "params"
+
+
+def test_context_query_tolerates_mapping_targets_without_a_table_or_platform():
+    g = S.CosmosGraph.__new__(S.CosmosGraph)
+    g._rules = []
+    seen = []
+    g.q = lambda gremlin, **b: (seen.append(gremlin), [])[1]
+    g.context(["Table:prime:invlod"])
+    mapping_q = [s for s in seen if "MAPS_TO" in s and "project(" in s][0]
+    assert "by(inV().values('table'))" not in mapping_q and "by(inV().values('platform'))" not in mapping_q
+
+
+def test_context_reads_column_and_table_mappings_only_at_their_own_level():
+    g = S.CosmosGraph.__new__(S.CosmosGraph)
+    g._rules = []
+    seen = []
+    g.q = lambda gremlin, **b: (seen.append(gremlin), [])[1]
+    g.context(["Table:prime14:locmst"])
+    col_q = [s for s in seen if "out('HAS_COLUMN').outE('MAPS_TO')" in s][0]
+    tab_q = [s for s in seen if "within(t)).outE('MAPS_TO')" in s][0]
+    assert "where(inV().hasLabel('Column'))" in col_q and "where(inV().hasLabel('Table'))" in tab_q

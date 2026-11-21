@@ -52,6 +52,15 @@ def test_semantic_overview_shows_concepts_and_their_relations(svc):
     assert {"INHERITS", "RELATES_TO"} <= {e["type"] for e in g["edges"]}
 
 
+def test_ontology_schema_and_sample_read_the_live_cosmos_graph(svc):
+    s = svc.graph.schema()
+    labels = {x["label"]: x["count"] for x in s["labels"]}
+    assert s["totals"]["nodes"] > 30000 and s["totals"]["relationships"] > 40000
+    assert labels.get("Table:RTCIS", 0) > 100 and labels.get("SemanticConcept", 0) >= 30
+    g = svc.graph.sample("Table:PrIME2022", 30)
+    assert g["nodes"] and all(n["labels"] for n in g["nodes"]) and g["edges"]
+
+
 def test_query_view_shows_both_sides_of_a_conversion(svc):
     g = svc.graph.view("query", "R16")
     ids = {n["id"] for n in g["nodes"]}
@@ -93,7 +102,9 @@ def test_validate_refuses_writes_without_touching_the_database(svc):
 
 # --- model + end to end ------------------------------------------------------------------------------------------
 def test_genai_model_answers(svc):
-    assert "ok" in svc.llm.chat([{"role": "user", "content": "Reply with the single word OK."}]).lower()
+    import kg_services as S   # svc.llm is only the Deep Agent label; the platform client is GenAiLLM
+    assert "ok" in S.GenAiLLM().chat([{"role": "user", "content": "Reply with the single word OK."}]).lower()
+    assert "Deep Agent" in svc.llm.model
 
 
 def test_ask_end_to_end_is_validated_on_de08(svc):

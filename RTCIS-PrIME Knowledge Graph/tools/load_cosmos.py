@@ -15,6 +15,7 @@ The account key is read through ARM listKeys at run time (signed-in user) and ke
 """
 import argparse
 import asyncio
+import collections
 import json
 import os
 import sys
@@ -226,6 +227,7 @@ def main():
         print("cosmos", a.graph, "vertices", sum(v.values()), v, flush=True)
         print("cosmos", a.graph, "edges", sum(e.values()), e, flush=True)
         json.dump({"db": DB, "graph": a.graph, "loaded_at": time.strftime("%Y-%m-%d %H:%M"), "vertices": v, "edges": e,
+                   "edge_types": dict(collections.Counter(x["label"] for x in graphio.load("edges", a.dir)).most_common()),
                    "failed": failed[:50]}, open(os.path.join(KIT, "benchmark", f"cosmos_load_{a.graph}.json"), "w"), indent=1)
     finally:
         c.close()

@@ -244,6 +244,24 @@ needs your approval and the AIF gates.
 show one "Semantic Layer & Knowledge Graph" page (tabs: live graph / ontology snapshot). iDecide reaches the API through its
 backend proxy `/sql-remediation/*` (`SQL_REMEDIATION_API_URL`; 503 "not connected" when unset).
 
+## 13. Concept-first routing (themes + Timbr concepts → tables)
+
+Following published practice (data.world: a knowledge graph over the SQL schema raised GPT-4 accuracy from 16% to 54%;
+Timbr: concept, then semantic SQL, then validate; Palantir: model real-world things, not tables), the agent now starts
+with `concept_context`:
+`kg_core.concept_map` gives each business theme (`Domain`, via `IN_DOMAIN`) and Timbr concept (`MAPPED_FROM`) its
+tables per engine. It extends them through table-level `MAPS_TO` only to show counterparts in the other engines.
+`kg_core.route_concepts` ignores filler words ("status", "number" …) and ranks a hit's tables by fit to the question.
+The tool offers only tables linked directly to the theme or concept, checked against the engine's live catalog.
+Table search now also uses the official PrIME table descriptions and the theme and concept words.
+Benchmark (round 5, `benchmark/CLOUD_RESULTS.md`): EX 10/12 → 11/12, conversions 7/8 → 8/8, automation question 0/1 →
+5/5. RTCIS zone grain remains unstable (BUG-10).
+
+The ontology tab of both UIs now reads the Cosmos graph (`/rp/schema`, `/rp/sample`):
+- Per-partition counts come from the load record, which was exact-checked at load time.
+- Totals are counted live and flagged when they differ (`verified`).
+- A full `groupCount` costs ~1,100 RU and is throttled, so it is never run.
+
 ## References
 * Text2KGBench — Mihindukulasooriya et al., ISWC 2023, github.com/cenguix/Text2KGBench (P/R/F1, ontology conformance, subject / relation / object hallucination).
 * Microsoft GraphRAG — github.com/microsoft/graphrag (entity + relationship extraction; local search from entity entry points).
@@ -253,3 +271,7 @@ backend proxy `/sql-remediation/*` (`SQL_REMEDIATION_API_URL`; 503 "not connecte
 * Spider (Yale LILY) and BIRD (bird-bench) text-to-SQL benchmarks: execution accuracy as the acceptance metric.
 * Microsoft Learn, "Secure your account — Azure Cosmos DB for Apache Gremlin" (2026-04): private endpoints, managed identities; points high-scale work to Cosmos DB for NoSQL and OLAP graph to Graph in Microsoft Fabric.
 * LangChain Deep Agents (docs.langchain.com, `deepagents` 0.7): planning, filesystem memory (`AGENTS.md`), skills, permissions on top of LangGraph.
+* Sequeda, Allemang, Jacob (data.world), "A Benchmark to Understand the Role of Knowledge Graphs on LLM Accuracy for Question Answering on Enterprise SQL Databases", arXiv 2311.07509 / GRADES-NDA 2024.
+* Timbr LangChain integration (docs.langchain.com/oss/python/integrations/graphs/timbr): concept-based semantic SQL, validate, execute.
+* Palantir, "Ontology design: best practices" (palantir.com/docs/foundry/ontology/ontology-best-practices).
+* neo4j-graphrag-python examples (Text2Cypher with schema + examples, Cypher template retriever).

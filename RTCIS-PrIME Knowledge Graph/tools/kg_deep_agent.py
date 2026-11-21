@@ -77,7 +77,10 @@ class DeepAssistant:
         def graph_context(tables: list[str]) -> str:
             """Validated mappings, learnings and expert rules from the knowledge graph for these tables."""
             side = SIDE[source_engine or engine]
-            ctx = self.graph.context([f"Table:{side}:{t.lower()}" for t in tables])
+            try:
+                ctx = self.graph.context([f"Table:{side}:{t.lower()}" for t in tables])
+            except Exception as e:   # a graph outage must not end the answer: tell the model and let it go on
+                return f"graph lookup failed ({type(e).__name__}) - continue with describe_tables / find_examples"
             return h._context_text(ctx) or "nothing in the graph for these tables"
 
         def find_examples(text: str) -> str:
@@ -100,7 +103,32 @@ class DeepAssistant:
             return json.dumps({"columns": res.get("columns"), "first_rows": (res.get("rows") or [])[:5], "row_count": res.get("row_count"),
                                "empty_fields": res.get("empty_fields")}, default=str)[:4000]
 
-        fns = [search_knowledge, describe_tables, join_paths, graph_context, find_examples, run_sql]
+        def concept_context(text: str) -> str:
+            """Business theme (inventory, outbound, receiving, automation ...) and Timbr semantic concept of the question,
+            with their tables in this engine (checked in the live catalog) and the matching tables in the other engines.
+            Call this first, then describe_tables on the tables it names."""
+            entries = [x for x in self.index if x.get("label") in ("Theme", "SemanticConcept")]
+            hits = k.route_concepts(text, entries, self.index, engine, k=3)
+            if not hits:
+                return "no theme or concept matches - use search_knowledge"
+            cat = self.columns.get(engine, {})
+            lines = []
+            for x in hits:
+                kind = "theme" if x["label"] == "Theme" else "concept"
+                direct = set(x["direct"].get(engine, [])) if "direct" in x else set(x["tables"].get(engine, []))
+                # only tables linked directly to the theme / concept: ones inferred through mappings misled the agent
+                # (RTCIS zones -> agv_inventory_view via the inventory_view hub)
+                mine = [t for t in x["ranked"].get(engine, []) if t in direct][:8]
+                if not mine:
+                    continue   # a theme with no table in this engine is noise for this request
+                usable = [t for t in mine if t.lower() in cat]
+                missing = [f"{t} (not in the {engine} catalog)" for t in mine if t.lower() not in cat]
+                others = "; ".join(f"{e}: {', '.join(ts)}" for e, ts in x["tables"].items() if e != engine and ts)
+                lines.append(f"- {kind} {x['name']}: {x['description'][:200]}\n  {engine} tables: " + ", ".join(usable + missing)
+                             + (f"\n  other engines: {others}" if others else ""))
+            return "\n".join(lines) or f"no theme or concept with {engine} tables - use search_knowledge"
+
+        fns = [concept_context, search_knowledge, describe_tables, join_paths, graph_context, find_examples, run_sql]
         return [StructuredTool.from_function(f) for f in fns]
 
     def _agent(self, tools):

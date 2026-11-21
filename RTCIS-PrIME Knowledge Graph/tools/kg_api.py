@@ -7,7 +7,7 @@ import os
 import re
 import sys
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -146,6 +146,14 @@ def create_app(svc):
     @app.get("/rp/search")
     def search(q: str):
         return svc.graph.search(q)
+
+    @app.get("/rp/schema")
+    def schema():
+        return svc.graph.schema()
+
+    @app.get("/rp/sample")
+    def sample(label: str, limit: int = Query(40, ge=1, le=200)):
+        return svc.graph.sample(label, limit)
 
     @app.get("/rp/templates")
     def templates():

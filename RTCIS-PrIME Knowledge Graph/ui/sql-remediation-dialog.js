@@ -68,13 +68,13 @@
     root.innerHTML =
       '<div class="card" style="margin-bottom:var(--space-5)">'
       + '<div class="flex items-center gap-3" style="justify-content:space-between;flex-wrap:wrap">'
-      +   '<div><div class="section__eyebrow">Ask, convert or validate &mdash; one box, every answer checked on a real database</div>'
-      +   '<p class="card__desc" style="margin:.3rem 0 0;max-width:86ch">Type a <b>question</b> &rarr; validated SQL. Paste <b>SQL</b> &rarr; validated on <i>Run on</i>, or converted when <i>Convert to</i> is another database. '
-      +   'Several questions (one per line ending with ? or as a list) or several SQL separated by a line <code>---</code> / <code>GO</code> &rarr; a batch (max 25). Ctrl+Enter sends.</p></div>'
+      +   '<div><div class="section__eyebrow">Ask &middot; convert &middot; validate &mdash; run on a real replica</div>'
+      +   '<p class="card__desc" style="margin:.3rem 0 0;max-width:86ch"><b>Question</b> &rarr; SQL. <b>SQL</b> &rarr; validated, or converted when <i>Convert to</i> is another database. '
+      +   'Several questions or SQL split by <code>---</code> / <code>GO</code> &rarr; batch (max 25). Ctrl+Enter sends.</p></div>'
       +   '<div class="card__desc" id="sr-cfg" style="text-align:right">connecting\u2026</div>'
       + "</div>"
       + '<div id="sr-offline" style="display:none;margin-top:.6rem;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:.6rem .8rem;border-radius:.6rem;font-size:.85rem">'
-      +   "<b>SQL Remediation API not reachable</b> at <code>" + esc(API) + "</code>. Start it (<code>_kg_cosmos: . .\\env.local.ps1; &amp; $py tools\\kg_api.py</code>) or set the cloud API in <code>localStorage.rp_api</code>.</div>"
+      +   "<b>Not connected</b> to the SQL Remediation API (<code>" + esc(API) + "</code>). Local: run <code>tools\\kg_api.py</code>; cloud: set <code>localStorage.rp_api</code>.</div>"
       + '<div class="kgf-ctrl" style="margin:.6rem 0 .4rem;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">Run on <select id="sr-site">' + siteOpts("RTCIS_EUS") + "</select>" + whBox("sr-site", "RTCIS_EUS")
       +   ' &nbsp;Convert to <select id="sr-dst"><option value="">same database (no conversion)</option>' + siteOpts("PRIME22_DE08") + "</select>" + whBox("sr-dst", "PRIME22_DE08")
       +   ' <select id="sr-tpl"><option value="">insert a validated template\u2026</option></select></div>'

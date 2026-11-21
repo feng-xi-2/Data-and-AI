@@ -46,5 +46,35 @@
   "Table:PrIME2022": 13588,
   "Table:RTCIS": 9081
  },
- "failed": []
+ "failed": [],
+ "edge_types": {
+  "HAS_COLUMN": 28585,
+  "MAPS_TO": 9079,
+  "EXISTS_AT": 2098,
+  "IN_PLATFORM": 1680,
+  "READS_COLUMN": 926,
+  "MENTIONS": 586,
+  "HAS_FIELD": 424,
+  "DERIVED_FROM": 279,
+  "IN_DOMAIN": 249,
+  "USES_TABLE": 238,
+  "READS": 207,
+  "APPLIES_RULE": 204,
+  "CONFIGURES": 183,
+  "LINKS_TO": 163,
+  "MAPPED_FROM": 117,
+  "JOINS_WITH": 91,
+  "RENDERED_WITH": 85,
+  "MAPS_FROM": 78,
+  "EXPLAINED_BY": 68,
+  "IN_MODULE": 58,
+  "MAPS_INTO": 52,
+  "DOCUMENTED_IN": 42,
+  "INHERITS": 28,
+  "TRANSFORMS_TO": 21,
+  "RELATES_TO": 21,
+  "JOINS_VIA": 18,
+  "CONVERTS_TO": 17
+ },
+ "edge_types_source": "edges loaded in this run (relationships/parts/edges_*.json); totals match the exact check above"
 }

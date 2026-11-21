@@ -219,3 +219,83 @@ def test_route_picks_the_action_from_what_was_typed(text, same, mode, n):
 
 def test_route_strips_list_markers_from_batch_questions():
     assert k.route("- pallets per area\n- open picks", same_engine=False)["items"] == ["pallets per area", "open picks"]
+
+
+# --- concept-first routing: themes (Domain) and Timbr concepts lead to tables in every engine ---------------------
+_CN = [{"id": "Domain:shipment", "label": "Domain", "name": "shipment"},
+       {"id": "SemanticConcept:outbound_shipments", "label": "SemanticConcept", "name": "outbound_shipments",
+        "description": "Outbound flow of a car move (trailer) through the DC"},
+       {"id": "Table:prime:shipment", "label": "Table", "name": "shipment", "platform": "PrIME2022"},
+       {"id": "Table:prime14:shipment", "label": "Table", "name": "shipment", "platform": "PrIME2014"},
+       {"id": "Table:rtcis:shphdr", "label": "Table", "name": "shphdr", "platform": "RTCIS"},
+       {"id": "Table:prime:invlod", "label": "Table", "name": "invlod", "platform": "PrIME2022"}]
+_CE = [{"src": "Table:prime:shipment", "dst": "Domain:shipment", "label": "IN_DOMAIN"},
+       {"src": "Table:rtcis:shphdr", "dst": "Table:prime:shipment", "label": "MAPS_TO"},
+       {"src": "SemanticConcept:outbound_shipments", "dst": "Table:prime14:shipment", "label": "MAPPED_FROM"},
+       {"src": "Table:prime14:shipment", "dst": "Table:prime:shipment", "label": "MAPS_TO"}]
+
+
+def test_concept_map_links_themes_and_concepts_to_tables_in_all_three_engines():
+    m = {x["id"]: x for x in k.concept_map(_CN, _CE)}
+    theme, concept = m["Domain:shipment"], m["SemanticConcept:outbound_shipments"]
+    assert theme["label"] == "Theme" and theme["engine"] is None   # never mixed into the per-engine table search
+    assert theme["tables"] == {"PrIME2022": ["shipment"], "RTCIS": ["shphdr"], "PrIME2014": ["shipment"]}
+    assert concept["tables"] == {"PrIME2014": ["shipment"], "PrIME2022": ["shipment"], "RTCIS": ["shphdr"]}
+    assert "trailer" in concept["description"] and "invlod" not in str(m)
+
+
+def test_table_descriptions_carry_their_theme_and_concept_words():
+    d = k.table_descriptions(_CN, _CE)
+    assert "theme shipment" in d["Table:prime:shipment"] and "concept outbound shipments" in d["Table:prime:shipment"]
+    assert "concept outbound shipments" in d["Table:prime14:shipment"] and "theme shipment" in d["Table:rtcis:shphdr"]
+
+
+def test_a_theme_is_found_by_the_names_and_descriptions_of_its_tables_and_generic_tables_are_left_out():
+    nodes = [{"id": f"Domain:{d}", "label": "Domain", "name": d} for d in ("outbound", "receiving", "trailer")] + [
+        {"id": "Table:prime:shipment_line", "label": "Table", "name": "shipment_line", "platform": "PrIME2022"},
+        {"id": "Table:prime:wcsmst", "label": "Table", "name": "wcsmst", "platform": "PrIME2022"},
+        {"id": "Table:prime:wh", "label": "Table", "name": "wh", "platform": "PrIME2022"},
+        {"id": "Query:R1:prime", "label": "Query", "intent": "WCS warehouse control system setup"}]
+    edges = [{"src": "Table:prime:shipment_line", "dst": "Domain:outbound", "label": "IN_DOMAIN"},
+             {"src": "Table:prime:wcsmst", "dst": "Domain:receiving", "label": "IN_DOMAIN"},
+             {"src": "Query:R1:prime", "dst": "Table:prime:wcsmst", "label": "READS"}] + [
+        {"src": "Table:prime:wh", "dst": f"Domain:{d}", "label": "IN_DOMAIN"} for d in ("outbound", "receiving", "trailer")]
+    m = k.concept_map(nodes, edges)
+    assert k.retrieve("How many shipments per status?", m, k=1)[0]["name"] == "outbound"
+    assert k.retrieve("Which WCS ids are configured?", m, k=1)[0]["name"] == "receiving"
+    assert all("wh" not in x["tables"].get("PrIME2022", []) for x in m)   # in every theme = says nothing about the question
+
+
+def test_route_concepts_ignores_question_filler_words_and_ranks_the_theme_tables_by_the_question():
+    entries = [{"id": "SemanticConcept:short_status", "label": "SemanticConcept", "engine": None, "name": "short_status",
+                "description": "short status of an order line", "tables": {"PrIME2022": ["prtftp"]}},
+               {"id": "Domain:receiving", "label": "Theme", "engine": None, "name": "receiving",
+                "description": "receiving trlr wkohdr rcvtrk receiving truck", "tables": {"PrIME2022": ["trlr", "wkohdr", "rcvtrk"]}}]
+    tables = [{"id": "Table:prime:rcvtrk", "label": "Table", "engine": "PrIME2022", "name": "rcvtrk", "description": "receiving truck header"},
+              {"id": "Table:prime:trlr", "label": "Table", "engine": "PrIME2022", "name": "trlr", "description": "trailer"},
+              {"id": "Table:prime:wkohdr", "label": "Table", "engine": "PrIME2022", "name": "wkohdr", "description": "work order"}]
+    hits = k.route_concepts("How many receiving trucks are there in each receiving status?", entries, tables, "PrIME2022")
+    assert hits[0]["name"] == "receiving" and hits[0]["ranked"]["PrIME2022"][0] == "rcvtrk"
+    assert all(h["name"] != "short_status" for h in hits)    # 'status' alone does not pick a concept
+
+
+def test_table_descriptions_start_with_the_official_prime_description():
+    nodes = [{"id": "Table:prime:wcsmst", "label": "Table", "name": "wcsmst", "platform": "PrIME2022",
+              "description": "The main Warehouse Control System table."}]
+    assert k.table_descriptions(nodes, [])["Table:prime:wcsmst"].startswith("The main Warehouse Control System table.")
+
+
+def test_route_concepts_lists_the_direct_theme_tables_before_those_reached_through_mappings():
+    nodes = [{"id": "Domain:receiving", "label": "Domain", "name": "receiving"},
+             {"id": "Table:prime:rcvtrk", "label": "Table", "name": "rcvtrk", "platform": "PrIME2022", "description": "Inbound Shipment"},
+             {"id": "Table:prime14:rcvtrk", "label": "Table", "name": "rcvtrk", "platform": "PrIME2014"},
+             {"id": "Table:prime:invdtl", "label": "Table", "name": "invdtl", "platform": "PrIME2022",
+              "description": "receiving inbound receipt inventory detail"}]
+    edges = [{"src": "Table:prime:rcvtrk", "dst": "Domain:receiving", "label": "IN_DOMAIN"},
+             {"src": "Table:prime14:rcvtrk", "dst": "Table:prime:rcvtrk", "label": "MAPS_TO"},
+             {"src": "Table:prime14:rcvtrk", "dst": "Table:prime:invdtl", "label": "MAPS_TO"}]
+    desc = k.table_descriptions(nodes, edges)
+    index = [{"id": n["id"], "label": "Table", "engine": n["platform"], "name": n["name"], "description": desc.get(n["id"], "")}
+             for n in nodes if n["label"] == "Table"]
+    hits = k.route_concepts("receiving inbound receipts", k.concept_map(nodes, edges), index, "PrIME2022")
+    assert hits[0]["ranked"]["PrIME2022"] == ["rcvtrk", "invdtl"]

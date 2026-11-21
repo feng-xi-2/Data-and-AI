@@ -7,6 +7,13 @@ import kg_api
 
 
 class G:
+    def schema(self):
+        return {"totals": {"nodes": 2, "relationships": 1}, "labels": [{"label": "Table:RTCIS", "count": 2}],
+                "relationships": [{"type": "MAPS_TO", "count": 1}], "source": "cosmos:rtcis_prime"}
+
+    def sample(self, label, limit=40):
+        return {"nodes": [{"id": f"{label}:{limit}", "labels": ["RTCIS table"], "props": {}}], "edges": []}
+
     def view(self, kind, key, limit=40):
         return {"nodes": [{"id": f"{kind}:{key}", "labels": ["RTCIS table"], "props": {}}], "edges": []}
 
@@ -93,6 +100,15 @@ def test_approve_reruns_the_sql_on_the_replica_and_records_the_approver(tmp_path
     assert r.status_code == 400 and "did not run" in r.json()["detail"]
     lines = open(svc.approved_file, encoding="utf-8").read().splitlines()
     assert len(lines) == 1 and '"approved_by": "<user>@<company>"' in lines[0]
+
+
+def test_ontology_schema_and_sample_come_from_the_cosmos_graph(tmp_path):
+    c, _ = client(tmp_path)
+    s = c.get("/rp/schema").json()
+    assert s["totals"]["nodes"] == 2 and s["source"] == "cosmos:rtcis_prime"
+    g = c.get("/rp/sample", params={"label": "Table:RTCIS", "limit": 12}).json()
+    assert g["nodes"][0]["id"] == "Table:RTCIS:12"
+    assert c.get("/rp/sample", params={"label": "Table:RTCIS", "limit": 999}).status_code == 422
 
 
 def test_unknown_site_is_a_client_error(tmp_path):

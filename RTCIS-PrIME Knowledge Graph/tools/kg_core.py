@@ -168,9 +168,27 @@ def join_paths(sqls):
 
 def table_descriptions(nodes, edges, limit=600):
     """Words for every table from the knowledge that points at it: query intents (READS), concepts / learnings / facts
-    (MENTIONS), SDC module names (USES_TABLE) and RTCIS -> PrIME transformation rules (TRANSFORMS_TO, both ends)."""
+    (MENTIONS), SDC module names (USES_TABLE) and RTCIS -> PrIME transformation rules (TRANSFORMS_TO, both ends).
+    Each table is also tagged with its business themes and Timbr concepts (concept_map), so a theme word finds it."""
+    out = _knowledge_words(nodes, edges)
+    table_id = {(n.get("platform"), n.get("name")): n["id"] for n in nodes if n.get("label") == "Table"}
+    tags = {}
+    for c in concept_map(nodes, edges):
+        tag = ("theme " if c["label"] == "Theme" else "concept ") + c["name"].replace("_", " ")
+        for eng, names in c["tables"].items():
+            for name in names:
+                tid = table_id.get((eng, name))
+                if tid:
+                    tags.setdefault(tid, []).append(tag)
+    res = {t: " | ".join(dict.fromkeys(v))[:limit] for t, v in out.items()}
+    for t, v in tags.items():
+        res[t] = "; ".join(dict.fromkeys(v)) + (" | " + res[t] if res.get(t) else "")
+    return res
+
+
+def _knowledge_words(nodes, edges):
     by_id = {n["id"]: n for n in nodes}
-    out = {}
+    out = {n["id"]: [n["description"][:200]] for n in nodes if n.get("label") == "Table" and n.get("description")}   # PrIME docs
     for e in edges:
         if e["label"] == "TRANSFORMS_TO" and e.get("rule"):
             for t in (e["src"], e["dst"]):
@@ -182,7 +200,89 @@ def table_descriptions(nodes, edges, limit=600):
         text = n.get("intent") or n.get("name") or n.get("text") or ""
         if text:
             out.setdefault(e["dst"], []).append(text[:200])
-    return {t: " | ".join(dict.fromkeys(v))[:limit] for t, v in out.items()}
+    return out
+
+
+ROUTE_STOP = set("status number total there exist exists recorded configured most recent top type ids each are were have "
+                 "list give find show".split())
+
+
+def route_concepts(question, entries, table_index, engine, k=3):
+    """Themes / Timbr concepts for a question, with each hit's tables in `engine` ranked by how well they fit the question
+    (table name + knowledge words), the rest in curated order. Filler words (status, number, total ...) do not route."""
+    q = " ".join(w for w in re.findall(r"[A-Za-z0-9_]+", question or "") if w.lower() not in ROUTE_STOP)
+    hits = retrieve(q, entries, k=k) if q.strip() else []
+    out = []
+    for h in hits:
+        names = h["tables"].get(engine, [])
+        direct = [n for n in names if n in h.get("direct", {}).get(engine, names)]
+        ranked = []
+        for group in (direct, [n for n in names if n not in direct]):
+            cand = [x for x in table_index if x.get("label") == "Table" and x.get("engine") == engine and x.get("name") in group]
+            fit = [x["name"] for x in retrieve(q, cand, engine=engine, k=len(cand))] if cand else []
+            ranked += fit + [n for n in group if n not in fit]
+        out.append(dict(h, ranked={**h["tables"], engine: ranked}))
+    return out
+
+
+ENGINE_OF_SIDE = {"rtcis": "RTCIS", "prime14": "PrIME2014", "prime": "PrIME2022"}
+
+
+def concept_map(nodes, edges, per_engine=12):
+    """Business themes (Domain, via IN_DOMAIN) and Timbr semantic concepts (via MAPPED_FROM) with their tables in each
+    engine. The direct links are extended by up to two hops of table-level MAPS_TO (RTCIS <-> PrIME 2014 <-> PrIME 2022),
+    direct tables first, at most `per_engine` per engine. Entries have no engine, so per-engine table search skips them.
+    A theme is described by its own name plus the names and knowledge words of its tables (the curated Domain names alone
+    are too thin to route a question); a table that sits in more than half of the themes (e.g. wh) is generic and left out."""
+    by_id = {n["id"]: n for n in nodes}
+    direct, maps = {}, {}
+    for e in edges:
+        if e["label"] == "IN_DOMAIN" and e["src"].startswith("Table:"):
+            direct.setdefault(e["dst"], []).append(e["src"])
+        elif e["label"] == "MAPPED_FROM" and e["dst"].startswith("Table:"):
+            direct.setdefault(e["src"], []).append(e["dst"])
+        elif e["label"] == "MAPS_TO" and e["src"].startswith("Table:") and e["dst"].startswith("Table:"):
+            maps.setdefault(e["src"], []).append(e["dst"])
+            maps.setdefault(e["dst"], []).append(e["src"])
+
+    themes = [d for d, n in ((d, by_id.get(d, {})) for d in direct) if n.get("label") == "Domain"]
+    in_themes = {}
+    for d in themes:
+        for t in set(direct[d]):
+            in_themes[t] = in_themes.get(t, 0) + 1
+    generic = {t for t, c in in_themes.items() if len(themes) >= 3 and c > len(themes) / 2}
+    words = _knowledge_words(nodes, edges)
+
+    def engine(tid):
+        return by_id.get(tid, {}).get("platform") or ENGINE_OF_SIDE.get(tid.split(":")[1])
+
+    out = []
+    for cid, start in sorted(direct.items()):
+        n = by_id.get(cid)
+        if not n or n["label"] not in ("Domain", "SemanticConcept"):
+            continue
+        start = [t for t in dict.fromkeys(start) if t not in generic]
+        order, frontier = list(start), list(start)
+        for _ in range(2):
+            frontier = [m for t in frontier for m in maps.get(t, []) if m not in order and m not in generic]
+            order += list(dict.fromkeys(frontier))
+        label = "Theme" if n["label"] == "Domain" else "SemanticConcept"
+        tables, first = {}, {}
+        for t in order:
+            eng = engine(t)
+            if eng and len(tables.setdefault(eng, [])) < per_engine:
+                tables[eng].append(by_id.get(t, {}).get("name") or t.split(":", 2)[2])
+                if t in start:
+                    first.setdefault(eng, []).append(tables[eng][-1])
+        own = [n.get("name", "").replace("_", " "), n.get("description", "")[:300], n.get("theme", "")]
+        if label == "Theme":
+            for t in start[:10]:
+                own.append(by_id.get(t, {}).get("name", t.split(":", 2)[2]).replace("_", " "))
+                own.append(" ".join(words.get(t, []))[:120])
+        desc = " ".join(x for x in own if x)
+        out.append({"id": cid, "label": label, "engine": None, "name": n.get("name", cid.split(":", 1)[1]),
+                    "description": desc, "tables": tables, "direct": first})
+    return out
 
 
 def retrieve(question, index, engine=None, k=8):

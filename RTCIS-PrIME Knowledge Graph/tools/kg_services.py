@@ -63,6 +63,39 @@ class CosmosGraph:
             vs += self.vertices(plats)
         return k.to_ui_graph(vs, self.edges_among([v["id"] for v in vs]))
 
+    # ---- ontology tab: schema counts + a sample neighbourhood per partition (label) ----
+    SCHEMA_TTL = 600
+
+    def schema(self):
+        """Ontology counts. Per-type counts come from the load record (exact-checked when the graph was loaded); the totals are
+        counted live and `verified` says whether they still match. A full groupCount costs ~1,100 RU and is throttled (429)."""
+        import time
+        cached = getattr(self, "_schema", None)
+        if cached and time.time() - cached[0] < self.SCHEMA_TTL:
+            return cached[1]
+        graph = getattr(self, "graph", "rtcis_prime")
+        path = getattr(self, "load_record", None) or os.environ.get("KG_LOAD_RECORD") or os.path.join(
+            os.path.dirname(__file__), "..", "benchmark", f"cosmos_load_{graph}.json")
+        rec = json.load(open(path, encoding="utf-8"))
+        vs, es = rec.get("vertices", {}), rec.get("edge_types", {})
+        nodes, rels = self.q("g.V().count()")[0], self.q("g.E().count()")[0]
+        out = {"totals": {"nodes": nodes, "relationships": rels},
+               "verified": nodes == sum(vs.values()) and rels == sum(es.values()),
+               "labels": [{"label": k2, "count": v2} for k2, v2 in sorted(vs.items(), key=lambda x: -x[1])],
+               "relationships": [{"type": k2, "count": v2} for k2, v2 in sorted(es.items(), key=lambda x: -x[1])],
+               "source": f"cosmos:{graph}", "loaded_at": rec.get("loaded_at", "")}
+        self._schema = (time.time(), out)
+        return out
+
+    def sample(self, label, limit=40):
+        """Up to `limit` vertices of one partition and their neighbours; only partitions that exist are queried."""
+        if label not in {x["label"] for x in self.schema()["labels"]}:
+            return {"nodes": [], "edges": []}
+        lim = max(6, min(int(limit), 60))
+        start = self.q("g.V().has('pk', p).limit(lim).id()", p=label, lim=max(3, lim // 4))
+        nb = self.q("g.V().has('id', within(s)).both().dedup().limit(lim).id()", s=start, lim=lim) if start else []
+        return self._graph(start + nb, with_platforms=False)
+
     # ---- views (templates of the graph tab) ----
     def view(self, kind, key, limit=40):
         if kind == "versions":
@@ -136,12 +169,16 @@ class CosmosGraph:
     def context(self, table_ids, target_platform=None):
         if not table_ids:
             return {"mappings": [], "learnings": [], "rules": self.rules()}
-        rows = self.q("g.V().has('id', within(t)).out('HAS_COLUMN').outE('MAPS_TO')"
-                      ".project('ft', 'fc', 'tt', 'tc', 'tp', 'v', 's').by(outV().values('table')).by(outV().values('name'))"
-                      ".by(inV().values('table')).by(inV().values('name')).by(inV().values('platform'))"
+        # every projected property is optional on some MAPS_TO targets (a missing one makes Cosmos fail the whole query)
+        rows = self.q("g.V().has('id', within(t)).out('HAS_COLUMN').outE('MAPS_TO').where(inV().hasLabel('Column'))"
+                      ".project('ft', 'fc', 'tt', 'tc', 'tp', 'v', 's').by(coalesce(outV().values('table'), constant('')))"
+                      ".by(coalesce(outV().values('name'), constant(''))).by(coalesce(inV().values('table'), constant('')))"
+                      ".by(coalesce(inV().values('name'), constant(''))).by(coalesce(inV().values('platform'), constant('')))"
                       ".by(coalesce(values('value_verdict'), values('tag'), constant(''))).by(outV().in('HAS_COLUMN').id())", t=table_ids)
-        trows = self.q("g.V().has('id', within(t)).outE('MAPS_TO').project('ft', 'tt', 'tp', 'v', 's').by(outV().values('name'))"
-                       ".by(inV().values('name')).by(inV().values('platform')).by(coalesce(values('sources'), constant(''))).by(outV().id())", t=table_ids)
+        trows = self.q("g.V().has('id', within(t)).outE('MAPS_TO').where(inV().hasLabel('Table')).project('ft', 'tt', 'tp', 'v', 's')"
+                       ".by(coalesce(outV().values('name'), constant(''))).by(coalesce(inV().values('name'), constant('')))"
+                       ".by(coalesce(inV().values('platform'), constant(''))).by(coalesce(values('sources'), constant(''))).by(outV().id())",
+                       t=table_ids)
         maps = [{"from_table": r["s"], "from": f"{r['ft']}.{r['fc']}", "to": f"{r['tt']}.{r['tc']}", "to_platform": r["tp"], "verdict": r["v"]}
                 for r in rows if not target_platform or r["tp"] == target_platform]
         maps += [{"from_table": r["s"], "from": r["ft"], "to": r["tt"], "to_platform": r["tp"], "verdict": "table map: " + r["v"][:60]}
@@ -318,6 +355,7 @@ def load_index_and_templates():
             reads.setdefault(e["src"], []).append(e["dst"].split(":", 2)[2])
     index = [{"id": n["id"], "label": n["label"], "engine": n.get("platform"), "name": n.get("name", ""),
               "description": desc.get(n["id"], "")} for n in nodes if n["label"] == "Table"]
+    index += k.concept_map(nodes, edges)   # themes + Timbr concepts (no engine: only the concept_context tool reads them)
     cat = json.load(open(os.path.join(KIT, "benchmark", "catalog.json"), encoding="utf-8"))["engines"]
     templates = []
     for n in nodes:

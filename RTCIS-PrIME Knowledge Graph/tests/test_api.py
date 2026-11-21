@@ -20,6 +20,8 @@ class DB:
 
     def validate(self, sql, site, params=None):
         self.calls.append((sql, site, params))
+        if "broken" in sql.lower():
+            return {"ok": False, "stage": "executed", "error": "Invalid column name 'broken'."}
         return {"ok": True, "stage": "executed", "columns": ["a"], "rows": [[1]], "empty_fields": []}
 
 
@@ -79,6 +81,18 @@ def test_approve_appends_a_validated_pair_for_few_shot(tmp_path):
     assert c.post("/rp/approve", json=dict(body, sql="DELETE FROM t")).status_code == 400
     lines = open(svc.approved_file, encoding="utf-8").read().splitlines()
     assert len(lines) == 1 and '"intent": "pallets per area"' in lines[0]
+
+
+def test_approve_reruns_the_sql_on_the_replica_and_records_the_approver(tmp_path):
+    c, svc = client(tmp_path)
+    body = {"question": "pallets per area", "engine": "PrIME2022", "sql": "SELECT 1 AS a", "site": "PRIME22_DE08",
+            "params": {"wh_id": "DE08"}, "approved_by": "<user>@<company>"}
+    assert c.post("/rp/approve", json=body).json()["approved"] is True
+    assert svc.db.calls[-1] == ("SELECT 1 AS a", "PRIME22_DE08", {"wh_id": "DE08"})
+    r = c.post("/rp/approve", json=dict(body, sql="SELECT broken FROM t"))
+    assert r.status_code == 400 and "did not run" in r.json()["detail"]
+    lines = open(svc.approved_file, encoding="utf-8").read().splitlines()
+    assert len(lines) == 1 and '"approved_by": "<user>@<company>"' in lines[0]
 
 
 def test_unknown_site_is_a_client_error(tmp_path):

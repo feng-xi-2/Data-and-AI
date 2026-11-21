@@ -58,6 +58,8 @@ class Approve(BaseModel):
     engine: str
     sql: str
     site: str
+    params: dict | None = None
+    approved_by: str | None = None
 
 
 class Chat(BaseModel):
@@ -175,11 +177,16 @@ def create_app(svc):
 
     @app.post("/rp/approve")
     def approve(b: Approve):
+        _site(b.site)
         try:
             sql = k.guard_sql(b.sql)
         except k.UnsafeSQL as e:
             raise HTTPException(400, str(e))
-        rec = {"qid": "approved", "engine": b.engine, "intent": b.question, "sql": sql, "site": b.site}
+        run = svc.db.validate(sql, b.site, b.params)   # only SQL that runs on the replica becomes an example
+        if not run.get("ok"):
+            raise HTTPException(400, f"not approved: the SQL did not run on {b.site} ({run.get('error', run.get('stage'))})")
+        rec = {"qid": "approved", "engine": b.engine, "intent": b.question, "sql": sql, "site": b.site,
+               "approved_by": b.approved_by}
         with open(svc.approved_file, "a", encoding="utf-8") as f:
             f.write(json.dumps(rec) + "\n")
         svc.assistant.approved.append(rec)

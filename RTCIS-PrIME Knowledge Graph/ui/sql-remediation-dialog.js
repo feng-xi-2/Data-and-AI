@@ -100,7 +100,8 @@
       var out = box.querySelector(".sr-out");
       if (!online) { out.innerHTML = '<div class="card__desc" style="color:#9a3412">Needs the API (see the note above).</div>'; return; }
       out.innerHTML = '<div class="card__desc">Working on ' + esc(site) + (dst && dst !== site ? " \u2192 " + esc(dst) : "") + ": knowledge graph \u2192 cloud model \u2192 guard \u2192 dry-run \u2192 execution\u2026</div>";
-      api("/rp/chat", { text: text, site: site, target_site: dst || null, params: params("sr-site"), target_params: dst ? params("sr-dst") : null }).then(function (r) {
+      var sp = params("sr-site");
+      api("/rp/chat", { text: text, site: site, target_site: dst || null, params: sp, target_params: dst ? params("sr-dst") : null }).then(function (r) {
         turns.push(r); $("sr-dl").disabled = $("sr-csv").disabled = false;
         var head = '<div style="margin:.4rem 0">' + chip(r.mode.replace("_", " ")) + " " + Object.keys(r.summary).map(function (k) { return chip(k) + " " + r.summary[k]; }).join(" ") + "</div>";
         out.innerHTML = head + r.results.map(function (it, i) {
@@ -110,7 +111,7 @@
         out.querySelectorAll(".sr-item").forEach(function (el) {
           var it = r.results[+el.getAttribute("data-i")], ap = el.querySelector("[data-ap]");
           if (ap) ap.onclick = function () {
-            api("/rp/approve", { question: it.question, engine: engineOf(site), sql: it.sql, site: site })
+            api("/rp/approve", { question: it.question, engine: engineOf(site), sql: it.sql, site: site, params: sp })
               .then(function () { ap.textContent = "Approved \u2713 (used as an example)"; ap.disabled = true; }).catch(function (e) { ap.textContent = e.message; });
           };
         });
@@ -126,7 +127,8 @@
     $("sr-clear").onclick = function () { $("sr-thread").innerHTML = ""; turns = []; $("sr-dl").disabled = $("sr-csv").disabled = true; };
     $("sr-dl").onclick = function () { download("sql-remediation-results.json", JSON.stringify(turns, null, 1), "application/json"); };
     $("sr-csv").onclick = function () {
-      var q = function (s) { return '"' + String(s == null ? "" : s).replace(/"/g, '""') + '"'; };
+      // a leading = + - @ tab or CR would be run as a formula by Excel / Sheets: prefix with '
+      var q = function (s) { var v = String(s == null ? "" : s); if (/^[=+\-@\t\r]/.test(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; };
       var lines = [["turn", "mode", "item", "status", "sql_runs", "rows", "error", "empty_fields", "sql"].join(",")];
       turns.forEach(function (t, n) {
         t.results.forEach(function (it) {

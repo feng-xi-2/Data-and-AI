@@ -16,6 +16,7 @@ from deepagents.middleware.filesystem import FilesystemPermission
 from langchain_core.tools import StructuredTool
 
 import kg_core as k
+import kg_runtime
 from kg_assistant import SIDE, Assistant, _tables_in
 
 AGENT_DIR = os.environ.get("KG_AGENT_DIR") or os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "agent"))
@@ -23,18 +24,29 @@ MAX_RUNS = 3
 RECURSION_LIMIT = 60
 
 
+def _transport():
+    import httpx
+    return httpx.HTTPTransport(retries=0)
+
+
+def _with_user(request):
+    request.headers["userid"] = kg_runtime.genai_user()
+
+
 def genai_model(name=None):
     """GenAI platform model. Chat Completions with tool calls works for GPT-5.x (default GPT-5.6 Sol). GPT-6.x only does
     tool calls on the Responses API, and the gateway rejects the multi-turn Responses input LangChain sends (assistant
-    'phase' items) - so GPT-6.x stays for single-shot use (kg_assistant) until the gateway accepts it."""
-    import kg_runtime
+    'phase' items) - so GPT-6.x stays for single-shot use (kg_assistant) until the gateway accepts it.
+    The `userid` header is set on every request from kg_runtime.genai_user() (the signed-in user of that request)."""
+    import httpx
     from langchain_openai import ChatOpenAI
     base = os.environ["KG_GENAI_ENDPOINT"].rstrip("/")
     name = name or os.environ.get("KG_AGENT_MODEL", "GPT-56-SOL-2026-07-09")
+    client = httpx.Client(transport=_transport(), timeout=180, event_hooks={"request": [_with_user]})
     return ChatOpenAI(model=name, base_url=f"{base}/openai/deployments/{name}",
                       api_key=lambda: kg_runtime.token("https://cognitiveservices.azure.com/.default"),
-                      default_query={"api-version": "2025-04-01-preview"}, timeout=180, max_retries=2,
-                      default_headers={"userid": os.environ.get("KG_GENAI_USER", ""), "project-name": os.environ.get("KG_GENAI_PROJECT", "")})
+                      default_query={"api-version": "2025-04-01-preview"}, timeout=180, max_retries=2, http_client=client,
+                      default_headers={"project-name": os.environ.get("KG_GENAI_PROJECT", "")})
 
 
 def _text(content):

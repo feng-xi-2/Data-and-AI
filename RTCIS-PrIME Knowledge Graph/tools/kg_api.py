@@ -10,10 +10,11 @@ import sys
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 sys.path.insert(0, os.path.dirname(__file__))
 import kg_core as k  # noqa: E402
+import kg_runtime  # noqa: E402
 
 SITES = {"RTCIS_EUS": "RTCIS", "RTCIS_LON": "RTCIS", "PRIME14_XQ": "PrIME2014", "PRIME22_DE08": "PrIME2022", "PRIME22_WMD1": "PrIME2022"}
 if os.environ.get("KG_SITES_JSON"):   # sites served by your replica endpoint: {"SITE_KEY": "RTCIS" | "PrIME2014" | "PrIME2022"}
@@ -68,6 +69,7 @@ class Chat(BaseModel):
     target_site: str | None = None
     params: dict | None = None
     target_params: dict | None = None
+    user: str | None = Field(None, max_length=254)   # the host app's verified user: GenAI `userid` of this request
 
 
 def _site(s):
@@ -112,11 +114,16 @@ def create_app(svc):
     @app.get("/rp/config")
     def config():
         llm = getattr(svc, "llm", None)
-        return {"sites": SITES, "model": getattr(llm, "model", ""), "replica": "endpoint" if getattr(svc.db, "endpoint", None) else "direct"}
+        return {"sites": SITES, "model": getattr(llm, "model", ""),
+                "replica": getattr(svc.db, "mode", None) or ("endpoint" if getattr(svc.db, "endpoint", None) else "direct")}
 
     @app.post("/rp/chat")
     def chat(b: Chat):
         """One dialogue box: the text decides the action (see kg_core.route)."""
+        with kg_runtime.as_user(b.user or ""):
+            return _chat(b)
+
+    def _chat(b):
         _site(b.site), _site(b.target_site)
         eng = SITES[b.site]
         tgt = b.target_site or b.site

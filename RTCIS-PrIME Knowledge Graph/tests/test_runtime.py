@@ -41,6 +41,94 @@ def test_cosmos_graph_connects_with_endpoint_and_key_without_arm(monkeypatch):
     assert seen == {"a": "acct", "k": "ro-key", "g": "rtcis_prime", "d": "whs_kg"} and g._c == "client" and g._lc is R
 
 
+def test_cosmos_key_is_read_from_the_key_vault_with_the_service_principal_when_no_key_is_set(monkeypatch):
+    seen = {}
+    monkeypatch.setattr(R, "connect", lambda account, key, graph, db: seen.update(a=account, k=key) or "client")
+    monkeypatch.setattr(R, "token", lambda scope: seen.update(scope=scope) or "kv-token")
+
+    class Resp:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def read(self):
+            return json.dumps({"value": "ro-key-from-vault"}).encode()
+
+    def urlopen(req, timeout=None):
+        seen.update(url=req.full_url, auth=req.headers.get("Authorization"))
+        return Resp()
+    monkeypatch.setattr(R.urllib.request, "urlopen", urlopen)
+    monkeypatch.delenv("KG_COSMOS_KEY", raising=False)
+    monkeypatch.setenv("KG_COSMOS_ACCOUNT", "acct")
+    monkeypatch.setenv("KG_COSMOS_KEY_VAULT_URL", "https://kv.vault.azure.net/")
+    S.CosmosGraph(graph="rtcis_prime")
+    assert seen["k"] == "ro-key-from-vault" and seen["scope"] == "https://vault.azure.net/.default"
+    assert seen["url"].startswith("https://kv.vault.azure.net/secrets/MM-KG-GREMLIN-READONLY-KEY?api-version=")
+    assert seen["auth"] == "Bearer kv-token"
+
+
+def test_hosted_service_without_a_replica_endpoint_says_so_instead_of_opening_a_desktop_connection(tmp_path, monkeypatch):
+    monkeypatch.setenv("KG_BUNDLE_DIR", str(tmp_path))
+    monkeypatch.delenv("KG_REPLICA_ENDPOINT", raising=False)
+    monkeypatch.setitem(sys.modules, "dbconn", None)          # the desktop ODBC helper is not shipped with the app
+    res = S.make_db().validate("SELECT 1 AS x", "DE08")
+    assert res["ok"] is False and res["stage"] == "endpoint" and "no replica endpoint" in res["error"]
+    assert res["site"] == "DE08" and res["rows"] == []
+
+
+def test_genai_user_is_the_request_user_inside_as_user_and_the_configured_user_outside(monkeypatch):
+    monkeypatch.setenv("KG_GENAI_USER", "<user>@<company>")
+    assert R.genai_user() == "<user>@<company>"
+    with R.as_user("<user>@<company>"):
+        assert R.genai_user() == "<user>@<company>"
+    with R.as_user(""):
+        assert R.genai_user() == "<user>@<company>"           # no verified user: the configured one
+    assert R.genai_user() == "<user>@<company>"
+
+
+def test_genai_model_sends_the_request_user_on_every_call(monkeypatch):
+    pytest.importorskip("langchain_openai")
+    import httpx
+    import kg_deep_agent as D
+    monkeypatch.setenv("KG_GENAI_ENDPOINT", "https://genai.example/v1")
+    monkeypatch.setenv("KG_GENAI_PROJECT", "proj")
+    monkeypatch.delenv("KG_GENAI_USER", raising=False)
+    monkeypatch.setattr(R, "token", lambda scope: "t")
+    seen = []
+
+    def handler(request):
+        seen.append((request.headers.get("userid"), request.headers.get("project-name")))
+        return httpx.Response(200, json={"id": "1", "object": "chat.completion", "created": 0, "model": "m", "choices": [
+            {"index": 0, "finish_reason": "stop", "message": {"role": "assistant", "content": "ok"}}]})
+    monkeypatch.setattr(D, "_transport", lambda: httpx.MockTransport(handler))
+    m = D.genai_model()
+    with R.as_user("<user>@<company>"):
+        m.invoke("hi")
+    with R.as_user("<user>@<company>"):
+        m.invoke("hi")
+    assert seen == [("<user>@<company>", "proj"), ("<user>@<company>", "proj")]
+
+
+def test_chat_runs_as_the_user_sent_by_the_host_app(monkeypatch):
+    import kg_api
+    from fastapi.testclient import TestClient
+    seen = []
+
+    class Svc:
+        templates, db, llm = [], None, None
+
+    def fake_route(text, same_engine=True):
+        seen.append(R.genai_user())
+        return {"mode": "validate", "items": []}
+    monkeypatch.setattr(kg_api.k, "route", fake_route)
+    monkeypatch.delenv("KG_GENAI_USER", raising=False)
+    c = TestClient(kg_api.create_app(Svc()), base_url="http://127.0.0.1")
+    assert c.post("/rp/chat", json={"text": "x", "site": "PRIME22_DE08", "user": "<user>@<company>"}).status_code == 200
+    assert seen == ["<user>@<company>"] and R.genai_user() == ""
+
+
 def test_runtime_bundle_round_trips_what_the_service_needs(tmp_path):
     index = [{"id": "Table:prime:invlod", "label": "Table", "engine": "PrIME2022", "name": "invlod", "description": "LPN"}]
     cat = {"PrIME2022": {"invlod": {"lodnum": "nvarchar"}}}

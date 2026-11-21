@@ -26,9 +26,10 @@ TABLE_PK = {"RTCIS": "Table:RTCIS", "PrIME2014": "Table:PrIME2014", "PrIME2022":
 class CosmosGraph:
     def __init__(self, graph=os.environ.get("KG_GRAPH", "rtcis_prime")):
         self.graph, self._rules = graph, None
-        if os.environ.get("KG_COSMOS_KEY"):   # hosted: account + (read-only) key from the app's Key Vault, no ARM call
+        if os.environ.get("KG_COSMOS_KEY") or os.environ.get("KG_COSMOS_KEY_VAULT_URL"):
+            # hosted: account + read-only key (given, or read from the app's Key Vault), no ARM call
             self._lc = kg_runtime
-            self._c = kg_runtime.connect(os.environ["KG_COSMOS_ACCOUNT"], os.environ["KG_COSMOS_KEY"], graph,
+            self._c = kg_runtime.connect(os.environ["KG_COSMOS_ACCOUNT"], kg_runtime.cosmos_key(), graph,
                                          os.environ.get("KG_DB", "whs_kg"))
         else:                                 # desktop: the signed-in user's key through ARM listKeys
             import load_cosmos as lc
@@ -210,11 +211,16 @@ class GenAiLLM:
         self.endpoint = os.environ.get("KG_GENAI_ENDPOINT", "").rstrip("/")
         self.model = os.environ.get("KG_GENAI_MODEL", "GPT-52-2025-12-11")
         self.project = os.environ.get("KG_GENAI_PROJECT", "")
-        self.user = os.environ.get("KG_GENAI_USER", "")
-        if not (self.endpoint and self.project and self.user):
-            raise SystemExit("set KG_GENAI_ENDPOINT, KG_GENAI_PROJECT and KG_GENAI_USER")
+        if not (self.endpoint and self.project):
+            raise SystemExit("set KG_GENAI_ENDPOINT and KG_GENAI_PROJECT")
+
+    @property
+    def user(self):
+        return kg_runtime.genai_user()
 
     def chat(self, messages, max_tokens=2000):
+        if not self.user:
+            raise RuntimeError("no GenAI user: the host app sends the signed-in user, or set KG_GENAI_USER")
         url = f"{self.endpoint}/openai/deployments/{self.model}/chat/completions?api-version=2024-02-01"
         body = {"messages": messages, "max_completion_tokens": max_tokens}
         req = urllib.request.Request(url, data=json.dumps(body).encode(), method="POST",
@@ -344,9 +350,21 @@ class HttpReplicaDB:
         return res
 
 
+class NoReplicaDB:
+    """Hosted without KG_REPLICA_ENDPOINT: every validation reports that no replica is connected (nothing is run)."""
+    endpoint = None
+    mode = "none"
+
+    def validate(self, sql, site, params=None):
+        return {"ok": False, "stage": "endpoint", "error": "no replica endpoint configured (KG_REPLICA_ENDPOINT): "
+                "the SQL was not run", "columns": [], "rows": [], "site": site}
+
+
 def make_db():
     ep = os.environ.get("KG_REPLICA_ENDPOINT")
-    return HttpReplicaDB(ep, os.environ.get("KG_REPLICA_TOKEN")) if ep else ReplicaDB()
+    if ep:
+        return HttpReplicaDB(ep, os.environ.get("KG_REPLICA_TOKEN"))
+    return NoReplicaDB() if os.environ.get("KG_BUNDLE_DIR") else ReplicaDB()
 
 
 # ================================================================================================= wiring

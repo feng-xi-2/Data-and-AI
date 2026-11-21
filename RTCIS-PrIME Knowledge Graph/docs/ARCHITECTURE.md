@@ -255,7 +255,8 @@ tables per engine. It extends them through table-level `MAPS_TO` only to show co
 The tool offers only tables linked directly to the theme or concept, checked against the engine's live catalog.
 Table search now also uses the official PrIME table descriptions and the theme and concept words.
 Benchmark (round 5, `benchmark/CLOUD_RESULTS.md`): EX 10/12 → 11/12, conversions 7/8 → 8/8, automation question 0/1 →
-5/5. RTCIS zone grain remains unstable (BUG-10).
+5/5. RTCIS zone grain was unstable (BUG-10); round 6 added a generic output-grain rule to the query-writing skill:
+grouped by zone only in 5/5 runs, EX 0/3 → 4/5, and the full set has no regression.
 
 The ontology tab of both UIs now reads the Cosmos graph (`/rp/schema`, `/rp/sample`):
 - Per-partition counts come from the load record, which was exact-checked at load time.
@@ -279,32 +280,51 @@ Option A in detail:
 - **Runtime:** `integrations/sql_remediation_inprocess.py` builds `kg_api.create_app(kg_services.services())` once in
   a worker thread, then calls it through `httpx.ASGITransport`. The routes, the proxy contract and the security
   checks are the same as in proxy mode.
-- **Identity and keys:**
+- **Identity and keys.** AI Apps pods receive only the DB settings and the app service principal (`AML-APP-SP-*`,
+  as `AZURE_CLIENT_ID` / `AZURE_CLIENT_SECRET` / `AZURE_TENANT_ID`); no other Key Vault secret is injected
+  (ConfigPod template v10, `ExternalSecret` + API `Deployment`). So the kit reads the graph key from the vault itself,
+  and `DevelopmentAppSettings` in iDecide carries the non-secret DEV values:
 
 | Setting | What it is | Source |
 |---|---|---|
-| `MM_KG_GREMLIN_READONLY_KEY` | Cosmos **read-only** key | Key Vault secret `MM-KG-GREMLIN-READONLY-KEY` |
-| `AML_APP_SP_ID` / `AML_APP_SP_SECRET` | the app service principal, used for GenAI platform tokens | Key Vault (`AML-APP-SP-*`) |
-| `KG_SP_TENANT_ID`, `KG_GENAI_ENDPOINT`, `KG_GENAI_PROJECT`, `KG_GENAI_USER`, `KG_COSMOS_ACCOUNT` | non-secret settings | app settings |
-| `KG_REPLICA_ENDPOINT` (+ optional `KG_REPLICA_TOKEN`) | the replica endpoint next to the replicas; the kit's guard runs before anything is sent | app settings |
+| `KG_COSMOS_KEY_VAULT_URL` (or `MM_KG_GREMLIN_READONLY_KEY`) | Cosmos **read-only** key, secret `MM-KG-GREMLIN-READONLY-KEY` | read by `kg_runtime.cosmos_key()` with the app service principal |
+| `AML_APP_SP_ID` / `AML_APP_SP_SECRET` / `KG_SP_TENANT_ID`, else `AZURE_CLIENT_*` / `AZURE_TENANT_ID` | the app service principal: GenAI platform and Key Vault tokens | the pod |
+| `KG_COSMOS_ACCOUNT`, `KG_GENAI_ENDPOINT`, `KG_GENAI_PROJECT` | non-secret settings | `DevelopmentAppSettings` defaults |
+| GenAI `userid` | the signed-in user of each chat (verified token email, sent by the iDecide route; `kg_runtime.as_user`); `KG_GENAI_USER` only without an identity | per request |
+| `KG_REPLICA_ENDPOINT` (+ optional `KG_REPLICA_TOKEN`) | optional replica endpoint; without it every answer says the SQL was not run (`NoReplicaDB`) | app settings |
 
   Verified on 2026-11-21:
   - The read-only key reads the graph, and a write test was refused.
-  - The app service principal gets a token, and the GenAI platform answers on GPT-5.6 Sol with project `uvamain`.
+  - The app service principal reads `MM-KG-GREMLIN-READONLY-KEY` from the vault, gets GenAI tokens, and the GenAI
+    platform answers on GPT-5.6 Sol with project `uvamain`. The gateway rejects a non-email `userid` (422).
   - A hosted-mode run (that key, that principal, the bundle) validated a DE08 question, 5 rows in 46 s.
+  - The iDecide router with `DevelopmentAppSettings`, only the pod identity, the pinned agent packages and Python 3.12:
+    health 200, Cosmos totals verified (30,915 / 45,597), a Deep Agent answer as the signed-in user in 41 s, and
+    "no replica endpoint configured" instead of a result.
+- **Agent packages (DEP-05):** installed by iDecide's project-owned image hook `dockerfile-customization.sh` after
+  `uv sync --frozen`, so `uv.lock` is unchanged. `agent_deps/make_hook.py` generates the hook:
+  - 70 packages are pinned with hashes and installed with `--no-deps`.
+  - The packages the base install already has stay at their lock versions, except certifi (a CA bundle;
+    langchain-core 1.8.4 needs ≥ 2026.10.19).
+  - `langchain-google-genai` is excluded: deepagents never imports it, and it would force pydantic ≥ 2.12.5 on
+    an app pinned to 2.11.7.
+  - The build fails if any installed package changes version.
 - **Failure behaviour:**
-  - A missing setting is a 503 naming it.
+  - A missing setting, or an image without the agent packages, is a 503 naming it.
   - A service that cannot start (Cosmos firewall, token) is a 502 with the error type only, never its message. It is
     retried after 60 s, and a partly built service closes its Cosmos client.
   - Each call ends at `SQL_REMEDIATION_TIMEOUT_SECONDS`.
   - At most 4 agent runs share the app's thread pool; more get a 429.
 - **Open before DEV:**
-  - DEP-05: `uv.lock` must be regenerated with the new dependencies by someone with access to the private template
-    dependency. It is excluded for the assistant, and the image build uses `uv sync --frozen`.
-  - DEP-06: the AI Apps cluster must reach the Cosmos account. Its firewall allows the AIF AKS subnet
-    `aks-aif-mt-np-14` and the uvawheu compute subnet. Verify with `GET /sql-remediation/health` on the deployed app.
-  - DEP-02: the replica endpoint.
-  - DEP-07: `AZURE-CLIENT-SECRET` in the same vault is invalid (AADSTS7000215). It is not used here; tell the app owner.
+  - Deploy: merging PR #9 to `main` runs "Deploy image". A manual dispatch from the branch would also replace the
+    shared DEV app and continue to the STG / PROD jobs when they are enabled, so it is not used.
+  - DEP-06: the DEV app runs on `aks-aif-mt-np-12` (`deploy_app.yml`). The Cosmos firewall allows the
+    `aks-aif-mt-np-14` subnet, the uvawheu compute subnet and 24 IP ranges, but not that cluster's subnet, so a block
+    is likely. Check `GET /sql-remediation/schema` on the deployed app: a 502 `…Error` means blocked. Then the Cosmos
+    admin adds the np-12 subnet; the user's role on the account excludes firewall changes.
+  - DEP-02: the replica endpoint (optional for the first deploy).
+  - DEP-07: `AZURE-CLIENT-SECRET` in the same vault is invalid (AADSTS7000215). Neither the app nor the agent uses it:
+    the pod gets `AML-APP-SP-*` as `AZURE_CLIENT_*`. Not blocking.
 
 ## 15. Operations
 - **Refresh the knowledge:** run `build_graph.py` → `load_cosmos.py --sync` → `export_ui_views.py` →

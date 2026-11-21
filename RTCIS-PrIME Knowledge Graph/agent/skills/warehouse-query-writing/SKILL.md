@@ -20,7 +20,9 @@ metadata:
    `invsub.lodnum = invlod.lodnum`, `invlod.stoloc = locmst.stoloc AND invlod.wh_id = locmst.wh_id`,
    `aremst.arecod = locmst.arecod`.
 4. **Filters**: PrIME warehouse tables `wh_id = @wh_id`; `prtmst` also `WH_ID_TMPL = @wh_id`; RTCIS sub-site via `subsit`.
-5. **Grain**: count distinct keys (`COUNT(DISTINCT lodnum)`) when a join can repeat a row; quantities can overflow `int` —
+5. **Grain**: the output has exactly the grouping the question names, nothing finer. Join and filter keys (RTCIS
+   `subsit`, PrIME `wh_id`) are not grouping columns unless the question asks "per sub-site" / "per warehouse".
+   Count distinct keys (`COUNT(DISTINCT lodnum)`) when a join can repeat a row; quantities can overflow `int` —
    `SUM(CAST(x AS bigint))`.
 6. Run with `run_sql`. 0 rows → re-check the join columns and the `@wh_id` value before answering; say so if the data
    really has none.

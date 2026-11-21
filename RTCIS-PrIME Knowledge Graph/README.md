@@ -46,7 +46,7 @@ python benchmark.py        # T1 entity recognition, T2 Text2KGBench, T3 conversi
 python export_ui_snapshot.py --ui "<config-drift-governance>\UIUX"
 python sdc_pmc_run.py      # SDC module / PMC layer: live catalog + data presence  -> relationships/sdc_pmc_layer.json (rebuild graph after)
 python semantic_layer_run.py   # Timbr concepts / mappings (KG_SEMANTIC_LAYER_DIR) -> relationships/semantic_layer.json (rebuild graph after)
-python kg_api.py           # API on http://127.0.0.1:8738: /rp/chat one box (KG_ASSISTANT=deep Deep Agent | pipeline), graph views, /rp/schema + /rp/sample (ontology tab, Cosmos); needs KG_GENAI_ENDPOINT / _PROJECT / _USER / _MODEL, optional KG_REPLICA_ENDPOINT / _TOKEN, KG_SITES_JSON
+python kg_api.py           # API on http://127.0.0.1:8738: /rp/chat one box (KG_ASSISTANT=deep Deep Agent | pipeline), graph views, /rp/schema + /rp/sample (ontology tab, Cosmos); needs KG_GENAI_ENDPOINT / _PROJECT / _MODEL and a user (the host's verified user per chat, else KG_GENAI_USER), optional KG_REPLICA_ENDPOINT / _TOKEN (without it in hosted mode: "SQL not run"), KG_SITES_JSON; hosted graph key: KG_COSMOS_KEY or KG_COSMOS_KEY_VAULT_URL
 python export_ui_views.py "<config-drift-governance>\UIUX"        # offline graph views for the tab, read from Cosmos via the API
 python cloud_batch.py 8    # cloud benchmark through the API: NL questions (3 engines, 10 business themes) + RTCIS->PrIME conversions, execution accuracy; KG_BATCH_MATCH / KG_BATCH_REPEAT repeat chosen questions (stability)
 python export_public.py "<repo>\RTCIS-PrIME Knowledge Graph"       # sanitise + publish check

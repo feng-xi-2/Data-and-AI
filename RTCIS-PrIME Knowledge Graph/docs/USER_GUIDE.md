@@ -21,6 +21,9 @@ site (DE08, WMD1, CN74) and passed as `@wh_id`; RTCIS has no warehouse id.
 - **Status:**
   - `validated`: the SQL ran on the replica.
   - `rejected`: it did not run, or it was refused by the read-only guard; the reason is shown.
+  - `failed validation` with *"no replica endpoint configured … the SQL was not run"*: the app has no replica
+    connected yet. The SQL is written and grounded in the graph, but it has not been checked on a real database.
+    Do not use it until it has been run.
 - **SQL runs:** how many times the agent ran SQL while working (at most 3), and how long it took.
 - **Column contract** (conversions): `identical` means the converted query returns the same columns, in the same order,
   as the source. Otherwise you see the missing and extra columns.
@@ -50,7 +53,7 @@ site (DE08, WMD1, CN74) and passed as `@wh_id`; RTCIS has no warehouse id.
 ## Limits (see `benchmark/CLOUD_RESULTS.md`)
 - Accuracy against expert reference queries is 11/12 on the current benchmark. Always check numbers that matter with
   the site's expert before you use them in a decision.
-- **RTCIS "per zone" questions** can come back per sub-site *and* zone (BUG-10). Add "per zone only" if you need one
-  row per zone.
+- **RTCIS "per zone" questions** now group by zone only (BUG-10 fixed, 5/5 runs). The agent may still label the
+  "no zone" row differently or read a view instead of the base tables; check the totals.
 - **Time:** an answer takes 30–100 s, and a batch takes about that long per item.
 - **Read-only:** nothing is written to any database.

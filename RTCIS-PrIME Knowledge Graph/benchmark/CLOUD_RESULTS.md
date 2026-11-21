@@ -100,6 +100,25 @@ Limits: one run per item for **before**, and n=2–8 per changed item for **afte
 themes (master data and picking have none). Next: references for the 6 unscored questions, more questions per theme
 (BIRD-style held-out set), n ≥ 3 for every item, and RTCIS zone grain as a rule in the query-writing skill (BUG-10).
 
+## Round 6 — output-grain rule (BUG-10), 2026-11-22
+Change: `warehouse-query-writing` step 5 now says that the output has exactly the grouping the question names. Join and
+filter keys (RTCIS `subsit`, PrIME `wh_id`) are not grouping columns unless the question asks per sub-site / warehouse.
+The rule is generic; it names no benchmark question or table.
+
+| Item | Before (n=3, same API, same day) | After (n=5, fresh API) | Full set after |
+|---|---|---|---|
+| RTCIS unit loads per zone, strict EX | 0/3 | 4/5 | false |
+| … grouped by zone only (the bug) | 0/2 (+1 run with no SQL) | **5/5** | yes |
+
+The two strict misses after the change both had the right grain. One used `agv_inventory_view` instead of
+`unitld` + `locatn` (table choice). The other labelled the NULL zone `'(no zone)'`, so its key values differ from
+the reference but its counts are the same.
+
+Full set after the change (`cloud_batch_results_round6.json`): 18/18 questions validated on the replicas. EX 10/12,
+the same item by item as round 5 (no regression; outbound still varies between `pckqty` and `picked_qty`).
+Conversions 8/8 validated, with identical column contracts.
+Raw: `cloud_batch_results_bug10_{before,after}.json`, `cloud_batch_results_round6.json`.
+
 ## Round 3 detail
 
 Open: the inventory difference above; references for the 6 unscored questions; a larger held-out question set (BIRD-style) before

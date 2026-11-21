@@ -1,0 +1,130 @@
+{
+ "ask": [
+  {
+   "engine": "RTCIS",
+   "site": "RTCIS_EUS",
+   "theme": "location",
+   "question": "How many unit loads are in each location zone?",
+   "status": "validated",
+   "attempts": 2,
+   "rows": 50,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 71.8,
+   "sql": "SELECT\n    l.zoncod AS location_zone,\n    COUNT(DISTINCT u.ulid) AS unit_load_count\nFROM live3.unitld AS u\nINNER JOIN live3.locatn AS l\n    ON l.subsit = u.subsit\n   AND l.locatn = u.locatn\nGROUP BY l.zoncod\nORDER BY l.zoncod;",
+   "accuracy": {
+    "ex": true,
+    "gold_rows": 144,
+    "model_rows": 144
+   }
+  },
+  {
+   "engine": "RTCIS",
+   "site": "RTCIS_EUS",
+   "theme": "location",
+   "question": "How many unit loads are in each location zone?",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 50,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 60.7,
+   "sql": "SELECT\n    l.zoncod AS location_zone,\n    COUNT(DISTINCT u.ulid) AS unit_load_count\nFROM live3.unitld AS u\nINNER JOIN live3.locatn AS l\n    ON l.subsit = u.subsit\n   AND l.locatn = u.locatn\nGROUP BY l.zoncod\nORDER BY l.zoncod;",
+   "accuracy": {
+    "ex": true,
+    "gold_rows": 144,
+    "model_rows": 144
+   }
+  },
+  {
+   "engine": "RTCIS",
+   "site": "RTCIS_EUS",
+   "theme": "location",
+   "question": "How many unit loads are in each location zone?",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 50,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 64.4,
+   "sql": "SELECT\n    l.zoncod AS location_zone,\n    COUNT(*) AS unit_load_count\nFROM live3.unitld AS u\nINNER JOIN live3.locatn AS l\n    ON l.subsit = u.subsit\n   AND l.locatn = u.locatn\nGROUP BY l.zoncod\nORDER BY l.zoncod;",
+   "accuracy": {
+    "ex": true,
+    "gold_rows": 144,
+    "model_rows": 144
+   }
+  },
+  {
+   "engine": "RTCIS",
+   "site": "RTCIS_EUS",
+   "theme": "location",
+   "question": "How many unit loads are in each location zone?",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 50,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 79.0,
+   "sql": "SELECT\n    COALESCE(zoncod, '(No zone)') AS location_zone,\n    COUNT(DISTINCT ulid20) AS unit_load_count\nFROM live3.agv_inventory_view\nGROUP BY COALESCE(zoncod, '(No zone)')\nORDER BY location_zone;",
+   "accuracy": {
+    "ex": false,
+    "gold_rows": 144,
+    "model_rows": 144
+   }
+  },
+  {
+   "engine": "RTCIS",
+   "site": "RTCIS_EUS",
+   "theme": "location",
+   "question": "How many unit loads are in each location zone?",
+   "status": "validated",
+   "attempts": 1,
+   "rows": 50,
+   "error": null,
+   "empty_fields": [],
+   "warnings": [],
+   "seconds": 50.1,
+   "sql": "SELECT\n    l.zoncod AS location_zone,\n    COUNT(DISTINCT u.ulid) AS unit_load_count\nFROM live3.unitld AS u\nINNER JOIN live3.locatn AS l\n    ON l.subsit = u.subsit\n   AND l.locatn = u.locatn\nGROUP BY l.zoncod\nORDER BY l.zoncod;",
+   "accuracy": {
+    "ex": true,
+    "gold_rows": 144,
+    "model_rows": 144
+   }
+  }
+ ],
+ "convert": [],
+ "summary": {
+  "ask": {
+   "validated": 5
+  },
+  "convert": {},
+  "ask_by_engine": {
+   "RTCIS": {
+    "validated": 5
+   },
+   "PrIME2014": {},
+   "PrIME2022": {}
+  },
+  "by_theme": {
+   "location": {
+    "n": 5,
+    "validated": 5,
+    "ex_true": 4,
+    "ex_scored": 5
+   }
+  },
+  "execution_accuracy": {
+   "RTCIS_EUS | How many unit loads are in each location zone?": [
+    true,
+    true,
+    true,
+    false,
+    true
+   ]
+  }
+ }
+}

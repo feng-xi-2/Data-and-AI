@@ -1,4 +1,4 @@
-# RTCIS / PrIME knowledge graph, semantic layer and SQL Remediation agent — delivery status (2026-11-21 23:16)
+# RTCIS / PrIME knowledge graph, semantic layer and SQL Remediation agent — delivery status (2026-11-22 02:05)
 
 A story is Done only when built, deployed and retested after deploy are yes (or n/a).
 
@@ -20,7 +20,7 @@ A story is Done only when built, deployed and retested after deploy are yes (or 
 | FR-CD-01 | Config Drift code published without site data (PR #5) | yes 2026-11-21 | n/a | n/a | n/a | n/a | Done |
 | FR-AG-04 | Concept-first routing: theme (Domain) + Timbr concept -> directly linked catalog-checked tables (concept_context) | yes 2026-11-21 | yes 2026-11-21 (kg_core + deep agent, 127 offline) | yes 2026-11-21 (cloud benchmark round 5, before/after) | no (agent service not deployed: FR-UVA-01) | no | In Progress |
 | FR-KG-05 | Ontology tab from the Cosmos graph (/rp/schema, /rp/sample) in desktop UI and iDecide | yes 2026-11-21 | yes 2026-11-21 (API + services + iDecide vitest) | yes 2026-11-21 (desktop UI E2E 7/7; cloud test on real Cosmos) | n/a desktop; iDecide not deployed | no | In Progress |
-| FR-IDE-02 | iDecide hosts the SQL Remediation agent in-process (SQL_REMEDIATION_MODE=inprocess, vendored kit + 1 MB bundle) | yes 2026-11-21 (integrations/sql_remediation_inprocess.py, app/sql_remediation_agent) | yes 2026-11-21 (adapter 7 tests incl. manifest; kit 132 offline) | partial 2026-11-21: hosted-mode run with the app's read-only Cosmos key + app service principal + bundle validated a DE08 question (5 rows, 46 s); not yet inside the app | no (DEP-05 lock, DEP-06 network, DEP-02 replica endpoint) | no | In Progress |
+| FR-IDE-02 | iDecide hosts the SQL Remediation agent in-process (SQL_REMEDIATION_MODE=inprocess, vendored kit + 1 MB bundle) | yes 2026-11-22 (in-process adapter; key from Key Vault with the pod identity; GenAI userid = signed-in user; DEV defaults; image hook) | yes 2026-11-22 (iDecide adapter + routes 27/27 incl. the import test with the pinned packages; kit 138 offline; hook guard tested with a stub uv) | partial 2026-11-22: iDecide router + DevelopmentAppSettings + only the pod identity + pinned packages on Python 3.12: health 200, Cosmos verified 30,915/45,597, Deep Agent answer as the signed-in user in 41 s; no replica connected; not yet in the deployed app | no (merge PR #9 to main runs Deploy image; DEP-06 Cosmos firewall) | no | In Progress |
 
 ## Bugs
 
@@ -35,7 +35,7 @@ A story is Done only when built, deployed and retested after deploy are yes (or 
 | BUG-07 | Valid RTCIS query with AT TIME ZONE failed (ODBC -155 datetimeoffset) | Done | found by: builder (cloud benchmark); fix: output converter; test_validate_fetches_datetimeoffset_columns |
 | BUG-08 | Xiqing answer joined invlod.stoloc to pck_area and returned 0 rows (reference 79 areas) | Done | found by: builder (execution accuracy); fix: validated join paths in the prompt; EX now identical |
 | BUG-09 | Deep Agent ended with prose and no SQL (R08) | Done | found by: builder (cloud benchmark); fix: fallback to last successful run; R08 re-run validated |
-| BUG-10 | RTCIS unit loads per zone answered at a finer grain (sub-site x zone) | To Do | found by: builder (execution accuracy); fix: open: RTCIS zone grain unstable (round 5: 1/8 after, 1/1 before); add the grain rule to the query-writing skill |
+| BUG-10 | RTCIS unit loads per zone answered at a finer grain (sub-site x zone) | Done | found by: builder (execution accuracy); fix: generic output-grain rule in warehouse-query-writing step 5; zone grain 0/2 -> 5/5, strict EX 0/3 -> 4/5 (n=5, fresh API); full set no regression (EX 10/12 same as round 5, conversions 8/8) |
 | BUG-11 | Knowledge page ignored later evidence links / semantic<->graph route (keep-alive panel) | Done | found by: independent code review; fix: fixed 2026-11-21: effect on ?view/&key/initialView; test |
 | BUG-12 | Approval state moved to another answer (cards keyed by index, newest first) | Done | found by: independent code review; fix: fixed 2026-11-21: stable turn ids; test proves RED with index key |
 | BUG-13 | CSV export could carry spreadsheet formulas (=, +, -, @) | Done | found by: independent code review; fix: fixed 2026-11-21: csvCell / q prefix '; tests |
@@ -56,9 +56,9 @@ A story is Done only when built, deployed and retested after deploy are yes (or 
 | DEP-02 | Replica endpoint for the cloud agent (KG_REPLICA_ENDPOINT contract in kg_services.HttpReplicaDB) | To Do | owner: builder (will set up) |
 | DEP-03 | Cosmos keys in the app / uvawh Key Vault: MM-KG-GREMLIN-KEY refreshed, MM-KG-GREMLIN-READONLY-KEY added (2026-11-21); workflow registration not needed for the in-process host | Done | owner: platform / builder |
 | DEP-04 | GenAI gateway: multi-turn Responses API for GPT-6.x tool calls | To Do | owner: GenAI platform |
-| DEP-05 | Regenerate iDecide uv.lock with deepagents, gremlinpython, langchain-openai, langgraph, sqlglot, msal (private template dependency is excluded for the assistant) | To Do | owner: builder / app owner |
-| DEP-06 | AI Apps cluster -> Cosmos (Gremlin) network: verify from the deployed app (/sql-remediation/health); add the subnet / private endpoint if blocked | To Do | owner: platform / builder |
-| DEP-07 | AZURE-CLIENT-SECRET in the app Key Vault is invalid (AADSTS7000215) - not used by SQL Remediation (uses AML-APP-SP); tell the app owner | To Do | owner: app owner |
+| DEP-05 | Agent packages in the iDecide image without regenerating uv.lock (image hook, pinned with hashes) | Done | fix: project-owned build hook installs 70 hashed pins --no-deps after uv sync --frozen; base packages keep uv.lock versions (certifi excepted); langchain-google-genai excluded (unused, needs pydantic>=2.12.5); build fails if an installed package changes; owner: builder |
+| DEP-06 | AI Apps DEV cluster aks-aif-mt-np-12 -> Cosmos: its subnet is not in the Cosmos firewall (np-14 is); check /sql-remediation/schema after the DEV deploy | To Do | owner: Cosmos admin (firewall rule; the builder's role excludes firewall writes) / builder (check) |
+| DEP-07 | AZURE-CLIENT-SECRET in the app Key Vault is invalid (AADSTS7000215) - not used by SQL Remediation (uses AML-APP-SP); tell the app owner | Done | fix: not blocking: neither the app nor the agent uses AZURE-CLIENT-SECRET; the pod's identity is AML-APP-SP; owner: app owner |
 | DOC-01 | Product PRD, architecture (hosting, operations) and user guide of the query convertor | Done | evidence: docs/PRD.md, docs/ARCHITECTURE.md sections 11-15, docs/USER_GUIDE.md; iDecide ARCHITECTURE.md SQL Remediation section |
 
 ## Test runs
@@ -74,6 +74,7 @@ A story is Done only when built, deployed and retested after deploy are yes (or 
 | TR-IDE-BE-1121 | iDecide backend route tests + flake8 + mypy | Done | evidence: pytest base/backend/tests/unit/routes; cases: 78; passed: 78 |
 | TR-CLOUD-R5 | Cloud benchmark round 5: theme set before/after concept routing (18 Q, 8 conversions) | Done | evidence: benchmark/cloud_batch_results_theme_*.json; cases: 26; passed: EX 11/12 (before 10/12), conversions 8/8 (before 7/8) |
 | TR-CLOUD-1121b | Cloud suite (real Cosmos, GenAI, replicas) | Done | evidence: tests/test_cloud.py; cases: 17; passed: 17 |
+| TR-BENCH-R6 | Benchmark round 6 (output-grain rule): 18 questions + 8 conversions on the replicas | Done | evidence: benchmark/cloud_batch_results_round6.json, cloud_batch_results_bug10_{before,after}.json; cases: 18 questions (12 scored) + 8 conversions; zone item n=3 before / n=5 after; passed: 18/18 validated, EX 10/12, conversions 8/8; zone grain 5/5 |
 
 ## Pull requests
 

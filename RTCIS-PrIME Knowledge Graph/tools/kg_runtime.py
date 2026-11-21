@@ -3,19 +3,41 @@
   token(scope)      Entra token: a service principal when KG_SP_CLIENT_ID / KG_SP_CLIENT_SECRET / KG_SP_TENANT_ID are set,
                     otherwise the signed-in user's cached token (tools/azauth.py, desktop use)
   connect(...)      Cosmos DB for Apache Gremlin client from account name + key (KG_COSMOS_ACCOUNT / KG_COSMOS_KEY)
+  cosmos_key()      KG_COSMOS_KEY, or the read-only key read from the Key Vault KG_COSMOS_KEY_VAULT_URL with token()
+  genai_user() / as_user(email)   the GenAI `userid` of the current request (host app's verified user, else KG_GENAI_USER)
   run(c, q, b)      a Gremlin request with bindings, retried on throttling / transient errors
   write_bundle / load_bundle   the runtime bundle (KG_BUNDLE_DIR): index.json, catalog.json, templates.json,
                     cosmos_load_<graph>.json - everything the service reads besides the live graph and the replicas
 """
+import contextlib
+import contextvars
 import json
 import os
 import threading
 import time
+import urllib.parse
+import urllib.request
 from types import SimpleNamespace
 
 RETRY = ("429", "RequestRateTooLarge", "408", "Timeout", "ServiceUnavailable", "1009", "Connection", "449")
+KEY_SECRET = "MM-KG-GREMLIN-READONLY-KEY"
 _apps = {}
 _lock = threading.Lock()
+_user = contextvars.ContextVar("kg_genai_user", default="")
+
+
+def genai_user():
+    """The GenAI platform `userid` of this request: the user the host app verified (as_user), else KG_GENAI_USER."""
+    return _user.get() or os.environ.get("KG_GENAI_USER", "")
+
+
+@contextlib.contextmanager
+def as_user(email):
+    reset = _user.set(email or "")
+    try:
+        yield
+    finally:
+        _user.reset(reset)
 
 
 def token(scope):
@@ -33,6 +55,21 @@ def token(scope):
     if "access_token" not in res:
         raise RuntimeError(f"service principal token for {scope}: {res.get('error', 'no token')}")
     return res["access_token"]
+
+
+def cosmos_key():
+    """KG_COSMOS_KEY, else the secret KG_COSMOS_KEY_SECRET (default MM-KG-GREMLIN-READONLY-KEY) read from the Key Vault
+    KG_COSMOS_KEY_VAULT_URL with token() - for platforms that inject no custom secrets into the app."""
+    if os.environ.get("KG_COSMOS_KEY"):
+        return os.environ["KG_COSMOS_KEY"]
+    vault = os.environ.get("KG_COSMOS_KEY_VAULT_URL", "").rstrip("/")
+    if not vault:
+        raise RuntimeError("set KG_COSMOS_KEY or KG_COSMOS_KEY_VAULT_URL")
+    name = urllib.parse.quote(os.environ.get("KG_COSMOS_KEY_SECRET") or KEY_SECRET)
+    req = urllib.request.Request(f"{vault}/secrets/{name}?api-version=7.4",
+                                 headers={"Authorization": "Bearer " + token("https://vault.azure.net/.default")})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return json.loads(r.read())["value"]
 
 
 def connect(account, key, graph, db):

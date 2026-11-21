@@ -230,17 +230,30 @@ ALERTS = [
                 "done": 'FORMAT([Prod Pallets Day], "#,##0")', "pct": 'FORMAT(DIVIDE([Prod Pallets Day], [Prod Ramp Plan Day]), "0%")',
                 "last": 'IF(ISBLANK([Prod Last Pallet Time]), "never in the loaded window", FORMAT([Prod Last Pallet Time], "ddd dd-mmm hh:00"))',
                 "hours": 'FORMAT([Elapsed Hours], "0.0")'})),
+    ("Verdict Flow Key", "7 Alerts", None,
+     '-- no structural (space / racking / line) constraint: the first CRITICAL flow KPI in material-flow order names the gap\n'
+     '-- (21-Nov: Jakarta 0.5 vs 120 plt/h read "no structural constraint" next to a red production tile)\n'
+     'SWITCH(TRUE(),\n'
+     + ",\n".join(f'  CALCULATE([KPI Status], Cfg_Threshold[KPI_Key] = "{k}") = "CRITICAL", "{k}"' for k in ("PPH", "TTAT_IN", "TTAT_OUT", "USER_PROD"))
+     + ',\n  BLANK())'),
     ("Verdict Key", "7 Alerts", None,
      'SWITCH(TRUE(),\n'
      f'  [Feature LevelA] = 1 && [KPI Idle A] > {thr("IDLE_A", "Warn_At")} && [KPI Free Short] >= {thr("MIN_SHORT")} && [KPI Free Tall] >= {thr("MIN_TALL")}, "SPACE_ALLOC",\n'
      f'  [Feature LevelA] = 1 && ([KPI Free Short] < {thr("MIN_SHORT")} || [KPI Free Tall] < {thr("MIN_TALL")}), "RACKING",\n'
      f'  [KPI Loc Util] > {thr("LOC_UTIL", "Warn_At")}, "WH_FULL",\n'
-     '  [KPI Lines In Alert] > 0, "LINE", "NONE")'),
+     '  [KPI Lines In Alert] > 0, "LINE",\n'
+     '  NOT ISBLANK([Verdict Flow Key]), "FLOW", "NONE")'),
     ("Narrative Verdict", "7 Alerts", None,
-     'VAR t = ' + rca("VERDICT", "[Verdict Key]") + '\nRETURN ' +
+     'VAR t = ' + rca("VERDICT", "[Verdict Key]") + '\nVAR fk = [Verdict Flow Key]\n'
+     'VAR fname = SWITCH(fk, "PPH", "production output (pallets / h)", "TTAT_IN", "inbound truck turnaround", "TTAT_OUT", "outbound truck turnaround",\n'
+     '    "USER_PROD", "user productivity (pallets / user-h)", "")\n'
+     'VAR fact = SWITCH(fk, "PPH", [Card PPH Value], "TTAT_IN", [Card TTAT_IN Value], "TTAT_OUT", [Card TTAT_OUT Value], "USER_PROD", [Card USER_PROD Value], "")\n'
+     'VAR ftgt = SWITCH(fk, "PPH", [Card PPH Target], "TTAT_IN", [Card TTAT_IN Target], "TTAT_OUT", [Card TTAT_OUT Target], "USER_PROD", [Card USER_PROD Target], "")\n'
+     'RETURN ' +
      fill("t", {"free_short": 'FORMAT([KPI Free Short], "0")', "free_tall": 'FORMAT([KPI Free Tall], "0")', "idle_locs": 'FORMAT([LevelA Idle Locations], "0")',
                 "loc_util": 'FORMAT([KPI Loc Util], "0.0%")', "lines": 'FORMAT([KPI Lines In Alert], "0")',
-                "runway": 'IF(ISBLANK([Space Runway Hours]), "", ", ~" & FORMAT([Space Runway Hours], "0") & " h until critical")'})),
+                "runway": 'IF(ISBLANK([Space Runway Hours]), "", ", ~" & FORMAT([Space Runway Hours], "0") & " h until critical")',
+                "flow_kpi": "fname", "flow_actual": "fact", "flow_target": "ftgt"})),
     ("Narrative Fix Order", "7 Alerts", None,
      'VAR st = ADDCOLUMNS(ALL(Cfg_AlertRule), "@s", [Alert Status])\n'
      'VAR useCrit = NOT ISEMPTY(FILTER(st, [@s] = "CRITICAL"))\n'

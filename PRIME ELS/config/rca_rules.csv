@@ -12,7 +12,7 @@ VERDICT,SPACE_ALLOC,1,"VERDICT: SPACE-ALLOCATION problem, not racking capacity o
 VERDICT,RACKING,2,"VERDICT: RACKING-CAPACITY constraint - free SHORT ({free_short}) / TALL ({free_tall}) spots are below minimum, takeaway will back up.",Release SHORT / TALL locations (bin-to-bin) and slow inbound if needed
 VERDICT,WH_FULL,3,VERDICT: WAREHOUSE-FULL risk - location utilisation {loc_util}{runway}.,Review slow movers / blocked locations and plan overflow
 VERDICT,LINE,4,VERDICT: LINE problem - {lines} takeaway line(s) in alert and no warehouse constraint detected.,Work the Line RCA list with production
-VERDICT,NONE,99,VERDICT: no structural constraint detected.,Keep monitoring
+VERDICT,NONE,99,"VERDICT: no constraint detected - space, racking, lines and the flow KPIs are within limits.",Keep monitoring
 NARRATIVE,PROD_OFF,1,Production pillar is not active for this site (Cfg_Site.Has_Production = 0).,
 NARRATIVE,PROD_BEHIND,2,At the current {rate} pallets/hr the site ends the shift day near {proj} pallets against a plan of {plan} pallets. Recovering the gap needs {req} pallets/hr for the rest of the day.,
 NARRATIVE,PROD_ONTRACK,3,At the current {rate} pallets/hr the site ends the shift day near {proj} pallets against a plan of {plan} pallets. On track for the day plan.,
@@ -71,3 +71,4 @@ NARRATIVE,HEALTH_V_NOTLIVE,17,"CAUSE: warehouse not live in the replica yet ({da
 NARRATIVE,HEALTH_V_LAG,18,CAUSE: replica behind - newest transaction {lag} min old although the report refreshed. REPORT OWNER: ask iDecide to check the replica feed (HVR).,
 NARRATIVE,HEALTH_V_OTHER,19,{fail} check(s) failed - each red row below says what to do and who.,
 NARRATIVE,HEALTH_V_OK,20,All {run} checks passed - the numbers can be trusted.,
+VERDICT,FLOW,5,"VERDICT: no space, racking or line constraint - the gap is {flow_kpi}: {flow_actual} against {flow_target}. Start there.",Follow the open alert of that KPI on 'What to do now' (owner listed)

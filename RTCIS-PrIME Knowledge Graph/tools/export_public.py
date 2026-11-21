@@ -86,6 +86,8 @@ def main():
     for d in ("tools", "templates", "docs", "ui", "tests", "agent"):
         tree(os.path.join(KIT, d), os.path.join(out, d))
     put(os.path.join(KIT, "README.md"), os.path.join(out, "README.md"))
+    if os.path.exists(os.path.join(KIT, "tracker", "PRD.md")):   # delivery status per requirement (docs/PRD.md links it)
+        put(os.path.join(KIT, "tracker", "PRD.md"), os.path.join(out, "tracker", "PRD.md"))
     rel = os.path.join(out, "relationships")
     put(os.path.join(KIT, "relationships", "ontology.json"), os.path.join(rel, "ontology.json"))
     for f in ("sdc_pmc_layer.json", "semantic_layer.json"):

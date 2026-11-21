@@ -262,6 +262,60 @@ The ontology tab of both UIs now reads the Cosmos graph (`/rp/schema`, `/rp/samp
 - Totals are counted live and flagged when they differ (`verified`).
 - A full `groupCount` costs ~1,100 RU and is throttled, so it is never run.
 
+## 14. Hosting and deployment of the agent
+
+| Option | Where | Needs | Status |
+|---|---|---|---|
+| **A. In iDecide (aiapp), in-process** | iDecide backend on the AI Apps platform (use case uvawh, dev project) | dependencies in the app's own `base` extra; settings from the app Key Vault | **chosen** (FR-IDE-02) |
+| B. uvawh workflow | Ultimate Platform tenant on the AIF AKS | `deepagents` + `gremlinpython` in the shared platform lock (owner approval), PR-environment deploy approval, workflow registration | on hold (FR-UVA-01) |
+| C. Separate service | `kg_api.py` as its own container; iDecide proxies `SQL_REMEDIATION_API_URL` | a host and ingress | supported (`SQL_REMEDIATION_MODE=proxy`) |
+
+Option A in detail:
+- **Packaging:** `tools/export_aiapp.py` copies the kit modules (`kg_core`, `kg_assistant`, `kg_deep_agent`,
+  `kg_services`, `kg_runtime`, `kg_api`), `agent/` and the runtime bundle into
+  `src/base/backend/app/sql_remediation_agent/`, with a sha256 `MANIFEST.json` that a unit test checks.
+  `tools/export_runtime_bundle.py` writes the bundle (≈1 MB): the index with theme and concept entries, the live catalog
+  columns, the validated templates and the Cosmos load record. The app never needs the 15 MB graph files or the wiki.
+- **Runtime:** `integrations/sql_remediation_inprocess.py` builds `kg_api.create_app(kg_services.services())` once in
+  a worker thread, then calls it through `httpx.ASGITransport`. The routes, the proxy contract and the security
+  checks are the same as in proxy mode.
+- **Identity and keys:**
+
+| Setting | What it is | Source |
+|---|---|---|
+| `MM_KG_GREMLIN_READONLY_KEY` | Cosmos **read-only** key | Key Vault secret `MM-KG-GREMLIN-READONLY-KEY` |
+| `AML_APP_SP_ID` / `AML_APP_SP_SECRET` | the app service principal, used for GenAI platform tokens | Key Vault (`AML-APP-SP-*`) |
+| `KG_SP_TENANT_ID`, `KG_GENAI_ENDPOINT`, `KG_GENAI_PROJECT`, `KG_GENAI_USER`, `KG_COSMOS_ACCOUNT` | non-secret settings | app settings |
+| `KG_REPLICA_ENDPOINT` (+ optional `KG_REPLICA_TOKEN`) | the replica endpoint next to the replicas; the kit's guard runs before anything is sent | app settings |
+
+  Verified on 2026-11-21:
+  - The read-only key reads the graph, and a write test was refused.
+  - The app service principal gets a token, and the GenAI platform answers on GPT-5.6 Sol with project `uvamain`.
+  - A hosted-mode run (that key, that principal, the bundle) validated a DE08 question, 5 rows in 46 s.
+- **Failure behaviour:**
+  - A missing setting is a 503 naming it.
+  - A service that cannot start (Cosmos firewall, token) is a 502 with the error type only, never its message. It is
+    retried after 60 s, and a partly built service closes its Cosmos client.
+  - Each call ends at `SQL_REMEDIATION_TIMEOUT_SECONDS`.
+  - At most 4 agent runs share the app's thread pool; more get a 429.
+- **Open before DEV:**
+  - DEP-05: `uv.lock` must be regenerated with the new dependencies by someone with access to the private template
+    dependency. It is excluded for the assistant, and the image build uses `uv sync --frozen`.
+  - DEP-06: the AI Apps cluster must reach the Cosmos account. Its firewall allows the AIF AKS subnet
+    `aks-aif-mt-np-14` and the uvawheu compute subnet. Verify with `GET /sql-remediation/health` on the deployed app.
+  - DEP-02: the replica endpoint.
+  - DEP-07: `AZURE-CLIENT-SECRET` in the same vault is invalid (AADSTS7000215). It is not used here; tell the app owner.
+
+## 15. Operations
+- **Refresh the knowledge:** run `build_graph.py` → `load_cosmos.py --sync` → `export_ui_views.py` →
+  `export_runtime_bundle.py` / `export_aiapp.py` → commit the app copy, so the bundle and the graph stay on the same load.
+- **Benchmark before a change that affects answers:**
+  1. `cloud_batch.py` before and after, on the same items and N.
+  2. `KG_BATCH_MATCH` / `KG_BATCH_REPEAT` for n ≥ 3 on every changed item.
+  3. Write every change with its SQL and cause into `benchmark/CLOUD_RESULTS.md`.
+- **Keys:** regenerating the Cosmos keys makes the vault secrets stale (as on 2026-08-25). Re-run the key refresh
+  (`MM-KG-GREMLIN-KEY`, `MM-KG-GREMLIN-READONLY-KEY`) and restart the app.
+
 ## References
 * Text2KGBench — Mihindukulasooriya et al., ISWC 2023, github.com/cenguix/Text2KGBench (P/R/F1, ontology conformance, subject / relation / object hallucination).
 * Microsoft GraphRAG — github.com/microsoft/graphrag (entity + relationship extraction; local search from entity entry points).

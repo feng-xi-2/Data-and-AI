@@ -12,6 +12,7 @@ import urllib.request
 from types import SimpleNamespace
 
 import kg_core as k
+import kg_runtime
 from kg_assistant import Assistant, SIDE
 
 KIT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -24,10 +25,15 @@ TABLE_PK = {"RTCIS": "Table:RTCIS", "PrIME2014": "Table:PrIME2014", "PrIME2022":
 # ================================================================================================= Cosmos graph
 class CosmosGraph:
     def __init__(self, graph=os.environ.get("KG_GRAPH", "rtcis_prime")):
-        import load_cosmos as lc
-        self._lc, self.graph = lc, graph
-        self._c = lc.connect(lc.ensure(graph, reset=False), graph)
-        self._rules = None
+        self.graph, self._rules = graph, None
+        if os.environ.get("KG_COSMOS_KEY"):   # hosted: account + (read-only) key from the app's Key Vault, no ARM call
+            self._lc = kg_runtime
+            self._c = kg_runtime.connect(os.environ["KG_COSMOS_ACCOUNT"], os.environ["KG_COSMOS_KEY"], graph,
+                                         os.environ.get("KG_DB", "whs_kg"))
+        else:                                 # desktop: the signed-in user's key through ARM listKeys
+            import load_cosmos as lc
+            self._lc = lc
+            self._c = lc.connect(lc.ensure(graph, reset=False), graph)
 
     def q(self, gremlin, **b):
         return self._lc.run(self._c, gremlin, b)
@@ -200,8 +206,7 @@ class CosmosGraph:
 # ================================================================================================= GenAI model
 class GenAiLLM:
     def __init__(self):
-        import azauth
-        self._token = lambda: azauth.token("https://cognitiveservices.azure.com/.default")
+        self._token = lambda: kg_runtime.token("https://cognitiveservices.azure.com/.default")
         self.endpoint = os.environ.get("KG_GENAI_ENDPOINT", "").rstrip("/")
         self.model = os.environ.get("KG_GENAI_MODEL", "GPT-52-2025-12-11")
         self.project = os.environ.get("KG_GENAI_PROJECT", "")
@@ -346,6 +351,9 @@ def make_db():
 
 # ================================================================================================= wiring
 def load_index_and_templates():
+    if os.environ.get("KG_BUNDLE_DIR"):   # hosted: the runtime bundle written by tools/export_runtime_bundle.py
+        b = kg_runtime.load_bundle(os.environ["KG_BUNDLE_DIR"])
+        return b.index, b.catalog, b.templates
     import graphio
     nodes, edges = graphio.load("nodes"), graphio.load("edges")
     desc = k.table_descriptions(nodes, edges)
@@ -373,9 +381,20 @@ def load_index_and_templates():
 
 def services():
     """KG_ASSISTANT=deep (default): LangGraph Deep Agent (kg_deep_agent); =pipeline: single-shot kg_assistant."""
-    graph, llm, db = CosmosGraph(), GenAiLLM(), make_db()
+    graph = CosmosGraph()
+    try:
+        return _services(graph)
+    except BaseException:
+        graph.close()   # a later step failed (bundle, model, deps): do not leave the Cosmos connection pool open
+        raise
+
+
+def _services(graph):
+    llm, db = GenAiLLM(), make_db()
     index, cat, templates = load_index_and_templates()
-    approved_f = os.path.join(KIT, "benchmark", "approved_pairs.jsonl")
+    if os.environ.get("KG_BUNDLE_DIR"):
+        graph.load_record = kg_runtime.load_bundle(os.environ["KG_BUNDLE_DIR"]).load_record
+    approved_f = os.environ.get("KG_APPROVED_FILE") or os.path.join(KIT, "benchmark", "approved_pairs.jsonl")
     approved = [json.loads(x) for x in open(approved_f, encoding="utf-8")] if os.path.exists(approved_f) else []
     if os.environ.get("KG_ASSISTANT", "deep") == "deep":
         import kg_deep_agent

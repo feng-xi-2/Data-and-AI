@@ -9,7 +9,9 @@ into **Azure Cosmos DB for Apache Gremlin**, and benchmarked with the Text2KGBen
 
 | Folder | What |
 |---|---|
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | design, hosting study (Cosmos Gremlin vs NoSQL vs Fabric vs Neo4j vs Timbr), one-graph-per-theme decision, user interfaces, NL query-writing flow, references |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | design, hosting study (Cosmos Gremlin vs NoSQL vs Fabric vs Neo4j vs Timbr), one-graph-per-theme decision, user interfaces, NL query-writing flow, agent hosting (iDecide in-process / uvawh / own service), operations, references |
+| [docs/PRD.md](docs/PRD.md) | product requirements of the SQL Remediation query convertor: problem, users, goals and measures, scope, FR / NFR, release plan, risks (status per id: [tracker/PRD.md](tracker/PRD.md)) |
+| [docs/USER_GUIDE.md](docs/USER_GUIDE.md) | how to use the one box (ask / validate / convert / batch), read an answer, approve, export, limits |
 | [knowledge/](knowledge/) | the knowledge: wiki pages (method, criteria, ground truth, expert rules, learnings, concepts, query pages), the complete RTCIS→PrIME reference, the PrIME 2014→2022 remediation guide, verified mappings, the converted SQL (RTCIS baseline + PrIME 2022) |
 | [relationships/](relationships/) | the graph: [ontology.json](relationships/ontology.json) (labels, properties, edge domain/range) + `parts/nodes_*.json`, `parts/edges_*.json` |
 | [templates/](templates/) | PrIME SQL header (mapping tags), field-notes (empty / mismatch reasons), query wiki page, tabbed HTML report, [Gremlin traversals](templates/gremlin_queries.md) |
@@ -48,6 +50,8 @@ python kg_api.py           # API on http://127.0.0.1:8738: /rp/chat one box (KG_
 python export_ui_views.py "<config-drift-governance>\UIUX"        # offline graph views for the tab, read from Cosmos via the API
 python cloud_batch.py 8    # cloud benchmark through the API: NL questions (3 engines, 10 business themes) + RTCIS->PrIME conversions, execution accuracy; KG_BATCH_MATCH / KG_BATCH_REPEAT repeat chosen questions (stability)
 python export_public.py "<repo>\RTCIS-PrIME Knowledge Graph"       # sanitise + publish check
+python export_runtime_bundle.py <dir>                              # ~1 MB bundle an app ships instead of the graph files + wiki
+python export_aiapp.py "<iDecide>\src\base\backend\app\sql_remediation_agent"   # vendored copy + MANIFEST for the in-process mode
 python export_config_drift_public.py "<config-drift-governance>" "<repo>\Config Drift Governance"   # code only, no data assets
 ```
 Database access: the signed-in user's Azure AD token (device code on first use). Cosmos: the account key is read through ARM
